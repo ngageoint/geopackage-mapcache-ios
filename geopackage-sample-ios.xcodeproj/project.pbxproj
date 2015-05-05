@@ -1,0 +1,439 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		040136751AF94FB200C92AFC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 040136741AF94FB200C92AFC /* main.m */; };
+		040136781AF94FB200C92AFC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 040136771AF94FB200C92AFC /* AppDelegate.m */; };
+		0401367B1AF94FB200C92AFC /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0401367A1AF94FB200C92AFC /* MasterViewController.m */; };
+		0401367E1AF94FB200C92AFC /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0401367D1AF94FB200C92AFC /* DetailViewController.m */; };
+		040136811AF94FB200C92AFC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0401367F1AF94FB200C92AFC /* Main.storyboard */; };
+		040136831AF94FB200C92AFC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 040136821AF94FB200C92AFC /* Images.xcassets */; };
+		040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 040136841AF94FB200C92AFC /* LaunchScreen.xib */; };
+		040136921AF94FB200C92AFC /* geopackage_sample_iosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 040136911AF94FB200C92AFC /* geopackage_sample_iosTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0401368C1AF94FB200C92AFC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 040136671AF94FB200C92AFC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0401366E1AF94FB200C92AFC;
+			remoteInfo = "geopackage-sample-ios";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0401366F1AF94FB200C92AFC /* geopackage-sample-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "geopackage-sample-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		040136731AF94FB200C92AFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		040136741AF94FB200C92AFC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		040136761AF94FB200C92AFC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		040136771AF94FB200C92AFC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		040136791AF94FB200C92AFC /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
+		0401367A1AF94FB200C92AFC /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
+		0401367C1AF94FB200C92AFC /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		0401367D1AF94FB200C92AFC /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		040136801AF94FB200C92AFC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		040136821AF94FB200C92AFC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		040136851AF94FB200C92AFC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		0401368B1AF94FB200C92AFC /* geopackage-sample-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "geopackage-sample-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		040136901AF94FB200C92AFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		040136911AF94FB200C92AFC /* geopackage_sample_iosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = geopackage_sample_iosTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0401366C1AF94FB200C92AFC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		040136881AF94FB200C92AFC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		040136661AF94FB200C92AFC = {
+			isa = PBXGroup;
+			children = (
+				040136711AF94FB200C92AFC /* geopackage-sample-ios */,
+				0401368E1AF94FB200C92AFC /* geopackage-sample-iosTests */,
+				040136701AF94FB200C92AFC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		040136701AF94FB200C92AFC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0401366F1AF94FB200C92AFC /* geopackage-sample-ios.app */,
+				0401368B1AF94FB200C92AFC /* geopackage-sample-iosTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		040136711AF94FB200C92AFC /* geopackage-sample-ios */ = {
+			isa = PBXGroup;
+			children = (
+				040136761AF94FB200C92AFC /* AppDelegate.h */,
+				040136771AF94FB200C92AFC /* AppDelegate.m */,
+				040136791AF94FB200C92AFC /* MasterViewController.h */,
+				0401367A1AF94FB200C92AFC /* MasterViewController.m */,
+				0401367C1AF94FB200C92AFC /* DetailViewController.h */,
+				0401367D1AF94FB200C92AFC /* DetailViewController.m */,
+				0401367F1AF94FB200C92AFC /* Main.storyboard */,
+				040136821AF94FB200C92AFC /* Images.xcassets */,
+				040136841AF94FB200C92AFC /* LaunchScreen.xib */,
+				040136721AF94FB200C92AFC /* Supporting Files */,
+			);
+			path = "geopackage-sample-ios";
+			sourceTree = "<group>";
+		};
+		040136721AF94FB200C92AFC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				040136731AF94FB200C92AFC /* Info.plist */,
+				040136741AF94FB200C92AFC /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0401368E1AF94FB200C92AFC /* geopackage-sample-iosTests */ = {
+			isa = PBXGroup;
+			children = (
+				040136911AF94FB200C92AFC /* geopackage_sample_iosTests.m */,
+				0401368F1AF94FB200C92AFC /* Supporting Files */,
+			);
+			path = "geopackage-sample-iosTests";
+			sourceTree = "<group>";
+		};
+		0401368F1AF94FB200C92AFC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				040136901AF94FB200C92AFC /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0401366E1AF94FB200C92AFC /* geopackage-sample-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 040136951AF94FB200C92AFC /* Build configuration list for PBXNativeTarget "geopackage-sample-ios" */;
+			buildPhases = (
+				0401366B1AF94FB200C92AFC /* Sources */,
+				0401366C1AF94FB200C92AFC /* Frameworks */,
+				0401366D1AF94FB200C92AFC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "geopackage-sample-ios";
+			productName = "geopackage-sample-ios";
+			productReference = 0401366F1AF94FB200C92AFC /* geopackage-sample-ios.app */;
+			productType = "com.apple.product-type.application";
+		};
+		0401368A1AF94FB200C92AFC /* geopackage-sample-iosTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 040136981AF94FB200C92AFC /* Build configuration list for PBXNativeTarget "geopackage-sample-iosTests" */;
+			buildPhases = (
+				040136871AF94FB200C92AFC /* Sources */,
+				040136881AF94FB200C92AFC /* Frameworks */,
+				040136891AF94FB200C92AFC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0401368D1AF94FB200C92AFC /* PBXTargetDependency */,
+			);
+			name = "geopackage-sample-iosTests";
+			productName = "geopackage-sample-iosTests";
+			productReference = 0401368B1AF94FB200C92AFC /* geopackage-sample-iosTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		040136671AF94FB200C92AFC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = NGA;
+				TargetAttributes = {
+					0401366E1AF94FB200C92AFC = {
+						CreatedOnToolsVersion = 6.3.1;
+					};
+					0401368A1AF94FB200C92AFC = {
+						CreatedOnToolsVersion = 6.3.1;
+						TestTargetID = 0401366E1AF94FB200C92AFC;
+					};
+				};
+			};
+			buildConfigurationList = 0401366A1AF94FB200C92AFC /* Build configuration list for PBXProject "geopackage-sample-ios" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 040136661AF94FB200C92AFC;
+			productRefGroup = 040136701AF94FB200C92AFC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0401366E1AF94FB200C92AFC /* geopackage-sample-ios */,
+				0401368A1AF94FB200C92AFC /* geopackage-sample-iosTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0401366D1AF94FB200C92AFC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				040136811AF94FB200C92AFC /* Main.storyboard in Resources */,
+				040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */,
+				040136831AF94FB200C92AFC /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		040136891AF94FB200C92AFC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0401366B1AF94FB200C92AFC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				040136781AF94FB200C92AFC /* AppDelegate.m in Sources */,
+				0401367B1AF94FB200C92AFC /* MasterViewController.m in Sources */,
+				040136751AF94FB200C92AFC /* main.m in Sources */,
+				0401367E1AF94FB200C92AFC /* DetailViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		040136871AF94FB200C92AFC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				040136921AF94FB200C92AFC /* geopackage_sample_iosTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0401368D1AF94FB200C92AFC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0401366E1AF94FB200C92AFC /* geopackage-sample-ios */;
+			targetProxy = 0401368C1AF94FB200C92AFC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		0401367F1AF94FB200C92AFC /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				040136801AF94FB200C92AFC /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		040136841AF94FB200C92AFC /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				040136851AF94FB200C92AFC /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		040136931AF94FB200C92AFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		040136941AF94FB200C92AFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		040136961AF94FB200C92AFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "geopackage-sample-ios/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		040136971AF94FB200C92AFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "geopackage-sample-ios/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		040136991AF94FB200C92AFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "geopackage-sample-iosTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/geopackage-sample-ios.app/geopackage-sample-ios";
+			};
+			name = Debug;
+		};
+		0401369A1AF94FB200C92AFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "geopackage-sample-iosTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/geopackage-sample-ios.app/geopackage-sample-ios";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0401366A1AF94FB200C92AFC /* Build configuration list for PBXProject "geopackage-sample-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				040136931AF94FB200C92AFC /* Debug */,
+				040136941AF94FB200C92AFC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		040136951AF94FB200C92AFC /* Build configuration list for PBXNativeTarget "geopackage-sample-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				040136961AF94FB200C92AFC /* Debug */,
+				040136971AF94FB200C92AFC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		040136981AF94FB200C92AFC /* Build configuration list for PBXNativeTarget "geopackage-sample-iosTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				040136991AF94FB200C92AFC /* Debug */,
+				0401369A1AF94FB200C92AFC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 040136671AF94FB200C92AFC /* Project object */;
+}
