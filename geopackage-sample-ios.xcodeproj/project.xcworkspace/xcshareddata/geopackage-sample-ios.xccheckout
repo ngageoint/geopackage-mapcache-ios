@@ -7,18 +7,18 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>FB00A425-6A6B-451E-8120-6D5421FC09B6</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>geopackage-sample-ios</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>E2BB76C923EC77C36643319299824846F5585DB8</key>
 		<string>git.geointapps.org:geopackage/geopackage-sample-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>geopackage-sample-ios/geopackage-sample-ios.xcodeproj/project.xcworkspace</string>
+	<string>geopackage-sample-ios.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>E2BB76C923EC77C36643319299824846F5585DB8</key>
-		<string>../../..</string>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>git.geointapps.org:geopackage/geopackage-sample-ios.git</string>
