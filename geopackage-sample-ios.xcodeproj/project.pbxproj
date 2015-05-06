@@ -15,6 +15,7 @@
 		040136831AF94FB200C92AFC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 040136821AF94FB200C92AFC /* Images.xcassets */; };
 		040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 040136841AF94FB200C92AFC /* LaunchScreen.xib */; };
 		040136921AF94FB200C92AFC /* geopackage_sample_iosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 040136911AF94FB200C92AFC /* geopackage_sample_iosTests.m */; };
+		79B230F4F60AF2BE7816B2CB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02FF687C0F94F922C6DBA093 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		02FF687C0F94F922C6DBA093 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0401366F1AF94FB200C92AFC /* geopackage-sample-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "geopackage-sample-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		040136731AF94FB200C92AFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		040136741AF94FB200C92AFC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -43,6 +45,8 @@
 		0401368B1AF94FB200C92AFC /* geopackage-sample-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "geopackage-sample-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		040136901AF94FB200C92AFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		040136911AF94FB200C92AFC /* geopackage_sample_iosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = geopackage_sample_iosTests.m; sourceTree = "<group>"; };
+		5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79B230F4F60AF2BE7816B2CB /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +74,8 @@
 				040136711AF94FB200C92AFC /* geopackage-sample-ios */,
 				0401368E1AF94FB200C92AFC /* geopackage-sample-iosTests */,
 				040136701AF94FB200C92AFC /* Products */,
+				C5D6DE3118DC6CC3BD7E852D /* Pods */,
+				F92DE52400ADCEC8CC3BBB88 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -124,6 +131,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		C5D6DE3118DC6CC3BD7E852D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */,
+				C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		F92DE52400ADCEC8CC3BBB88 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				02FF687C0F94F922C6DBA093 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -131,9 +155,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 040136951AF94FB200C92AFC /* Build configuration list for PBXNativeTarget "geopackage-sample-ios" */;
 			buildPhases = (
+				C8B98BBB41597A0D3F25DE44 /* Check Pods Manifest.lock */,
 				0401366B1AF94FB200C92AFC /* Sources */,
 				0401366C1AF94FB200C92AFC /* Frameworks */,
 				0401366D1AF94FB200C92AFC /* Resources */,
+				D51B2B27AB5CBB199555A59F /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -218,6 +244,39 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C8B98BBB41597A0D3F25DE44 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		D51B2B27AB5CBB199555A59F /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0401366B1AF94FB200C92AFC /* Sources */ = {
@@ -353,6 +412,7 @@
 		};
 		040136961AF94FB200C92AFC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "geopackage-sample-ios/Info.plist";
@@ -363,6 +423,7 @@
 		};
 		040136971AF94FB200C92AFC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "geopackage-sample-ios/Info.plist";
@@ -424,6 +485,7 @@
 				040136971AF94FB200C92AFC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		040136981AF94FB200C92AFC /* Build configuration list for PBXNativeTarget "geopackage-sample-iosTests" */ = {
 			isa = XCConfigurationList;
@@ -432,6 +494,7 @@
 				0401369A1AF94FB200C92AFC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
