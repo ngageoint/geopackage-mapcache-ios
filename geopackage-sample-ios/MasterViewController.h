@@ -8,12 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@class DetailViewController;
+@interface MasterViewController : UIViewController
 
-@interface MasterViewController : UITableViewController
+@property (nonatomic, strong) IBOutlet UITextView *resultText;
 
-@property (strong, nonatomic) DetailViewController *detailViewController;
-
+- (IBAction)buttonTapped:(id)sender;
 
 @end
-
