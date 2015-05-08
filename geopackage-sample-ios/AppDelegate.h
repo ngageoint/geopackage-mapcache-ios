@@ -1,9 +1,9 @@
 //
 //  AppDelegate.h
-//  geopackage-sample-ios
+//  QuoteGen
 //
-//  Created by Brian Osborn on 5/5/15.
-//  Copyright (c) 2015 NGA. All rights reserved.
+//  Created by Brian Osborn on 5/6/15.
+//  Copyright (c) 2015 Test. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
