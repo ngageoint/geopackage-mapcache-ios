@@ -80,6 +80,14 @@
         [resultString appendString:geomColumn.tableName];
         [resultString appendString:@"\n"];
         [resultString appendString:geomColumn.columnName];
+        [resultString appendString:@"\n"];
+        [resultString appendString:geomColumn.geometryTypeName];
+        [resultString appendString:@"\n"];
+        [resultString appendString:[geomColumn.srsId stringValue]];
+        [resultString appendString:@"\n"];
+        [resultString appendString:[geomColumn.z stringValue]];
+        [resultString appendString:@"\n"];
+        [resultString appendString:[geomColumn.m stringValue]];
     }
     
     
