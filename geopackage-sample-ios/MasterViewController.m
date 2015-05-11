@@ -10,6 +10,7 @@
 #import "GPKGGeoPackage.h"
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGGeoPackageManager.h"
+#import "GPKGGeometryColumnsDao.h"
 
 
 @interface MasterViewController ()
@@ -34,8 +35,10 @@
 }
 
 -(IBAction)buttonTapped:(id)sender {
-    self.resultText.text = @"TEST";
     
+    NSMutableString *resultString = [NSMutableString string];
+    
+    /*
     // Prepare the query string.
     NSString *query = @"select * from gpkg_spatial_ref_sys";
     //NSString *query = @"select name from sqlite_master where type ='table'";
@@ -43,7 +46,6 @@
     // Execute the query.
     NSArray *results = [[NSArray alloc] initWithArray:[[self.geoPackage getDatabase] query:query]];
     
-    NSMutableString *resultString = [NSMutableString string];
     [resultString appendFormat:@"Results: %lu", results.count];
     [resultString appendString:@"\n"];
     //self.resultText.text = [NSString stringWithFormat:@"Results: %lu", results.count];
@@ -57,12 +59,29 @@
     }
     
     [resultString appendString:@"\n"];
+     */
     
     NSArray *featureTables = [self.geoPackage getFeatureTables];
     for (NSString *featureTable in featureTables) {
         [resultString appendString:@"\n"];
         [resultString appendString:featureTable];
     }
+    
+    GPKGGeometryColumnsDao *dao = [self.geoPackage getGeometryColumnsDao];
+    
+    BOOL tableExists = [dao isTableExists];
+    [resultString appendString:@"\n"];
+    [resultString appendString:@"\n"];
+    [resultString appendString:[NSString stringWithFormat:@"Table Exists: %d", tableExists]];
+    
+    NSArray *allGeometryColumns = [dao queryForAll];
+    for(GPKGGeometryColumns *geomColumn in allGeometryColumns){
+        [resultString appendString:@"\n\n"];
+        [resultString appendString:geomColumn.tableName];
+        [resultString appendString:@"\n"];
+        [resultString appendString:geomColumn.columnName];
+    }
+    
     
     self.resultText.text = resultString;
     
