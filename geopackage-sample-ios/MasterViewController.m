@@ -38,29 +38,6 @@
     
     NSMutableString *resultString = [NSMutableString string];
     
-    /*
-    // Prepare the query string.
-    NSString *query = @"select * from gpkg_spatial_ref_sys";
-    //NSString *query = @"select name from sqlite_master where type ='table'";
-    
-    // Execute the query.
-    NSArray *results = [[NSArray alloc] initWithArray:[[self.geoPackage getDatabase] query:query]];
-    
-    [resultString appendFormat:@"Results: %lu", results.count];
-    [resultString appendString:@"\n"];
-    //self.resultText.text = [NSString stringWithFormat:@"Results: %lu", results.count];
-    
-    for (NSMutableArray *result in results) {
-        for(int i = 0; i < result.count; i++){
-            NSString *value = [result objectAtIndex:(i)];
-            [resultString appendString:@"\n"];
-            [resultString appendString:value];
-        }
-    }
-    
-    [resultString appendString:@"\n"];
-     */
-    
     NSArray *featureTables = [self.geoPackage getFeatureTables];
     for (NSString *featureTable in featureTables) {
         [resultString appendString:@"\n"];
@@ -72,10 +49,14 @@
     BOOL tableExists = [dao isTableExists];
     [resultString appendString:@"\n"];
     [resultString appendString:@"\n"];
-    [resultString appendString:[NSString stringWithFormat:@"Table Exists: %d", tableExists]];
+    [resultString appendFormat:@"Table Exists: %d", tableExists];
     
-    NSArray *allGeometryColumns = [dao queryForAll];
-    for(GPKGGeometryColumns *geomColumn in allGeometryColumns){
+    GPKGResultSet *allGeometryColumns = [dao queryForAll];
+    [resultString appendString:@"\n\n"];
+    [resultString appendFormat:@"Count: %d", allGeometryColumns.count];
+    while([allGeometryColumns moveToNext]){
+        GPKGGeometryColumns *geomColumn = (GPKGGeometryColumns *)[dao getObject: allGeometryColumns];
+
         [resultString appendString:@"\n\n"];
         [resultString appendString:geomColumn.tableName];
         [resultString appendString:@"\n"];
@@ -89,7 +70,18 @@
         [resultString appendString:@"\n"];
         [resultString appendString:[geomColumn.m stringValue]];
     }
+    [allGeometryColumns close];
     
+    NSArray *idValues = @[@"multipoint2d", @"geom"];
+    GPKGGeometryColumns *idValuesResult = (GPKGGeometryColumns *)[dao queryForMultiId:idValues];
+    
+     GPKGGeometryColumns *idValueResult = (GPKGGeometryColumns *)[dao queryForId:@"linestring2d"];
+    
+    GPKGResultSet *equalResult = [dao queryForEqWithField:GC_COLUMN_Z andValue: [NSNumber numberWithInt:1]];
+    while([equalResult moveToNext]){
+        GPKGGeometryColumns *geomColumn = (GPKGGeometryColumns *)[dao getObject: equalResult];
+    }
+    [equalResult close];
     
     self.resultText.text = resultString;
     
