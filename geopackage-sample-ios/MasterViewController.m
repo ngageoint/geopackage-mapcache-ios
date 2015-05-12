@@ -83,6 +83,26 @@
     }
     [equalResult close];
     
+    int count = [dao count];
+    int count2 = [dao countWhere:[NSString stringWithFormat:@"%@ = 'linestring2d'", GC_COLUMN_TABLE_NAME]];
+    
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    GPKGColumnValue *tableNameCV = [[GPKGColumnValue alloc] init];
+    tableNameCV.value = @"linestring3d";
+    [dictionary setObject:tableNameCV forKey:GC_COLUMN_TABLE_NAME];
+    GPKGColumnValue *zCV = [[GPKGColumnValue alloc] init];
+    zCV.value = [NSNumber numberWithInt:1];
+    zCV.tolerance = [NSNumber numberWithDouble:0.5];
+    [dictionary setObject:zCV forKey:GC_COLUMN_Z];
+    NSString *dictionaryQuery = [dao buildWhereWithColumnValueFields: dictionary];
+    NSString *fullDictionaryQuery = [dao buildSelectAllWithWhere:dictionaryQuery];
+    GPKGResultSet *dictionaryResult = [dao query:fullDictionaryQuery];
+    while([dictionaryResult moveToNext]){
+        GPKGGeometryColumns *geomColumn = (GPKGGeometryColumns *)[dao getObject: dictionaryResult];
+    }
+    
+    //[dao buildWhereWithField:<#(NSString *)#> andColumnValue:<#(GPKGColumnValue *)#>]
+    
     self.resultText.text = resultString;
     
 }
