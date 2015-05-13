@@ -182,7 +182,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "geopackage-sample-ios/MasterViewController.m"
@@ -522,11 +522,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../geopackage-ios/geopackage-ios/db/dao/GPKGBaseDao.m"
-            timestampString = "453239700.382256"
+            timestampString = "453244198.255643"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "242"
-            endingLineNumber = "242"
+            startingLineNumber = "276"
+            endingLineNumber = "276"
             landmarkName = "-countWhere:"
             landmarkType = "5">
          </BreakpointContent>
@@ -538,11 +538,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../geopackage-ios/geopackage-ios/db/dao/GPKGBaseDao.m"
-            timestampString = "453239700.382256"
+            timestampString = "453244198.255643"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
+            startingLineNumber = "260"
+            endingLineNumber = "260"
             landmarkName = "-buildWhereWithField:andColumnValue:"
             landmarkType = "5">
          </BreakpointContent>
@@ -554,11 +554,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../geopackage-ios/geopackage-ios/db/dao/GPKGBaseDao.m"
-            timestampString = "453239700.382256"
+            timestampString = "453244198.255643"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "220"
-            endingLineNumber = "220"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
             landmarkName = "-buildWhereWithField:andColumnValue:"
             landmarkType = "5">
          </BreakpointContent>
