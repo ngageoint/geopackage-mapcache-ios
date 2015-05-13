@@ -105,6 +105,10 @@
     
     self.resultText.text = resultString;
     
+    [dao dropTable];
+    
+    tableExists = [dao isTableExists];
+    
 }
 
 @end
