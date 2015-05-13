@@ -73,9 +73,9 @@
     [allGeometryColumns close];
     
     NSArray *idValues = @[@"multipoint2d", @"geom"];
-    GPKGGeometryColumns *idValuesResult = (GPKGGeometryColumns *)[dao queryForMultiId:idValues];
+    GPKGGeometryColumns *idValuesResult = (GPKGGeometryColumns *)[dao queryForMultiIdObject:idValues];
     
-     GPKGGeometryColumns *idValueResult = (GPKGGeometryColumns *)[dao queryForId:@"linestring2d"];
+    GPKGGeometryColumns *idValueResult = (GPKGGeometryColumns *)[dao queryForIdObject:@"linestring2d"];
     
     GPKGResultSet *equalResult = [dao queryForEqWithField:GC_COLUMN_Z andValue: [NSNumber numberWithInt:1]];
     while([equalResult moveToNext]){
@@ -94,14 +94,11 @@
     zCV.value = [NSNumber numberWithInt:1];
     zCV.tolerance = [NSNumber numberWithDouble:0.5];
     [dictionary setObject:zCV forKey:GC_COLUMN_Z];
-    NSString *dictionaryQuery = [dao buildWhereWithColumnValueFields: dictionary];
-    NSString *fullDictionaryQuery = [dao buildSelectAllWithWhere:dictionaryQuery];
-    GPKGResultSet *dictionaryResult = [dao query:fullDictionaryQuery];
+
+    GPKGResultSet *dictionaryResult = [dao queryForColumnValueFieldValues:dictionary];
     while([dictionaryResult moveToNext]){
         GPKGGeometryColumns *geomColumn = (GPKGGeometryColumns *)[dao getObject: dictionaryResult];
     }
-    
-    //[dao buildWhereWithField:<#(NSString *)#> andColumnValue:<#(GPKGColumnValue *)#>]
     
     self.resultText.text = resultString;
     
