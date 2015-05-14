@@ -101,6 +101,10 @@
         geomColumn = (GPKGGeometryColumns *)[dao getObject: dictionaryResult];
     }
     
+    geomColumn.geometryTypeName = @"POINT";
+    geomColumn.m = [NSNumber numberWithInt:1];
+    int updated = [dao update:geomColumn];
+    
     idValues = [dao getIdValues:geomColumn];
     GPKGGeometryColumns *geomColumn2 = (GPKGGeometryColumns *)[dao queryForMultiIdObject:idValues];
     int deleted = [dao delete:geomColumn2];
