@@ -96,9 +96,15 @@
     [dictionary setObject:zCV forKey:GC_COLUMN_Z];
 
     GPKGResultSet *dictionaryResult = [dao queryForColumnValueFieldValues:dictionary];
+    GPKGGeometryColumns *geomColumn = nil;
     while([dictionaryResult moveToNext]){
-        GPKGGeometryColumns *geomColumn = (GPKGGeometryColumns *)[dao getObject: dictionaryResult];
+        geomColumn = (GPKGGeometryColumns *)[dao getObject: dictionaryResult];
     }
+    
+    idValues = [dao getIdValues:geomColumn];
+    GPKGGeometryColumns *geomColumn2 = (GPKGGeometryColumns *)[dao queryForMultiIdObject:idValues];
+    int deleted = [dao delete:geomColumn2];
+    geomColumn2 = (GPKGGeometryColumns *)[dao queryForMultiIdObject:idValues];
     
     self.resultText.text = resultString;
     
