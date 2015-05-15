@@ -110,6 +110,37 @@
     int deleted = [dao delete:geomColumn2];
     geomColumn2 = (GPKGGeometryColumns *)[dao queryForMultiIdObject:idValues];
     
+    allGeometryColumns = [dao queryForAll];
+    [resultString appendString:@"\n\n"];
+    [resultString appendFormat:@"New Count: %d", allGeometryColumns.count];
+    
+    GPKGGeometryColumns *newGeomColumns = [[GPKGGeometryColumns alloc] init];
+    newGeomColumns.tableName = @"test_table";
+    newGeomColumns.columnName = @"test_column";
+    newGeomColumns.geometryTypeName = @"GEOMETRY";
+    newGeomColumns.srsId = [NSNumber numberWithInt:0];
+    newGeomColumns.z = [NSNumber numberWithInt:1];
+    newGeomColumns.m = [NSNumber numberWithInt:1];
+    long long newId = [dao insert:newGeomColumns];
+    GPKGGeometryColumns *newGeomResult = (GPKGGeometryColumns *)[dao queryForMultiIdObject:@[@"test_table", @"test_column"]];
+    
+    [resultString appendString:@"\n\nNew Geom Query:\n"];
+    [resultString appendString:newGeomResult.tableName];
+    [resultString appendString:@"\n"];
+    [resultString appendString:newGeomResult.columnName];
+    [resultString appendString:@"\n"];
+    [resultString appendString:newGeomResult.geometryTypeName];
+    [resultString appendString:@"\n"];
+    [resultString appendString:[newGeomResult.srsId stringValue]];
+    [resultString appendString:@"\n"];
+    [resultString appendString:[newGeomResult.z stringValue]];
+    [resultString appendString:@"\n"];
+    [resultString appendString:[newGeomResult.m stringValue]];
+    
+    allGeometryColumns = [dao queryForAll];
+    [resultString appendString:@"\n\n"];
+    [resultString appendFormat:@"New Count: %d", allGeometryColumns.count];
+    
     self.resultText.text = resultString;
     
     [dao dropTable];
