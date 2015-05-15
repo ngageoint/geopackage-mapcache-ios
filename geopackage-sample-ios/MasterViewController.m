@@ -122,7 +122,8 @@
     newGeomColumns.z = [NSNumber numberWithInt:1];
     newGeomColumns.m = [NSNumber numberWithInt:1];
     long long newId = [dao insert:newGeomColumns];
-    GPKGGeometryColumns *newGeomResult = (GPKGGeometryColumns *)[dao queryForMultiIdObject:@[@"test_table", @"test_column"]];
+    GPKGGeometryColumns *newGeomResult = [dao queryForTableName:newGeomColumns.tableName];
+    //GPKGGeometryColumns *newGeomResult = (GPKGGeometryColumns *)[dao queryForMultiIdObject:@[@"test_table", @"test_column"]];
     
     [resultString appendString:@"\n\nNew Geom Query:\n"];
     [resultString appendString:newGeomResult.tableName];
