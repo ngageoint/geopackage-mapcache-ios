@@ -46,7 +46,7 @@
     
     GPKGGeometryColumnsDao *dao = [self.geoPackage getGeometryColumnsDao];
     
-    BOOL tableExists = [dao isTableExists];
+    BOOL tableExists = [dao tableExists];
     [resultString appendString:@"\n"];
     [resultString appendString:@"\n"];
     [resultString appendFormat:@"Table Exists: %d", tableExists];
@@ -146,7 +146,7 @@
     
     [dao dropTable];
     
-    tableExists = [dao isTableExists];
+    tableExists = [dao tableExists];
     
 }
 
