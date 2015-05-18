@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../geopackage-ios/geopackage-ios/features/columns/GPKGGeometryColumnsDao.m"
-            timestampString = "453415511.007011"
+            timestampString = "453683558.801208"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "113"
-            endingLineNumber = "113"
+            startingLineNumber = "115"
+            endingLineNumber = "115"
             landmarkName = "-getFeatureTables"
             landmarkType = "5">
          </BreakpointContent>
@@ -330,11 +330,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../geopackage-ios/geopackage-ios/features/columns/GPKGGeometryColumnsDao.m"
-            timestampString = "453415511.007011"
+            timestampString = "453683558.801208"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "113"
-            endingLineNumber = "113"
+            startingLineNumber = "115"
+            endingLineNumber = "115"
             landmarkName = "-getFeatureTables"
             landmarkType = "5">
          </BreakpointContent>
@@ -362,11 +362,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../geopackage-ios/geopackage-ios/features/columns/GPKGGeometryColumnsDao.m"
-            timestampString = "453415511.007011"
+            timestampString = "453683558.801208"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "113"
-            endingLineNumber = "113"
+            startingLineNumber = "115"
+            endingLineNumber = "115"
             landmarkName = "-getFeatureTables"
             landmarkType = "5">
          </BreakpointContent>
@@ -426,11 +426,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../geopackage-ios/geopackage-ios/db/dao/GPKGBaseDao.m"
-            timestampString = "453663593.828889"
+            timestampString = "453683558.801208"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "345"
-            endingLineNumber = "345"
+            startingLineNumber = "359"
+            endingLineNumber = "359"
             landmarkName = "-countWhere:"
             landmarkType = "5">
          </BreakpointContent>
@@ -442,11 +442,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../geopackage-ios/geopackage-ios/db/dao/GPKGBaseDao.m"
-            timestampString = "453663593.828889"
+            timestampString = "453683558.801208"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "329"
-            endingLineNumber = "329"
+            startingLineNumber = "343"
+            endingLineNumber = "343"
             landmarkName = "-buildWhereWithField:andColumnValue:"
             landmarkType = "5">
          </BreakpointContent>
@@ -458,11 +458,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../geopackage-ios/geopackage-ios/db/dao/GPKGBaseDao.m"
-            timestampString = "453663593.828889"
+            timestampString = "453683558.801208"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "323"
-            endingLineNumber = "323"
+            startingLineNumber = "337"
+            endingLineNumber = "337"
             landmarkName = "-buildWhereWithField:andColumnValue:"
             landmarkType = "5">
          </BreakpointContent>
@@ -618,11 +618,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../geopackage-ios/geopackage-ios/features/columns/GPKGGeometryColumnsDao.m"
-            timestampString = "453415511.007011"
+            timestampString = "453683558.801208"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
             landmarkName = "-setValueInObject:withColumnIndex:withValue:"
             landmarkType = "5">
          </BreakpointContent>

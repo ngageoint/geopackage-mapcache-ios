@@ -105,7 +105,7 @@
     geomColumn.m = [NSNumber numberWithInt:1];
     int updated = [dao update:geomColumn];
     
-    idValues = [dao getIdValues:geomColumn];
+    idValues = [dao getMultiId:geomColumn];
     GPKGGeometryColumns *geomColumn2 = (GPKGGeometryColumns *)[dao queryForMultiIdObject:idValues];
     int deleted = [dao delete:geomColumn2];
     geomColumn2 = (GPKGGeometryColumns *)[dao queryForMultiIdObject:idValues];
