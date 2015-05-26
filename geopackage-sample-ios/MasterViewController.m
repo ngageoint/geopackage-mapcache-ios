@@ -77,23 +77,23 @@
     
     GPKGGeometryColumns *idValueResult = (GPKGGeometryColumns *)[dao queryForIdObject:@"linestring2d"];
     
-    GPKGResultSet *equalResult = [dao queryForEqWithField:GC_COLUMN_Z andValue: [NSNumber numberWithInt:1]];
+    GPKGResultSet *equalResult = [dao queryForEqWithField:GPKG_GC_COLUMN_Z andValue: [NSNumber numberWithInt:1]];
     while([equalResult moveToNext]){
         GPKGGeometryColumns *geomColumn = (GPKGGeometryColumns *)[dao getObject: equalResult];
     }
     [equalResult close];
     
     int count = [dao count];
-    int count2 = [dao countWhere:[NSString stringWithFormat:@"%@ = 'linestring2d'", GC_COLUMN_TABLE_NAME]];
+    int count2 = [dao countWhere:[NSString stringWithFormat:@"%@ = 'linestring2d'", GPKG_GC_COLUMN_TABLE_NAME]];
     
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     GPKGColumnValue *tableNameCV = [[GPKGColumnValue alloc] init];
     tableNameCV.value = @"linestring3d";
-    [dictionary setObject:tableNameCV forKey:GC_COLUMN_TABLE_NAME];
+    [dictionary setObject:tableNameCV forKey:GPKG_GC_COLUMN_TABLE_NAME];
     GPKGColumnValue *zCV = [[GPKGColumnValue alloc] init];
     zCV.value = [NSNumber numberWithInt:1];
     zCV.tolerance = [NSNumber numberWithDouble:0.5];
-    [dictionary setObject:zCV forKey:GC_COLUMN_Z];
+    [dictionary setObject:zCV forKey:GPKG_GC_COLUMN_Z];
 
     GPKGResultSet *dictionaryResult = [dao queryForColumnValueFieldValues:dictionary];
     GPKGGeometryColumns *geomColumn = nil;
