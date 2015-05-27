@@ -99,7 +99,18 @@
     GPKGGeometryColumns *geomColumn = nil;
     while([dictionaryResult moveToNext]){
         geomColumn = (GPKGGeometryColumns *)[dao getObject: dictionaryResult];
+        
+        GPKGFeatureDao * featureDao = [self.geoPackage getFeatureDaoWithGeometryColumns:geomColumn];
+        GPKGResultSet * featureResults = [featureDao queryForAll];
+        while([featureResults moveToNext]){
+            GPKGFeatureRow * featureRow = [featureDao getFeatureRow:featureResults];
+            int geomColumnIndex = [featureRow getGeometryColumnIndex];
+            GPKGFeatureColumn * geomColumn = [featureRow getGeometryColumn];
+            GPKGGeometryData * geomData = [featureRow getGeometry];
+
+        }
     }
+    [dictionaryResult close];
     
     geomColumn.geometryTypeName = @"POINT";
     geomColumn.m = [NSNumber numberWithInt:1];
@@ -113,6 +124,7 @@
     allGeometryColumns = [dao queryForAll];
     [resultString appendString:@"\n\n"];
     [resultString appendFormat:@"New Count: %d", allGeometryColumns.count];
+    [allGeometryColumns close];
     
     GPKGGeometryColumns *newGeomColumns = [[GPKGGeometryColumns alloc] init];
     newGeomColumns.tableName = @"test_table";
@@ -141,6 +153,7 @@
     allGeometryColumns = [dao queryForAll];
     [resultString appendString:@"\n\n"];
     [resultString appendFormat:@"New Count: %d", allGeometryColumns.count];
+    [allGeometryColumns close];
     
     self.resultText.text = resultString;
     
