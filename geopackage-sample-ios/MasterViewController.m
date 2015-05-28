@@ -69,6 +69,21 @@
         [resultString appendString:[geomColumn.z stringValue]];
         [resultString appendString:@"\n"];
         [resultString appendString:[geomColumn.m stringValue]];
+        
+        GPKGFeatureDao * featureDao = [self.geoPackage getFeatureDaoWithGeometryColumns:geomColumn];
+        GPKGResultSet * featureResults = [featureDao queryForAll];
+        while([featureResults moveToNext]){
+            GPKGFeatureRow * featureRow = [featureDao getFeatureRow:featureResults];
+            int geomColumnIndex = [featureRow getGeometryColumnIndex];
+            GPKGFeatureColumn * geomColumn = [featureRow getGeometryColumn];
+            GPKGGeometryData * geomData = [featureRow getGeometry];
+            
+            [resultString appendString:@"\n"];
+            for(NSString * column in featureDao.columns){
+                NSObject * value = [featureRow getValueWithColumnName:column];
+                [resultString appendFormat:@"\n%@: %@", column, value];
+            }
+        }
     }
     [allGeometryColumns close];
     
@@ -99,16 +114,6 @@
     GPKGGeometryColumns *geomColumn = nil;
     while([dictionaryResult moveToNext]){
         geomColumn = (GPKGGeometryColumns *)[dao getObject: dictionaryResult];
-        
-        GPKGFeatureDao * featureDao = [self.geoPackage getFeatureDaoWithGeometryColumns:geomColumn];
-        GPKGResultSet * featureResults = [featureDao queryForAll];
-        while([featureResults moveToNext]){
-            GPKGFeatureRow * featureRow = [featureDao getFeatureRow:featureResults];
-            int geomColumnIndex = [featureRow getGeometryColumnIndex];
-            GPKGFeatureColumn * geomColumn = [featureRow getGeometryColumn];
-            GPKGGeometryData * geomData = [featureRow getGeometry];
-
-        }
     }
     [dictionaryResult close];
     
