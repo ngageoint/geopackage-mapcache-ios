@@ -12,6 +12,8 @@
 	<dict>
 		<key>01899DCED27641F740FBF559E7582CB5F03E1B28</key>
 		<string>git.geointapps.org:geopackage/geopackage-ios.git</string>
+		<key>DF105DDF49A495E306DE2BAA6B220A307A2204BE</key>
+		<string>git.geointapps.org:geopackage/wkb-ios.git</string>
 		<key>E2BB76C923EC77C36643319299824846F5585DB8</key>
 		<string>git.geointapps.org:geopackage/geopackage-sample-ios.git</string>
 	</dict>
@@ -21,6 +23,8 @@
 	<dict>
 		<key>01899DCED27641F740FBF559E7582CB5F03E1B28</key>
 		<string>../../geopackage-ios</string>
+		<key>DF105DDF49A495E306DE2BAA6B220A307A2204BE</key>
+		<string>../../wkb-ios</string>
 		<key>E2BB76C923EC77C36643319299824846F5585DB8</key>
 		<string>..</string>
 	</dict>
@@ -47,6 +51,14 @@
 			<string>E2BB76C923EC77C36643319299824846F5585DB8</string>
 			<key>IDESourceControlWCCName</key>
 			<string>geopackage-sample-ios</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DF105DDF49A495E306DE2BAA6B220A307A2204BE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>wkb-ios</string>
 		</dict>
 	</array>
 </dict>
