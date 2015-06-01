@@ -80,8 +80,36 @@
             
             [resultString appendString:@"\n"];
             for(NSString * column in featureDao.columns){
+                GPKGFeatureColumn * userColumn = (GPKGFeatureColumn *)[featureRow getColumnWithColumnName:column];
                 NSObject * value = [featureRow getValueWithColumnName:column];
-                [resultString appendFormat:@"\n%@: %@", column, value];
+                if(![userColumn isGeometry]){
+                    [resultString appendFormat:@"\n%@: %@", column, value];
+                }
+            }
+            if(geomData != nil){
+                [resultString appendString:@"\n\nGeom:"];
+                [resultString appendFormat:@"\nExtended: %d", geomData.extended];
+                [resultString appendFormat:@"\nEmpty: %d", geomData.empty];
+                [resultString appendFormat:@"\nByte Order: %ld", geomData.byteOrder];
+                [resultString appendFormat:@"\nSRS Id: %@", geomData.srsId];
+                if(geomData.envelope != nil){
+                    [resultString appendFormat:@"\nmin x: %@", geomData.envelope.minX];
+                    [resultString appendFormat:@"\nmax x: %@", geomData.envelope.maxX];
+                    [resultString appendFormat:@"\nmin y: %@", geomData.envelope.minY];
+                    [resultString appendFormat:@"\nmax y: %@", geomData.envelope.maxY];
+                    if(geomData.envelope.hasZ){
+                        [resultString appendFormat:@"\nmin z: %@", geomData.envelope.minZ];
+                        [resultString appendFormat:@"\nmax z: %@", geomData.envelope.maxZ];
+                    }
+                    if(geomData.envelope.hasM){
+                        [resultString appendFormat:@"\nmin m: %@", geomData.envelope.minM];
+                        [resultString appendFormat:@"\nmax m: %@", geomData.envelope.maxM];
+                    }
+                }
+                [resultString appendFormat:@"\nWKB Index: %d", geomData.wkbGeometryIndex];
+                if(geomData.geometry != nil){
+                    [resultString appendFormat:@"\nGeometry Type: %u", geomData.geometry.geometryType];
+                }
             }
         }
     }
