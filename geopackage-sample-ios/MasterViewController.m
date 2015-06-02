@@ -11,7 +11,7 @@
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGGeometryColumnsDao.h"
-
+#import "WKBGeometryPrinter.h"
 
 @interface MasterViewController ()
 
@@ -108,7 +108,9 @@
                 }
                 [resultString appendFormat:@"\nWKB Index: %d", geomData.wkbGeometryIndex];
                 if(geomData.geometry != nil){
-                    [resultString appendFormat:@"\nGeometry Type: %u", geomData.geometry.geometryType];
+                    [resultString appendFormat:@"\nGeometry Type Code: %u", geomData.geometry.geometryType];
+                    [resultString appendFormat:@"\nGeometry Type Name: %@", [WKBGeometryTypes name:geomData.geometry.geometryType]];
+                    [resultString appendFormat:@"\n%@", [WKBGeometryPrinter getGeometryString:geomData.geometry]];
                 }
             }
         }
