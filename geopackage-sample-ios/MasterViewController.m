@@ -112,7 +112,36 @@
                     [resultString appendFormat:@"\nGeometry Type Name: %@", [WKBGeometryTypes name:geomData.geometry.geometryType]];
                     [resultString appendFormat:@"\n%@", [WKBGeometryPrinter getGeometryString:geomData.geometry]];
                 }
-            }
+                
+                GPKGFeatureRow * newRow =[featureDao newRow];
+                [newRow setGeometry:geomData];
+                
+                for(NSString * column in featureDao.columns){
+                    GPKGFeatureColumn * userColumn = (GPKGFeatureColumn *)[featureRow getColumnWithColumnName:column];
+                    if(![userColumn isGeometry] && !userColumn.primaryKey){
+                        NSObject * value = [featureRow getValueWithColumnName:column];
+                        [newRow setValueWithColumnName:userColumn.name andValue:value];
+                        
+                        enum GPKGDataType dataType = userColumn.dataType;
+                        if(dataType == GPKG_DT_DATE || dataType == GPKG_DT_DATETIME){
+                            NSDate * date = [NSDate date];
+                            [newRow setValueWithColumnName:userColumn.name andValue:date];
+                        }
+                    }
+                }
+                
+                long long newRowId = [featureDao create:newRow];
+                GPKGFeatureRow * newFeatureRow = (GPKGFeatureRow *)[featureDao queryForIdObject:[NSNumber numberWithLongLong:newRowId]];
+                GPKGGeometryData * newGeomData = [newFeatureRow getGeometry];
+                if(newGeomData != nil){
+                    if(newGeomData.geometry != nil){
+                        NSString * printedGeometry = [WKBGeometryPrinter getGeometryString:newGeomData.geometry];
+                        [resultString appendFormat:@"\nSaved Geometry Type Code: %u", newGeomData.geometry.geometryType];
+                        [resultString appendFormat:@"\nSaved Geometry Type Name: %@", [WKBGeometryTypes name:newGeomData.geometry.geometryType]];
+                        [resultString appendFormat:@"\n%@", printedGeometry];
+                    }
+                }
+            } 
         }
     }
     [allGeometryColumns close];
@@ -131,16 +160,16 @@
     int count = [dao count];
     int count2 = [dao countWhere:[NSString stringWithFormat:@"%@ = 'linestring2d'", GPKG_GC_COLUMN_TABLE_NAME]];
     
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    GPKGColumnValues *columnValues = [[GPKGColumnValues alloc] init];
     GPKGColumnValue *tableNameCV = [[GPKGColumnValue alloc] init];
     tableNameCV.value = @"linestring3d";
-    [dictionary setObject:tableNameCV forKey:GPKG_GC_COLUMN_TABLE_NAME];
+    [columnValues addColumn:GPKG_GC_COLUMN_TABLE_NAME withValue:tableNameCV];
     GPKGColumnValue *zCV = [[GPKGColumnValue alloc] init];
     zCV.value = [NSNumber numberWithInt:1];
     zCV.tolerance = [NSNumber numberWithDouble:0.5];
-    [dictionary setObject:zCV forKey:GPKG_GC_COLUMN_Z];
+    [columnValues addColumn:GPKG_GC_COLUMN_Z withValue:zCV];
 
-    GPKGResultSet *dictionaryResult = [dao queryForColumnValueFieldValues:dictionary];
+    GPKGResultSet *dictionaryResult = [dao queryForColumnValueFieldValues:columnValues];
     GPKGGeometryColumns *geomColumn = nil;
     while([dictionaryResult moveToNext]){
         geomColumn = (GPKGGeometryColumns *)[dao getObject: dictionaryResult];
