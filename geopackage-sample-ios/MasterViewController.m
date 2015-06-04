@@ -72,7 +72,9 @@
         
         GPKGFeatureDao * featureDao = [self.geoPackage getFeatureDaoWithGeometryColumns:geomColumn];
         GPKGResultSet * featureResults = [featureDao queryForAll];
-        while([featureResults moveToNext]){
+        int count = [featureResults count];
+        for(int i = 0; i < count; i++){
+            [featureResults moveToNext];
             GPKGFeatureRow * featureRow = [featureDao getFeatureRow:featureResults];
             int geomColumnIndex = [featureRow getGeometryColumnIndex];
             GPKGFeatureColumn * geomColumn = [featureRow getGeometryColumn];
@@ -143,6 +145,7 @@
                 }
             } 
         }
+        [featureResults close];
     }
     [allGeometryColumns close];
     

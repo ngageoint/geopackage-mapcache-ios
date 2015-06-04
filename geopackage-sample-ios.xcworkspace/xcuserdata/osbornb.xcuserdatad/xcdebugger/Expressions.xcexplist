@@ -18,6 +18,11 @@
       </ContextState>
       <ContextState
          contextName = "-[MasterViewController buttonTapped:]:MasterViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "geomColumn">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[GPKGFeatureRow setGeometry:]:GPKGFeatureRow.m">
