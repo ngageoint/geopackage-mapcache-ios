@@ -37,6 +37,14 @@
          contextName = "-[GPKGGeometryData readFlags:]:GPKGGeometryData.m">
       </ContextState>
       <ContextState
+         contextName = "-[GPKGTableCreator createTable:]:GPKGTableCreator.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[NSBundle bundleForClass:[self class]]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[GPKGGeometryData fromData:]:GPKGGeometryData.m">
          <PersistentStrings>
             <PersistentString

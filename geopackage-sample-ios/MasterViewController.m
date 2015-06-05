@@ -12,6 +12,7 @@
 #import "GPKGGeoPackageManager.h"
 #import "GPKGGeometryColumnsDao.h"
 #import "WKBGeometryPrinter.h"
+#import "GPKGTableCreator.h"
 
 @interface MasterViewController ()
 
