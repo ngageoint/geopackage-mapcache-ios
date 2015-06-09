@@ -26,7 +26,8 @@
     [super viewDidLoad];
     
     GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory getManager];
-    self.geoPackage = [manager open:@"TestName"];
+    NSString *filePath  = [[[NSBundle bundleForClass:[MasterViewController class]] resourcePath] stringByAppendingPathComponent:@"gdal_sample.gpkg"];
+    self.geoPackage = [manager open:filePath];
 
 }
 
