@@ -26,8 +26,12 @@
     [super viewDidLoad];
     
     GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory getManager];
-    NSString *filePath  = [[[NSBundle bundleForClass:[MasterViewController class]] resourcePath] stringByAppendingPathComponent:@"gdal_sample.gpkg"];
-    self.geoPackage = [manager open:filePath];
+    NSString * file = @"gdal_sample.gpkg";
+    NSString * databaseName = [file stringByDeletingPathExtension];
+    [manager delete:databaseName];
+    NSString *filePath  = [[[NSBundle bundleForClass:[MasterViewController class]] resourcePath] stringByAppendingPathComponent:file];
+    BOOL created = [manager importGeoPackageFromPath:filePath andDatabase:databaseName];
+    self.geoPackage = [manager open:databaseName];
 
 }
 
@@ -223,6 +227,8 @@
     [resultString appendString:@"\n\n"];
     [resultString appendFormat:@"New Count: %d", allGeometryColumns.count];
     [allGeometryColumns close];
+    
+    [self.geoPackage createMetadataTable];
     
     self.resultText.text = resultString;
     
