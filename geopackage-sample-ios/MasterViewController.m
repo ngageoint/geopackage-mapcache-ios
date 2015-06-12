@@ -44,6 +44,25 @@
     
     NSMutableString *resultString = [NSMutableString string];
     
+    GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory getManager];
+    BOOL exists = [manager exists:self.geoPackage.name];
+    [resultString appendFormat:@"GeoPackage Exists: %d", exists];
+    int size = [manager size: self.geoPackage.name];
+    [resultString appendFormat:@"\nGeoPackage Size: %d", size];
+    NSString * sizeString = [manager readableSize:self.geoPackage.name];
+    [resultString appendFormat:@"\nGeoPackage Readable Size: %@", sizeString];
+    NSString * copyName = @"temp";
+    [manager copy:self.geoPackage.name to:copyName];
+    BOOL copyExists = [manager exists:copyName];
+    [resultString appendFormat:@"\nCopy Exists: %d", copyExists];
+    NSString * copyName2 = @"another";
+    [manager rename:copyName to:copyName2];
+    copyExists = [manager exists:copyName];
+    BOOL renameExists = [manager exists:copyName2];
+    [resultString appendFormat:@"\nRename Exists: %d, Original Exists: %d", renameExists, copyExists];
+    [manager delete:copyName2];
+    [resultString appendString:@"\n"];
+    
     NSArray *featureTables = [self.geoPackage getFeatureTables];
     for (NSString *featureTable in featureTables) {
         [resultString appendString:@"\n"];
