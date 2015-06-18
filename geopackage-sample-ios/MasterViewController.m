@@ -13,6 +13,7 @@
 #import "GPKGGeometryColumnsDao.h"
 #import "WKBGeometryPrinter.h"
 #import "GPKGTableCreator.h"
+#import "GPKGUrlTileGenerator.h"
 
 @interface MasterViewController ()
 
@@ -249,12 +250,23 @@
     
     [self.geoPackage createMetadataTable];
     
-    self.resultText.text = resultString;
-    
     [dao dropTable];
     
     tableExists = [dao tableExists];
     
+    NSString * url = @"http://osm.geointapps.org/osm/{z}/{x}/{y}.png";
+    GPKGUrlTileGenerator * urlTileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:self.geoPackage andTableName:@"gen_test" andTileUrl:url andMinZoom:0 andMaxZoom:1];
+    int tilesGenerated = [urlTileGenerator generateTiles];
+    [resultString appendString:@"\n\n"];
+    [resultString appendFormat:@"Tiles Generated: %d", tilesGenerated];
+    
+    url = @"http://nowcoast.noaa.gov/wms/com.esri.wms.Esrimap/obs?service=wms%26version=1.1.1%26request=GetMap%26format=jpeg%26BBOX={minLon},{minLat},{maxLon},{maxLat}%26SRS=EPSG:4326%26width=256%26height=256%26Layers=world_countries,RAS_GOES,RAS_RIDGE_NEXRAD";
+    GPKGUrlTileGenerator * urlTileGenerator2 = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:self.geoPackage andTableName:@"gen_test2" andTileUrl:url andMinZoom:0 andMaxZoom:1];
+    int tilesGenerated2 = [urlTileGenerator2 generateTiles];
+    [resultString appendString:@"\n\n"];
+    [resultString appendFormat:@"Tiles Generated2: %d", tilesGenerated2];
+    
+    self.resultText.text = resultString;
 }
 
 @end

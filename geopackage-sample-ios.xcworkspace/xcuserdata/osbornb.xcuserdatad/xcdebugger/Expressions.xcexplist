@@ -3,7 +3,7 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[GPKGGeometryData toData]:GPKGGeometryData.m">
+         contextName = "-[GPKGGeometryData readFlags:]:GPKGGeometryData.m">
       </ContextState>
       <ContextState
          contextName = "+[GPKGSqlUtils insertWithDatabase:andStatement:]:GPKGSqlUtils.m">
@@ -14,7 +14,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[WKBByteReader readInt]:WKBByteReader.m">
+         contextName = "-[GPKGUserDao table]:GPKGUserDao.h">
       </ContextState>
       <ContextState
          contextName = "-[MasterViewController buttonTapped:]:MasterViewController.m">
@@ -25,24 +25,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[GPKGFeatureRow setGeometry:]:GPKGFeatureRow.m">
-      </ContextState>
-      <ContextState
          contextName = "-[GPKGFeatureDao newRow]:GPKGFeatureDao.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[WKBByteReader readDouble]:WKBByteReader.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[GPKGGeometryData readFlags:]:GPKGGeometryData.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[GPKGTableCreator createTable:]:GPKGTableCreator.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "[NSBundle bundleForClass:[self class]]">
-            </PersistentString>
-         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[GPKGGeometryData fromData:]:GPKGGeometryData.m">
@@ -53,7 +36,40 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[GPKGUserDao table]:GPKGUserDao.h">
+         contextName = "-[GPKGTileGenerator generateTiles]:GPKGTileGenerator.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[tileMatrixSetDao idExists:self.tableName]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGGeometryData toData]:GPKGGeometryData.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[WKBByteReader readInt]:WKBByteReader.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGUrlTileGenerator replaceXYZWithUrl:andZ:andX:andY:]:GPKGUrlTileGenerator.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[GPKGProperties getValueOfBaseProperty:GPKG_PROP_TILE_GENERATOR_VARIABLE andProperty:GPKG_PROP_TILE_GENERATOR_VARIABLE_Z]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[WKBByteReader readDouble]:WKBByteReader.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGFeatureRow setGeometry:]:GPKGFeatureRow.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGTableCreator createTable:]:GPKGTableCreator.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[NSBundle bundleForClass:[self class]]">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
    </ContextStates>
 </VariablesViewState>
