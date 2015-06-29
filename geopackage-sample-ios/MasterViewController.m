@@ -27,6 +27,7 @@
     [super viewDidLoad];
     
     GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory getManager];
+    //[manager deleteAll];
     NSString * file = @"gdal_sample.gpkg";
     NSString * databaseName = [file stringByDeletingPathExtension];
     [manager delete:databaseName];

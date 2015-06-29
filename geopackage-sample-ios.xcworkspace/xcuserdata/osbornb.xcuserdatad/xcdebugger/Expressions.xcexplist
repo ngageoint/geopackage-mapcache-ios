@@ -17,6 +17,14 @@
          contextName = "-[GPKGUserDao table]:GPKGUserDao.h">
       </ContextState>
       <ContextState
+         contextName = "-[GPKGGeoPackageManager importGeoPackageFromPath:andDatabase:inDirectory:]:GPKGGeoPackageManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[fileManager isReadableFileAtPath:@&quot;/Users/osbornb/Library/Developer/CoreSimulator/Devices/04FC32B1-FEA3-4CBC-A680-46119B4889EB/data/Containers/Data/Application/39441EF0-08DE-4F68-A7AE-85E937D5501F/Documents/geopackage/metadata&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MasterViewController buttonTapped:]:MasterViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -40,6 +48,17 @@
          <PersistentStrings>
             <PersistentString
                value = "[tileMatrixSetDao idExists:self.tableName]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGGeoPackageManager copy:to:andSameDirectory:]:GPKGGeoPackageManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[fileManager isReadableFileAtPath:@&quot;/Users/osbornb/Library/Developer/CoreSimulator/Devices/04FC32B1-FEA3-4CBC-A680-46119B4889EB/data/Containers/Data/Application/5B2F4745-B2AC-4A88-A304-5CED89629ED2/Documents/geopackage/db/temp.gpkg&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "[fileManager isReadableFileAtPath:documentsPath]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
