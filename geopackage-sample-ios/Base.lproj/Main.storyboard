@@ -31,10 +31,10 @@
             </objects>
             <point key="canvasLocation" x="-113" y="-675"/>
         </scene>
-        <!--Test-->
+        <!--TestViewController-->
         <scene sceneID="bER-Ej-MZc">
             <objects>
-                <viewController id="uVC-ti-xMX" customClass="MasterViewController" sceneMemberID="viewController">
+                <viewController title="TestViewController" id="uVC-ti-xMX" customClass="MasterViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="VHJ-MJ-WrJ"/>
                         <viewControllerLayoutGuide type="bottom" id="bnv-i3-uS9"/>
@@ -203,54 +203,74 @@
             </objects>
             <point key="canvasLocation" x="2494" y="-1415"/>
         </scene>
-        <!--Root View Controller-->
-        <scene sceneID="nMe-V3-luH">
+        <!--MapViewController-->
+        <scene sceneID="gC6-Wh-fym">
             <objects>
-                <tableViewController id="aIv-Uj-Lal" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="vcI-l8-i2V">
+                <viewController title="MapViewController" id="8Zz-7e-1So" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pva-TU-9mq"/>
+                        <viewControllerLayoutGuide type="bottom" id="ZJ4-ER-8lG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cxh-GH-L9i">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="au6-Jg-Q0b">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </mapView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="ZAy-4K-G94">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZAy-4K-G94" id="CzT-HZ-ODp">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="aIv-Uj-Lal" id="yKA-na-X3K"/>
-                            <outlet property="delegate" destination="aIv-Uj-Lal" id="o6s-mv-vTB"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="e1v-8f-zL7"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="FY6-tz-Xr3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <constraints>
+                            <constraint firstItem="au6-Jg-Q0b" firstAttribute="bottom" secondItem="ZJ4-ER-8lG" secondAttribute="top" id="Etr-TW-ohs"/>
+                            <constraint firstAttribute="trailing" secondItem="au6-Jg-Q0b" secondAttribute="trailing" id="F7S-Ek-Mgd"/>
+                            <constraint firstItem="au6-Jg-Q0b" firstAttribute="leading" secondItem="cxh-GH-L9i" secondAttribute="leading" id="PSY-c5-f66"/>
+                            <constraint firstItem="au6-Jg-Q0b" firstAttribute="top" secondItem="cxh-GH-L9i" secondAttribute="top" id="nvW-Zn-7il"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Map" id="KJg-QM-9MI">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="VnM-5H-lOL">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="b8V-M5-0ad">
+                                <rect key="frame" x="16" y="7" width="143" height="88"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="Menu">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="handleButton:" destination="A5c-hd-Yyl" eventType="touchUpInside" id="Z6r-UY-UUp"/>
+                                </connections>
+                            </button>
+                            <connections>
+                                <action selector="handleButton:" destination="A5c-hd-Yyl" id="nPw-N7-e9X"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oVD-8B-yJy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="A5c-hd-Yyl" customClass="GPKGButtonHandler"/>
             </objects>
             <point key="canvasLocation" x="2494" y="-675"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--MapNavigationController-->
         <scene sceneID="BLD-hm-Bhf">
             <objects>
-                <navigationController id="Ba9-aI-DSn" sceneMemberID="viewController">
+                <navigationController title="MapNavigationController" id="Ba9-aI-DSn" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Hfz-PC-JsM">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="aIv-Uj-Lal" kind="relationship" relationship="rootViewController" id="OX9-e2-i3e"/>
+                        <segue destination="8Zz-7e-1So" kind="relationship" relationship="rootViewController" id="HKA-Ei-7bv"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jBp-Px-DQe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1683" y="-675"/>
         </scene>
-        <!--Test-->
+        <!--TestNavigationController-->
         <scene sceneID="FgX-f1-Ow9">
             <objects>
-                <navigationController title="Test" id="jx8-0s-rMZ" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" backIndicatorImage="Image" id="VGR-Mu-JWu">
+                <navigationController title="TestNavigationController" id="jx8-0s-rMZ" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VGR-Mu-JWu">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -265,10 +285,10 @@
             </objects>
             <point key="canvasLocation" x="1683" y="101"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--ManagerNavigationController-->
         <scene sceneID="xjP-XG-uVu">
             <objects>
-                <navigationController id="9n8-Pb-zIz" sceneMemberID="viewController">
+                <navigationController title="ManagerNavigationController" id="9n8-Pb-zIz" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="GHD-mV-4pY">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -283,7 +303,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Image" width="88" height="88"/>
         <image name="Menu" width="88" height="88"/>
     </resources>
 </document>
