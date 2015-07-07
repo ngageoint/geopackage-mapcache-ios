@@ -64,7 +64,7 @@
             <objects>
                 <tabBarController title="SampleTableBarController" id="FVL-0R-8qQ" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="WC8-j2-MD9">
+                    <tabBar key="tabBar" contentMode="scaleAspectFit" id="WC8-j2-MD9">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -121,23 +121,30 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="More" translatesAutoresizingMaskIntoConstraints="NO" id="ZEU-VZ-Gk0" userLabel="Options">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AW4-6G-xP2" userLabel="OptionsButton" customClass="GPKGSDatabaseOptionsButton">
                                                     <rect key="frame" x="558" y="6" width="34" height="32"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="32" id="AM7-0c-3nB"/>
-                                                        <constraint firstAttribute="width" constant="34" id="qXb-aa-UV9"/>
+                                                        <constraint firstAttribute="height" constant="32" id="Nuc-qs-vbX"/>
+                                                        <constraint firstAttribute="width" constant="34" id="tRw-G3-hDu"/>
                                                     </constraints>
-                                                </imageView>
+                                                    <state key="normal" image="More">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="databaseOptions:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="5f4-PR-XVY"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="ZEU-VZ-Gk0" firstAttribute="trailing" secondItem="xJ3-GB-v3X" secondAttribute="trailingMargin" id="O4w-EE-Ebc"/>
-                                                <constraint firstAttribute="centerY" secondItem="ZEU-VZ-Gk0" secondAttribute="centerY" constant="-0.5" id="RxV-Oi-jm3"/>
+                                                <constraint firstItem="AW4-6G-xP2" firstAttribute="trailing" secondItem="xJ3-GB-v3X" secondAttribute="trailingMargin" id="6sJ-3H-GDI"/>
+                                                <constraint firstAttribute="centerY" secondItem="AW4-6G-xP2" secondAttribute="centerY" id="TrD-J0-8tf"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.80000001192092896" green="0.80000001192092896" blue="0.80000001192092896" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <outlet property="database" destination="asP-M1-EOw" id="zzt-Vw-66U"/>
                                             <outlet property="expandImage" destination="Sqo-wc-Gcd" id="ztM-z4-Bhv"/>
+                                            <outlet property="optionsButton" destination="AW4-6G-xP2" id="pnt-M3-BX7"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GeoPackageTableCell" id="ryS-kE-6fk" customClass="GPKGSTableCell">
@@ -146,8 +153,11 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ryS-kE-6fk" id="GPZ-KS-nY6">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YE8-aA-r1h">
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YE8-aA-r1h" customClass="GPKGSActiveTableSwitch">
                                                     <rect key="frame" x="8" y="6" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="tableActiveChanged:" destination="0EV-Hx-RDM" eventType="valueChanged" id="21H-uY-5OJ"/>
+                                                    </connections>
                                                 </switch>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Geometry" translatesAutoresizingMaskIntoConstraints="NO" id="5qY-ko-fnp" userLabel="TableType">
                                                     <rect key="frame" x="65" y="0.0" width="36" height="43"/>
@@ -158,12 +168,14 @@
                                                 </imageView>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="GeoPackage Table" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p1E-p4-Jrt">
                                                     <rect key="frame" x="116" y="0.0" width="351" height="43"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="(Count)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hdD-c1-2w5" userLabel="Count">
                                                     <rect key="frame" x="475" y="0.0" width="68" height="43"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -187,6 +199,7 @@
                                                 <constraint firstItem="YE8-aA-r1h" firstAttribute="trailing" secondItem="5qY-ko-fnp" secondAttribute="trailing" constant="-44" id="xXY-AC-37t"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.40000000596046448" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <outlet property="active" destination="YE8-aA-r1h" id="mbJ-sZ-aPL"/>
                                             <outlet property="count" destination="hdD-c1-2w5" id="RfY-Q2-YW7"/>

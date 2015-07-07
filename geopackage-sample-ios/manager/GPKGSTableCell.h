@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GPKGSActiveTableSwitch.h"
 
 @interface GPKGSTableCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UISwitch *active;
+@property (weak, nonatomic) IBOutlet GPKGSActiveTableSwitch *active;
 @property (weak, nonatomic) IBOutlet UIImageView *tableType;
 @property (nonatomic, strong) IBOutlet UILabel *tableName;
 @property (weak, nonatomic) IBOutlet UILabel *count;

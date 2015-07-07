@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>icon_geometry</key>
+	<string>Geometry</string>
+	<key>icon_point</key>
+	<string>Point</string>
+	<key>icon_linestring</key>
+	<string>Linestring</string>
+	<key>icon_polygon</key>
+	<string>Polygon</string>
+	<key>icon_tiles</key>
+	<string>Tiles</string>
+	<key>icon_paint</key>
+	<string>Paint</string>
+	<key>icon_up</key>
+	<string>Up</string>
+	<key>icon_down</key>
+	<string>Down</string>
+	<key>cancel_label</key>
+	<string>Cancel</string>
+	<key>geopackage_view_label</key>
+	<string>View</string>
+	<key>geopackage_delete_label</key>
+	<string>Delete</string>
+	<key>geopackage_rename_label</key>
+	<string>Rename</string>
+	<key>geopackage_copy_label</key>
+	<string>Copy</string>
+	<key>geopackage_export_label</key>
+	<string>Export</string>
+	<key>geopackage_share_label</key>
+	<string>Share</string>
+	<key>geopackage_create_features_label</key>
+	<string>Create Features</string>
+	<key>geopackage_create_tiles_label</key>
+	<string>Create Tiles</string>
+</dict>
+</plist>

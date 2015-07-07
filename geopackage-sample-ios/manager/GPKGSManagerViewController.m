@@ -14,6 +14,8 @@
 #import "GPKGSTableCell.h"
 #import "GPKGSDatabaseCell.h"
 #import "GPKGSConstants.h"
+#import "GPKGSActiveTableSwitch.h"
+#import "GPKGSProperties.h"
 
 @interface GPKGSManagerViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -25,6 +27,8 @@
 @end
 
 @implementation GPKGSManagerViewController
+
+#define TAG_DATABASE_OPTIONS 1
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -112,8 +116,9 @@
         GPKGSDatabaseCell * dbCell = (GPKGSDatabaseCell *) cell;
         GPKGSDatabase * database = (GPKGSDatabase *) cellObject;
         [dbCell.database setText:database.name];
-        NSString *expandImage = database.expanded ? GPKGS_ICON_UP : GPKGS_ICON_DOWN;
+        NSString *expandImage = database.expanded ? [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_UP] : [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_DOWN];
         [dbCell.expandImage setImage:[UIImage imageNamed:expandImage]];
+        [dbCell.optionsButton setDatabase:database];
     }else{
         cell = [tableView dequeueReusableCellWithIdentifier:GPKGS_CELL_TABLE forIndexPath:indexPath];
         GPKGSTableCell * tableCell = (GPKGSTableCell *) cell;
@@ -121,12 +126,12 @@
         NSString * typeImage = nil;
         if([cellObject isKindOfClass:[GPKGSFeatureTable class]]){
             GPKGSFeatureTable * featureTable = (GPKGSFeatureTable *) cellObject;
-            typeImage = GPKGS_ICON_GEOMETRY;
+            typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
             if(featureTable.geometryType != WKB_NONE){
                 switch(featureTable.geometryType){
                     case WKB_POINT:
                     case WKB_MULTIPOINT:
-                        typeImage = GPKGS_ICON_POINT;
+                        typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_POINT];
                         break;
                     case WKB_LINESTRING:
                     case WKB_MULTILINESTRING:
@@ -134,7 +139,7 @@
                     case WKB_COMPOUNDCURVE:
                     case WKB_CIRCULARSTRING:
                     case WKB_MULTICURVE:
-                        typeImage = GPKGS_ICON_LINESTRING;
+                        typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_LINESTRING];
                         break;
                     case WKB_POLYGON:
                     case WKB_SURFACE:
@@ -144,19 +149,19 @@
                     case WKB_TIN:
                     case WKB_MULTIPOLYGON:
                     case WKB_MULTISURFACE:
-                        typeImage = GPKGS_ICON_POLYGON;
+                        typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_POLYGON];
                         break;
                     case WKB_GEOMETRY:
                     case WKB_GEOMETRYCOLLECTION:
                     case WKB_NONE:
-                        typeImage = GPKGS_ICON_GEOMETRY;
+                        typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
                         break;
                 }
             }
         }else if([cellObject isKindOfClass:[GPKGSTileTable class]]){
-            typeImage = GPKGS_ICON_TILES;
+            typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_TILES];
         } else{
-            typeImage = GPKGS_ICON_PAINT;
+            typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_PAINT];
         }
         tableCell.active.on = table.active;
         if(typeImage != nil){
@@ -164,6 +169,7 @@
         }
         [tableCell.tableName setText:table.name];
         [tableCell.count setText:[NSString stringWithFormat:@"(%d)", table.count]];
+        [tableCell.active setTable:table];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
@@ -200,6 +206,85 @@
     database.expanded = !database.expanded;
     
     [self.tableView reloadData];
+}
+
+- (IBAction)tableActiveChanged:(GPKGSActiveTableSwitch *)sender {
+    GPKGSTable * table = sender.table;
+    table.active = sender.on;
+}
+
+
+
+- (IBAction)databaseOptions:(GPKGSDatabaseOptionsButton *)sender {
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:sender.database.name
+                          message:nil
+                          delegate:self
+                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_VIEW_LABEL],
+                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_DELETE_LABEL],
+                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL],
+                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL],
+                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_EXPORT_LABEL],
+                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_SHARE_LABEL],
+                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL],
+                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL],
+                          nil];
+    alert.tag = TAG_DATABASE_OPTIONS;
+    [alert show];
+}
+
+-(void)alertView:(UIAlertView *)alertView
+clickedButtonAtIndex:(NSInteger)buttonIndex {
+
+    switch(alertView.tag){
+            
+        case TAG_DATABASE_OPTIONS:
+            if(buttonIndex > 0){
+                switch (buttonIndex) {
+                    case 1:
+                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_VIEW_LABEL]];
+                        break;
+                    case 2:
+                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_DELETE_LABEL]];
+                        break;
+                    case 3:
+                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]];
+                        break;
+                    case 4:
+                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL]];
+                        break;
+                    case 5:
+                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_EXPORT_LABEL]];
+                        break;
+                    case 6:
+                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_SHARE_LABEL]];
+                        break;
+                    case 7:
+                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL]];
+                        break;
+                    case 8:
+                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
+                        break;
+                    default:
+                        break;
+                }
+            }
+            break;
+            
+    }
+}
+
+// TODO delete when no longer used
+-(void) todoAlert: (NSString *) name{
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:[NSString stringWithFormat:@"TODO: %@", name]
+                          message:nil
+                          delegate:self
+                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          otherButtonTitles:
+                          nil];
+    [alert show];
 }
 
 @end
