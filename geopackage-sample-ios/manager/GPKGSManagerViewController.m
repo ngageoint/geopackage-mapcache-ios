@@ -7,6 +7,7 @@
 //
 
 #import "GPKGSManagerViewController.h"
+#import <objc/runtime.h>
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGSFeatureTable.h"
 #import "GPKGSTileTable.h"
@@ -16,6 +17,8 @@
 #import "GPKGSConstants.h"
 #import "GPKGSActiveTableSwitch.h"
 #import "GPKGSProperties.h"
+
+const char ConstantKey;
 
 @interface GPKGSManagerViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -29,6 +32,7 @@
 @implementation GPKGSManagerViewController
 
 #define TAG_DATABASE_OPTIONS 1
+#define TAG_TABLE_OPTIONS 2
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -170,6 +174,7 @@
         [tableCell.tableName setText:table.name];
         [tableCell.count setText:[NSString stringWithFormat:@"(%d)", table.count]];
         [tableCell.active setTable:table];
+        [tableCell.optionsButton setTable:table];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
@@ -213,8 +218,6 @@
     table.active = sender.on;
 }
 
-
-
 - (IBAction)databaseOptions:(GPKGSDatabaseOptionsButton *)sender {
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle:sender.database.name
@@ -231,6 +234,47 @@
                           [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL],
                           nil];
     alert.tag = TAG_DATABASE_OPTIONS;
+    [alert show];
+}
+
+- (IBAction)tableOptions:(GPKGSTableOptionsButton *)sender {
+    
+    NSMutableArray * options = [[NSMutableArray alloc] init];
+    [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_VIEW_LABEL]];
+    [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_EDIT_LABEL]];
+    [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL]];
+    
+    switch([sender.table getType]){
+        case GPKGS_TT_FEATURE:
+            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_LABEL]];
+            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]];
+            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL]];
+            break;
+        case GPKGS_TT_TILE:
+            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
+            break;
+        case GPKGS_TT_FEATURE_OVERLAY:
+            break;
+        default:
+            [NSException raise:@"Unsupported" format:@"Unsupported table type: %@", [GPKGSTableTypes name:sender.table.getType]];
+    }
+    
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:sender.table.name
+                          message:nil
+                          delegate:self
+                          cancelButtonTitle:nil
+                          otherButtonTitles:nil];
+                          
+    for (NSString *option in options) {
+        [alert addButtonWithTitle:option];
+    }
+    alert.cancelButtonIndex = [alert addButtonWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
+                          
+    alert.tag = TAG_TABLE_OPTIONS;
+    
+    objc_setAssociatedObject(alert, &ConstantKey, sender.table, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
     [alert show];
 }
 
@@ -270,6 +314,74 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
                         break;
                 }
             }
+            break;
+        case TAG_TABLE_OPTIONS:
+            
+            if(buttonIndex >= 0){
+                
+                GPKGSTable *table = objc_getAssociatedObject(alertView, &ConstantKey);
+                switch(buttonIndex){
+                    case 0:
+                        switch([table getType]){
+                            case GPKGS_TT_FEATURE:
+                            case GPKGS_TT_TILE:
+                            case GPKGS_TT_FEATURE_OVERLAY:
+                                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_VIEW_LABEL]];
+                                break;
+                        }
+                        break;
+                    case 1:
+                        switch([table getType]){
+                            case GPKGS_TT_FEATURE:
+                            case GPKGS_TT_TILE:
+                                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_EDIT_LABEL]];
+                                break;
+                            case GPKGS_TT_FEATURE_OVERLAY:
+                                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_EDIT_LABEL]];
+                                break;
+                        }
+                        break;
+                    case 2:
+                        switch([table getType]){
+                            case GPKGS_TT_FEATURE:
+                            case GPKGS_TT_TILE:
+                                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL]];
+                                break;
+                            case GPKGS_TT_FEATURE_OVERLAY:
+                                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL]];
+                                break;
+                        }
+                        break;
+                    case 3:
+                        switch([table getType]){
+                            case GPKGS_TT_FEATURE:
+                                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_LABEL]];
+                                break;
+                            case GPKGS_TT_TILE:
+                                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
+                                break;
+                        }
+                        break;
+                    case 4:
+                        switch([table getType]){
+                            case GPKGS_TT_FEATURE:
+                                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]];
+                                break;
+                        }
+                        break;
+                    case 5:
+                        switch([table getType]){
+                            case GPKGS_TT_FEATURE:
+                                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL]];
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            
+            }
+    
             break;
             
     }

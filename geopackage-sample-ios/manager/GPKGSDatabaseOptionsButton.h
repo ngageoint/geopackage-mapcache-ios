@@ -12,5 +12,6 @@
 @interface GPKGSDatabaseOptionsButton : UIButton
 
 @property (nonatomic, strong) GPKGSDatabase * database;
+
 @end
 

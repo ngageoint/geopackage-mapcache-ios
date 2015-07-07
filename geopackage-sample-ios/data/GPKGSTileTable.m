@@ -11,7 +11,6 @@
 @implementation GPKGSTileTable
 
 -(enum GPKGSTableType) getType{
-    [self doesNotRecognizeSelector:_cmd];
     return GPKGS_TT_TILE;
 }
 
