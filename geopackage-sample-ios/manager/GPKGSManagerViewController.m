@@ -399,4 +399,24 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
     [alert show];
 }
 
+- (IBAction)downloadFile:(id)sender {
+    //TODO
+    [self todoAlert: @"Download File"];
+}
+
+- (IBAction)importFile:(id)sender {
+    //TODO
+    [self todoAlert: @"Import File"];
+}
+
+- (IBAction)create:(id)sender {
+    // TODO
+    [self todoAlert: @"Create File"];
+}
+
+- (IBAction)clearActive:(id)sender {
+    // TODO
+    [self todoAlert: @"Clear Active"];
+}
+
 @end
