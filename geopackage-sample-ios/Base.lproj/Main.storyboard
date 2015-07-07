@@ -102,27 +102,42 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </toolbar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Ib2-gQ-Kk3" userLabel="ManagerTableView">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Ib2-gQ-Kk3" userLabel="ManagerTableView">
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GeoPackageCell" textLabel="RLC-J2-Ttv" style="IBUITableViewCellStyleDefault" id="dpR-Hz-jsX" customClass="GPKGCell">
-                                        <rect key="frame" x="0.0" y="278" width="600" height="44"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dpR-Hz-jsX" id="uGm-gg-tdu">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GeoPackageCell" id="YTV-a6-Q7P" customClass="GPKGCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YTV-a6-Q7P" id="xJ3-GB-v3X">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="GeoPackage" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="RLC-J2-Ttv">
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Down" translatesAutoresizingMaskIntoConstraints="NO" id="Sqo-wc-Gcd" userLabel="Expand">
+                                                    <rect key="frame" x="24" y="11" width="16" height="21"/>
+                                                </imageView>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" fixedFrame="YES" text="GeoPackage" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="asP-M1-EOw">
+                                                    <rect key="frame" x="69" y="-2" width="472" height="43"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="More" translatesAutoresizingMaskIntoConstraints="NO" id="ZEU-VZ-Gk0" userLabel="Options">
+                                                    <rect key="frame" x="558" y="6" width="34" height="32"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="32" id="AM7-0c-3nB"/>
+                                                        <constraint firstAttribute="width" constant="34" id="qXb-aa-UV9"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.80000001192092896" green="0.80000001192092896" blue="0.80000001192092896" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstItem="ZEU-VZ-Gk0" firstAttribute="trailing" secondItem="xJ3-GB-v3X" secondAttribute="trailingMargin" id="O4w-EE-Ebc"/>
+                                                <constraint firstAttribute="centerY" secondItem="ZEU-VZ-Gk0" secondAttribute="centerY" constant="-0.5" id="RxV-Oi-jm3"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.80000001192092896" green="0.80000001192092896" blue="0.80000001192092896" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
-                                            <outlet property="database" destination="RLC-J2-Ttv" id="jEe-bB-RyX"/>
+                                            <outlet property="database" destination="asP-M1-EOw" id="zzt-Vw-66U"/>
+                                            <outlet property="expandImage" destination="Sqo-wc-Gcd" id="ztM-z4-Bhv"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GeoPackageTableCell" id="ryS-kE-6fk" customClass="GPKGTableCell">
@@ -131,16 +146,52 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ryS-kE-6fk" id="GPZ-KS-nY6">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YE8-aA-r1h">
+                                                    <rect key="frame" x="8" y="6" width="51" height="31"/>
+                                                </switch>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Geometry" translatesAutoresizingMaskIntoConstraints="NO" id="5qY-ko-fnp" userLabel="TableType">
+                                                    <rect key="frame" x="65" y="0.0" width="36" height="43"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="43" id="0Zd-kN-dQF"/>
+                                                        <constraint firstAttribute="width" constant="36" id="htW-FP-tRs"/>
+                                                    </constraints>
+                                                </imageView>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="GeoPackage Table" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p1E-p4-Jrt">
-                                                    <rect key="frame" x="38" y="0.0" width="562" height="43"/>
+                                                    <rect key="frame" x="116" y="0.0" width="351" height="43"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="(Count)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hdD-c1-2w5" userLabel="Count">
+                                                    <rect key="frame" x="475" y="0.0" width="68" height="43"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="More" translatesAutoresizingMaskIntoConstraints="NO" id="vb3-4U-aKW" userLabel="Options">
+                                                    <rect key="frame" x="558" y="6" width="34" height="32"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="32" id="OMz-LV-xIb"/>
+                                                        <constraint firstAttribute="width" constant="34" id="vw1-o3-CPe"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerY" secondItem="hdD-c1-2w5" secondAttribute="centerY" id="Af4-M3-gUj"/>
+                                                <constraint firstItem="vb3-4U-aKW" firstAttribute="top" secondItem="GPZ-KS-nY6" secondAttribute="top" id="EC0-8e-QHa"/>
+                                                <constraint firstAttribute="centerY" secondItem="5qY-ko-fnp" secondAttribute="centerY" id="IgX-Am-S48"/>
+                                                <constraint firstItem="YE8-aA-r1h" firstAttribute="leading" secondItem="GPZ-KS-nY6" secondAttribute="leadingMargin" id="dLZ-Nu-K3g"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="vb3-4U-aKW" secondAttribute="trailing" id="krZ-yo-75L"/>
+                                                <constraint firstAttribute="centerY" secondItem="YE8-aA-r1h" secondAttribute="centerY" id="pod-aR-d4l"/>
+                                                <constraint firstItem="vb3-4U-aKW" firstAttribute="leading" secondItem="hdD-c1-2w5" secondAttribute="leading" constant="76" id="wvr-J1-8cb"/>
+                                                <constraint firstItem="YE8-aA-r1h" firstAttribute="trailing" secondItem="5qY-ko-fnp" secondAttribute="trailing" constant="-44" id="xXY-AC-37t"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="active" destination="YE8-aA-r1h" id="mbJ-sZ-aPL"/>
+                                            <outlet property="count" destination="hdD-c1-2w5" id="RfY-Q2-YW7"/>
                                             <outlet property="tableName" destination="p1E-p4-Jrt" id="16d-9T-SZb"/>
+                                            <outlet property="tableType" destination="5qY-ko-fnp" id="Xgx-xN-san"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -151,6 +202,12 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Ib2-gQ-Kk3" firstAttribute="top" secondItem="wdX-Xk-Kch" secondAttribute="bottom" constant="44" id="Gdq-PQ-els"/>
+                            <constraint firstAttribute="trailing" secondItem="Ib2-gQ-Kk3" secondAttribute="trailing" id="Ue2-GA-Ah2"/>
+                            <constraint firstItem="Y3h-Uo-8mi" firstAttribute="top" secondItem="Ib2-gQ-Kk3" secondAttribute="bottom" id="ye1-xl-g1t"/>
+                            <constraint firstItem="Ib2-gQ-Kk3" firstAttribute="leading" secondItem="zog-nx-nXR" secondAttribute="leading" id="zlW-2U-K87"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Manager" id="ZWT-Iv-7Qm"/>
                     <connections>
@@ -222,8 +279,11 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Down" width="50" height="50"/>
+        <image name="Geometry" width="108" height="108"/>
         <image name="Manager" width="35" height="35"/>
         <image name="Map" width="35" height="35"/>
         <image name="Menu" width="88" height="88"/>
+        <image name="More" width="50" height="50"/>
     </resources>
 </document>

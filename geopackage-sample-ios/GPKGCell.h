@@ -11,5 +11,6 @@
 @interface GPKGCell : UITableViewCell
 
 @property (nonatomic, strong) IBOutlet UILabel *database;
+@property (weak, nonatomic) IBOutlet UIImageView *expandImage;
 
 @end

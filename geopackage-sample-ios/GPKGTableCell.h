@@ -10,6 +10,9 @@
 
 @interface GPKGTableCell : UITableViewCell
 
+@property (weak, nonatomic) IBOutlet UISwitch *active;
+@property (weak, nonatomic) IBOutlet UIImageView *tableType;
 @property (nonatomic, strong) IBOutlet UILabel *tableName;
+@property (weak, nonatomic) IBOutlet UILabel *count;
 
 @end
