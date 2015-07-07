@@ -111,21 +111,60 @@
         GPKGCell * dbCell = (GPKGCell *) cell;
         GPKGSDatabase * database = (GPKGSDatabase *) cellObject;
         [dbCell.database setText:database.name];
+        NSString *expandImage = database.expanded ? @"Up" : @"Down";
+        [dbCell.expandImage setImage:[UIImage imageNamed:expandImage]];
     }else{
         cell = [tableView dequeueReusableCellWithIdentifier:@"GeoPackageTableCell" forIndexPath:indexPath];
         GPKGTableCell * tableCell = (GPKGTableCell *) cell;
         GPKGSTable * table = (GPKGSTable *) cellObject;
+        NSString * typeImage = nil;
         if([cellObject isKindOfClass:[GPKGSFeatureTable class]]){
             GPKGSFeatureTable * featureTable = (GPKGSFeatureTable *) cellObject;
-            // TODO
+            typeImage = @"Geometry";
+            if(featureTable.geometryType != WKB_NONE){
+                switch(featureTable.geometryType){
+                    case WKB_POINT:
+                    case WKB_MULTIPOINT:
+                        typeImage = @"Point";
+                        break;
+                    case WKB_LINESTRING:
+                    case WKB_MULTILINESTRING:
+                    case WKB_CURVE:
+                    case WKB_COMPOUNDCURVE:
+                    case WKB_CIRCULARSTRING:
+                    case WKB_MULTICURVE:
+                        typeImage = @"Linestring";
+                        break;
+                    case WKB_POLYGON:
+                    case WKB_SURFACE:
+                    case WKB_CURVEPOLYGON:
+                    case WKB_TRIANGLE:
+                    case WKB_POLYHEDRALSURFACE:
+                    case WKB_TIN:
+                    case WKB_MULTIPOLYGON:
+                    case WKB_MULTISURFACE:
+                        typeImage = @"Polygon";
+                        break;
+                    case WKB_GEOMETRY:
+                    case WKB_GEOMETRYCOLLECTION:
+                    case WKB_NONE:
+                        typeImage = @"Geometry";
+                        break;
+                }
+            }
         }else if([cellObject isKindOfClass:[GPKGSTileTable class]]){
-            GPKGSTileTable * tileTable = (GPKGSTileTable *) cellObject;
-            // TODO
+            typeImage = @"Tiles";
         } else{
-            // TODO overlay
+            typeImage = @"Paint";
+        }
+        tableCell.active.on = table.active;
+        if(typeImage != nil){
+            [tableCell.tableType setImage:[UIImage imageNamed:typeImage]];
         }
         [tableCell.tableName setText:table.name];
+        [tableCell.count setText:[NSString stringWithFormat:@"(%d)", table.count]];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
     return cell;
 }
