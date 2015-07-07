@@ -91,17 +91,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vlN-zT-BQA">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
-                                <items>
-                                    <barButtonItem title="Item" id="ncJ-3a-OHo"/>
-                                </items>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
-                                        <integer key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </toolbar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Ib2-gQ-Kk3" userLabel="ManagerTableView">
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -121,8 +110,8 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AW4-6G-xP2" userLabel="OptionsButton" customClass="GPKGSDatabaseOptionsButton">
-                                                    <rect key="frame" x="558" y="6" width="34" height="32"/>
+                                                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AW4-6G-xP2" userLabel="OptionsButton" customClass="GPKGSDatabaseOptionsButton">
+                                                    <rect key="frame" x="558" y="0.0" width="34" height="34"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="32" id="Nuc-qs-vbX"/>
                                                         <constraint firstAttribute="width" constant="34" id="tRw-G3-hDu"/>
@@ -180,8 +169,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wxQ-iP-psd" userLabel="OptionsButton" customClass="GPKGSTableOptionsButton">
-                                                    <rect key="frame" x="558" y="6" width="34" height="32"/>
+                                                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wxQ-iP-psd" userLabel="OptionsButton" customClass="GPKGSTableOptionsButton">
+                                                    <rect key="frame" x="558" y="4" width="34" height="34"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="32" id="Pnf-Q0-MvH"/>
                                                         <constraint firstAttribute="width" constant="34" id="T7i-eq-FJ9"/>
@@ -220,11 +209,76 @@
                                     <outlet property="delegate" destination="0EV-Hx-RDM" id="EK2-8O-Rfn"/>
                                 </connections>
                             </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vlN-zT-BQA">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="FDS-84-bmk"/>
+                                    <barButtonItem style="plain" id="bbY-Hz-aDT" userLabel="DownloadItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0zc-eG-nZ0" userLabel="DownloadButton">
+                                            <rect key="frame" x="376" y="3" width="34" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="Download">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="downloadFile:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="vPb-5O-4ZO"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="1ia-2M-KEg"/>
+                                    <barButtonItem style="plain" id="obT-uD-lAh" userLabel="ImportItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="18x-xb-Q7F" userLabel="ImportButton">
+                                            <rect key="frame" x="434" y="3" width="34" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="Import">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="importFile:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="ldR-fM-ihb"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="0Jd-8i-fXz"/>
+                                    <barButtonItem style="plain" id="wgg-MR-5gp" userLabel="CreateItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="CpK-5P-0Ub" userLabel="CreateButton">
+                                            <rect key="frame" x="492" y="3" width="34" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="Create">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="create:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="jVh-bV-jiN"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="HDR-Wm-Ywa"/>
+                                    <barButtonItem style="plain" id="MGn-9j-MqE" userLabel="ClearItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="3vl-DY-Cbp" userLabel="ClearButton">
+                                            <rect key="frame" x="550" y="3" width="34" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="Clear">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="clearActive:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="EQ6-yL-2eC"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                </items>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="vlN-zT-BQA" firstAttribute="top" secondItem="wdX-Xk-Kch" secondAttribute="bottom" id="2C5-wI-Rvl"/>
                             <constraint firstItem="Ib2-gQ-Kk3" firstAttribute="top" secondItem="wdX-Xk-Kch" secondAttribute="bottom" constant="44" id="Gdq-PQ-els"/>
+                            <constraint firstItem="vlN-zT-BQA" firstAttribute="leading" secondItem="zog-nx-nXR" secondAttribute="leading" id="UXC-6W-XDf"/>
                             <constraint firstAttribute="trailing" secondItem="Ib2-gQ-Kk3" secondAttribute="trailing" id="Ue2-GA-Ah2"/>
+                            <constraint firstAttribute="trailing" secondItem="vlN-zT-BQA" secondAttribute="trailing" id="ZEO-nS-6vj"/>
                             <constraint firstItem="Y3h-Uo-8mi" firstAttribute="top" secondItem="Ib2-gQ-Kk3" secondAttribute="bottom" id="ye1-xl-g1t"/>
                             <constraint firstItem="Ib2-gQ-Kk3" firstAttribute="leading" secondItem="zog-nx-nXR" secondAttribute="leading" id="zlW-2U-K87"/>
                         </constraints>
@@ -299,10 +353,14 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Clear" width="50" height="50"/>
+        <image name="Create" width="50" height="50"/>
         <image name="Down" width="50" height="50"/>
+        <image name="Download" width="50" height="50"/>
         <image name="Geometry" width="108" height="108"/>
-        <image name="Manager" width="35" height="35"/>
-        <image name="Map" width="35" height="35"/>
+        <image name="Import" width="50" height="50"/>
+        <image name="Manager" width="32" height="32"/>
+        <image name="Map" width="32" height="32"/>
         <image name="Menu" width="88" height="88"/>
         <image name="More" width="50" height="50"/>
     </resources>
