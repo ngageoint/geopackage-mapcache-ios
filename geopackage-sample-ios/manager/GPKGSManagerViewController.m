@@ -13,6 +13,7 @@
 #import "GPKGSDatabase.h"
 #import "GPKGSTableCell.h"
 #import "GPKGSDatabaseCell.h"
+#import "GPKGSConstants.h"
 
 @interface GPKGSManagerViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -107,25 +108,25 @@
     
     NSObject * cellObject = [self.tableCells objectAtIndex:indexPath.row];
     if([cellObject isKindOfClass:[GPKGSDatabase class]]){
-        cell = [tableView dequeueReusableCellWithIdentifier:@"GeoPackageCell" forIndexPath:indexPath];
+        cell = [tableView dequeueReusableCellWithIdentifier:GPKGS_CELL_DATABASE forIndexPath:indexPath];
         GPKGSDatabaseCell * dbCell = (GPKGSDatabaseCell *) cell;
         GPKGSDatabase * database = (GPKGSDatabase *) cellObject;
         [dbCell.database setText:database.name];
-        NSString *expandImage = database.expanded ? @"Up" : @"Down";
+        NSString *expandImage = database.expanded ? GPKGS_ICON_UP : GPKGS_ICON_DOWN;
         [dbCell.expandImage setImage:[UIImage imageNamed:expandImage]];
     }else{
-        cell = [tableView dequeueReusableCellWithIdentifier:@"GeoPackageTableCell" forIndexPath:indexPath];
+        cell = [tableView dequeueReusableCellWithIdentifier:GPKGS_CELL_TABLE forIndexPath:indexPath];
         GPKGSTableCell * tableCell = (GPKGSTableCell *) cell;
         GPKGSTable * table = (GPKGSTable *) cellObject;
         NSString * typeImage = nil;
         if([cellObject isKindOfClass:[GPKGSFeatureTable class]]){
             GPKGSFeatureTable * featureTable = (GPKGSFeatureTable *) cellObject;
-            typeImage = @"Geometry";
+            typeImage = GPKGS_ICON_GEOMETRY;
             if(featureTable.geometryType != WKB_NONE){
                 switch(featureTable.geometryType){
                     case WKB_POINT:
                     case WKB_MULTIPOINT:
-                        typeImage = @"Point";
+                        typeImage = GPKGS_ICON_POINT;
                         break;
                     case WKB_LINESTRING:
                     case WKB_MULTILINESTRING:
@@ -133,7 +134,7 @@
                     case WKB_COMPOUNDCURVE:
                     case WKB_CIRCULARSTRING:
                     case WKB_MULTICURVE:
-                        typeImage = @"Linestring";
+                        typeImage = GPKGS_ICON_LINESTRING;
                         break;
                     case WKB_POLYGON:
                     case WKB_SURFACE:
@@ -143,19 +144,19 @@
                     case WKB_TIN:
                     case WKB_MULTIPOLYGON:
                     case WKB_MULTISURFACE:
-                        typeImage = @"Polygon";
+                        typeImage = GPKGS_ICON_POLYGON;
                         break;
                     case WKB_GEOMETRY:
                     case WKB_GEOMETRYCOLLECTION:
                     case WKB_NONE:
-                        typeImage = @"Geometry";
+                        typeImage = GPKGS_ICON_GEOMETRY;
                         break;
                 }
             }
         }else if([cellObject isKindOfClass:[GPKGSTileTable class]]){
-            typeImage = @"Tiles";
+            typeImage = GPKGS_ICON_TILES;
         } else{
-            typeImage = @"Paint";
+            typeImage = GPKGS_ICON_PAINT;
         }
         tableCell.active.on = table.active;
         if(typeImage != nil){
@@ -200,64 +201,5 @@
     
     [self.tableView reloadData];
 }
-
-//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-//    NSString * database =  [[self.manager databases] objectAtIndex:section];
-//    return database;
-//}
-
-//-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GeoPackageCell"];
-    
-//    NSString * database = [self tableView:tableView titleForHeaderInSection:section];
-//    [[cell textLabel] setText:database];
-    
-//    return cell;
-//}
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
