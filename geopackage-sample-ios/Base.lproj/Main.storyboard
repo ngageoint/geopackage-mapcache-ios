@@ -8,7 +8,7 @@
         <!--TestViewController-->
         <scene sceneID="bER-Ej-MZc">
             <objects>
-                <viewController title="TestViewController" id="uVC-ti-xMX" customClass="MasterViewController" sceneMemberID="viewController">
+                <viewController title="TestViewController" id="uVC-ti-xMX" customClass="GPKGSTestViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="VHJ-MJ-WrJ"/>
                         <viewControllerLayoutGuide type="bottom" id="bnv-i3-uS9"/>
@@ -82,7 +82,7 @@
         <!--ManagerViewController-->
         <scene sceneID="otH-Y6-nUJ">
             <objects>
-                <viewController title="ManagerViewController" id="0EV-Hx-RDM" customClass="GPKGManagerTableView" sceneMemberID="viewController">
+                <viewController title="ManagerViewController" id="0EV-Hx-RDM" customClass="GPKGSManagerViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wdX-Xk-Kch"/>
                         <viewControllerLayoutGuide type="bottom" id="Y3h-Uo-8mi"/>
@@ -106,7 +106,7 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GeoPackageCell" id="YTV-a6-Q7P" customClass="GPKGCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GeoPackageCell" id="YTV-a6-Q7P" customClass="GPKGSDatabaseCell">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YTV-a6-Q7P" id="xJ3-GB-v3X">
@@ -140,7 +140,7 @@
                                             <outlet property="expandImage" destination="Sqo-wc-Gcd" id="ztM-z4-Bhv"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GeoPackageTableCell" id="ryS-kE-6fk" customClass="GPKGTableCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GeoPackageTableCell" id="ryS-kE-6fk" customClass="GPKGSTableCell">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ryS-kE-6fk" id="GPZ-KS-nY6">
