@@ -173,29 +173,35 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="(Count)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hdD-c1-2w5" userLabel="Count">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="(Count)" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hdD-c1-2w5" userLabel="Count">
                                                     <rect key="frame" x="475" y="0.0" width="68" height="43"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="More" translatesAutoresizingMaskIntoConstraints="NO" id="vb3-4U-aKW" userLabel="Options">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wxQ-iP-psd" userLabel="OptionsButton" customClass="GPKGSTableOptionsButton">
                                                     <rect key="frame" x="558" y="6" width="34" height="32"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="32" id="OMz-LV-xIb"/>
-                                                        <constraint firstAttribute="width" constant="34" id="vw1-o3-CPe"/>
+                                                        <constraint firstAttribute="height" constant="32" id="Pnf-Q0-MvH"/>
+                                                        <constraint firstAttribute="width" constant="34" id="T7i-eq-FJ9"/>
                                                     </constraints>
-                                                </imageView>
+                                                    <state key="normal" title="Button" image="More">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="tableOptions:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="c5S-i2-SGw"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="centerY" secondItem="hdD-c1-2w5" secondAttribute="centerY" id="Af4-M3-gUj"/>
-                                                <constraint firstItem="vb3-4U-aKW" firstAttribute="top" secondItem="GPZ-KS-nY6" secondAttribute="top" id="EC0-8e-QHa"/>
+                                                <constraint firstAttribute="centerY" secondItem="wxQ-iP-psd" secondAttribute="centerY" id="EbK-Eb-2os"/>
                                                 <constraint firstAttribute="centerY" secondItem="5qY-ko-fnp" secondAttribute="centerY" id="IgX-Am-S48"/>
+                                                <constraint firstItem="wxQ-iP-psd" firstAttribute="trailing" secondItem="GPZ-KS-nY6" secondAttribute="trailingMargin" id="RgJ-C2-9h4"/>
                                                 <constraint firstItem="YE8-aA-r1h" firstAttribute="leading" secondItem="GPZ-KS-nY6" secondAttribute="leadingMargin" id="dLZ-Nu-K3g"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="vb3-4U-aKW" secondAttribute="trailing" id="krZ-yo-75L"/>
                                                 <constraint firstAttribute="centerY" secondItem="YE8-aA-r1h" secondAttribute="centerY" id="pod-aR-d4l"/>
-                                                <constraint firstItem="vb3-4U-aKW" firstAttribute="leading" secondItem="hdD-c1-2w5" secondAttribute="leading" constant="76" id="wvr-J1-8cb"/>
+                                                <constraint firstItem="hdD-c1-2w5" firstAttribute="leading" secondItem="wxQ-iP-psd" secondAttribute="leading" constant="-83" id="wht-yi-J1Q"/>
                                                 <constraint firstItem="YE8-aA-r1h" firstAttribute="trailing" secondItem="5qY-ko-fnp" secondAttribute="trailing" constant="-44" id="xXY-AC-37t"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -203,6 +209,7 @@
                                         <connections>
                                             <outlet property="active" destination="YE8-aA-r1h" id="mbJ-sZ-aPL"/>
                                             <outlet property="count" destination="hdD-c1-2w5" id="RfY-Q2-YW7"/>
+                                            <outlet property="optionsButton" destination="wxQ-iP-psd" id="Ij8-uJ-urp"/>
                                             <outlet property="tableName" destination="p1E-p4-Jrt" id="16d-9T-SZb"/>
                                             <outlet property="tableType" destination="5qY-ko-fnp" id="Xgx-xN-san"/>
                                         </connections>

@@ -36,5 +36,19 @@
 	<string>Create Features</string>
 	<key>geopackage_create_tiles_label</key>
 	<string>Create Tiles</string>
+	<key>geopackage_table_view_label</key>
+	<string>View</string>
+	<key>geopackage_table_edit_label</key>
+	<string>Edit</string>
+	<key>geopackage_table_delete_label</key>
+	<string>Delete</string>
+	<key>geopackage_table_index_features_label</key>
+	<string>Index Features</string>
+	<key>geopackage_table_create_feature_tiles_label</key>
+	<string>Create Tiles</string>
+	<key>geopackage_table_add_feature_overlay_label</key>
+	<string>Add Tile Overlay</string>
+	<key>geopackage_table_tiles_load_label</key>
+	<string>Load Tiles</string>
 </dict>
 </plist>

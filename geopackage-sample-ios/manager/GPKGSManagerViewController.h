@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+extern const char ConstantKey;
+
 @interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @end

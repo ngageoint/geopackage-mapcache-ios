@@ -28,6 +28,13 @@ NSString * const GPKGS_PROP_GEOPACKAGE_EXPORT_LABEL = @"geopackage_export_label"
 NSString * const GPKGS_PROP_GEOPACKAGE_SHARE_LABEL = @"geopackage_share_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL = @"geopackage_create_features_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL = @"geopackage_create_tiles_label";
+NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_VIEW_LABEL = @"geopackage_table_view_label";
+NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_EDIT_LABEL = @"geopackage_table_edit_label";
+NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL = @"geopackage_table_delete_label";
+NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_LABEL = @"geopackage_table_index_features_label";
+NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL = @"geopackage_table_create_feature_tiles_label";
+NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL = @"geopackage_table_add_feature_overlay_label";
+NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL = @"geopackage_table_tiles_load_label";
 
 @implementation GPKGSConstants
 
