@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GPKGSTable.h"
 
 @interface GPKGSActiveTableSwitch : UISwitch
+
+@property (nonatomic, strong) GPKGSTable * table;
 
 @end
