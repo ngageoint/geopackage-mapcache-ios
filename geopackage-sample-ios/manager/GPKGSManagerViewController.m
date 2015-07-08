@@ -33,6 +33,7 @@ const char ConstantKey;
 
 #define TAG_DATABASE_OPTIONS 1
 #define TAG_TABLE_OPTIONS 2
+#define TAG_DATABASE_DELETE 3
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -100,6 +101,11 @@ const char ConstantKey;
             [geoPackage close];
         }
     }
+}
+
+-(void) updateAndReloadData{
+    [self update];
+    [self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -201,7 +207,7 @@ const char ConstantKey;
             }
         }
     }else{
-        NSInteger i = [self.tableCells count];
+        NSInteger i = indexPath.row + 1;
         [self.tableCells insertObjects:database.features atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, [database.features count])]];
         i = i + [database.features count];
         [self.tableCells insertObjects:database.tiles atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, [database.tiles count])]];
@@ -233,7 +239,11 @@ const char ConstantKey;
                           [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL],
                           [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL],
                           nil];
+    
     alert.tag = TAG_DATABASE_OPTIONS;
+    
+    objc_setAssociatedObject(alert, &ConstantKey, sender.database, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
     [alert show];
 }
 
@@ -278,19 +288,20 @@ const char ConstantKey;
     [alert show];
 }
 
--(void)alertView:(UIAlertView *)alertView
-clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 
     switch(alertView.tag){
             
         case TAG_DATABASE_OPTIONS:
             if(buttonIndex > 0){
+                
+                GPKGSDatabase *database = objc_getAssociatedObject(alertView, &ConstantKey);
                 switch (buttonIndex) {
                     case 1:
                         [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_VIEW_LABEL]];
                         break;
                     case 2:
-                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_DELETE_LABEL]];
+                        [self deleteDatabaseOption:database.name];
                         break;
                     case 3:
                         [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]];
@@ -384,7 +395,32 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
     
             break;
             
+        case TAG_DATABASE_DELETE:
+            if(buttonIndex > 0){
+                NSString *database = objc_getAssociatedObject(alertView, &ConstantKey);
+                [self.manager delete:database];
+                [self updateAndReloadData];
+            }
+            break;
+            
     }
+}
+
+-(void) deleteDatabaseOption: (NSString *) database{
+    // TODO configure dialog values
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:@"Delete"
+                          message:[NSString stringWithFormat:@"Delete %@?", database]
+                          delegate:self
+                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          otherButtonTitles:@"Delete",
+                          nil];
+    
+    alert.tag = TAG_DATABASE_DELETE;
+    
+    objc_setAssociatedObject(alert, &ConstantKey, database, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [alert show];
 }
 
 // TODO delete when no longer used
@@ -400,6 +436,12 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 }
 
 - (IBAction)downloadFile:(id)sender {
+    
+    // Import
+    NSURL *url =  [NSURL URLWithString:@"http://www.geopackage.org/data/gdal_sample.gpkg"];
+    //NSURL *url =  [NSURL URLWithString:@"http://www.geopackage.org/data/haiti-vectors-split.gpkg"];
+    [self.manager importGeoPackageFromUrl:url withName:@"importFile"];
+    
     //TODO
     [self todoAlert: @"Download File"];
 }

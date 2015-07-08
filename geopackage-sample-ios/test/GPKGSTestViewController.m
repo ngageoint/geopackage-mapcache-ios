@@ -32,7 +32,7 @@
     NSString * databaseName = [file stringByDeletingPathExtension];
     [manager delete:databaseName];
     NSString *filePath  = [[[NSBundle bundleForClass:[GPKGSTestViewController class]] resourcePath] stringByAppendingPathComponent:file];
-    BOOL created = [manager importGeoPackageFromPath:filePath andDatabase:databaseName];
+    BOOL created = [manager importGeoPackageFromPath:filePath withName:databaseName];
     self.geoPackage = [manager open:databaseName];
 
 }

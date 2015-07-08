@@ -88,6 +88,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__94-[GPKGGeoPackageManager importGeoPackageFromUrl:withName:inDirectory:andOverride:andProgress:]_block_invoke138:GPKGGeoPackageManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[NSString fi">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[GPKGFeatureRow setGeometry:]:GPKGFeatureRow.m">
       </ContextState>
       <ContextState
