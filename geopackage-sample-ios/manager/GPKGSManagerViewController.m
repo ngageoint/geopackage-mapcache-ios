@@ -18,6 +18,8 @@
 #import "GPKGSActiveTableSwitch.h"
 #import "GPKGSProperties.h"
 
+NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
+
 const char ConstantKey;
 
 @interface GPKGSManagerViewController ()
@@ -407,13 +409,13 @@ const char ConstantKey;
 }
 
 -(void) deleteDatabaseOption: (NSString *) database{
-    // TODO configure dialog values
+    NSString * label = [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_DELETE_LABEL];
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:@"Delete"
-                          message:[NSString stringWithFormat:@"Delete %@?", database]
+                          initWithTitle:label
+                          message:[NSString stringWithFormat:@"%@ %@?", label, database]
                           delegate:self
                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
-                          otherButtonTitles:@"Delete",
+                          otherButtonTitles:label,
                           nil];
     
     alert.tag = TAG_DATABASE_DELETE;
@@ -436,14 +438,7 @@ const char ConstantKey;
 }
 
 - (IBAction)downloadFile:(id)sender {
-    
-    // Import
-    NSURL *url =  [NSURL URLWithString:@"http://www.geopackage.org/data/gdal_sample.gpkg"];
-    //NSURL *url =  [NSURL URLWithString:@"http://www.geopackage.org/data/haiti-vectors-split.gpkg"];
-    [self.manager importGeoPackageFromUrl:url withName:@"importFile"];
-    
-    //TODO
-    [self todoAlert: @"Download File"];
+    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DOWNLOAD_FILE sender:self];
 }
 
 - (IBAction)importFile:(id)sender {
@@ -459,6 +454,32 @@ const char ConstantKey;
 - (IBAction)clearActive:(id)sender {
     // TODO
     [self todoAlert: @"Clear Active"];
+}
+
+- (void)downloadFileViewController:(GPKGSDownloadFileViewController *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error{
+    if(downloaded){
+        [self updateAndReloadData];
+    }
+    if(error != nil){
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_IMPORT_URL_ERROR]
+                              message:[NSString stringWithFormat:@"Error downloading '%@' at:\n%@\n\nError: %@", controller.nameTextField.text, controller.urlTextField.text, error]
+                              delegate:self
+                              cancelButtonTitle:nil
+                              otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                              nil];
+        [alert show];
+    }
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    
+    if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DOWNLOAD_FILE])
+    {
+        GPKGSDownloadFileViewController *downloadFileViewController = segue.destinationViewController;
+        downloadFileViewController.delegate = self;
+    }
+    
 }
 
 @end

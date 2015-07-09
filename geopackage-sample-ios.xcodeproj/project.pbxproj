@@ -14,6 +14,7 @@
 		040136831AF94FB200C92AFC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 040136821AF94FB200C92AFC /* Images.xcassets */; };
 		040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 040136841AF94FB200C92AFC /* LaunchScreen.xib */; };
 		040136921AF94FB200C92AFC /* geopackage_sample_iosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 040136911AF94FB200C92AFC /* geopackage_sample_iosTests.m */; };
+		04082B531B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04082B521B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.m */; };
 		044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 044647FB1B4AD1C00052913B /* GPKGSManagerViewController.m */; };
 		044647FF1B4AF3870052913B /* GPKGSTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 044647FE1B4AF3870052913B /* GPKGSTable.m */; };
 		044648021B4AF4250052913B /* GPKGSTableTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 044648011B4AF4250052913B /* GPKGSTableTypes.m */; };
@@ -58,6 +59,8 @@
 		0401368B1AF94FB200C92AFC /* geopackage-sample-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "geopackage-sample-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		040136901AF94FB200C92AFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		040136911AF94FB200C92AFC /* geopackage_sample_iosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = geopackage_sample_iosTests.m; sourceTree = "<group>"; };
+		04082B511B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSDownloadFileViewController.h; sourceTree = "<group>"; };
+		04082B521B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSDownloadFileViewController.m; sourceTree = "<group>"; };
 		044647FA1B4AD1C00052913B /* GPKGSManagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSManagerViewController.h; sourceTree = "<group>"; };
 		044647FB1B4AD1C00052913B /* GPKGSManagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSManagerViewController.m; sourceTree = "<group>"; };
 		044647FD1B4AF3870052913B /* GPKGSTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSTable.h; sourceTree = "<group>"; };
@@ -208,6 +211,8 @@
 				047733BD1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m */,
 				047733C71B4C496600E523BD /* GPKGSTableOptionsButton.h */,
 				047733C81B4C496600E523BD /* GPKGSTableOptionsButton.m */,
+				04082B511B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.h */,
+				04082B521B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.m */,
 			);
 			path = manager;
 			sourceTree = "<group>";
@@ -391,6 +396,7 @@
 				047733C91B4C496600E523BD /* GPKGSTableOptionsButton.m in Sources */,
 				044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */,
 				0446481A1B4C24AD0052913B /* GPKGSActiveTableSwitch.m in Sources */,
+				04082B531B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.m in Sources */,
 				044648081B4AF6A70052913B /* GPKGSTileTable.m in Sources */,
 				047733C41B4C3D1200E523BD /* GPKGSProperties.m in Sources */,
 				0446481E1B4C26DF0052913B /* GPKGSConstants.m in Sources */,

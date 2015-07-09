@@ -18,6 +18,8 @@
 	<string>Up</string>
 	<key>icon_down</key>
 	<string>Down</string>
+	<key>ok_label</key>
+	<string>OK</string>
 	<key>cancel_label</key>
 	<string>Cancel</string>
 	<key>geopackage_view_label</key>
@@ -50,5 +52,52 @@
 	<string>Add Tile Overlay</string>
 	<key>geopackage_table_tiles_load_label</key>
 	<string>Load Tiles</string>
+	<key>import_url_preloaded_label</key>
+	<string>Preloaded</string>
+	<key>import_url_error</key>
+	<string>Download Error</string>
+	<key>preloaded_geopackage_urls</key>
+	<array>
+		<dict>
+			<key>label</key>
+			<string>GDAL Sample</string>
+			<key>url</key>
+			<string>http://www.geopackage.org/data/gdal_sample.gpkg</string>
+			<key>name</key>
+			<string>gdal_sample</string>
+		</dict>
+		<dict>
+			<key>label</key>
+			<string>Simple Sewers</string>
+			<key>url</key>
+			<string>http://www.geopackage.org/data/simple_sewer_features.gpkg</string>
+			<key>name</key>
+			<string>simple_sewer_features</string>
+		</dict>
+		<dict>
+			<key>label</key>
+			<string>Haiti</string>
+			<key>url</key>
+			<string>http://www.geopackage.org/data/haiti-vectors-split.gpkg</string>
+			<key>name</key>
+			<string>haiti-vectors-split</string>
+		</dict>
+		<dict>
+			<key>label</key>
+			<string>Belgium Geonames</string>
+			<key>url</key>
+			<string>http://www.geopackage.org/data/geonames_belgium.gpkg</string>
+			<key>name</key>
+			<string>geonames_belgium</string>
+		</dict>
+		<dict>
+			<key>label</key>
+			<string>ERDC Whitehorse</string>
+			<key>url</key>
+			<string>https://portal.opengeospatial.org/files/63156</string>
+			<key>name</key>
+			<string>erdc_whitehorse</string>
+		</dict>
+	</array>
 </dict>
 </plist>

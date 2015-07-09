@@ -19,6 +19,7 @@ NSString * const GPKGS_PROP_ICON_TILES = @"icon_tiles";
 NSString * const GPKGS_PROP_ICON_PAINT = @"icon_paint";
 NSString * const GPKGS_PROP_ICON_UP = @"icon_up";
 NSString * const GPKGS_PROP_ICON_DOWN = @"icon_down";
+NSString * const GPKGS_PROP_OK_LABEL = @"ok_label";
 NSString * const GPKGS_PROP_CANCEL_LABEL = @"cancel_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_VIEW_LABEL = @"geopackage_view_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_DELETE_LABEL = @"geopackage_delete_label";
@@ -35,6 +36,12 @@ NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_LABEL = @"geopackage
 NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL = @"geopackage_table_create_feature_tiles_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL = @"geopackage_table_add_feature_overlay_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL = @"geopackage_table_tiles_load_label";
+NSString * const GPKGS_PROP_IMPORT_URL_PRELOADED_LABEL = @"import_url_preloaded_label";
+NSString * const GPKGS_PROP_IMPORT_URL_ERROR = @"import_url_error";
+NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS = @"preloaded_geopackage_urls";
+NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_LABEL = @"label";
+NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_URL = @"url";
+NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_NAME = @"name";
 
 @implementation GPKGSConstants
 

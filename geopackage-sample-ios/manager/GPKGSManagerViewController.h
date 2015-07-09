@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GPKGSDownloadFileViewController.h"
+
+extern NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE;
 
 extern const char ConstantKey;
 
-@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadFileDelegate>
 
 @end
