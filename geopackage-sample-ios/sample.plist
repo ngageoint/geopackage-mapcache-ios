@@ -30,10 +30,14 @@
 	<string>Rename</string>
 	<key>geopackage_copy_label</key>
 	<string>Copy</string>
+	<key>geopackage_copy_suffix</key>
+	<string>_copy</string>
 	<key>geopackage_export_label</key>
 	<string>Export</string>
 	<key>geopackage_share_label</key>
 	<string>Share</string>
+	<key>geopackage_create_label</key>
+	<string>Create</string>
 	<key>geopackage_create_features_label</key>
 	<string>Create Features</string>
 	<key>geopackage_create_tiles_label</key>

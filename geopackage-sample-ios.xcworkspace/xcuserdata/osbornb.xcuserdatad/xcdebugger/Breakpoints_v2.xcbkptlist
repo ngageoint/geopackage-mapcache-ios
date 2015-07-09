@@ -1544,28 +1544,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "geopackage-sample-ios/manager/GPKGSManagerViewController.m"
-            timestampString = "458149745.889677"
+            timestampString = "458172495.349481"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "225"
-            endingLineNumber = "225"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
             landmarkName = "-tableActiveChanged:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "geopackage-sample-ios/manager/GPKGSManagerViewController.m"
-            timestampString = "458149745.889677"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "333"
-            endingLineNumber = "333"
-            landmarkName = "-alertView:clickedButtonAtIndex:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1800,11 +1784,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "geopackage-sample-ios/manager/GPKGSManagerViewController.m"
-            timestampString = "458149745.889677"
+            timestampString = "458172495.349481"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "202"
-            endingLineNumber = "202"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
             landmarkName = "-expandOrCollapseDatabase:atIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1848,11 +1832,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "geopackage-sample-ios/manager/GPKGSManagerViewController.m"
-            timestampString = "458149745.889677"
+            timestampString = "458172495.349481"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
             landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
@@ -1864,11 +1848,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "geopackage-sample-ios/manager/GPKGSManagerViewController.m"
-            timestampString = "458149745.889677"
+            timestampString = "458172738.746842"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "460"
-            endingLineNumber = "460"
+            startingLineNumber = "590"
+            endingLineNumber = "590"
             landmarkName = "-downloadFileViewController:downloadedFile:withError:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1880,11 +1864,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "geopackage-sample-ios/manager/GPKGSManagerViewController.m"
-            timestampString = "458163066.360695"
+            timestampString = "458172738.746842"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "477"
-            endingLineNumber = "477"
+            startingLineNumber = "602"
+            endingLineNumber = "602"
             landmarkName = "-prepareForSegue:sender:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1896,11 +1880,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "geopackage-sample-ios/manager/GPKGSManagerViewController.m"
-            timestampString = "458149745.889677"
+            timestampString = "458172738.746842"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "441"
-            endingLineNumber = "441"
+            startingLineNumber = "541"
+            endingLineNumber = "541"
             landmarkName = "-downloadFile:"
             landmarkType = "5">
          </BreakpointContent>
@@ -2094,6 +2078,22 @@
             startingLineNumber = "326"
             endingLineNumber = "326"
             landmarkName = "-importGeoPackageFromUrl:withName:inDirectory:andOverride:andProgress:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../geopackage-ios/geopackage-ios/factory/GPKGGeoPackageManager.m"
+            timestampString = "458172929.796056"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "446"
+            endingLineNumber = "446"
+            landmarkName = "-copy:to:andSameDirectory:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
