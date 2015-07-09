@@ -16,10 +16,7 @@ static NSDictionary * properties;
 
 +(NSString *) getValueOfProperty: (NSString *) property{
     
-    if(properties == nil){
-        NSString * propertiesPath = [GPKGIOUtils getPropertyListPathWithName:GPKGS_SAMPLE_RESOURCES_PROPERTIES];
-        properties = [NSDictionary dictionaryWithContentsOfFile:propertiesPath];
-    }
+    [self loadProperties];
     
     NSString * value = [properties valueForKey:property];
     
@@ -28,6 +25,39 @@ static NSDictionary * properties;
     }
     
     return value;
+}
+
++(NSArray *) getArrayOfProperty: (NSString *) property{
+    
+    [self loadProperties];
+    
+    NSArray * value = [properties valueForKey:property];
+    
+    if(value == nil){
+        [NSException raise:@"Required Array Property" format:@"Required array property not found: %@", property];
+    }
+    
+    return value;
+}
+
++(NSDictionary *) getDictionaryOfProperty: (NSString *) property{
+    
+    [self loadProperties];
+    
+    NSDictionary * value = [properties valueForKey:property];
+    
+    if(value == nil){
+        [NSException raise:@"Required Dictionary Property" format:@"Required dictionary property not found: %@", property];
+    }
+    
+    return value;
+}
+
++(void) loadProperties{
+    if(properties == nil){
+        NSString * propertiesPath = [GPKGIOUtils getPropertyListPathWithName:GPKGS_SAMPLE_RESOURCES_PROPERTIES];
+        properties = [NSDictionary dictionaryWithContentsOfFile:propertiesPath];
+    }
 }
 
 @end

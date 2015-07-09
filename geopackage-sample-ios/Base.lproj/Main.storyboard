@@ -286,11 +286,165 @@
                     <tabBarItem key="tabBarItem" title="" image="Manager" id="ZWT-Iv-7Qm"/>
                     <connections>
                         <outlet property="tableView" destination="Ib2-gQ-Kk3" id="Pjw-dP-j91"/>
+                        <segue destination="BbS-qo-Mou" kind="presentation" identifier="downloadFile" id="Isx-SZ-9vo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ter-A5-hWz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2075" y="-1542"/>
+        </scene>
+        <!--Download File View Controller-->
+        <scene sceneID="I64-UR-e60">
+            <objects>
+                <viewController modalPresentationStyle="overCurrentContext" id="BbS-qo-Mou" customClass="GPKGSDownloadFileViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="sMO-nu-8g1"/>
+                        <viewControllerLayoutGuide type="bottom" id="KpO-pm-Lvs"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Q2G-El-S90">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="14u-fi-6oY">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" id="b68-yf-byE" userLabel="CancelButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="7Fu-G2-sgX" userLabel="CancelButton">
+                                            <rect key="frame" x="16" y="7" width="64" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Cancel">
+                                                <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="cancel:" destination="BbS-qo-Mou" eventType="touchUpInside" id="Kz3-ax-Hke"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="NvO-Re-NRl"/>
+                                    <barButtonItem style="plain" id="zbw-2B-HAg" userLabel="ImportButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yu8-gS-Y0m" userLabel="ImportButton">
+                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Import">
+                                                <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="import:" destination="BbS-qo-Mou" eventType="touchUpInside" id="Pr1-g2-60i"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                </items>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </toolbar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xmF-bM-JaG">
+                                <rect key="frame" x="16" y="87" width="58" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="58" id="gRA-kB-6xj"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="URL:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dPA-fs-knX">
+                                <rect key="frame" x="16" y="154" width="58" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fc8-0r-K8o" userLabel="NameTextField">
+                                <rect key="frame" x="16" y="116" width="568" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="nameChanged:" destination="BbS-qo-Mou" eventType="editingChanged" id="rhW-mN-mFo"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="http://" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="v6S-Wy-OmP" userLabel="URLTextField">
+                                <rect key="frame" x="16" y="183" width="568" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="urlChanged:" destination="BbS-qo-Mou" eventType="editingChanged" id="bFP-gc-uU0"/>
+                                </connections>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A8w-g0-nsc">
+                                <rect key="frame" x="16" y="301" width="568" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="wDg-8q-g7R"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Sia-cZ-Os3">
+                                <rect key="frame" x="16" y="330" width="568" height="2"/>
+                                <color key="progressTintColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </progressView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PcG-6o-G6X" userLabel="PreloadedButton">
+                                <rect key="frame" x="16" y="237" width="70" height="30"/>
+                                <state key="normal" title="Preloaded">
+                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="preloaded:" destination="BbS-qo-Mou" eventType="touchUpInside" id="pK3-hb-Nmx"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="v6S-Wy-OmP" firstAttribute="leading" secondItem="Q2G-El-S90" secondAttribute="leadingMargin" id="0Yz-26-j5P"/>
+                            <constraint firstItem="A8w-g0-nsc" firstAttribute="leading" secondItem="PcG-6o-G6X" secondAttribute="leading" id="1kS-Bb-a6H"/>
+                            <constraint firstItem="dPA-fs-knX" firstAttribute="leading" secondItem="v6S-Wy-OmP" secondAttribute="leading" id="3g9-ES-Xu6"/>
+                            <constraint firstItem="dPA-fs-knX" firstAttribute="top" secondItem="fc8-0r-K8o" secondAttribute="bottom" constant="8" symbolic="YES" id="9ZF-pJ-UXG"/>
+                            <constraint firstItem="xmF-bM-JaG" firstAttribute="top" secondItem="14u-fi-6oY" secondAttribute="bottom" constant="23" id="AGE-99-egV"/>
+                            <constraint firstItem="14u-fi-6oY" firstAttribute="leading" secondItem="Q2G-El-S90" secondAttribute="leading" id="CDH-Vx-pX8"/>
+                            <constraint firstItem="fc8-0r-K8o" firstAttribute="top" secondItem="xmF-bM-JaG" secondAttribute="bottom" constant="8" symbolic="YES" id="EP8-hr-ZNC"/>
+                            <constraint firstItem="Sia-cZ-Os3" firstAttribute="leading" secondItem="A8w-g0-nsc" secondAttribute="leading" id="Egc-ez-cIb"/>
+                            <constraint firstItem="14u-fi-6oY" firstAttribute="top" secondItem="sMO-nu-8g1" secondAttribute="bottom" id="IMH-uf-QfV"/>
+                            <constraint firstItem="fc8-0r-K8o" firstAttribute="leading" secondItem="dPA-fs-knX" secondAttribute="leading" id="Kwt-Po-opT"/>
+                            <constraint firstAttribute="trailing" secondItem="14u-fi-6oY" secondAttribute="trailing" id="NW1-ut-6sJ"/>
+                            <constraint firstItem="fc8-0r-K8o" firstAttribute="trailing" secondItem="v6S-Wy-OmP" secondAttribute="trailing" id="QlV-UB-QaJ"/>
+                            <constraint firstItem="Sia-cZ-Os3" firstAttribute="trailing" secondItem="A8w-g0-nsc" secondAttribute="trailing" id="RvP-JA-AxC"/>
+                            <constraint firstItem="fc8-0r-K8o" firstAttribute="leading" secondItem="xmF-bM-JaG" secondAttribute="leading" id="SZQ-I1-4oA"/>
+                            <constraint firstItem="v6S-Wy-OmP" firstAttribute="top" secondItem="dPA-fs-knX" secondAttribute="bottom" constant="8" symbolic="YES" id="TWB-S2-cdR"/>
+                            <constraint firstItem="PcG-6o-G6X" firstAttribute="top" secondItem="v6S-Wy-OmP" secondAttribute="bottom" constant="24" id="WoR-we-EyE"/>
+                            <constraint firstItem="A8w-g0-nsc" firstAttribute="top" secondItem="PcG-6o-G6X" secondAttribute="bottom" constant="34" id="YzC-uD-y5U"/>
+                            <constraint firstItem="v6S-Wy-OmP" firstAttribute="trailing" secondItem="A8w-g0-nsc" secondAttribute="trailing" id="eKY-8j-6U4"/>
+                            <constraint firstItem="PcG-6o-G6X" firstAttribute="leading" secondItem="v6S-Wy-OmP" secondAttribute="leading" id="nCo-GW-8cW"/>
+                            <constraint firstItem="Sia-cZ-Os3" firstAttribute="top" secondItem="A8w-g0-nsc" secondAttribute="bottom" constant="8" symbolic="YES" id="q49-Vc-DtQ"/>
+                            <constraint firstItem="xmF-bM-JaG" firstAttribute="trailing" secondItem="dPA-fs-knX" secondAttribute="trailing" id="sVT-id-y5G"/>
+                            <constraint firstItem="fc8-0r-K8o" firstAttribute="centerX" secondItem="14u-fi-6oY" secondAttribute="centerX" id="zcB-GR-DW3"/>
+                        </constraints>
+                    </view>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="cancelButton" destination="7Fu-G2-sgX" id="485-0E-dX8"/>
+                        <outlet property="downloadedLabel" destination="A8w-g0-nsc" id="BYM-JR-xNC"/>
+                        <outlet property="importButton" destination="yu8-gS-Y0m" id="NQP-BN-IJV"/>
+                        <outlet property="nameTextField" destination="fc8-0r-K8o" id="IoD-Mc-NOz"/>
+                        <outlet property="progressView" destination="Sia-cZ-Os3" id="jJA-gr-l6N"/>
+                        <outlet property="urlTextField" destination="v6S-Wy-OmP" id="gbu-gs-wLg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jBu-1f-eOd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationBar contentMode="scaleToFill" id="2Mm-zu-DWz">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <items>
+                        <navigationItem title="Title" id="1sp-Ty-hy8"/>
+                    </items>
+                </navigationBar>
+            </objects>
+            <point key="canvasLocation" x="2807" y="-1577"/>
         </scene>
         <!--MapViewController-->
         <scene sceneID="gC6-Wh-fym">
