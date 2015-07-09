@@ -40,6 +40,7 @@ const char ConstantKey;
 #define TAG_DATABASE_CREATE 4
 #define TAG_DATABASE_RENAME 5
 #define TAG_DATABASE_COPY 6
+#define TAG_TABLE_DELETE 7
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -251,6 +252,9 @@ const char ConstantKey;
         case TAG_DATABASE_COPY:
             [self handleCopyDatabaseWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
             break;
+        case TAG_TABLE_DELETE:
+            [self handleDeleteTableWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
     }
 }
 
@@ -394,7 +398,7 @@ const char ConstantKey;
                 switch([table getType]){
                     case GPKGS_TT_FEATURE:
                     case GPKGS_TT_TILE:
-                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL]];
+                        [self deleteTableOption:table];
                         break;
                     case GPKGS_TT_FEATURE_OVERLAY:
                         [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL]];
@@ -533,6 +537,40 @@ const char ConstantKey;
                                            andTitle:[NSString stringWithFormat:@"Copy %@ to %@", database, newName]
                                          andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
             }
+        }
+    }
+}
+
+-(void) deleteTableOption: (GPKGSTable *) table{
+    NSString * label = [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL];
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:label
+                          message:[NSString stringWithFormat:@"%@ %@ - %@?", label, table.database, table.name]
+                          delegate:self
+                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          otherButtonTitles:label,
+                          nil];
+    alert.tag = TAG_TABLE_DELETE;
+    objc_setAssociatedObject(alert, &ConstantKey, table, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [alert show];
+}
+
+- (void) handleDeleteTableWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex > 0){
+        GPKGSTable *table = objc_getAssociatedObject(alertView, &ConstantKey);
+        GPKGGeoPackage * geoPackage = [self.manager open:table.database];
+        @try {
+            [geoPackage deleteUserTable:table.name];
+            // TODO remove from active?
+            [self updateAndReloadData];
+        }
+        @catch (NSException *exception) {
+            [GPKGSUtils showMessageWithDelegate:self
+                                       andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], table.database, table.name]
+                                     andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
+        }
+        @finally {
+            [geoPackage close];
         }
     }
 }
