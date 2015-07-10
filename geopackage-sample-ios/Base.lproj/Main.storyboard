@@ -287,6 +287,7 @@
                     <connections>
                         <outlet property="tableView" destination="Ib2-gQ-Kk3" id="Pjw-dP-j91"/>
                         <segue destination="BbS-qo-Mou" kind="presentation" identifier="downloadFile" id="Isx-SZ-9vo"/>
+                        <segue destination="LNZ-6o-75L" kind="presentation" identifier="displayText" id="5H4-Qu-fu7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ter-A5-hWz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -296,7 +297,7 @@
         <!--Download File View Controller-->
         <scene sceneID="I64-UR-e60">
             <objects>
-                <viewController modalPresentationStyle="overCurrentContext" id="BbS-qo-Mou" customClass="GPKGSDownloadFileViewController" sceneMemberID="viewController">
+                <viewController id="BbS-qo-Mou" customClass="GPKGSDownloadFileViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="sMO-nu-8g1"/>
                         <viewControllerLayoutGuide type="bottom" id="KpO-pm-Lvs"/>
@@ -313,7 +314,6 @@
                                             <rect key="frame" x="16" y="7" width="64" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Cancel">
-                                                <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
@@ -322,12 +322,22 @@
                                         </button>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="NvO-Re-NRl"/>
+                                    <barButtonItem style="plain" id="FmL-uH-6nc" userLabel="TitleButtonItem">
+                                        <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="LJB-o3-piI" userLabel="TitleButton">
+                                            <rect key="frame" x="231" y="7" width="138" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Download File">
+                                                <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="R67-hW-zoT"/>
                                     <barButtonItem style="plain" id="zbw-2B-HAg" userLabel="ImportButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yu8-gS-Y0m" userLabel="ImportButton">
                                             <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Import">
-                                                <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
@@ -398,7 +408,7 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="v6S-Wy-OmP" firstAttribute="leading" secondItem="Q2G-El-S90" secondAttribute="leadingMargin" id="0Yz-26-j5P"/>
                             <constraint firstItem="A8w-g0-nsc" firstAttribute="leading" secondItem="PcG-6o-G6X" secondAttribute="leading" id="1kS-Bb-a6H"/>
@@ -425,7 +435,6 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="cancelButton" destination="7Fu-G2-sgX" id="485-0E-dX8"/>
                         <outlet property="downloadedLabel" destination="A8w-g0-nsc" id="BYM-JR-xNC"/>
@@ -444,7 +453,80 @@
                     </items>
                 </navigationBar>
             </objects>
-            <point key="canvasLocation" x="2807" y="-1577"/>
+            <point key="canvasLocation" x="3069" y="-2003"/>
+        </scene>
+        <!--Display Text View Controller-->
+        <scene sceneID="FNm-e3-4hK">
+            <objects>
+                <viewController id="LNZ-6o-75L" userLabel="Display Text View Controller" customClass="GPKGSDisplayTextViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="fLd-jp-bbd"/>
+                        <viewControllerLayoutGuide type="bottom" id="nzs-7H-3aI"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kx8-GW-V1O">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Ng-Rg-G0Y">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" id="yLQ-dc-9Rb" userLabel="BackButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="b56-yp-Jiq" userLabel="BackButton">
+                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Back">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="backButton:" destination="LNZ-6o-75L" eventType="touchUpInside" id="2mi-pw-Emr"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="tRQ-6j-1iv"/>
+                                    <barButtonItem style="plain" id="ODV-KK-nL6" userLabel="TitleButtonItem">
+                                        <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="13T-A6-oOL" userLabel="TitleButton">
+                                            <rect key="frame" x="86" y="7" width="428" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Title">
+                                                <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ikp-l6-AOZ"/>
+                                </items>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </toolbar>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y6M-i2-rcn">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="y6M-i2-rcn" firstAttribute="top" secondItem="0Ng-Rg-G0Y" secondAttribute="bottom" id="9MU-fC-s0o"/>
+                            <constraint firstItem="0Ng-Rg-G0Y" firstAttribute="top" secondItem="fLd-jp-bbd" secondAttribute="bottom" id="SQJ-Fe-Ckw"/>
+                            <constraint firstItem="y6M-i2-rcn" firstAttribute="trailing" secondItem="0Ng-Rg-G0Y" secondAttribute="trailing" id="ePL-8a-BoL"/>
+                            <constraint firstItem="y6M-i2-rcn" firstAttribute="leading" secondItem="0Ng-Rg-G0Y" secondAttribute="leading" id="jg7-Fd-fnj"/>
+                            <constraint firstItem="y6M-i2-rcn" firstAttribute="bottom" secondItem="nzs-7H-3aI" secondAttribute="top" id="myq-Mn-LiU"/>
+                            <constraint firstAttribute="trailing" secondItem="y6M-i2-rcn" secondAttribute="trailing" id="t4F-4H-ZYB"/>
+                            <constraint firstItem="y6M-i2-rcn" firstAttribute="leading" secondItem="kx8-GW-V1O" secondAttribute="leading" id="zt9-Bb-cXb"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="textView" destination="y6M-i2-rcn" id="J6E-yM-1XM"/>
+                        <outlet property="titleButton" destination="13T-A6-oOL" id="dcR-9C-MC8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uCQ-67-bpm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3069" y="-1251"/>
         </scene>
         <!--MapViewController-->
         <scene sceneID="gC6-Wh-fym">
