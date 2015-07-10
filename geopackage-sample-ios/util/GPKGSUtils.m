@@ -23,4 +23,25 @@
     [alert show];
 }
 
++(void) disableButton: (UIButton *) button{
+    if(button.enabled){
+        button.enabled = false;
+        button.alpha = 0.5;
+    }
+}
+
++(void) enableButton: (UIButton *) button{
+    if(!button.enabled){
+        button.enabled = true;
+        button.alpha = 1.0;
+    }
+}
+
++(void) disableTextField: (UITextField *) textField{
+    if(textField.enabled){
+        textField.enabled = false;
+        textField.alpha = 0.5;
+    }
+}
+
 @end

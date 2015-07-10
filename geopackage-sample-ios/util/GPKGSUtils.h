@@ -13,4 +13,10 @@
 
 +(void) showMessageWithDelegate: (id) delegate andTitle: (NSString *) title andMessage: (NSString *) message;
 
++(void) disableButton: (UIButton *) button;
+
++(void) enableButton: (UIButton *) button;
+
++(void) disableTextField: (UITextField *) textField;
+
 @end
