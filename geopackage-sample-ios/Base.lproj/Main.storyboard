@@ -215,7 +215,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="FDS-84-bmk"/>
                                     <barButtonItem style="plain" id="bbY-Hz-aDT" userLabel="DownloadItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0zc-eG-nZ0" userLabel="DownloadButton">
-                                            <rect key="frame" x="376" y="3" width="34" height="34"/>
+                                            <rect key="frame" x="304" y="5" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="Download">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -228,7 +228,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="1ia-2M-KEg"/>
                                     <barButtonItem style="plain" id="obT-uD-lAh" userLabel="ImportItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="18x-xb-Q7F" userLabel="ImportButton">
-                                            <rect key="frame" x="434" y="3" width="34" height="34"/>
+                                            <rect key="frame" x="354" y="5" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="Import">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -241,7 +241,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="0Jd-8i-fXz"/>
                                     <barButtonItem style="plain" id="wgg-MR-5gp" userLabel="CreateItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="CpK-5P-0Ub" userLabel="CreateButton">
-                                            <rect key="frame" x="492" y="3" width="34" height="34"/>
+                                            <rect key="frame" x="404" y="5" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="Create">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -251,10 +251,36 @@
                                             </connections>
                                         </button>
                                     </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="adh-xf-mGz"/>
+                                    <barButtonItem style="plain" id="FB4-Xk-qEK" userLabel="ExpandItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="rYx-5n-nHB" userLabel="ExpandButton">
+                                            <rect key="frame" x="462" y="7" width="26" height="26"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="Down">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="expandAll:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="Nka-eV-FQD"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="rXB-KK-EIW"/>
+                                    <barButtonItem style="plain" id="7z5-lR-E6A" userLabel="CollapseItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xRH-kd-jDh" userLabel="CollapseButton">
+                                            <rect key="frame" x="504" y="9" width="26" height="26"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="Up">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="collapseAll:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="Lt7-sa-iEO"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="HDR-Wm-Ywa"/>
                                     <barButtonItem style="plain" id="MGn-9j-MqE" userLabel="ClearItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="3vl-DY-Cbp" userLabel="ClearButton">
-                                            <rect key="frame" x="550" y="3" width="34" height="34"/>
+                                            <rect key="frame" x="554" y="5" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="Clear">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -285,6 +311,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Manager" id="ZWT-Iv-7Qm"/>
                     <connections>
+                        <outlet property="clearActiveButton" destination="3vl-DY-Cbp" id="xAN-en-sbh"/>
                         <outlet property="tableView" destination="Ib2-gQ-Kk3" id="Pjw-dP-j91"/>
                         <segue destination="BbS-qo-Mou" kind="presentation" identifier="downloadFile" id="Isx-SZ-9vo"/>
                         <segue destination="LNZ-6o-75L" kind="presentation" identifier="displayText" id="5H4-Qu-fu7"/>
@@ -599,5 +626,6 @@
         <image name="Map" width="32" height="32"/>
         <image name="Menu" width="88" height="88"/>
         <image name="More" width="50" height="50"/>
+        <image name="Up" width="50" height="50"/>
     </resources>
 </document>

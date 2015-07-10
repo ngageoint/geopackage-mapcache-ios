@@ -15,4 +15,6 @@ extern const char ConstantKey;
 
 @interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadFileDelegate>
 
+@property (weak, nonatomic) IBOutlet UIButton *clearActiveButton;
+
 @end

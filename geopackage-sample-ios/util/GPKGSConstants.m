@@ -40,6 +40,7 @@ NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL = @"geopa
 NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL = @"geopackage_table_tiles_load_label";
 NSString * const GPKGS_PROP_IMPORT_URL_PRELOADED_LABEL = @"import_url_preloaded_label";
 NSString * const GPKGS_PROP_IMPORT_URL_ERROR = @"import_url_error";
+NSString * const GPKGS_PROP_CLEAR_ACTIVE_LABEL = @"clear_active_label";
 NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS = @"preloaded_geopackage_urls";
 NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_LABEL = @"label";
 NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_URL = @"url";

@@ -11,6 +11,7 @@
 #import "GPKGIOUtils.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
+#import "GPKGSUtils.h"
 
 @interface GPKGSDownloadFileViewController ()
 
@@ -26,7 +27,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self disableButton:self.importButton];
+    [GPKGSUtils disableButton:self.importButton];
     
     UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed)];
     UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -98,10 +99,10 @@
 
 - (IBAction)import:(id)sender {
     
-    [self disableButton:self.preloadedButton];
-    [self disableButton:self.importButton];
-    [self disableTextField:self.urlTextField];
-    [self disableTextField:self.nameTextField];
+    [GPKGSUtils disableButton:self.preloadedButton];
+    [GPKGSUtils disableButton:self.importButton];
+    [GPKGSUtils disableTextField:self.urlTextField];
+    [GPKGSUtils disableTextField:self.nameTextField];
     
     GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory getManager];
     
@@ -129,30 +130,9 @@
 
 -(void) updateImportButtonState{
     if([self.nameTextField.text length] == 0 || [self.urlTextField.text length] == 0){
-        [self disableButton:self.importButton];
+        [GPKGSUtils disableButton:self.importButton];
     }else{
-        [self enableButton:self.importButton];
-    }
-}
-
--(void) disableButton: (UIButton *) button{
-    if(button.enabled){
-        button.enabled = false;
-        button.alpha = 0.3;
-    }
-}
-
--(void) enableButton: (UIButton *) button{
-    if(!button.enabled){
-        button.enabled = true;
-        button.alpha = 1.0;
-    }
-}
-
--(void) disableTextField: (UITextField *) textField{
-    if(textField.enabled){
-        textField.enabled = false;
-        textField.alpha = 0.3;
+        [GPKGSUtils enableButton:self.importButton];
     }
 }
 

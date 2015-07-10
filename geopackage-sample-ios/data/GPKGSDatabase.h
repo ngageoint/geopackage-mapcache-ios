@@ -7,13 +7,43 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GPKGSTable.h"
 
 @interface GPKGSDatabase : NSObject
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic) BOOL expanded;
-@property (nonatomic, strong) NSMutableArray *features;
-@property (nonatomic, strong) NSMutableArray *tiles;
-@property (nonatomic, strong) NSMutableArray *featureOverlays;
+
+-(instancetype) initWithName: (NSString *) name andExpanded: (BOOL) expanded;
+
+-(NSArray *) getFeatures;
+
+-(NSInteger) getFeatureCount;
+
+-(NSArray *) getFeatureOverlays;
+
+-(NSInteger) getFeatureOverlayCount;
+
+-(NSArray *) getTiles;
+
+-(NSInteger) getTileCount;
+
+-(NSArray *) getTables;
+
+-(NSInteger) getTableCount;
+
+-(void) addFeature: (GPKGSTable *) table;
+
+-(void) addFeatureOverlay: (GPKGSTable *) table;
+
+-(void) addTile: (GPKGSTable *) table;
+
+-(BOOL) exists: (GPKGSTable *) table;
+
+-(void) add:(GPKGSTable *) table;
+
+-(void) remove:(GPKGSTable *) table;
+
+-(BOOL) isEmpty;
 
 @end

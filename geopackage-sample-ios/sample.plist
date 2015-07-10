@@ -60,6 +60,8 @@
 	<string>Preloaded</string>
 	<key>import_url_error</key>
 	<string>Download Error</string>
+	<key>clear_active_label</key>
+	<string>Clear Active</string>
 	<key>preloaded_geopackage_urls</key>
 	<array>
 		<dict>

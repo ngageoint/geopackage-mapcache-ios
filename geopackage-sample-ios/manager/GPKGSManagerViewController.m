@@ -19,6 +19,8 @@
 #import "GPKGSProperties.h"
 #import "GPKGSUtils.h"
 #import "GPKGSDisplayTextViewController.h"
+#import "GPKGSFeatureOverlayTable.h"
+#import "GPKGSDatabases.h"
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
 NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
@@ -26,11 +28,12 @@ NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
 const char ConstantKey;
 
 @interface GPKGSManagerViewController ()
+
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) NSArray *databases;
-@property (nonatomic, strong) NSMutableArray *databaseTables;
+@property (nonatomic, strong) NSMutableDictionary *databases;
 @property (nonatomic, strong) NSMutableArray *tableCells;
+@property (nonatomic, strong) GPKGSDatabases *active;
 
 @end
 
@@ -43,26 +46,36 @@ const char ConstantKey;
 #define TAG_DATABASE_RENAME 5
 #define TAG_DATABASE_COPY 6
 #define TAG_TABLE_DELETE 7
+#define TAG_CLEAR_ACTIVE 8
 
 -(void)viewDidLoad{
     [super viewDidLoad];
     self.manager = [GPKGGeoPackageFactory getManager];
+    self.active = [GPKGSDatabases getInstance];
     [self update];
 }
 
 -(void) update{
-    self.databases = [self.manager databases];
-    self.databaseTables = [[NSMutableArray alloc] init];
+    NSArray * databaseNames = [self.manager databases];
     self.tableCells = [[NSMutableArray alloc] init];
-    for(NSString * database in self.databases){
+    NSDictionary * previousDatabases = self.databases;
+    self.databases = [[NSMutableDictionary alloc] init];
+    for(NSString * database in databaseNames){
         GPKGGeoPackage * geoPackage = [self.manager open:database];
         @try {
-            GPKGSDatabase * theDatabase = [[GPKGSDatabase alloc] init];
-            theDatabase.name = database;
+            BOOL expanded = false;
+            if(previousDatabases != nil){
+                GPKGSDatabase * previousDatabase = [previousDatabases objectForKey:database];
+                if(previousDatabase != nil){
+                    expanded = previousDatabase.expanded;
+                }
+            }
+            
+            GPKGSDatabase * theDatabase = [[GPKGSDatabase alloc] initWithName:database andExpanded:expanded];
+            [self.databases setObject:theDatabase forKey:database];
             [self.tableCells addObject:theDatabase];
             NSMutableArray * tables = [[NSMutableArray alloc] init];
             
-            NSMutableArray * featureTables = [[NSMutableArray alloc] init];
             GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
             for(NSString * tableName in [geoPackage getFeatureTables]){
                 GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
@@ -77,15 +90,15 @@ const char ConstantKey;
                 [table setName:tableName];
                 [table setGeometryType:geometryType];
                 [table setCount:count];
-                //[table setActive:false];
+                [table setActive:[self.active exists:table]];
                 
                 [tables addObject:table];
-                [featureTables addObject:table];
-                //[self.tableCells addObject:table];
+                [theDatabase addFeature:table];
+                if(theDatabase.expanded){
+                    [self.tableCells addObject:table];
+                }
             }
-            theDatabase.features = featureTables;
             
-            NSMutableArray * tileTables = [[NSMutableArray alloc] init];
             for(NSString * tableName in [geoPackage getTileTables]){
                 GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName: tableName];
                 int count = [tileDao count];
@@ -94,22 +107,33 @@ const char ConstantKey;
                 [table setDatabase:database];
                 [table setName:tableName];
                 [table setCount:count];
-                //[table setActive:false];
+                [table setActive:[self.active exists:table]];
                 
                 [tables addObject:table];
-                [tileTables addObject:table];
-                //[self.tableCells addObject:table];
+                [theDatabase addTile:table];
+                if(theDatabase.expanded){
+                    [self.tableCells addObject:table];
+                }
             }
-            theDatabase.tiles = tileTables;
             
-            // TODO overlays
+            for(GPKGSFeatureOverlayTable * table in [self.active featureOverlays:database]){
+                GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:table.featureTable];
+                int count = [featureDao count];
+                [table setCount:count];
+                
+                [tables addObject:table];
+                [theDatabase addFeatureOverlay:table];
+                if(theDatabase.expanded){
+                    [self.tableCells addObject:table];
+                }
+            }
             
-            [self.databaseTables addObject:tables];
         }
         @finally {
             [geoPackage close];
         }
     }
+    [self updateClearActiveButton];
 }
 
 -(void) updateAndReloadData{
@@ -217,11 +241,7 @@ const char ConstantKey;
         }
     }else{
         NSInteger i = indexPath.row + 1;
-        [self.tableCells insertObjects:database.features atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, [database.features count])]];
-        i = i + [database.features count];
-        [self.tableCells insertObjects:database.tiles atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, [database.tiles count])]];
-        i = i + [database.tiles count];
-        [self.tableCells insertObjects:database.featureOverlays atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, [database.featureOverlays count])]];
+        [self.tableCells insertObjects:[database getTables] atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, [database getTableCount])]];
     }
     database.expanded = !database.expanded;
     
@@ -231,6 +251,12 @@ const char ConstantKey;
 - (IBAction)tableActiveChanged:(GPKGSActiveTableSwitch *)sender {
     GPKGSTable * table = sender.table;
     table.active = sender.on;
+    if(table.active){
+        [self.active addTable:table];
+    }else{
+        [self.active removeTable:table];
+    }
+    [self updateClearActiveButton];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -256,6 +282,9 @@ const char ConstantKey;
             break;
         case TAG_TABLE_DELETE:
             [self handleDeleteTableWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
+        case TAG_CLEAR_ACTIVE:
+            [self handleClearActiveWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
             break;
     }
 }
@@ -403,7 +432,8 @@ const char ConstantKey;
                         [self deleteTableOption:table];
                         break;
                     case GPKGS_TT_FEATURE_OVERLAY:
-                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL]];
+                        [self.active removeTable:table];
+                        [self updateAndReloadData];
                         break;
                 }
                 break;
@@ -466,6 +496,7 @@ const char ConstantKey;
     if(buttonIndex > 0){
         NSString *database = objc_getAssociatedObject(alertView, &ConstantKey);
         [self.manager delete:database];
+        [self.active removeDatabase:database andPreserveOverlays:false];
         //TODO remove from active?
         [self updateAndReloadData];
     }
@@ -492,7 +523,7 @@ const char ConstantKey;
         if(newName != nil && [newName length] > 0 && ![newName isEqualToString:database]){
             @try {
                 if([self.manager rename:database to:newName]){
-                    //TODO rename active?
+                    [self.active renameDatabase:database asNewDatabase:newName];
                     [self updateAndReloadData];
                 }else{
                     [GPKGSUtils showMessageWithDelegate:self
@@ -571,7 +602,7 @@ const char ConstantKey;
         GPKGGeoPackage * geoPackage = [self.manager open:table.database];
         @try {
             [geoPackage deleteUserTable:table.name];
-            // TODO remove from active?
+            [self.active removeTable:table];
             [self updateAndReloadData];
         }
         @catch (NSException *exception) {
@@ -629,9 +660,45 @@ const char ConstantKey;
     }
 }
 
+- (IBAction)expandAll:(id)sender {
+    for(GPKGSDatabase * database in [self.databases allValues]){
+        database.expanded = true;
+    }
+    [self updateAndReloadData];
+}
+
+- (IBAction)collapseAll:(id)sender {
+    for(GPKGSDatabase * database in [self.databases allValues]){
+        database.expanded = false;
+    }
+    [self updateAndReloadData];
+}
+
 - (IBAction)clearActive:(id)sender {
-    // TODO
-    [self todoAlert: @"Clear Active"];
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:nil
+                          message:[NSString stringWithFormat:@"%@ - %d", [GPKGSProperties getValueOfProperty:GPKGS_PROP_CLEAR_ACTIVE_LABEL], [self.active count]]
+                          delegate:self
+                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                          nil];
+    alert.tag = TAG_CLEAR_ACTIVE;
+    [alert show];
+}
+
+- (void) handleClearActiveWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex > 0){
+        [self.active clearActive];
+        [self updateAndReloadData];
+    }
+}
+
+-(void) updateClearActiveButton{
+    if([self.active count] > 0){
+        [GPKGSUtils enableButton:self.clearActiveButton];
+    }else{
+        [GPKGSUtils disableButton:self.clearActiveButton];
+    }
 }
 
 - (void)downloadFileViewController:(GPKGSDownloadFileViewController *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error{
@@ -705,7 +772,7 @@ const char ConstantKey;
         
         switch([table getType]){
             case GPKGS_TT_FEATURE_OVERLAY:
-                // TODO
+                tableName = ((GPKGSFeatureOverlayTable *) table).featureTable;
             case GPKGS_TT_FEATURE:
                 {
                     featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
