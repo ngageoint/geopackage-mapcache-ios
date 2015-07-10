@@ -18,8 +18,10 @@
 #import "GPKGSActiveTableSwitch.h"
 #import "GPKGSProperties.h"
 #import "GPKGSUtils.h"
+#import "GPKGSDisplayTextViewController.h"
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
+NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
 
 const char ConstantKey;
 
@@ -299,7 +301,7 @@ const char ConstantKey;
         GPKGSDatabase *database = objc_getAssociatedObject(alertView, &ConstantKey);
         switch (buttonIndex) {
             case 1:
-                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_VIEW_LABEL]];
+                [self viewDatabaseOption:database];
                 break;
             case 2:
                 [self deleteDatabaseOption:database.name];
@@ -379,7 +381,7 @@ const char ConstantKey;
                     case GPKGS_TT_FEATURE:
                     case GPKGS_TT_TILE:
                     case GPKGS_TT_FEATURE_OVERLAY:
-                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_VIEW_LABEL]];
+                        [self viewTableOption:table];
                         break;
                 }
                 break;
@@ -440,6 +442,10 @@ const char ConstantKey;
         }
         
     }
+}
+
+-(void) viewDatabaseOption: (GPKGSDatabase *) database{
+    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DISPLAY_TEXT sender:database];
 }
 
 -(void) deleteDatabaseOption: (NSString *) database{
@@ -539,6 +545,10 @@ const char ConstantKey;
             }
         }
     }
+}
+
+-(void) viewTableOption: (GPKGSTable *) table{
+        [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DISPLAY_TEXT sender:table];
 }
 
 -(void) deleteTableOption: (GPKGSTable *) table{
@@ -641,8 +651,177 @@ const char ConstantKey;
     {
         GPKGSDownloadFileViewController *downloadFileViewController = segue.destinationViewController;
         downloadFileViewController.delegate = self;
+    }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DISPLAY_TEXT]){
+        GPKGSDisplayTextViewController *displayTextViewController = segue.destinationViewController;
+        if([sender isKindOfClass:[GPKGSDatabase class]]){
+            GPKGSDatabase * database = (GPKGSDatabase *)sender;
+            displayTextViewController.titleValue = database.name;
+            displayTextViewController.textValue = [self buildTextForDatabase:database];
+        }else if([sender isKindOfClass:[GPKGSTable class]]){
+            GPKGSTable * table = (GPKGSTable *)sender;
+            displayTextViewController.titleValue = [NSString stringWithFormat:@"%@ - %@", table.database, table.name];
+            displayTextViewController.textValue = [self buildTextForTable:table];
+        }
     }
     
+}
+
+-(NSString *) buildTextForDatabase: (GPKGSDatabase *) database{
+    NSMutableString * info = [[NSMutableString alloc] init];
+    GPKGGeoPackage * geoPackage = [self.manager open:database.name];
+    @try {
+        GPKGSpatialReferenceSystemDao * srsDao = [geoPackage getSpatialReferenceSystemDao];
+        [info appendFormat:@"Size: %@", [self.manager readableSize:database.name]];
+        [info appendFormat:@"\n\nPath: %@", [self.manager pathForDatabase:database.name]];
+        [info appendFormat:@"\nDocuments Path: %@", [self.manager documentsPathForDatabase:database.name]];
+        [info appendFormat:@"\n\nFeature Tables: %d", [geoPackage getFeatureTableCount]];
+        [info appendFormat:@"\nTile Tables: %d", [geoPackage getTileTableCount]];
+        GPKGResultSet * results = [srsDao queryForAll];
+        [info appendFormat:@"\nSpatial Reference Systems: %d", [results count]];
+        while([results moveToNext]){
+            GPKGSpatialReferenceSystem * srs = (GPKGSpatialReferenceSystem *)[srsDao getObject:results];
+            [info appendString:@"\n"];
+            [self addSrsToInfoString:info withSrs:srs];
+        }
+    }
+    @catch (NSException *e) {
+        [info appendString:[e description]];
+    }
+    @finally {
+        [geoPackage close];
+    }
+    return info;
+}
+
+-(NSString *) buildTextForTable: (GPKGSTable *) table{
+    NSMutableString * info = [[NSMutableString alloc] init];
+    GPKGGeoPackage * geoPackage = [self.manager open:table.database];
+    @try {
+        NSString * tableName = table.name;
+        GPKGContents * contents = nil;
+        GPKGFeatureDao * featureDao = nil;
+        GPKGTileDao * tileDao = nil;
+        GPKGUserTable * userTable = nil;
+        
+        switch([table getType]){
+            case GPKGS_TT_FEATURE_OVERLAY:
+                // TODO
+            case GPKGS_TT_FEATURE:
+                {
+                    featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
+                    GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage getGeometryColumnsDao];
+                    contents = [geometryColumnsDao getContents:featureDao.geometryColumns];
+                    [info appendString:@"Feature Table"];
+                    [info appendFormat:@"\nFeatures: %d", [featureDao count]];
+                    userTable = featureDao.table;
+                }
+                break;
+            case GPKGS_TT_TILE:
+                {
+                    tileDao = [geoPackage getTileDaoWithTableName:tableName];
+                    GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
+                    contents = [tileMatrixSetDao getContents:tileDao.tileMatrixSet];
+                    [info appendString:@"Tile Table"];
+                    [info appendFormat:@"\nZoom Levels: %lu", (unsigned long)[tileDao.tileMatrices count]];
+                    [info appendFormat:@"\nTiles: %d", [tileDao count]];
+                    userTable = tileDao.table;
+                }
+                break;
+            default:
+                [NSException raise:@"Unsupported" format:@"Unsupported table type: %d", [table getType]];
+        }
+        
+        GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
+        GPKGSpatialReferenceSystem * srs = [contentsDao getSrs:contents];
+        
+        [info appendString:@"\n\nSpatial Reference System:"];
+        [self addSrsToInfoString:info withSrs:srs];
+        
+        [info appendString:@"\n\nContents:"];
+        [info appendFormat:@"\nTable Name: %@", contents.tableName];
+        [info appendFormat:@"\nData Type: %@", contents.dataType];
+        [info appendFormat:@"\nIdentifier: %@", contents.identifier];
+        [info appendFormat:@"\nDescription: %@", contents.theDescription];
+        [info appendFormat:@"\nLast Change: %@", contents.lastChange];
+        [info appendFormat:@"\nMin X: %@", contents.minX];
+        [info appendFormat:@"\nMin Y: %@", contents.minY];
+        [info appendFormat:@"\nMax X: %@", contents.maxX];
+        [info appendFormat:@"\nMax Y: %@", contents.maxY];
+        
+        if(featureDao != nil){
+            GPKGGeometryColumns * geometryColumns = featureDao.geometryColumns;
+            [info appendString:@"\n\nGeometry Columns:"];
+            [info appendFormat:@"\nTable Name: %@", geometryColumns.tableName];
+            [info appendFormat:@"\nColumn Name: %@", geometryColumns.columnName];
+            [info appendFormat:@"\nGeometry Type Name: %@", geometryColumns.geometryTypeName];
+            [info appendFormat:@"\nZ: %@", geometryColumns.z];
+            [info appendFormat:@"\nM: %@", geometryColumns.m];
+        }
+        
+        if(tileDao != nil){
+            GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
+            
+            GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
+            GPKGSpatialReferenceSystem * tileMatrixSetSrs = [tileMatrixSetDao getSrs:tileMatrixSet];
+            if(![tileMatrixSetSrs.srsId isEqualToNumber:srs.srsId]){
+                [info appendString:@"\n\nTile Matrix Set Spatial Reference System:"];
+                [self addSrsToInfoString:info withSrs:tileMatrixSetSrs];
+            }
+            
+            [info appendString:@"\n\nTile Matrices:"];
+            [info appendFormat:@"\nTable Name: %@", tileMatrixSet.tableName];
+            [info appendFormat:@"\nMin X: %@", tileMatrixSet.minX];
+            [info appendFormat:@"\nMin Y: %@", tileMatrixSet.minY];
+            [info appendFormat:@"\nMax X: %@", tileMatrixSet.maxX];
+            [info appendFormat:@"\nMax Y: %@", tileMatrixSet.maxY];
+            
+            [info appendFormat:@"\n\nTile Matrices:"];
+            for(GPKGTileMatrix * tileMatrix in tileDao.tileMatrices){
+                [info appendFormat:@"\n\nTable Name: %@", tileMatrix.tableName];
+                [info appendFormat:@"\nZoom Level: %@", tileMatrix.zoomLevel];
+                [info appendFormat:@"\nTiles: %d", [tileDao countWithZoomLevel:[tileMatrix.zoomLevel intValue]]];
+                [info appendFormat:@"\nMatrix Width: %@", tileMatrix.matrixWidth];
+                [info appendFormat:@"\nMatrix Height: %@", tileMatrix.matrixHeight];
+                [info appendFormat:@"\nTile Width: %@", tileMatrix.tileWidth];
+                [info appendFormat:@"\nTile Height: %@", tileMatrix.tileHeight];
+                [info appendFormat:@"\nPixel X Size: %@", tileMatrix.pixelXSize];
+                [info appendFormat:@"\nPixel Y Size: %@", tileMatrix.pixelYSize];
+            }
+        }
+        
+        [info appendFormat:@"\n\n%@ columns:", tableName];
+        for(GPKGUserColumn * userColumn in userTable.columns){
+            [info appendFormat:@"\n\nIndex: %d", userColumn.index];
+            [info appendFormat:@"\nName: %@", userColumn.name];
+            if(userColumn.max != nil){
+                [info appendFormat:@"\nMax: %@", userColumn.max];
+            }
+            [info appendFormat:@"\nNot Null: %d", userColumn.notNull];
+            if(userColumn.defaultValue != nil){
+                [info appendFormat:@"\nDefault Value: %@", userColumn.defaultValue];
+            }
+            if(userColumn.primaryKey){
+                [info appendFormat:@"\nPrimary Key: %d", userColumn.primaryKey];
+            }
+            [info appendFormat:@"\nType: %@", [userColumn getTypeName]];
+        }
+    }
+    @catch (NSException *e) {
+        [info appendString:[e description]];
+    }
+    @finally {
+        [geoPackage close];
+    }
+    return info;
+}
+
+-(void) addSrsToInfoString: (NSMutableString *) info withSrs: (GPKGSpatialReferenceSystem *) srs{
+    [info appendFormat:@"\nSRS Name: %@", srs.srsName];
+    [info appendFormat:@"\nSRS ID: %@", srs.srsId];
+    [info appendFormat:@"\nOrganization: %@", srs.organization];
+    [info appendFormat:@"\nCoordsys ID: %@", srs.organizationCoordsysId];
+    [info appendFormat:@"\nDefinition: %@", srs.definition];
+    [info appendFormat:@"\nDescription: %@", srs.theDescription];
 }
 
 @end
