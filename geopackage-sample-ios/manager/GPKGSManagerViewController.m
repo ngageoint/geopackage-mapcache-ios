@@ -382,7 +382,7 @@ const char ConstantKey;
     }
     
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:sender.table.name
+                          initWithTitle:[NSString stringWithFormat:@"%@ - %@",sender.table.database,sender.table.name]
                           message:nil
                           delegate:self
                           cancelButtonTitle:nil
