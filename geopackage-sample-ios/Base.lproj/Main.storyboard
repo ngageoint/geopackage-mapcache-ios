@@ -558,7 +558,7 @@
         <!--MapViewController-->
         <scene sceneID="gC6-Wh-fym">
             <objects>
-                <viewController title="MapViewController" id="8Zz-7e-1So" sceneMemberID="viewController">
+                <viewController title="MapViewController" id="8Zz-7e-1So" customClass="GPKGSMapViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="pva-TU-9mq"/>
                         <viewControllerLayoutGuide type="bottom" id="ZJ4-ER-8lG"/>
@@ -567,14 +567,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="au6-Jg-Q0b">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="au6-Jg-Q0b" customClass="GPKGSMapView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </mapView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xA6-nd-bsP">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xA6-nd-bsP">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
-                                <items>
-                                    <barButtonItem title="Item" id="dGI-cM-suc"/>
-                                </items>
+                                <items/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
                                         <integer key="value" value="3"/>
@@ -584,10 +582,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="xA6-nd-bsP" firstAttribute="leading" secondItem="au6-Jg-Q0b" secondAttribute="leading" id="9t0-gH-yuf"/>
                             <constraint firstItem="au6-Jg-Q0b" firstAttribute="bottom" secondItem="ZJ4-ER-8lG" secondAttribute="top" id="Etr-TW-ohs"/>
                             <constraint firstAttribute="trailing" secondItem="au6-Jg-Q0b" secondAttribute="trailing" id="F7S-Ek-Mgd"/>
                             <constraint firstItem="au6-Jg-Q0b" firstAttribute="leading" secondItem="cxh-GH-L9i" secondAttribute="leading" id="PSY-c5-f66"/>
+                            <constraint firstItem="xA6-nd-bsP" firstAttribute="trailing" secondItem="au6-Jg-Q0b" secondAttribute="trailing" id="fZP-8x-MOW"/>
                             <constraint firstItem="au6-Jg-Q0b" firstAttribute="top" secondItem="cxh-GH-L9i" secondAttribute="top" id="nvW-Zn-7il"/>
+                            <constraint firstItem="xA6-nd-bsP" firstAttribute="top" secondItem="pva-TU-9mq" secondAttribute="bottom" id="xEZ-Ts-zGC"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Map" id="0ke-Tq-5U8"/>
@@ -608,11 +609,14 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="mapView" destination="au6-Jg-Q0b" id="LDB-4c-Jar"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oVD-8B-yJy" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="A5c-hd-Yyl" customClass="GPKGButtonHandler"/>
             </objects>
-            <point key="canvasLocation" x="2075" y="-713"/>
+            <point key="canvasLocation" x="2011" y="-719"/>
         </scene>
     </scenes>
     <resources>

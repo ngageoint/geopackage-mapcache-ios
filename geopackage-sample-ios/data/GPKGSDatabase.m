@@ -10,12 +10,12 @@
 
 @interface GPKGSDatabase ()
 
-@property (nonatomic, strong) NSMutableDictionary *featuresDictionary;
-@property (nonatomic, strong) NSMutableDictionary *tilesDictionary;
-@property (nonatomic, strong) NSMutableDictionary *featureOverlaysDictionary;
-@property (nonatomic, strong) NSMutableArray *featuresArray;
-@property (nonatomic, strong) NSMutableArray *tilesArray;
-@property (nonatomic, strong) NSMutableArray *featureOverlaysArray;
+@property (nonatomic, strong) NSMutableOrderedSet *featuresSet;
+@property (nonatomic, strong) NSMutableOrderedSet *featureNamesSet;
+@property (nonatomic, strong) NSMutableOrderedSet *tilesSet;
+@property (nonatomic, strong) NSMutableOrderedSet *tileNamesSet;
+@property (nonatomic, strong) NSMutableOrderedSet *featureOverlaysSet;
+@property (nonatomic, strong) NSMutableOrderedSet *featureOverlayNamesSet;
 
 @end
 
@@ -26,45 +26,45 @@
     if(self != nil){
         self.name = name;
         self.expanded = expanded;
-        self.featuresDictionary = [[NSMutableDictionary alloc] init];
-        self.tilesDictionary = [[NSMutableDictionary alloc] init];
-        self.featureOverlaysDictionary = [[NSMutableDictionary alloc] init];
-        self.featuresArray = [[NSMutableArray alloc] init];
-        self.tilesArray = [[NSMutableArray alloc] init];
-        self.featureOverlaysArray = [[NSMutableArray alloc] init];
+        self.featuresSet = [[NSMutableOrderedSet alloc] init];
+        self.featureNamesSet = [[NSMutableOrderedSet alloc] init];
+        self.tilesSet = [[NSMutableOrderedSet alloc] init];
+        self.tileNamesSet = [[NSMutableOrderedSet alloc] init];
+        self.featureOverlaysSet = [[NSMutableOrderedSet alloc] init];
+        self.featureOverlayNamesSet = [[NSMutableOrderedSet alloc] init];
     }
     return self;
 }
 
 -(NSArray *) getFeatures{
-    return self.featuresArray;
+    return [self.featuresSet array];
 }
 
 -(NSInteger) getFeatureCount{
-    return [self.featuresArray count];
+    return [self.featuresSet count];
 }
 
 -(NSArray *) getFeatureOverlays{
-    return self.featureOverlaysArray;
+    return [self.featureOverlaysSet array];
 }
 
 -(NSInteger) getFeatureOverlayCount{
-    return [self.featureOverlaysArray count];
+    return [self.featureOverlaysSet count];
 }
 
 -(NSArray *) getTiles{
-    return self.tilesArray;
+    return [self.tilesSet array];
 }
 
 -(NSInteger) getTileCount{
-    return [self.tilesArray count];
+    return [self.tilesSet count];
 }
 
 -(NSArray *) getTables{
     NSMutableArray * tables = [[NSMutableArray alloc] init];
-    [tables addObjectsFromArray:self.featuresArray];
-    [tables addObjectsFromArray:self.tilesArray];
-    [tables addObjectsFromArray:self.featureOverlaysArray];
+    [tables addObjectsFromArray:[self getFeatures]];
+    [tables addObjectsFromArray:[self getTiles]];
+    [tables addObjectsFromArray:[self getFeatureOverlays]];
     return tables;
 }
 
@@ -73,44 +73,41 @@
 }
 
 -(void) addFeature: (GPKGSTable *) table{
-    NSInteger index = [self.featuresArray count];
-    [self.featuresArray addObject:table];
-    [self.featuresDictionary setObject:[NSNumber numberWithInteger:index] forKey:table.name];
+    [self.featuresSet addObject:table];
+    [self.featureNamesSet addObject:table.name];
 }
 
 -(void) addFeatureOverlay: (GPKGSTable *) table{
-    NSInteger index = [self.featureOverlaysArray count];
-    [self.featureOverlaysArray addObject:table];
-    [self.featureOverlaysDictionary setObject:[NSNumber numberWithInteger:index] forKey:table.name];
+    [self.featureOverlaysSet addObject:table];
+    [self.featureOverlayNamesSet addObject:table.name];
 }
 
 -(void) addTile: (GPKGSTable *) table{
-    NSInteger index = [self.tilesArray count];
-    [self.tilesArray addObject:table];
-    [self.tilesDictionary setObject:[NSNumber numberWithInteger:index] forKey:table.name];
+    [self.tilesSet addObject:table];
+    [self.tileNamesSet addObject:table.name];
 }
 
 -(void) removeFeature: (GPKGSTable *) table{
-    NSNumber * index = [self.featuresDictionary objectForKey:table.name];
-    if(index != nil){
-        [self.featuresDictionary removeObjectForKey:table.name];
-        [self.featuresArray removeObjectAtIndex:[index integerValue]];
+    NSUInteger index = [self.featureNamesSet indexOfObject:table.name];
+    if(index != NSNotFound){
+        [self.featuresSet removeObjectAtIndex:index];
+        [self.featureNamesSet removeObjectAtIndex:index];
     }
 }
 
 -(void) removeFeatureOverlay: (GPKGSTable *) table{
-    NSNumber * index = [self.featureOverlaysDictionary objectForKey:table.name];
-    if(index != nil){
-        [self.featureOverlaysDictionary removeObjectForKey:table.name];
-        [self.featureOverlaysArray removeObjectAtIndex:[index integerValue]];
+    NSUInteger index = [self.featureOverlayNamesSet indexOfObject:table.name];
+    if(index != NSNotFound){
+        [self.featureOverlaysSet removeObjectAtIndex:index];
+        [self.featureOverlayNamesSet removeObjectAtIndex:index];
     }
 }
 
 -(void) removeTile: (GPKGSTable *) table{
-    NSNumber * index = [self.tilesDictionary objectForKey:table.name];
-    if(index != nil){
-        [self.tilesDictionary removeObjectForKey:table.name];
-        [self.tilesArray removeObjectAtIndex:[index integerValue]];
+    NSUInteger index = [self.tileNamesSet indexOfObject:table.name];
+    if(index != NSNotFound){
+        [self.tilesSet removeObjectAtIndex:index];
+        [self.tileNamesSet removeObjectAtIndex:index];
     }
 }
 
@@ -120,13 +117,13 @@
     
     switch([table getType]){
         case GPKGS_TT_FEATURE:
-            exists = [self.featuresDictionary objectForKey:table.name] != nil;
+            exists = [self.featureNamesSet indexOfObject:table.name] != NSNotFound;
             break;
         case GPKGS_TT_TILE:
-            exists = [self.tilesDictionary objectForKey:table.name] != nil;
+            exists = [self.tileNamesSet indexOfObject:table.name] != NSNotFound;
             break;
         case GPKGS_TT_FEATURE_OVERLAY:
-            exists = [self.featureOverlaysDictionary objectForKey:table.name] != nil;
+            exists = [self.featureOverlayNamesSet indexOfObject:table.name] != NSNotFound;
             break;
         default:
             [NSException raise:@"Unsupported" format:@"Unsupported table type: %u", [table getType]];

@@ -29,6 +29,8 @@
 		045C94831B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94821B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m */; };
 		045C94861B50226D0005CCD0 /* GPKGSFeatureOverlayTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94851B50226D0005CCD0 /* GPKGSFeatureOverlayTable.m */; };
 		045C94891B5026E00005CCD0 /* GPKGSDatabases.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94881B5026E00005CCD0 /* GPKGSDatabases.m */; };
+		045C948D1B50789D0005CCD0 /* GPKGSMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C948C1B50789D0005CCD0 /* GPKGSMapView.m */; };
+		045C94901B53EEB80005CCD0 /* GPKGSMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C948F1B53EEB80005CCD0 /* GPKGSMapViewController.m */; };
 		047733BE1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 047733BD1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m */; };
 		047733C41B4C3D1200E523BD /* GPKGSProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 047733C31B4C3D1200E523BD /* GPKGSProperties.m */; };
 		047733C61B4C3E3400E523BD /* sample.plist in Resources */ = {isa = PBXBuildFile; fileRef = 047733C51B4C3E3400E523BD /* sample.plist */; };
@@ -93,6 +95,10 @@
 		045C94851B50226D0005CCD0 /* GPKGSFeatureOverlayTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSFeatureOverlayTable.m; sourceTree = "<group>"; };
 		045C94871B5026E00005CCD0 /* GPKGSDatabases.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSDatabases.h; sourceTree = "<group>"; };
 		045C94881B5026E00005CCD0 /* GPKGSDatabases.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSDatabases.m; sourceTree = "<group>"; };
+		045C948B1B50789D0005CCD0 /* GPKGSMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSMapView.h; sourceTree = "<group>"; };
+		045C948C1B50789D0005CCD0 /* GPKGSMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSMapView.m; sourceTree = "<group>"; };
+		045C948E1B53EEB80005CCD0 /* GPKGSMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSMapViewController.h; sourceTree = "<group>"; };
+		045C948F1B53EEB80005CCD0 /* GPKGSMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSMapViewController.m; sourceTree = "<group>"; };
 		047733BC1B4C371500E523BD /* GPKGSDatabaseOptionsButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSDatabaseOptionsButton.h; sourceTree = "<group>"; };
 		047733BD1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSDatabaseOptionsButton.m; sourceTree = "<group>"; };
 		047733C21B4C3D1200E523BD /* GPKGSProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSProperties.h; sourceTree = "<group>"; };
@@ -150,6 +156,7 @@
 		040136711AF94FB200C92AFC /* geopackage-sample-ios */ = {
 			isa = PBXGroup;
 			children = (
+				045C948A1B50785B0005CCD0 /* map */,
 				0446481B1B4C26BE0052913B /* util */,
 				044648171B4C21280052913B /* test */,
 				044648161B4C20360052913B /* manager */,
@@ -255,6 +262,17 @@
 				04082B551B4F18A000D65E6B /* GPKGSUtils.m */,
 			);
 			path = util;
+			sourceTree = "<group>";
+		};
+		045C948A1B50785B0005CCD0 /* map */ = {
+			isa = PBXGroup;
+			children = (
+				045C948B1B50789D0005CCD0 /* GPKGSMapView.h */,
+				045C948C1B50789D0005CCD0 /* GPKGSMapView.m */,
+				045C948E1B53EEB80005CCD0 /* GPKGSMapViewController.h */,
+				045C948F1B53EEB80005CCD0 /* GPKGSMapViewController.m */,
+			);
+			path = map;
 			sourceTree = "<group>";
 		};
 		C5D6DE3118DC6CC3BD7E852D /* Pods */ = {
@@ -413,6 +431,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				045C94901B53EEB80005CCD0 /* GPKGSMapViewController.m in Sources */,
 				047733C91B4C496600E523BD /* GPKGSTableOptionsButton.m in Sources */,
 				044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */,
 				0446481A1B4C24AD0052913B /* GPKGSActiveTableSwitch.m in Sources */,
@@ -425,6 +444,7 @@
 				044647FF1B4AF3870052913B /* GPKGSTable.m in Sources */,
 				040136781AF94FB200C92AFC /* AppDelegate.m in Sources */,
 				044648021B4AF4250052913B /* GPKGSTableTypes.m in Sources */,
+				045C948D1B50789D0005CCD0 /* GPKGSMapView.m in Sources */,
 				044648111B4B1D960052913B /* GPKGSTableCell.m in Sources */,
 				044648051B4AF6990052913B /* GPKGSFeatureTable.m in Sources */,
 				0401367B1AF94FB200C92AFC /* GPKGSTestViewController.m in Sources */,
