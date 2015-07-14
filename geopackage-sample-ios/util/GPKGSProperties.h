@@ -12,6 +12,8 @@
 
 +(NSString *) getValueOfProperty: (NSString *) property;
 
++(NSNumber *) getNumberValueOfProperty: (NSString *) property;
+
 +(NSArray *) getArrayOfProperty: (NSString *) property;
 
 +(NSDictionary *) getDictionaryOfProperty: (NSString *) property;

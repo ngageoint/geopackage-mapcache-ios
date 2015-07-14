@@ -27,6 +27,19 @@ static NSDictionary * properties;
     return value;
 }
 
++(NSNumber *) getNumberValueOfProperty: (NSString *) property{
+    
+    [self loadProperties];
+    
+    NSNumber * value = [properties valueForKey:property];
+    
+    if(value == nil){
+        [NSException raise:@"Required Property" format:@"Required property not found: %@", property];
+    }
+    
+    return value;
+}
+
 +(NSArray *) getArrayOfProperty: (NSString *) property{
     
     [self loadProperties];

@@ -17,6 +17,8 @@
 #import "GPKGTileBoundingBoxUtils.h"
 #import "GPKGSFeatureOverlayTable.h"
 #import "GPKGMapShapeConverter.h"
+#import "GPKGSProperties.h"
+#import "GPKGSConstants.h"
 
 @interface GPKGSMapViewController ()
 
@@ -161,18 +163,24 @@
     if(bbox == nil){
         bbox = self.tilesBoundingBox;
         if(self.featureOverlayTiles){
-            paddingPercentage = 10 * .01; //TODO
+            paddingPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURE_TILES_ZOOM_PADDING_PERCENTAGE] intValue] * .01;
         }else{
-            paddingPercentage = 0 * .01; //TODO
+            paddingPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_ZOOM_PADDING_PERCENTAGE] intValue] * .01;
         }
     }else{
-        paddingPercentage = 10 * .01f; //TODO
+        paddingPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_PADDING_PERCENTAGE] intValue] * .01f;
     }
     
     if(bbox != nil){
+
+        struct GPKGBoundingBoxSize size = [bbox sizeInMeters];
+        double expandedHeight = size.height + (2 * (size.height * paddingPercentage));
+        double expandedWidth = size.width + (2 * (size.width * paddingPercentage));
         
-        MKCoordinateRegion coordRegion = [bbox getCoordinateRegion];
-        [self.mapView setRegion:coordRegion animated:true];
+        CLLocationCoordinate2D center = [bbox getCenter];
+        MKCoordinateRegion expandedRegion = MKCoordinateRegionMakeWithDistance(center, expandedHeight, expandedWidth);
+        
+        [self.mapView setRegion:expandedRegion animated:true];
     }
 }
 
