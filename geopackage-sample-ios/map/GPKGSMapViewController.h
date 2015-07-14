@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GPKGSMapView.h"
 
-@interface GPKGSMapViewController : UIViewController <MKMapViewDelegate>
+@interface GPKGSMapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet GPKGSMapView *mapView;
 

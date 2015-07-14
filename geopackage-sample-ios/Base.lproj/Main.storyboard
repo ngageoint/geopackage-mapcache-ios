@@ -569,7 +569,86 @@
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xA6-nd-bsP">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
-                                <items/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="U4c-PP-wUf"/>
+                                    <barButtonItem style="plain" id="QNz-Hf-a9u" userLabel="ZoomActiveItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="A9k-RT-gky" userLabel="ZoomActiveButton">
+                                            <rect key="frame" x="364" y="-3" width="30" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="search">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="zoomToActiveButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="KPE-P6-0Sr"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="kj1-Aw-hs7"/>
+                                    <barButtonItem style="plain" id="vwi-FI-f4Q" userLabel="FeaturesButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="E1n-ne-vUV" userLabel="FeaturesButton">
+                                            <rect key="frame" x="454" y="-3" width="30" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="features">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="featuresButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="l48-LD-x0Z"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="zr3-WR-TeH"/>
+                                    <barButtonItem style="plain" id="Nh0-p6-UmK" userLabel="BoundingBoxButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="A2J-Zr-8Xo" userLabel="BoundingBoxButton">
+                                            <rect key="frame" x="504" y="-3" width="30" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="boundingbox">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="boundingBoxButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="pvE-3Q-Nhj"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="fyM-sW-ouc"/>
+                                    <barButtonItem style="plain" id="t6c-8Q-dPm" userLabel="LocationButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="gMK-qe-FoI" userLabel="LocationButton">
+                                            <rect key="frame" x="554" y="-3" width="30" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="location">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="userLocation:" destination="8Zz-7e-1So" eventType="touchUpInside" id="8No-1W-dPr"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="VDi-Hd-DkT"/>
+                                    <barButtonItem style="plain" id="3td-k2-jQT" userLabel="MaxButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hH3-BN-PUR" userLabel="MaxButton">
+                                            <rect key="frame" x="488" y="-3" width="30" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="max">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="maxFeaturesButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="w8V-pS-AGY"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="6RH-Re-4hG"/>
+                                    <barButtonItem style="plain" id="tip-G1-oQ2" userLabel="LayersButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="E3P-6n-NNf" userLabel="LayersButton">
+                                            <rect key="frame" x="554" y="-3" width="30" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="layers">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="mapType:" destination="8Zz-7e-1So" eventType="touchUpInside" id="xvU-ms-xeR"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                </items>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
                                         <integer key="value" value="3"/>
@@ -631,5 +710,11 @@
         <image name="Menu" width="88" height="88"/>
         <image name="More" width="50" height="50"/>
         <image name="Up" width="50" height="50"/>
+        <image name="boundingbox" width="50" height="50"/>
+        <image name="features" width="50" height="50"/>
+        <image name="layers" width="50" height="50"/>
+        <image name="location" width="50" height="50"/>
+        <image name="max" width="50" height="50"/>
+        <image name="search" width="50" height="50"/>
     </resources>
 </document>
