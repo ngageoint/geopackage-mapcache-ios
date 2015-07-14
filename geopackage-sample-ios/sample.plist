@@ -62,12 +62,26 @@
 	<string>Download Error</string>
 	<key>clear_active_label</key>
 	<string>Clear Active</string>
+	<key>map_max_features</key>
+	<string>Max Features</string>
+	<key>map_max_features_message</key>
+	<string>Set the max number of features to draw on the map</string>
+	<key>map_max_features_default</key>
+	<integer>1000</integer>
+	<key>map_type</key>
+	<string>Map Type</string>
+	<key>map_type_standard</key>
+	<string>Standard</string>
+	<key>map_type_satellite</key>
+	<string>Satellite</string>
+	<key>map_type_hybrid</key>
+	<string>Hybrid</string>
 	<key>map_features_zoom_padding_percentage</key>
 	<integer>10</integer>
 	<key>map_tiles_zoom_padding_percentage</key>
-	<string>0</string>
+	<integer>0</integer>
 	<key>map_feature_tiles_zoom_padding_percentage</key>
-	<string>10</string>
+	<integer>10</integer>
 	<key>preloaded_geopackage_urls</key>
 	<array>
 		<dict>

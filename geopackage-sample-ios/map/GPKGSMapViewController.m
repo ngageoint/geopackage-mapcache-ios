@@ -28,18 +28,28 @@
 @property (nonatomic, strong) GPKGBoundingBox * featuresBoundingBox;
 @property (nonatomic, strong) GPKGBoundingBox * tilesBoundingBox;
 @property (nonatomic) BOOL featureOverlayTiles;
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (nonatomic, strong) NSUserDefaults * settings;
 
 @end
 
 @implementation GPKGSMapViewController
 
+#define TAG_MAP_TYPE 1
+#define TAG_MAX_FEATURES 2
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.settings = [NSUserDefaults standardUserDefaults];
     self.mapView.delegate = self;
+    self.mapView.showsUserLocation = YES;
     self.manager = [GPKGGeoPackageFactory getManager];
     self.active = [GPKGSDatabases getInstance];
     self.geoPackages = [[NSMutableDictionary alloc] init];
-    [self updateWithZoom:self.active.modified];
+    [self updateInBackgroundWithZoom:self.active.modified];
+    self.locationManager = [[CLLocationManager alloc] init];
+    [self.locationManager setDelegate:self];
+    [self.locationManager requestWhenInUseAuthorization];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -48,9 +58,116 @@
     if(self.active.modified){
         [self.active setModified:false];
         // TODO
-        [self updateWithZoom:true];
+        [self updateInBackgroundWithZoom:true];
     }
 
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    switch(alertView.tag){
+        case TAG_MAP_TYPE:
+            [self handleMapTypeWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
+        case TAG_MAX_FEATURES:
+            [self handleMaxFeaturesWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
+    }
+}
+
+- (IBAction)zoomToActiveButton:(id)sender {
+    [self zoomToActive];
+}
+
+- (IBAction)featuresButton:(id)sender {
+    //TODO
+}
+
+- (IBAction)boundingBoxButton:(id)sender {
+    //TODO
+}
+
+- (IBAction)userLocation:(id)sender {
+    if([CLLocationManager locationServicesEnabled]){
+        [self.locationManager startUpdatingLocation];
+    }
+}
+
+- (IBAction)maxFeaturesButton:(id)sender {
+    UIAlertView * alert = [[UIAlertView alloc]
+                           initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES]
+                           message:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_MESSAGE]
+                           delegate:self
+                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                           nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    UITextField* textField = [alert textFieldAtIndex:0];
+    textField.keyboardType = UIKeyboardTypeNumberPad;
+    [textField setText:[NSString stringWithFormat:@"%d", [self getMaxFeatures]]];
+    alert.tag = TAG_MAX_FEATURES;
+    [alert show];
+}
+
+- (void) handleMaxFeaturesWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex > 0){
+        NSString * maxFeatures = [[alertView textFieldAtIndex:0] text];
+        if(maxFeatures != nil && [maxFeatures length] > 0){
+            @try {
+                NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+                formatter.numberStyle = NSNumberFormatterDecimalStyle;
+                NSNumber *maxFeaturesNumber = [formatter numberFromString:maxFeatures];
+                [self.settings setInteger:[maxFeaturesNumber integerValue] forKey:GPKGS_PROP_MAP_MAX_FEATURES];
+                [self.settings synchronize];
+                [self updateInBackgroundWithZoom:false];
+            }
+            @catch (NSException *e) {
+                NSLog(@"Invalid max features value: %@, Error: %@", maxFeatures, [e description]);
+            }
+        }
+    }
+}
+
+- (IBAction)mapType:(id)sender {
+    UIAlertView * alert = [[UIAlertView alloc]
+                           initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE]
+                           message:nil
+                           delegate:self
+                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD],
+                           [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE],
+                           [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_HYBRID],
+                           nil];
+    alert.tag = TAG_MAP_TYPE;
+    [alert show];
+}
+
+- (void) handleMapTypeWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex > 0){
+        MKMapType mapType;
+        switch(buttonIndex){
+            case 1:
+                mapType = MKMapTypeStandard;
+                break;
+            case 2:
+                mapType = MKMapTypeSatellite;
+                break;
+            case 3:
+                mapType = MKMapTypeHybrid;
+                break;
+            default:
+                mapType = MKMapTypeStandard;
+        }
+        [self.mapView setMapType:mapType];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    CLLocation * userLocation = self.mapView.userLocation.location;
+    if(userLocation != nil){
+        [self.mapView setCenterCoordinate:userLocation.coordinate animated:YES];
+        [self.locationManager stopUpdatingLocation];
+    }
 }
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id)overlay {
@@ -72,7 +189,7 @@
     return rendered;
 }
 
--(int) updateWithZoom: (BOOL) zoom{
+-(int) updateInBackgroundWithZoom: (BOOL) zoom{
     
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
@@ -87,6 +204,12 @@
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
     int maxFeatures = [self getMaxFeatures];
+
+    // TODO do in the background
+    [self updateWithZoom:zoom andMaxFeatures:maxFeatures];
+}
+
+-(int) updateWithZoom: (BOOL) zoom andMaxFeatures: (int) maxFeatures{
     
     int count = 0;
     
@@ -275,7 +398,11 @@
 }
 
 -(int) getMaxFeatures{
-    return 1000; // TODO
+    int maxFeatures = (int)[self.settings integerForKey:GPKGS_PROP_MAP_MAX_FEATURES];
+    if(maxFeatures == 0){
+        maxFeatures = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
+    }
+    return maxFeatures;
 }
 
 /*
