@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		040136751AF94FB200C92AFC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 040136741AF94FB200C92AFC /* main.m */; };
 		040136781AF94FB200C92AFC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 040136771AF94FB200C92AFC /* AppDelegate.m */; };
-		0401367B1AF94FB200C92AFC /* GPKGSTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0401367A1AF94FB200C92AFC /* GPKGSTestViewController.m */; };
 		040136811AF94FB200C92AFC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0401367F1AF94FB200C92AFC /* Main.storyboard */; };
 		040136831AF94FB200C92AFC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 040136821AF94FB200C92AFC /* Images.xcassets */; };
 		040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 040136841AF94FB200C92AFC /* LaunchScreen.xib */; };
@@ -57,8 +56,6 @@
 		040136741AF94FB200C92AFC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		040136761AF94FB200C92AFC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		040136771AF94FB200C92AFC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		040136791AF94FB200C92AFC /* GPKGSTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSTestViewController.h; sourceTree = "<group>"; };
-		0401367A1AF94FB200C92AFC /* GPKGSTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSTestViewController.m; sourceTree = "<group>"; };
 		040136801AF94FB200C92AFC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		040136821AF94FB200C92AFC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		040136851AF94FB200C92AFC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -158,7 +155,6 @@
 			children = (
 				045C948A1B50785B0005CCD0 /* map */,
 				0446481B1B4C26BE0052913B /* util */,
-				044648171B4C21280052913B /* test */,
 				044648161B4C20360052913B /* manager */,
 				044648151B4C1A8D0052913B /* data */,
 				040136761AF94FB200C92AFC /* AppDelegate.h */,
@@ -240,15 +236,6 @@
 				045C94821B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m */,
 			);
 			path = manager;
-			sourceTree = "<group>";
-		};
-		044648171B4C21280052913B /* test */ = {
-			isa = PBXGroup;
-			children = (
-				040136791AF94FB200C92AFC /* GPKGSTestViewController.h */,
-				0401367A1AF94FB200C92AFC /* GPKGSTestViewController.m */,
-			);
-			path = test;
 			sourceTree = "<group>";
 		};
 		0446481B1B4C26BE0052913B /* util */ = {
@@ -447,7 +434,6 @@
 				045C948D1B50789D0005CCD0 /* GPKGSMapView.m in Sources */,
 				044648111B4B1D960052913B /* GPKGSTableCell.m in Sources */,
 				044648051B4AF6990052913B /* GPKGSFeatureTable.m in Sources */,
-				0401367B1AF94FB200C92AFC /* GPKGSTestViewController.m in Sources */,
 				045C94831B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m in Sources */,
 				045C94861B50226D0005CCD0 /* GPKGSFeatureOverlayTable.m in Sources */,
 				04082B561B4F18A000D65E6B /* GPKGSUtils.m in Sources */,
