@@ -62,6 +62,12 @@
 	<string>Download Error</string>
 	<key>clear_active_label</key>
 	<string>Clear Active</string>
+	<key>map_features_zoom_padding_percentage</key>
+	<integer>10</integer>
+	<key>map_tiles_zoom_padding_percentage</key>
+	<string>0</string>
+	<key>map_feature_tiles_zoom_padding_percentage</key>
+	<string>10</string>
 	<key>preloaded_geopackage_urls</key>
 	<array>
 		<dict>
