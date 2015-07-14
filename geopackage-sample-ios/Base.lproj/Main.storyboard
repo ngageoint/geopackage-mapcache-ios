@@ -5,60 +5,6 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--TestViewController-->
-        <scene sceneID="bER-Ej-MZc">
-            <objects>
-                <viewController title="TestViewController" id="uVC-ti-xMX" customClass="GPKGSTestViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="VHJ-MJ-WrJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="bnv-i3-uS9"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="27s-k6-CdZ">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l0A-cW-OSO">
-                                <rect key="frame" x="0.0" y="20" width="600" height="475"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XLY-Ci-XOO">
-                                <rect key="frame" x="110" y="495" width="92" height="53"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="53" id="05I-XN-WeG"/>
-                                    <constraint firstAttribute="width" constant="92" id="id7-Ov-rRA"/>
-                                </constraints>
-                                <state key="normal" title="Button">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="buttonTapped:" destination="uVC-ti-xMX" eventType="touchUpInside" id="KjQ-bd-xwA"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="bnv-i3-uS9" firstAttribute="top" secondItem="XLY-Ci-XOO" secondAttribute="bottom" constant="27" id="4jk-zx-vje"/>
-                            <constraint firstItem="XLY-Ci-XOO" firstAttribute="top" secondItem="l0A-cW-OSO" secondAttribute="bottom" constant="1" id="E9F-4K-ohF"/>
-                            <constraint firstItem="l0A-cW-OSO" firstAttribute="leading" secondItem="27s-k6-CdZ" secondAttribute="leading" id="JQT-Qa-GPV"/>
-                            <constraint firstItem="l0A-cW-OSO" firstAttribute="top" secondItem="27s-k6-CdZ" secondAttribute="top" id="Rbg-Jx-jtn"/>
-                            <constraint firstItem="XLY-Ci-XOO" firstAttribute="leading" secondItem="27s-k6-CdZ" secondAttribute="leadingMargin" constant="94" id="bE9-QP-L3S"/>
-                            <constraint firstAttribute="trailing" secondItem="l0A-cW-OSO" secondAttribute="trailing" id="t1F-Af-MVe"/>
-                        </constraints>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="" image="Manager" id="7rO-zU-nFp"/>
-                    <toolbarItems/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
-                    <connections>
-                        <outlet property="resultText" destination="l0A-cW-OSO" id="4l3-W9-Z2O"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Mxf-Qr-gad" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <customObject id="dWl-KO-6ue" customClass="GPKGButtonHandler"/>
-            </objects>
-            <point key="canvasLocation" x="2075" y="133"/>
-        </scene>
         <!--SampleTableBarController-->
         <scene sceneID="3O9-6s-RJ8">
             <objects>
@@ -72,7 +18,6 @@
                     <connections>
                         <segue destination="0EV-Hx-RDM" kind="relationship" relationship="viewControllers" id="gi3-PR-kM3"/>
                         <segue destination="8Zz-7e-1So" kind="relationship" relationship="viewControllers" id="DZP-Cd-Ctw"/>
-                        <segue destination="uVC-ti-xMX" kind="relationship" relationship="viewControllers" id="fkH-29-vfD"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cgz-L6-8z0" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -319,7 +264,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ter-A5-hWz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2075" y="-1542"/>
+            <point key="canvasLocation" x="1923" y="-1270"/>
         </scene>
         <!--Download File View Controller-->
         <scene sceneID="I64-UR-e60">
@@ -480,7 +425,7 @@
                     </items>
                 </navigationBar>
             </objects>
-            <point key="canvasLocation" x="3069" y="-2003"/>
+            <point key="canvasLocation" x="3109" y="-1791"/>
         </scene>
         <!--Display Text View Controller-->
         <scene sceneID="FNm-e3-4hK">
@@ -553,7 +498,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uCQ-67-bpm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3069" y="-1251"/>
+            <point key="canvasLocation" x="3109" y="-859"/>
         </scene>
         <!--MapViewController-->
         <scene sceneID="gC6-Wh-fym">
@@ -695,7 +640,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oVD-8B-yJy" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="A5c-hd-Yyl" customClass="GPKGButtonHandler"/>
             </objects>
-            <point key="canvasLocation" x="2011" y="-719"/>
+            <point key="canvasLocation" x="1923" y="-131"/>
         </scene>
     </scenes>
     <resources>
