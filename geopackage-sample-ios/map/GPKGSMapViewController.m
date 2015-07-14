@@ -30,6 +30,7 @@
 @property (nonatomic) BOOL featureOverlayTiles;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (nonatomic, strong) NSUserDefaults * settings;
+@property (atomic) int updateCountId;
 
 @end
 
@@ -40,27 +41,27 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.updateCountId = 0;
     self.settings = [NSUserDefaults standardUserDefaults];
     self.mapView.delegate = self;
     self.mapView.showsUserLocation = YES;
     self.manager = [GPKGGeoPackageFactory getManager];
     self.active = [GPKGSDatabases getInstance];
     self.geoPackages = [[NSMutableDictionary alloc] init];
-    [self updateInBackgroundWithZoom:self.active.modified];
+    //[self updateInBackgroundWithZoom:self.active.modified];
     self.locationManager = [[CLLocationManager alloc] init];
     [self.locationManager setDelegate:self];
     [self.locationManager requestWhenInUseAuthorization];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void) viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     
     if(self.active.modified){
         [self.active setModified:false];
         // TODO
         [self updateInBackgroundWithZoom:true];
     }
-
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -191,6 +192,7 @@
 
 -(int) updateInBackgroundWithZoom: (BOOL) zoom{
     
+    int updateId = ++self.updateCountId;
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
     for(GPKGGeoPackage * geoPackage in [self.geoPackages allValues]){
@@ -203,13 +205,21 @@
     [self.geoPackages removeAllObjects];
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
+    self.featureOverlayTiles = false;
     int maxFeatures = [self getMaxFeatures];
 
-    // TODO do in the background
-    [self updateWithZoom:zoom andMaxFeatures:maxFeatures];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        [self updateWithId: updateId andZoom:zoom andMaxFeatures:maxFeatures];
+    });
 }
 
--(int) updateWithZoom: (BOOL) zoom andMaxFeatures: (int) maxFeatures{
+-(BOOL) updateCanceled: (int) updateId{
+    BOOL canceled = updateId < self.updateCountId;
+    return canceled;
+}
+
+-(int) updateWithId: (int) updateId andZoom: (BOOL) zoom andMaxFeatures: (int) maxFeatures{
     
     int count = 0;
     
@@ -230,13 +240,23 @@
                     @catch (NSException *e) {
                         NSLog(@"%@", [e description]);
                     }
+                    if([self updateCanceled:updateId]){
+                        break;
+                    }
                 }
              
                 for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
                     // TODO
+                    if([self updateCanceled:updateId]){
+                        break;
+                    }
                 }
             } else{
                 [self.active removeDatabase:database.name andPreserveOverlays:false];
+            }
+            
+            if([self updateCanceled:updateId]){
+                break;
             }
         }
         
@@ -263,16 +283,22 @@
             NSMutableArray * databaseFeatures = [featureTables objectForKey:databaseName];
             
             for(NSString * features in databaseFeatures){
-                count = [self displayFeaturesWithDatabase:databaseName andFeatures:features andCount:count andMaxFeatures:maxFeatures];
-                if(count >= maxFeatures){
+                count = [self displayFeaturesWithId:updateId andDatabase:databaseName andFeatures:features andCount:count andMaxFeatures:maxFeatures];
+                if([self updateCanceled:updateId] || count >= maxFeatures){
                     break;
                 }
+            }
+            
+            if([self updateCanceled:updateId]){
+                break;
             }
         }
     }
     
     if(zoom){
-        [self zoomToActive];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self zoomToActive];
+        });
     }
     
     return count;
@@ -348,14 +374,14 @@
     [self.mapView addOverlay:overlay];
 }
 
--(int) displayFeaturesWithDatabase: (NSString *) database andFeatures: (NSString *) features andCount: (int) count andMaxFeatures: (int) maxFeatures{
+-(int) displayFeaturesWithId: (int) updateId andDatabase: (NSString *) database andFeatures: (NSString *) features andCount: (int) count andMaxFeatures: (int) maxFeatures{
     
     GPKGGeoPackage * geoPackage = [self.geoPackages objectForKey:database];
     GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:features];
     
     GPKGResultSet * results = [featureDao queryForAll];
     @try {
-        while(count < maxFeatures && [results moveToNext]){
+        while(![self updateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
             GPKGFeatureRow * row = [featureDao getFeatureRow:results];
             count = [self processFeatureRowWithDatabase:database andFeatureDao:featureDao andFeatureRow:row andCount:count andMaxFeatures:maxFeatures];
         }
@@ -380,7 +406,9 @@
             if(count++ < maxFeatures){
                 GPKGMapShape * shape = [converter toShapeWithGeometry:geometry];
                 [self updateFeatureBoundingBox:shape];
-                [GPKGMapShapeConverter addMapShape:shape toMapView:self.mapView];
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    [GPKGMapShapeConverter addMapShape:shape toMapView:self.mapView];
+                });
             }
         }
         
