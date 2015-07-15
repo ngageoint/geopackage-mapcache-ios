@@ -8,6 +8,8 @@
 
 #import "GPKGSFeatureTable.h"
 
+NSString * const GPKGS_FEATURE_TABLE_GEOMETRY_TYPE = @"geometry_type";
+
 @implementation GPKGSFeatureTable
 
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andGeometryType: (enum WKBGeometryType) geometryType andCount: (int) count{
@@ -18,8 +20,26 @@
     return self;
 }
 
+-(instancetype) initWithValues: (NSDictionary *) values{
+    self = [self initWithValues:values];
+    if(self != nil){
+        self.geometryType = (enum WKBGeometryType)[values objectForKey:GPKGS_FEATURE_TABLE_GEOMETRY_TYPE];
+    }
+    return self;
+}
+
 -(enum GPKGSTableType) getType{
     return GPKGS_TT_FEATURE;
+}
+
+-(NSDictionary *) getValues{
+    
+    NSMutableDictionary * values = [[NSMutableDictionary alloc] init];
+    [values setValuesForKeysWithDictionary:[super getValues]];
+    
+    [values setObject:[NSNumber numberWithInt:(int)self.geometryType] forKey:GPKGS_FEATURE_TABLE_GEOMETRY_TYPE];
+    
+    return values;
 }
 
 @end
