@@ -10,4 +10,6 @@
 
 @interface GPKGSTileTable : GPKGSTable
 
+-(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count;
+
 @end

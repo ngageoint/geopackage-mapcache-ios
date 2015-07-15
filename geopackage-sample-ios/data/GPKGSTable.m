@@ -10,6 +10,16 @@
 
 @implementation GPKGSTable
 
+-(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count{
+    self = [super init];
+    if(self != nil){
+        self.database = database;
+        self.name = name;
+        self.count = count;
+    }
+    return self;
+}
+
 -(enum GPKGSTableType) getType{
     [self doesNotRecognizeSelector:_cmd];
     return GPKGS_TT_FEATURE;

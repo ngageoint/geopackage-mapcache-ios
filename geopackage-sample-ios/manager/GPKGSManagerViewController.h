@@ -10,6 +10,8 @@
 #import "GPKGSDownloadFileViewController.h"
 
 extern NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE;
+extern NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT;;
+extern NSString * const GPKGS_EXPANDED_PREFERENCE;
 
 extern const char ConstantKey;
 

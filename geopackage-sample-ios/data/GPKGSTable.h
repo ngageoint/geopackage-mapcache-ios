@@ -16,6 +16,8 @@
 @property (nonatomic) int count;
 @property (nonatomic) BOOL active;
 
+-(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count;
+
 -(enum GPKGSTableType) getType;
 
 @end

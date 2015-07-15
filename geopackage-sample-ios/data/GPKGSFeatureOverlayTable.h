@@ -18,4 +18,6 @@
 @property (nonatomic) double minLon;
 @property (nonatomic) double maxLon;
 
+-(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andFeatureTable: (NSString *) featureTable andGeometryType: (enum WKBGeometryType) geometryType andCount: (int) count;
+
 @end

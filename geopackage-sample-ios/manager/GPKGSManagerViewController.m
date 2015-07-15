@@ -24,6 +24,7 @@
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
 NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
+NSString * const GPKGS_EXPANDED_PREFERENCE = @"expanded";
 
 const char ConstantKey;
 
@@ -34,6 +35,7 @@ const char ConstantKey;
 @property (nonatomic, strong) NSMutableDictionary *databases;
 @property (nonatomic, strong) NSMutableArray *tableCells;
 @property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic, strong) NSUserDefaults * settings;
 
 @end
 
@@ -52,6 +54,12 @@ const char ConstantKey;
     [super viewDidLoad];
     self.manager = [GPKGGeoPackageFactory getManager];
     self.active = [GPKGSDatabases getInstance];
+    self.settings = [NSUserDefaults standardUserDefaults];
+    NSArray * expandedDatabases = [self.settings stringArrayForKey:GPKGS_EXPANDED_PREFERENCE];
+    self.databases = [[NSMutableDictionary alloc] init];
+    for(NSString * expandedDatabase in expandedDatabases){
+        [self.databases setObject:[[GPKGSDatabase alloc] initWithName:expandedDatabase andExpanded:true] forKey:expandedDatabase];
+    }
     [self update];
 }
 
@@ -85,11 +93,7 @@ const char ConstantKey;
                 GPKGGeometryColumns * geometryColumns = [contentsDao getGeometryColumns:contents];
                 enum WKBGeometryType geometryType = [WKBGeometryTypes fromName:geometryColumns.geometryTypeName];
                 
-                GPKGSFeatureTable * table = [[GPKGSFeatureTable alloc] init];
-                [table setDatabase:database];
-                [table setName:tableName];
-                [table setGeometryType:geometryType];
-                [table setCount:count];
+                GPKGSFeatureTable * table = [[GPKGSFeatureTable alloc] initWithDatabase:database andName:tableName andGeometryType:geometryType andCount:count];
                 [table setActive:[self.active exists:table]];
                 
                 [tables addObject:table];
@@ -103,10 +107,7 @@ const char ConstantKey;
                 GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName: tableName];
                 int count = [tileDao count];
                 
-                GPKGSTileTable * table = [[GPKGSTileTable alloc] init];
-                [table setDatabase:database];
-                [table setName:tableName];
-                [table setCount:count];
+                GPKGSTileTable * table = [[GPKGSTileTable alloc] initWithDatabase:database andName:tableName andCount:count];
                 [table setActive:[self.active exists:table]];
                 
                 [tables addObject:table];
@@ -244,6 +245,11 @@ const char ConstantKey;
         [self.tableCells insertObjects:[database getTables] atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, [database getTableCount])]];
     }
     database.expanded = !database.expanded;
+    if(database.expanded){
+        [self addExpandedSetting:database.name];
+    }else{
+        [self removeExpandedSetting:database.name];
+    }
     
     [self.tableView reloadData];
 }
@@ -663,6 +669,7 @@ const char ConstantKey;
 - (IBAction)expandAll:(id)sender {
     for(GPKGSDatabase * database in [self.databases allValues]){
         database.expanded = true;
+        [self addExpandedSetting:database.name];
     }
     [self updateAndReloadData];
 }
@@ -671,6 +678,7 @@ const char ConstantKey;
     for(GPKGSDatabase * database in [self.databases allValues]){
         database.expanded = false;
     }
+    [self clearExpandedSettings];
     [self updateAndReloadData];
 }
 
@@ -889,6 +897,37 @@ const char ConstantKey;
     [info appendFormat:@"\nCoordsys ID: %@", srs.organizationCoordsysId];
     [info appendFormat:@"\nDefinition: %@", srs.definition];
     [info appendFormat:@"\nDescription: %@", srs.theDescription];
+}
+
+-(void) addExpandedSetting: (NSString *) database{
+    NSArray * expandedDatabases = [self.settings stringArrayForKey:GPKGS_EXPANDED_PREFERENCE];
+    if(expandedDatabases == nil){
+        NSMutableArray * newExpandedDatabases = [[NSMutableArray alloc] initWithObjects:database, nil];
+        [self.settings setObject:newExpandedDatabases forKey:GPKGS_EXPANDED_PREFERENCE];
+        [self.settings synchronize];
+    }else{
+        NSMutableArray * newExpandedDatabases = [[NSMutableArray alloc] initWithArray:expandedDatabases];
+        if(![newExpandedDatabases containsObject:database]){
+            [newExpandedDatabases addObject:database];
+            [self.settings setObject:newExpandedDatabases forKey:GPKGS_EXPANDED_PREFERENCE];
+            [self.settings synchronize];
+        }
+    }
+}
+
+-(void) removeExpandedSetting: (NSString *) database{
+    NSArray * expandedDatabases = [self.settings stringArrayForKey:GPKGS_EXPANDED_PREFERENCE];
+    if(expandedDatabases != nil && [expandedDatabases containsObject:database]){
+        NSMutableArray * newExpandedDatabases = [[NSMutableArray alloc] initWithArray:expandedDatabases];
+        [newExpandedDatabases removeObject:database];
+        [self.settings setObject:newExpandedDatabases forKey:GPKGS_EXPANDED_PREFERENCE];
+        [self.settings synchronize];
+    }
+}
+
+-(void) clearExpandedSettings{
+    [self.settings removeObjectForKey:GPKGS_EXPANDED_PREFERENCE];
+    [self.settings synchronize];
 }
 
 @end
