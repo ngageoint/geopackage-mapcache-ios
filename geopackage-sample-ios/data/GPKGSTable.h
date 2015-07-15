@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "GPKGSTableTypes.h"
 
+extern NSString * const GPKGS_TABLE_DATABASE;
+extern NSString * const GPKGS_TABLE_NAME;
+extern NSString * const GPKGS_TABLE_COUNT;
+extern NSString * const GPKGS_TABLE_ACTIVE;
+
 @interface GPKGSTable : NSObject
 
 @property (nonatomic, strong) NSString *name;
@@ -18,6 +23,10 @@
 
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count;
 
+-(instancetype) initWithValues: (NSDictionary *) values;
+
 -(enum GPKGSTableType) getType;
+
+-(NSDictionary *) getValues;
 
 @end
