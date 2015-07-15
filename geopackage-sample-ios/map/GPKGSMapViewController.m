@@ -48,7 +48,6 @@
     self.manager = [GPKGGeoPackageFactory getManager];
     self.active = [GPKGSDatabases getInstance];
     self.geoPackages = [[NSMutableDictionary alloc] init];
-    //[self updateInBackgroundWithZoom:self.active.modified];
     self.locationManager = [[CLLocationManager alloc] init];
     [self.locationManager setDelegate:self];
     [self.locationManager requestWhenInUseAuthorization];

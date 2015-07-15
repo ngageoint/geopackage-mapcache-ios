@@ -10,6 +10,11 @@
 
 @implementation GPKGSTileTable
 
+-(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count{
+    self = [super initWithDatabase:database andName:name andCount:count];
+    return self;
+}
+
 -(enum GPKGSTableType) getType{
     return GPKGS_TT_TILE;
 }

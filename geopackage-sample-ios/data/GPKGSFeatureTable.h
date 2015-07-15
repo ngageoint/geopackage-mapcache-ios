@@ -13,4 +13,6 @@
 
 @property (nonatomic) enum WKBGeometryType geometryType;
 
+-(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andGeometryType: (enum WKBGeometryType) geometryType andCount: (int) count;
+
 @end

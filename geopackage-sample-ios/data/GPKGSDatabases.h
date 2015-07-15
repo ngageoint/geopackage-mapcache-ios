@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "GPKGSDatabase.h"
 
+extern NSString * const GPKGS_DATABASES_PREFERENCE;
+extern NSString * const GPKGS_TILE_TABLES_PREFERENCE_SUFFIX;
+extern NSString * const GPKGS_FEATURE_TABLES_PREFERENCE_SUFFIX;
+extern NSString * const GPKGS_FEATURE_OVERLAY_TABLES_PREFERENCE_SUFFIX;
+
 @interface GPKGSDatabases : NSObject
 
 @property (nonatomic) BOOL modified;

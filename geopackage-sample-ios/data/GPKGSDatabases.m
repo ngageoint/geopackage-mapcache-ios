@@ -7,6 +7,14 @@
 //
 
 #import "GPKGSDatabases.h"
+#import "GPKGSTileTable.h"
+#import "GPKGSFeatureTable.h"
+#import "GPKGSFeatureOverlayTable.h"
+
+NSString * const GPKGS_DATABASES_PREFERENCE = @"databases";
+NSString * const GPKGS_TILE_TABLES_PREFERENCE_SUFFIX = @"_tile_tables";
+NSString * const GPKGS_FEATURE_TABLES_PREFERENCE_SUFFIX = @"_feature_tables";
+NSString * const GPKGS_FEATURE_OVERLAY_TABLES_PREFERENCE_SUFFIX = @"_feature_overlay_tables";
 
 static GPKGSDatabases * instance;
 
@@ -144,19 +152,177 @@ static GPKGSDatabases * instance;
 }
 
 -(void) loadFromPreferences{
-    // TODO
+    [self.databases removeAllObjects];
+    NSArray * databases = [self.settings stringArrayForKey:GPKGS_DATABASES_PREFERENCE];
+    for(NSString * database in databases){
+        NSArray * tiles = [self.settings stringArrayForKey:[self getTileTablesPreferenceKeyForDatabase:database]];
+        NSArray * features = [self.settings stringArrayForKey:[self getFeatureTablesPreferenceKeyForDatabase:database]];
+        NSArray * featureOverlays = [self.settings stringArrayForKey:[self getFeatureOverlayTablesPreferenceKeyForDatabase:database]];
+        
+        if(tiles != nil){
+            for(NSString * tile in tiles){
+                [self addTable:[[GPKGSTileTable alloc] initWithDatabase:database andName:tile andCount:0] andUpdatePreferences:false];
+            }
+        }
+        if(features != nil){
+            for(NSString * feature in features){
+                [self addTable:[[GPKGSFeatureTable alloc] initWithDatabase:database andName:feature andGeometryType:nil andCount:0] andUpdatePreferences:false];
+            }
+        }
+        if(featureOverlays != nil){
+            // TODO
+        }
+    }
 }
 
 -(void) removeDatabaseFromPreferences: (NSString *) database andPreserveOverlays: (BOOL) preserveOverlays{
-    // TODO
+
+    NSArray * databases = [self.settings stringArrayForKey:GPKGS_DATABASES_PREFERENCE];
+    if(databases != nil && [databases containsObject:database]){
+        NSMutableArray * newDatabases = [[NSMutableArray alloc] initWithArray:databases];
+        [newDatabases removeObject:database];
+        [self.settings setObject:newDatabases forKey:GPKGS_DATABASES_PREFERENCE];
+    }
+    [self.settings removeObjectForKey:[self getTileTablesPreferenceKeyForDatabase:database]];
+    [self.settings removeObjectForKey:[self getFeatureTablesPreferenceKeyForDatabase:database]];
+    if(!preserveOverlays){
+        [self.settings removeObjectForKey:[self getFeatureOverlayTablesPreferenceKeyForDatabase:database]];
+        //TODO
+    }
+    
+    [self.settings synchronize];
 }
 
 -(void) removeTableFromPreferences: (GPKGSTable *) table{
-    // TODO
+    
+    switch([table getType]){
+        case GPKGS_TT_FEATURE:
+            {
+                NSArray * features = [self.settings stringArrayForKey:[self getFeatureTablesPreferenceKeyForTable:table]];
+                if(features != nil && [features containsObject:table.name]){
+                    NSMutableArray * newFeatures = [[NSMutableArray alloc] initWithArray:features];
+                    [newFeatures removeObject:table.name];
+                    [self.settings setObject:newFeatures forKey:[self getFeatureTablesPreferenceKeyForTable:table]];
+                }
+            }
+            break;
+            
+        case GPKGS_TT_TILE:
+            {
+                NSArray * tiles = [self.settings stringArrayForKey:[self getTileTablesPreferenceKeyForTable:table]];
+                if(tiles != nil && [tiles containsObject:table.name]){
+                    NSMutableArray * newTiles = [[NSMutableArray alloc] initWithArray:tiles];
+                    [newTiles removeObject:table.name];
+                    [self.settings setObject:newTiles forKey:[self getTileTablesPreferenceKeyForTable:table]];
+                }
+            }
+            break;
+            
+        case GPKGS_TT_FEATURE_OVERLAY:
+            {
+                NSArray * featureOverlays = [self.settings stringArrayForKey:[self getFeatureOverlayTablesPreferenceKeyForTable:table]];
+                if(featureOverlays != nil && [featureOverlays containsObject:table.name]){
+                    NSMutableArray * newFeatureOverlays = [[NSMutableArray alloc] initWithArray:featureOverlays];
+                    [newFeatureOverlays removeObject:table.name];
+                    [self.settings setObject:newFeatureOverlays forKey:[self getFeatureOverlayTablesPreferenceKeyForTable:table]];
+                }
+                // TODO
+            }
+            break;
+            
+        default:
+            [NSException raise:@"Unsupported" format:@"Unsupported table type: %u", [table getType]];
+    }
+    
+    [self.settings synchronize];
 }
 
 -(void) addTableToPreferences: (GPKGSTable *) table{
-    // TODO
+    
+    NSArray * databases = [self.settings stringArrayForKey:GPKGS_DATABASES_PREFERENCE];
+    if(databases == nil || ![databases containsObject:table.database]){
+        NSMutableArray * newDatabases = [[NSMutableArray alloc] init];
+        if(databases != nil){
+            [newDatabases addObjectsFromArray:databases];
+        }
+        [newDatabases addObject:table.database];
+        [self.settings setObject:newDatabases forKey:GPKGS_DATABASES_PREFERENCE];
+    }
+    
+    switch ([table getType]){
+            
+        case GPKGS_TT_FEATURE:
+            {
+                NSArray * features = [self.settings stringArrayForKey:[self getFeatureTablesPreferenceKeyForTable:table]];
+                if(features == nil || ![features containsObject:table.name]){
+                    NSMutableArray * newFeatures = [[NSMutableArray alloc] init];
+                    if(features != nil){
+                        [newFeatures addObjectsFromArray:features];
+                    }
+                    [newFeatures addObject:table.name];
+                    [self.settings setObject:newFeatures forKey:[self getFeatureTablesPreferenceKeyForTable:table]];
+                }
+            }
+            break;
+            
+        case GPKGS_TT_TILE:
+            {
+                NSArray * tiles = [self.settings stringArrayForKey:[self getTileTablesPreferenceKeyForTable:table]];
+                if(tiles == nil || ![tiles containsObject:table.name]){
+                    NSMutableArray * newTiles = [[NSMutableArray alloc] init];
+                    if(tiles != nil){
+                        [newTiles addObjectsFromArray:tiles];
+                    }
+                    [newTiles addObject:table.name];
+                    [self.settings setObject:newTiles forKey:[self getTileTablesPreferenceKeyForTable:table]];
+                }
+            }
+            break;
+            
+        case GPKGS_TT_FEATURE_OVERLAY:
+            {
+                NSArray * featureOverlays = [self.settings stringArrayForKey:[self getFeatureOverlayTablesPreferenceKeyForTable:table]];
+                if(featureOverlays == nil || ![featureOverlays containsObject:table.name]){
+                    NSMutableArray * newFeatureOverlays = [[NSMutableArray alloc] init];
+                    if(featureOverlays != nil){
+                        [newFeatureOverlays addObjectsFromArray:featureOverlays];
+                    }
+                    [newFeatureOverlays addObject:table.name];
+                    [self.settings setObject:newFeatureOverlays forKey:[self getFeatureOverlayTablesPreferenceKeyForTable:table]];
+                }
+                // TODO
+            }
+            break;
+            
+        default:
+            [NSException raise:@"Unsupported" format:@"Unsupported table type: %u", [table getType]];
+    }
+    
+    [self.settings synchronize];
+}
+
+-(NSString *) getTileTablesPreferenceKeyForTable: (GPKGSTable *) table{
+    return [self getTileTablesPreferenceKeyForDatabase:table.database];
+}
+
+-(NSString *) getTileTablesPreferenceKeyForDatabase: (NSString *) database{
+    return [NSString stringWithFormat:@"%@%@", database, GPKGS_TILE_TABLES_PREFERENCE_SUFFIX];
+}
+
+-(NSString *) getFeatureTablesPreferenceKeyForTable: (GPKGSTable *) table{
+    return [self getFeatureTablesPreferenceKeyForDatabase:table.database];
+}
+
+-(NSString *) getFeatureTablesPreferenceKeyForDatabase: (NSString *) database{
+    return [NSString stringWithFormat:@"%@%@", database, GPKGS_FEATURE_TABLES_PREFERENCE_SUFFIX];
+}
+
+-(NSString *) getFeatureOverlayTablesPreferenceKeyForTable: (GPKGSTable *) table{
+    return [self getFeatureOverlayTablesPreferenceKeyForDatabase:table.database];
+}
+
+-(NSString *) getFeatureOverlayTablesPreferenceKeyForDatabase: (NSString *) database{
+    return [NSString stringWithFormat:@"%@%@", database, GPKGS_FEATURE_OVERLAY_TABLES_PREFERENCE_SUFFIX];
 }
 
 @end
