@@ -50,6 +50,12 @@
 	<string>Delete</string>
 	<key>geopackage_table_index_features_label</key>
 	<string>Index Features</string>
+	<key>geopackage_table_index_features_index_title</key>
+	<string>Index</string>
+	<key>geopackage_table_index_features_indexed_message</key>
+	<string>Table index is up to date</string>
+	<key>geopackage_table_index_features_index_message</key>
+	<string>Table index required. Index?</string>
 	<key>geopackage_table_create_feature_tiles_label</key>
 	<string>Create Tiles</string>
 	<key>geopackage_table_add_feature_overlay_label</key>
