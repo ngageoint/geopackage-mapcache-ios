@@ -21,6 +21,8 @@
 #import "GPKGSDisplayTextViewController.h"
 #import "GPKGSFeatureOverlayTable.h"
 #import "GPKGSDatabases.h"
+#import "GPKGFeatureIndexer.h"
+#import "GPKGSIndexerTask.h"
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
 NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
@@ -49,6 +51,7 @@ const char ConstantKey;
 #define TAG_DATABASE_COPY 6
 #define TAG_TABLE_DELETE 7
 #define TAG_CLEAR_ACTIVE 8
+#define TAG_INDEX_FEATURES 9
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -292,6 +295,9 @@ const char ConstantKey;
         case TAG_CLEAR_ACTIVE:
             [self handleClearActiveWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
             break;
+        case TAG_INDEX_FEATURES:
+            [self handleIndexFeaturesWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
     }
 }
 
@@ -446,7 +452,7 @@ const char ConstantKey;
             case 3:
                 switch([table getType]){
                     case GPKGS_TT_FEATURE:
-                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_LABEL]];
+                        [self indexFeaturesOption:table];
                         break;
                     case GPKGS_TT_TILE:
                         [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
@@ -517,6 +523,7 @@ const char ConstantKey;
                            otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
                            nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [[alert textFieldAtIndex:0] setText:database];
     alert.tag = TAG_DATABASE_RENAME;
     objc_setAssociatedObject(alert, &ConstantKey, database, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [alert show];
@@ -619,6 +626,50 @@ const char ConstantKey;
         @finally {
             [geoPackage close];
         }
+    }
+}
+
+-(void) indexFeaturesOption: (GPKGSTable *) table{
+    
+    BOOL indexed = false;
+    GPKGGeoPackage * geoPackage = [self.manager open:table.database];
+    @try {
+        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:table.name];
+    
+        GPKGFeatureIndexer * indexer = [[GPKGFeatureIndexer alloc] initWithFeatureDao:featureDao];
+        indexed = [indexer isIndexed];
+    }
+    @finally {
+        [geoPackage close];
+    }
+
+    if(indexed){
+        UIAlertView * alert = [[UIAlertView alloc]
+                               initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]
+                               message:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEXED_MESSAGE]
+                               delegate:nil
+                               cancelButtonTitle:nil
+                               otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                               nil];
+        [alert show];
+    }else{
+        UIAlertView * alert = [[UIAlertView alloc]
+                               initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]
+                               message:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_MESSAGE]
+                               delegate:self
+                               cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                               otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                               nil];
+        alert.tag = TAG_INDEX_FEATURES;
+        objc_setAssociatedObject(alert, &ConstantKey, table, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [alert show];
+    }
+}
+
+- (void) handleIndexFeaturesWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex > 0){
+        GPKGSTable *table = objc_getAssociatedObject(alertView, &ConstantKey);
+        [GPKGSIndexerTask indexFeaturesWithCallback:self andDatabase:table.database andTable:table.name];
     }
 }
 
@@ -928,6 +979,18 @@ const char ConstantKey;
 -(void) clearExpandedSettings{
     [self.settings removeObjectForKey:GPKGS_EXPANDED_PREFERENCE];
     [self.settings synchronize];
+}
+
+-(void) onIndexerCanceled: (NSString *) result{
+    
+}
+
+-(void) onIndexerFailure: (NSString *) result{
+    
+}
+
+-(void) onIndexerCompleted: (NSString *) result{
+    
 }
 
 @end
