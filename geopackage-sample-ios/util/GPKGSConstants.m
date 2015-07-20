@@ -21,6 +21,11 @@ NSString * const GPKGS_PROP_ICON_UP = @"icon_up";
 NSString * const GPKGS_PROP_ICON_DOWN = @"icon_down";
 NSString * const GPKGS_PROP_OK_LABEL = @"ok_label";
 NSString * const GPKGS_PROP_CANCEL_LABEL = @"cancel_label";
+NSString * const GPKGS_PROP_BOUNDING_BOX_PRELOADED_LABEL = @"bounding_box_preloaded_label";
+NSString * const GPKGS_PROP_BOUNDING_BOX_DEFAULT_MIN_LATITUDE = @"bounding_box_default_min_latitude";
+NSString * const GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LATITUDE = @"bounding_box_default_max_latitude";
+NSString * const GPKGS_PROP_BOUNDING_BOX_DEFAULT_MIN_LONGITUDE = @"bounding_box_default_min_longitude";
+NSString * const GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LONGITUDE = @"bounding_box_default_max_longitude";
 NSString * const GPKGS_PROP_GEOPACKAGE_VIEW_LABEL = @"geopackage_view_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_DELETE_LABEL = @"geopackage_delete_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_RENAME_LABEL = @"geopackage_rename_label";
@@ -54,10 +59,19 @@ NSString * const GPKGS_PROP_MAP_TYPE_HYBRID = @"map_type_hybrid";
 NSString * const GPKGS_PROP_MAP_FEATURES_ZOOM_PADDING_PERCENTAGE = @"map_features_zoom_padding_percentage";
 NSString * const GPKGS_PROP_MAP_TILES_ZOOM_PADDING_PERCENTAGE = @"map_tiles_zoom_padding_percentage";
 NSString * const GPKGS_PROP_MAP_FEATURE_TILES_ZOOM_PADDING_PERCENTAGE = @"map_feature_tiles_zoom_padding_percentage";
+NSString * const GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPE_LABEL = @"edit_features_geometry_type_label";
+NSString * const GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES = @"edit_features_geometry_types";
 NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS = @"preloaded_geopackage_urls";
 NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_LABEL = @"label";
 NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_URL = @"url";
 NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_NAME = @"name";
+NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES = @"preloaded_bounding_boxes";
+NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_LABEL = @"label";
+NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LAT = @"min_lat";
+NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LAT = @"max_lat";
+NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LON = @"min_lon";
+NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LON = @"max_lon";
+
 
 @implementation GPKGSConstants
 

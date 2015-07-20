@@ -31,6 +31,8 @@
 		045C948D1B50789D0005CCD0 /* GPKGSMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C948C1B50789D0005CCD0 /* GPKGSMapView.m */; };
 		045C94901B53EEB80005CCD0 /* GPKGSMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C948F1B53EEB80005CCD0 /* GPKGSMapViewController.m */; };
 		045C94941B56DF620005CCD0 /* GPKGSIndexerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94931B56DF620005CCD0 /* GPKGSIndexerTask.m */; };
+		045C94981B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94971B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m */; };
+		045C949B1B5D4C560005CCD0 /* GPKGSDecimalValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C949A1B5D4C560005CCD0 /* GPKGSDecimalValidator.m */; };
 		047733BE1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 047733BD1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m */; };
 		047733C41B4C3D1200E523BD /* GPKGSProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 047733C31B4C3D1200E523BD /* GPKGSProperties.m */; };
 		047733C61B4C3E3400E523BD /* sample.plist in Resources */ = {isa = PBXBuildFile; fileRef = 047733C51B4C3E3400E523BD /* sample.plist */; };
@@ -100,6 +102,10 @@
 		045C94921B56DF620005CCD0 /* GPKGSIndexerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSIndexerTask.h; sourceTree = "<group>"; };
 		045C94931B56DF620005CCD0 /* GPKGSIndexerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSIndexerTask.m; sourceTree = "<group>"; };
 		045C94951B56E1050005CCD0 /* GPKGSIndexerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSIndexerProtocol.h; sourceTree = "<group>"; };
+		045C94961B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSCreateFeaturesViewController.h; sourceTree = "<group>"; };
+		045C94971B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSCreateFeaturesViewController.m; sourceTree = "<group>"; };
+		045C94991B5D4C560005CCD0 /* GPKGSDecimalValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSDecimalValidator.h; sourceTree = "<group>"; };
+		045C949A1B5D4C560005CCD0 /* GPKGSDecimalValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSDecimalValidator.m; sourceTree = "<group>"; };
 		047733BC1B4C371500E523BD /* GPKGSDatabaseOptionsButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSDatabaseOptionsButton.h; sourceTree = "<group>"; };
 		047733BD1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSDatabaseOptionsButton.m; sourceTree = "<group>"; };
 		047733C21B4C3D1200E523BD /* GPKGSProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSProperties.h; sourceTree = "<group>"; };
@@ -239,6 +245,8 @@
 				04082B521B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.m */,
 				045C94811B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.h */,
 				045C94821B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m */,
+				045C94961B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.h */,
+				045C94971B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m */,
 			);
 			path = manager;
 			sourceTree = "<group>";
@@ -252,6 +260,8 @@
 				047733C31B4C3D1200E523BD /* GPKGSProperties.m */,
 				04082B541B4F18A000D65E6B /* GPKGSUtils.h */,
 				04082B551B4F18A000D65E6B /* GPKGSUtils.m */,
+				045C94991B5D4C560005CCD0 /* GPKGSDecimalValidator.h */,
+				045C949A1B5D4C560005CCD0 /* GPKGSDecimalValidator.m */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -448,11 +458,13 @@
 				040136781AF94FB200C92AFC /* AppDelegate.m in Sources */,
 				044648021B4AF4250052913B /* GPKGSTableTypes.m in Sources */,
 				045C948D1B50789D0005CCD0 /* GPKGSMapView.m in Sources */,
+				045C949B1B5D4C560005CCD0 /* GPKGSDecimalValidator.m in Sources */,
 				044648111B4B1D960052913B /* GPKGSTableCell.m in Sources */,
 				044648051B4AF6990052913B /* GPKGSFeatureTable.m in Sources */,
 				045C94831B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m in Sources */,
 				045C94861B50226D0005CCD0 /* GPKGSFeatureOverlayTable.m in Sources */,
 				04082B561B4F18A000D65E6B /* GPKGSUtils.m in Sources */,
+				045C94981B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m in Sources */,
 				0446480B1B4AFC100052913B /* GPKGSDatabase.m in Sources */,
 				040136751AF94FB200C92AFC /* main.m in Sources */,
 				044648141B4B20950052913B /* GPKGSDatabaseCell.m in Sources */,

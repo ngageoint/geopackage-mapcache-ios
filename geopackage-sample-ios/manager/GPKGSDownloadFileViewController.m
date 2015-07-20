@@ -42,10 +42,6 @@
     [self.urlTextField resignFirstResponder];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
 - (IBAction)cancel:(id)sender {
     if(self.active){
         self.active = false;

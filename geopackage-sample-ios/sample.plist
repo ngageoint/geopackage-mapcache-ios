@@ -22,6 +22,16 @@
 	<string>OK</string>
 	<key>cancel_label</key>
 	<string>Cancel</string>
+	<key>bounding_box_preloaded_label</key>
+	<string>Preloaded Locations</string>
+	<key>bounding_box_default_min_latitude</key>
+	<string>-90.0</string>
+	<key>bounding_box_default_max_latitude</key>
+	<string>90.0</string>
+	<key>bounding_box_default_min_longitude</key>
+	<string>-180.0</string>
+	<key>bounding_box_default_max_longitude</key>
+	<string>180.0</string>
 	<key>geopackage_view_label</key>
 	<string>View</string>
 	<key>geopackage_delete_label</key>
@@ -88,6 +98,26 @@
 	<integer>0</integer>
 	<key>map_feature_tiles_zoom_padding_percentage</key>
 	<integer>10</integer>
+	<key>edit_features_geometry_type_label</key>
+	<string>Geometry Type</string>
+	<key>edit_features_geometry_types</key>
+	<array>
+		<string>GEOMETRY</string>
+		<string>POINT</string>
+		<string>LINESTRING</string>
+		<string>POLYGON</string>
+		<string>MULTIPOINT</string>
+		<string>MULTILINESTRING</string>
+		<string>MULTIPOLYGON</string>
+		<string>GEOMETRYCOLLECTION</string>
+		<string>CIRCULARSTRING</string>
+		<string>COMPOUNDCURVE</string>
+		<string>CURVEPOLYGON</string>
+		<string>MULTICURVE</string>
+		<string>MULTISURFACE</string>
+		<string>CURVE</string>
+		<string>SURFACE</string>
+	</array>
 	<key>preloaded_geopackage_urls</key>
 	<array>
 		<dict>
@@ -129,6 +159,33 @@
 			<string>https://portal.opengeospatial.org/files/63156</string>
 			<key>name</key>
 			<string>erdc_whitehorse</string>
+		</dict>
+	</array>
+	<key>preloaded_bounding_boxes</key>
+	<array>
+		<dict>
+			<key>label</key>
+			<string>NGA</string>
+			<key>min_lat</key>
+			<string>38.748123</string>
+			<key>max_lat</key>
+			<string>38.759038</string>
+			<key>min_lon</key>
+			<string>-77.202143</string>
+			<key>max_lon</key>
+			<string>-77.186146</string>
+		</dict>
+		<dict>
+			<key>label</key>
+			<string>BIT Systems</string>
+			<key>min_lat</key>
+			<string>39.719140</string>
+			<key>max_lat</key>
+			<string>39.720635</string>
+			<key>min_lon</key>
+			<string>-104.803478</string>
+			<key>max_lon</key>
+			<string>-104.801516</string>
 		</dict>
 	</array>
 </dict>
