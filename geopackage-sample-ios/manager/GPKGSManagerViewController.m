@@ -23,9 +23,12 @@
 #import "GPKGSDatabases.h"
 #import "GPKGFeatureIndexer.h"
 #import "GPKGSIndexerTask.h"
+#import "GPKGSCreateFeaturesViewController.h"
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
 NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
+NSString * const GPKGS_MANAGER_SEG_CREATE_FEATURES = @"createFeatures";
+NSString * const GPKGS_MANAGER_SEG_CREATE_TILES = @"createTiles";
 NSString * const GPKGS_EXPANDED_PREFERENCE = @"expanded";
 
 const char ConstantKey;
@@ -360,7 +363,7 @@ const char ConstantKey;
                 [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_SHARE_LABEL]];
                 break;
             case 7:
-                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL]];
+                [self createFeaturesDatabaseOption:database];
                 break;
             case 8:
                 [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
@@ -591,6 +594,11 @@ const char ConstantKey;
     }
 }
 
+-(void) createFeaturesDatabaseOption: (GPKGSDatabase *) database
+{
+    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_CREATE_FEATURES sender:database];
+}
+
 -(void) viewTableOption: (GPKGSTable *) table{
         [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DISPLAY_TEXT sender:table];
 }
@@ -771,6 +779,17 @@ const char ConstantKey;
     }
 }
 
+- (void)createFeaturesViewController:(GPKGSCreateFeaturesViewController *)controller createdFeatures:(BOOL)created withError: (NSString *) error{
+    if(created){
+        [self updateAndReloadData];
+    }
+    if(error != nil){
+        [GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL]
+                                 andMessage:[NSString stringWithFormat:@"Error creating features table '%@' in database: '%@'\n\nError: %@", controller.nameValue.text, controller.database.name, error]];
+    }
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DOWNLOAD_FILE])
@@ -788,8 +807,15 @@ const char ConstantKey;
             displayTextViewController.titleValue = [NSString stringWithFormat:@"%@ - %@", table.database, table.name];
             displayTextViewController.textValue = [self buildTextForTable:table];
         }
+    }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_CREATE_FEATURES]){
+        GPKGSCreateFeaturesViewController *createFeaturesViewController = segue.destinationViewController;
+        GPKGSDatabase * database = (GPKGSDatabase *)sender;
+        createFeaturesViewController.delegate = self;
+        createFeaturesViewController.database = database;
+        createFeaturesViewController.manager = self.manager;
+    }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_CREATE_TILES]){
+        
     }
-    
 }
 
 -(NSString *) buildTextForDatabase: (GPKGSDatabase *) database{
