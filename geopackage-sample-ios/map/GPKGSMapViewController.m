@@ -339,7 +339,7 @@
     GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName:tiles.name];
     
     MKTileOverlay * overlay = [GPKGOverlayFactory getTileOverlayWithTileDao:tileDao];
-    overlay.canReplaceMapContent = true;
+    overlay.canReplaceMapContent = false;
     
     GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
     GPKGContents * contents = [[geoPackage getTileMatrixSetDao] getContents:tileMatrixSet];
@@ -370,7 +370,9 @@
         [self.tilesBoundingBox setMaxLatitude:MAX(self.tilesBoundingBox.maxLatitude, boundingBox.maxLatitude)];
     }
     
-    [self.mapView addOverlay:overlay];
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [self.mapView addOverlay:overlay];
+    });
 }
 
 -(int) displayFeaturesWithId: (int) updateId andDatabase: (NSString *) database andFeatures: (NSString *) features andCount: (int) count andMaxFeatures: (int) maxFeatures{

@@ -24,6 +24,7 @@
 #import "GPKGFeatureIndexer.h"
 #import "GPKGSIndexerTask.h"
 #import "GPKGSCreateFeaturesViewController.h"
+#import "GPKGUrlTileGenerator.h" // TODO delete
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
 NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
@@ -366,7 +367,7 @@ const char ConstantKey;
                 [self createFeaturesDatabaseOption:database];
                 break;
             case 8:
-                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
+                [self createTilesDatabaseOption:database];
                 break;
             default:
                 break;
@@ -597,6 +598,23 @@ const char ConstantKey;
 -(void) createFeaturesDatabaseOption: (GPKGSDatabase *) database
 {
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_CREATE_FEATURES sender:database];
+}
+
+-(void) createTilesDatabaseOption: (GPKGSDatabase *) database
+{
+    // TODO
+    int count = 0;
+    GPKGGeoPackage * geoPackage = [self.manager open:database.name];
+    @try {
+    
+        GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:@"testtiles" andTileUrl:@"http://osm.geointapps.org/osm/{z}/{x}/{y}.png" andMinZoom:4 andMaxZoom:4];
+        count = [tileGenerator generateTiles];
+     }
+     @finally {
+         [geoPackage close];
+     }
+    [self todoAlert: [NSString stringWithFormat:@"%@ - %d",[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL], count]];
+    [self updateAndReloadData];
 }
 
 -(void) viewTableOption: (GPKGSTable *) table{

@@ -33,12 +33,14 @@
 		045C94941B56DF620005CCD0 /* GPKGSIndexerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94931B56DF620005CCD0 /* GPKGSIndexerTask.m */; };
 		045C94981B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94971B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m */; };
 		045C949B1B5D4C560005CCD0 /* GPKGSDecimalValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C949A1B5D4C560005CCD0 /* GPKGSDecimalValidator.m */; };
+		045C94A91B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94A81B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m */; };
 		047733BE1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 047733BD1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m */; };
 		047733C41B4C3D1200E523BD /* GPKGSProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 047733C31B4C3D1200E523BD /* GPKGSProperties.m */; };
 		047733C61B4C3E3400E523BD /* sample.plist in Resources */ = {isa = PBXBuildFile; fileRef = 047733C51B4C3E3400E523BD /* sample.plist */; };
 		047733C91B4C496600E523BD /* GPKGSTableOptionsButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 047733C81B4C496600E523BD /* GPKGSTableOptionsButton.m */; };
 		048C212B1AFBCC9400EBC38B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 048C212A1AFBCC9400EBC38B /* libsqlite3.dylib */; };
 		0499E6181AFCE2B900431FCF /* gdal_sample.gpkg in Resources */ = {isa = PBXBuildFile; fileRef = 0499E6171AFCE2B900431FCF /* gdal_sample.gpkg */; };
+		04CCC8581B5EC1EF0001296D /* 0.png in Resources */ = {isa = PBXBuildFile; fileRef = 04CCC8571B5EC1EF0001296D /* 0.png */; };
 		79B230F4F60AF2BE7816B2CB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02FF687C0F94F922C6DBA093 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -106,6 +108,8 @@
 		045C94971B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSCreateFeaturesViewController.m; sourceTree = "<group>"; };
 		045C94991B5D4C560005CCD0 /* GPKGSDecimalValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSDecimalValidator.h; sourceTree = "<group>"; };
 		045C949A1B5D4C560005CCD0 /* GPKGSDecimalValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSDecimalValidator.m; sourceTree = "<group>"; };
+		045C94A71B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSBoundingBoxViewController.h; sourceTree = "<group>"; };
+		045C94A81B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSBoundingBoxViewController.m; sourceTree = "<group>"; };
 		047733BC1B4C371500E523BD /* GPKGSDatabaseOptionsButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSDatabaseOptionsButton.h; sourceTree = "<group>"; };
 		047733BD1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSDatabaseOptionsButton.m; sourceTree = "<group>"; };
 		047733C21B4C3D1200E523BD /* GPKGSProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSProperties.h; sourceTree = "<group>"; };
@@ -115,6 +119,7 @@
 		047733C81B4C496600E523BD /* GPKGSTableOptionsButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSTableOptionsButton.m; sourceTree = "<group>"; };
 		048C212A1AFBCC9400EBC38B /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		0499E6171AFCE2B900431FCF /* gdal_sample.gpkg */ = {isa = PBXFileReference; lastKnownFileType = file; path = gdal_sample.gpkg; sourceTree = "<group>"; };
+		04CCC8571B5EC1EF0001296D /* 0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 0.png; sourceTree = "<group>"; };
 		5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -163,6 +168,8 @@
 		040136711AF94FB200C92AFC /* geopackage-sample-ios */ = {
 			isa = PBXGroup;
 			children = (
+				04CCC8571B5EC1EF0001296D /* 0.png */,
+				045C949C1B5D89E80005CCD0 /* ui */,
 				045C94911B56DEFA0005CCD0 /* indexer */,
 				045C948A1B50785B0005CCD0 /* map */,
 				0446481B1B4C26BE0052913B /* util */,
@@ -287,6 +294,15 @@
 			path = indexer;
 			sourceTree = "<group>";
 		};
+		045C949C1B5D89E80005CCD0 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				045C94A71B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.h */,
+				045C94A81B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
 		C5D6DE3118DC6CC3BD7E852D /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -388,6 +404,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04CCC8581B5EC1EF0001296D /* 0.png in Resources */,
 				0499E6181AFCE2B900431FCF /* gdal_sample.gpkg in Resources */,
 				047733C61B4C3E3400E523BD /* sample.plist in Resources */,
 				040136811AF94FB200C92AFC /* Main.storyboard in Resources */,
@@ -447,6 +464,7 @@
 				045C94941B56DF620005CCD0 /* GPKGSIndexerTask.m in Sources */,
 				047733C91B4C496600E523BD /* GPKGSTableOptionsButton.m in Sources */,
 				044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */,
+				045C94A91B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m in Sources */,
 				0446481A1B4C24AD0052913B /* GPKGSActiveTableSwitch.m in Sources */,
 				045C94891B5026E00005CCD0 /* GPKGSDatabases.m in Sources */,
 				04082B531B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.m in Sources */,
