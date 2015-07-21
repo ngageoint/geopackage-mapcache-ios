@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GPKGSDatabase.h"
 #import "GPKGGeoPackageManager.h"
+#import "GPKGSBoundingBoxViewController.h"
 
 @class GPKGSCreateFeaturesViewController;
 
@@ -16,18 +17,15 @@
 - (void)createFeaturesViewController:(GPKGSCreateFeaturesViewController *)controller createdFeatures:(BOOL)created withError: (NSString *) error;
 @end
 
-@interface GPKGSCreateFeaturesViewController : UIViewController
+@interface GPKGSCreateFeaturesViewController : UIViewController <GPKGSBoundingBoxDelegate>
 
 @property (nonatomic, weak) id <GPKGSCreateFeaturesDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UIButton *titleButton;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) GPKGSDatabase *database;
-@property (weak, nonatomic) IBOutlet UITextField *minLatValue;
-@property (weak, nonatomic) IBOutlet UITextField *maxLatValue;
-@property (weak, nonatomic) IBOutlet UITextField *minLonValue;
-@property (weak, nonatomic) IBOutlet UITextField *maxLonValue;
 @property (weak, nonatomic) IBOutlet UITextField *databaseValue;
 @property (weak, nonatomic) IBOutlet UITextField *nameValue;
 @property (weak, nonatomic) IBOutlet UIButton *geometryTypeButton;
+@property (weak, nonatomic) IBOutlet UIView *bboxView;
 
 @end
