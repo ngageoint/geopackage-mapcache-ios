@@ -16,7 +16,6 @@
 @property (nonatomic, strong) NSArray * boundingBoxes;
 @property (nonatomic, strong) GPKGSDecimalValidator * latitudeValidator;
 @property (nonatomic, strong) GPKGSDecimalValidator * longitudeValidator;
-@property (nonatomic, strong) GPKGBoundingBox * boundingBox;
 
 @end
 
@@ -27,10 +26,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.minLatValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MIN_LATITUDE]];
-    [self.maxLatValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LATITUDE]];
-    [self.minLonValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MIN_LONGITUDE]];
-    [self.maxLonValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LONGITUDE]];
     self.latitudeValidator = [[GPKGSDecimalValidator alloc] initWithMinimumDouble:-90.0 andMaximumDouble:90.0];
     self.longitudeValidator = [[GPKGSDecimalValidator alloc] initWithMinimumDouble:-180.0 andMaximumDouble:180.0];
     [self.minLatValue setDelegate:self.latitudeValidator];
@@ -38,8 +33,19 @@
     [self.minLonValue setDelegate:self.longitudeValidator];
     [self.maxLonValue setDelegate:self.longitudeValidator];
     self.boundingBoxes = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_BOUNDING_BOXES];
-    self.boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-180.0 andMaxLongitudeDouble:180.0 andMinLatitudeDouble:-90.0 andMaxLatitudeDouble:90.0];
-    [self updateBoundingBox];
+    if(self.boundingBox == nil){
+        [self.minLatValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MIN_LATITUDE]];
+        [self.maxLatValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LATITUDE]];
+        [self.minLonValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MIN_LONGITUDE]];
+        [self.maxLonValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LONGITUDE]];
+        self.boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-180.0 andMaxLongitudeDouble:180.0 andMinLatitudeDouble:-90.0 andMaxLatitudeDouble:90.0];
+        [self updateBoundingBox];
+    } else{
+        [self.minLatValue setText:[self.boundingBox.minLatitude stringValue]];
+        [self.maxLatValue setText:[self.boundingBox.maxLatitude stringValue]];
+        [self.minLonValue setText:[self.boundingBox.minLongitude stringValue]];
+        [self.maxLonValue setText:[self.boundingBox.maxLongitude stringValue]];
+    }
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {

@@ -22,5 +22,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *maxLatValue;
 @property (weak, nonatomic) IBOutlet UITextField *minLonValue;
 @property (weak, nonatomic) IBOutlet UITextField *maxLonValue;
+@property (nonatomic, strong) GPKGBoundingBox * boundingBox;
 
 @end
