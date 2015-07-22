@@ -20,7 +20,6 @@
 @interface GPKGSCreateFeaturesViewController : UIViewController <GPKGSBoundingBoxDelegate>
 
 @property (nonatomic, weak) id <GPKGSCreateFeaturesDelegate> delegate;
-@property (weak, nonatomic) IBOutlet UIButton *titleButton;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) GPKGSDatabase *database;
 @property (weak, nonatomic) IBOutlet UITextField *databaseValue;

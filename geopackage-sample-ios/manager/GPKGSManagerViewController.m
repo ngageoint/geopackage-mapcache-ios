@@ -24,7 +24,7 @@
 #import "GPKGFeatureIndexer.h"
 #import "GPKGSIndexerTask.h"
 #import "GPKGSCreateFeaturesViewController.h"
-#import "GPKGUrlTileGenerator.h" // TODO delete
+#import "GPKGSManagerCreateTilesViewController.h"
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
 NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
@@ -602,7 +602,9 @@ const char ConstantKey;
 
 -(void) createTilesDatabaseOption: (GPKGSDatabase *) database
 {
-    // TODO
+    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_CREATE_TILES sender:database];
+    // TODO delete
+    /*
     int count = 0;
     GPKGGeoPackage * geoPackage = [self.manager open:database.name];
     @try {
@@ -615,6 +617,7 @@ const char ConstantKey;
      }
     [self todoAlert: [NSString stringWithFormat:@"%@ - %d",[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL], count]];
     [self updateAndReloadData];
+     */
 }
 
 -(void) viewTableOption: (GPKGSTable *) table{
@@ -808,6 +811,19 @@ const char ConstantKey;
     }
 }
 
+- (void)createManagerTilesViewController:(GPKGSManagerCreateTilesViewController *)controller createdTiles:(BOOL)created withError: (NSString *) error{
+    if(created){
+        [self updateAndReloadData];
+    }
+    if(error != nil){
+        // TODO
+        /*[GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]
+                                 andMessage:[NSString stringWithFormat:@"Error creating tiles table '%@' in database: '%@'\n\nError: %@", controller.nameValue.text, controller.database.name, error]];
+         */
+    }
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DOWNLOAD_FILE])
@@ -832,7 +848,11 @@ const char ConstantKey;
         createFeaturesViewController.database = database;
         createFeaturesViewController.manager = self.manager;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_CREATE_TILES]){
-        
+        GPKGSManagerCreateTilesViewController *createTilesViewController = segue.destinationViewController;
+        GPKGSDatabase * database = (GPKGSDatabase *)sender;
+        createTilesViewController.delegate = self;
+        createTilesViewController.database = database;
+        createTilesViewController.manager = self.manager;
     }
 }
 
