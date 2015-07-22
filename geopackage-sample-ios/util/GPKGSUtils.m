@@ -44,4 +44,12 @@
     }
 }
 
++(UIToolbar *) buildKeyboardDoneToolbarWithTarget: (id) target andAction:(SEL)action{
+    UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:target action:action];
+    UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    toolbar.items = [NSArray arrayWithObjects:flexSpace, doneBarButton, nil];
+    return toolbar;
+}
+
 @end

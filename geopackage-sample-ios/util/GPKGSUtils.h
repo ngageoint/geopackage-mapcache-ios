@@ -19,4 +19,6 @@
 
 +(void) disableTextField: (UITextField *) textField;
 
++(UIToolbar *) buildKeyboardDoneToolbarWithTarget: (id) target andAction:(SEL)action;
+
 @end
