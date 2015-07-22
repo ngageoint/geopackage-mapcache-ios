@@ -10,6 +10,7 @@
 #import "GPKGSDownloadFileViewController.h"
 #import "GPKGSIndexerProtocol.h"
 #import "GPKGSCreateFeaturesViewController.h"
+#import "GPKGSManagerCreateTilesViewController.h"
 
 extern NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE;
 extern NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT;
@@ -19,7 +20,7 @@ extern NSString * const GPKGS_EXPANDED_PREFERENCE;
 
 extern const char ConstantKey;
 
-@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadFileDelegate, GPKGSIndexerProtocol, GPKGSCreateFeaturesDelegate>
+@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadFileDelegate, GPKGSIndexerProtocol, GPKGSCreateFeaturesDelegate, GPKGSManagerCreateTilesDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *clearActiveButton;
 
