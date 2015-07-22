@@ -13,6 +13,7 @@
 #import "GPKGGeoPackage.h"
 #import "GPKGProjectionConstants.h"
 #import "GPKGSBoundingBoxViewController.h"
+#import "GPKGSUtils.h"
 
 @interface GPKGSCreateFeaturesViewController ()
 
@@ -32,7 +33,16 @@
     [self.databaseValue setText:self.database.name];
     self.geometryTypes = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
     [self.geometryTypeButton setTitle:[self.geometryTypes objectAtIndex:0] forState:UIControlStateNormal];
+
+    UIToolbar *toolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    
+    self.nameValue.inputAccessoryView = toolbar;
 }
+
+- (void) doneButtonPressed {
+    [self.nameValue resignFirstResponder];
+}
+
 
 - (IBAction)cancelButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];

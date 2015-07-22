@@ -565,9 +565,6 @@
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CAM-hy-jsn" userLabel="GeometryTypeButton">
                                         <rect key="frame" x="153" y="324" width="433" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="433" id="IdV-gE-fHU"/>
-                                        </constraints>
                                         <state key="normal" title="geometry type">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -1080,7 +1077,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="t9U-vv-RZ0">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="t9U-vv-RZ0">
                                 <rect key="frame" x="151" y="84" width="359" height="29"/>
                                 <segments>
                                     <segment title="None"/>
@@ -1097,7 +1094,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kh2-s5-cV7" userLabel="CompressQualityValue">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kh2-s5-cV7" userLabel="CompressQualityValue">
                                 <rect key="frame" x="151" y="121" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="97" id="x6i-RG-cWG"/>
@@ -1114,7 +1111,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NUA-38-9jf" userLabel="CompressScaleValue">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NUA-38-9jf" userLabel="CompressScaleValue">
                                 <rect key="frame" x="151" y="157" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1129,10 +1126,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Afx-gq-LqQ">
-                                <rect key="frame" x="151" y="196" width="359" height="29"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="28" id="bEb-eo-X1v"/>
-                                </constraints>
+                                <rect key="frame" x="151" y="197" width="359" height="28"/>
                                 <segments>
                                     <segment title="GeoPackage"/>
                                     <segment title="Standard"/>
@@ -1157,9 +1151,10 @@
                             <constraint firstAttribute="trailing" secondItem="Afx-gq-LqQ" secondAttribute="trailing" id="6zS-cP-rC7"/>
                             <constraint firstItem="kh2-s5-cV7" firstAttribute="top" secondItem="t9U-vv-RZ0" secondAttribute="bottom" constant="9" id="9KP-yA-pSy"/>
                             <constraint firstItem="t9U-vv-RZ0" firstAttribute="leading" secondItem="kh2-s5-cV7" secondAttribute="leading" id="AJH-1s-yOe"/>
+                            <constraint firstAttribute="centerX" secondItem="Afx-gq-LqQ" secondAttribute="centerX" constant="-75.5" id="Akf-Qh-KSr"/>
+                            <constraint firstItem="VB4-Ej-iXg" firstAttribute="top" secondItem="txG-A0-EXf" secondAttribute="bottom" constant="17" id="BTe-nm-3gM"/>
                             <constraint firstItem="v10-AN-6fs" firstAttribute="top" secondItem="Afx-gq-LqQ" secondAttribute="bottom" constant="11" id="COY-8d-UgL"/>
                             <constraint firstItem="e2a-tB-YdF" firstAttribute="leading" secondItem="Wuc-Gc-x6u" secondAttribute="leading" id="E8d-GR-Ix7"/>
-                            <constraint firstItem="t9U-vv-RZ0" firstAttribute="top" secondItem="veO-IO-BiM" secondAttribute="bottom" constant="8" symbolic="YES" id="EMX-Lk-lcz"/>
                             <constraint firstItem="Hhh-Vu-rbw" firstAttribute="top" secondItem="veO-IO-BiM" secondAttribute="bottom" constant="11" id="Ewy-Vn-nk1"/>
                             <constraint firstItem="zsM-wc-Qqn" firstAttribute="baseline" secondItem="Afx-gq-LqQ" secondAttribute="baseline" id="FYW-PV-LoW"/>
                             <constraint firstItem="t9U-vv-RZ0" firstAttribute="leading" secondItem="Hhh-Vu-rbw" secondAttribute="trailing" constant="8" symbolic="YES" id="JiL-Z5-evj"/>
@@ -1174,6 +1169,7 @@
                             <constraint firstItem="txG-A0-EXf" firstAttribute="leading" secondItem="N3V-0a-Vtp" secondAttribute="leading" id="V51-Gv-dwm"/>
                             <constraint firstItem="Wuc-Gc-x6u" firstAttribute="top" secondItem="e2a-tB-YdF" secondAttribute="bottom" constant="15" id="YUX-DX-Yb2"/>
                             <constraint firstItem="txG-A0-EXf" firstAttribute="top" secondItem="WKu-ou-cUW" secondAttribute="bottom" constant="12" id="Yu5-T3-FD6"/>
+                            <constraint firstAttribute="centerX" secondItem="t9U-vv-RZ0" secondAttribute="centerX" constant="-75.5" id="bhw-7A-QzH"/>
                             <constraint firstItem="v10-AN-6fs" firstAttribute="bottom" secondItem="P6V-hZ-SOI" secondAttribute="top" id="eTP-Qg-8R4"/>
                             <constraint firstItem="Hhh-Vu-rbw" firstAttribute="top" secondItem="VB4-Ej-iXg" secondAttribute="bottom" constant="16" id="exa-Vv-Cht"/>
                             <constraint firstItem="Hhh-Vu-rbw" firstAttribute="leading" secondItem="VB4-Ej-iXg" secondAttribute="leading" id="iAH-jD-7QP"/>
@@ -1367,6 +1363,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="X4O-rd-xnT"/>
         <segue reference="E1Z-ca-WBX"/>
-        <segue reference="SDT-vo-ke2"/>
+        <segue reference="eWo-PS-bO7"/>
     </inferredMetricsTieBreakers>
 </document>

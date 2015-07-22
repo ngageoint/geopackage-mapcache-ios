@@ -29,10 +29,9 @@
     [super viewDidLoad];
     [GPKGSUtils disableButton:self.importButton];
     
-    UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed)];
-    UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-    toolbar.items = [NSArray arrayWithObjects:flexSpace, doneBarButton, nil];
+    
+    UIToolbar *toolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    
     self.nameTextField.inputAccessoryView = toolbar;
     self.urlTextField.inputAccessoryView = toolbar;
 }
