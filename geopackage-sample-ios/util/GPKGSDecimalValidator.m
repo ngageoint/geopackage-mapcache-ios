@@ -30,6 +30,14 @@
     return [self initWithMinimum:[[NSDecimalNumber alloc] initWithDouble:minimum] andMaximum:[[NSDecimalNumber alloc] initWithDouble:maximum]];
 }
 
+-(instancetype) initWithMinimumNumber: (NSNumber *) minimum andMaximumNumber: (NSNumber *) maximum{
+    return [self initWithMinimumDouble:[minimum doubleValue] andMaximumDouble:[maximum doubleValue]];
+}
+
+-(instancetype) initWithMinimumInt: (int) minimum andMaximumInt: (int) maximum{
+    return [self initWithMinimum:[[NSDecimalNumber alloc] initWithInt:minimum] andMaximum:[[NSDecimalNumber alloc] initWithInt:maximum]];
+}
+
 -(BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     NSString * newString = [[textField text] stringByReplacingCharactersInRange:range withString:string];
     NSNumberFormatter *nf = [[NSNumberFormatter alloc] init];

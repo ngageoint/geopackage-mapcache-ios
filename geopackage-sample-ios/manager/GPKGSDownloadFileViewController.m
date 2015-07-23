@@ -30,10 +30,10 @@
     [GPKGSUtils disableButton:self.importButton];
     
     
-    UIToolbar *toolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
-    self.nameTextField.inputAccessoryView = toolbar;
-    self.urlTextField.inputAccessoryView = toolbar;
+    self.nameTextField.inputAccessoryView = keyboardToolbar;
+    self.urlTextField.inputAccessoryView = keyboardToolbar;
 }
 
 - (void) doneButtonPressed {

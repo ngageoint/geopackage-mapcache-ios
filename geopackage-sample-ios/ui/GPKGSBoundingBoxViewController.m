@@ -48,12 +48,12 @@
         [self.maxLonValue setText:[self.boundingBox.maxLongitude stringValue]];
     }
     
-    UIToolbar *toolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
-    self.minLatValue.inputAccessoryView = toolbar;
-    self.maxLatValue.inputAccessoryView = toolbar;
-    self.minLonValue.inputAccessoryView = toolbar;
-    self.maxLonValue.inputAccessoryView = toolbar;
+    self.minLatValue.inputAccessoryView = keyboardToolbar;
+    self.maxLatValue.inputAccessoryView = keyboardToolbar;
+    self.minLonValue.inputAccessoryView = keyboardToolbar;
+    self.maxLonValue.inputAccessoryView = keyboardToolbar;
 }
 
 - (void) doneButtonPressed {

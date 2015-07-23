@@ -15,6 +15,8 @@
 #import "GPKGSBoundingBoxViewController.h"
 #import "GPKGSUtils.h"
 
+NSString * const GPKGS_CREATE_FEATURES_SEG_BOUNDING_BOX = @"boundingBox";
+
 @interface GPKGSCreateFeaturesViewController ()
 
 @property (nonatomic, strong) NSArray * geometryTypes;
@@ -34,9 +36,9 @@
     self.geometryTypes = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
     [self.geometryTypeButton setTitle:[self.geometryTypes objectAtIndex:0] forState:UIControlStateNormal];
 
-    UIToolbar *toolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
-    self.nameValue.inputAccessoryView = toolbar;
+    self.nameValue.inputAccessoryView = keyboardToolbar;
 }
 
 - (void) doneButtonPressed {
@@ -128,7 +130,7 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
-    if([segue.identifier isEqualToString:@"boundingBox"])
+    if([segue.identifier isEqualToString:GPKGS_CREATE_FEATURES_SEG_BOUNDING_BOX])
     {
         GPKGSBoundingBoxViewController *boundingBoxViewController = segue.destinationViewController;
         boundingBoxViewController.delegate = self;
