@@ -9,8 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "GPKGSLoadTilesData.h"
 
+@class GPKGSLoadTilesViewController;
+
+@protocol GPKGSLoadTilesDelegate <NSObject>
+- (void)loadTilesViewControllerUrlName:(NSString *) urlName;
+@end
+
 @interface GPKGSLoadTilesViewController : UIViewController
 
+@property (nonatomic, weak) id <GPKGSLoadTilesDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UITextField *urlTextField;
 @property (nonatomic, strong) GPKGSLoadTilesData * data;
 

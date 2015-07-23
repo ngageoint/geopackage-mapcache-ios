@@ -79,14 +79,18 @@ NSString * const GPKGS_CREATE_FEATURES_SEG_BOUNDING_BOX = @"boundingBox";
         GPKGGeoPackage * geoPackage = [self.manager open:self.database.name];
         @try {
             [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:self.boundingBox andSrsId:[NSNumber numberWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
-            [self.delegate createFeaturesViewController:self createdFeatures:true withError:nil];
+            if(self.delegate != nil){
+                [self.delegate createFeaturesViewController:self createdFeatures:true withError:nil];
+            }
         }
         @finally {
             [geoPackage close];
         }
     }
     @catch (NSException *e) {
-        [self.delegate createFeaturesViewController:self createdFeatures:false withError:[e description]];
+        if(self.delegate != nil){
+            [self.delegate createFeaturesViewController:self createdFeatures:false withError:[e description]];
+        }
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }

@@ -88,6 +88,8 @@
 	<string>Preloaded</string>
 	<key>import_url_error</key>
 	<string>Download Error</string>
+	<key>load_tiles_preloaded_label</key>
+	<string>Preloaded</string>
 	<key>clear_active_label</key>
 	<string>Clear Active</string>
 	<key>map_max_features</key>
@@ -172,6 +174,89 @@
 			<key>name</key>
 			<string>erdc_whitehorse</string>
 		</dict>
+	</array>
+	<key>preloaded_tile_urls</key>
+	<array>
+		<dict>
+			<key>label</key>
+			<string>GEOINT OpenStreetMap</string>
+			<key>url</key>
+			<string>http://osm.geointapps.org/osm/{z}/{x}/{y}.png</string>
+			<key>name</key>
+			<string>geoint_openstreetmap</string>
+			<key>min_zoom</key>
+			<integer>0</integer>
+			<key>max_zoom</key>
+			<integer>17</integer>
+			<key>default_min_zoom</key>
+			<integer>1</integer>
+			<key>default_max_zoom</key>
+			<integer>5</integer>
+		</dict>
+        <dict>
+            <key>label</key>
+            <string>OpenStreetMap</string>
+            <key>url</key>
+            <string>http://a.tile.openstreetmap.org/{z}/{x}/{y}.png</string>
+            <key>name</key>
+            <string>openstreetmap</string>
+            <key>min_zoom</key>
+            <integer>0</integer>
+            <key>max_zoom</key>
+            <integer>17</integer>
+            <key>default_min_zoom</key>
+            <integer>1</integer>
+            <key>default_max_zoom</key>
+            <integer>5</integer>
+        </dict>
+        <dict>
+            <key>label</key>
+            <string>MapQuest-OSM</string>
+            <key>url</key>
+            <string>http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png</string>
+            <key>name</key>
+            <string>mapquest_osm</string>
+            <key>min_zoom</key>
+            <integer>0</integer>
+            <key>max_zoom</key>
+            <integer>21</integer>
+            <key>default_min_zoom</key>
+            <integer>0</integer>
+            <key>default_max_zoom</key>
+            <integer>5</integer>
+        </dict>
+        <dict>
+            <key>label</key>
+            <string>MapQuest Open Aerial</string>
+            <key>url</key>
+            <string>http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png</string>
+            <key>name</key>
+            <string>mapquest_open_aerial</string>
+            <key>min_zoom</key>
+            <integer>0</integer>
+            <key>max_zoom</key>
+            <integer>21</integer>
+            <key>default_min_zoom</key>
+            <integer>0</integer>
+            <key>default_max_zoom</key>
+            <integer>5</integer>
+        </dict>
+        <dict>
+            <key>label</key>
+            <string>nowCOAST</string>
+            <key>url</key>
+            <string>http://nowcoast.noaa.gov/wms/com.esri.wms.Esrimap/obs?service=wms%26version=1.1.1%26request=GetMap%26format=jpeg%26BBOX={minLon},{minLat},{maxLon},{maxLat}%26SRS=EPSG:4326%26width=256%26height=256%26Layers=world_countries,RAS_GOES,RAS_RIDGE_NEXRAD</string>
+            <key>name</key>
+            <string>nowCOAST</string>
+            <key>min_zoom</key>
+            <integer>0</integer>
+            <key>max_zoom</key>
+            <integer>21</integer>
+            <key>default_min_zoom</key>
+            <integer>0</integer>
+            <key>default_max_zoom</key>
+            <integer>5</integer>
+        </dict>
 	</array>
 	<key>preloaded_bounding_boxes</key>
 	<array>

@@ -9,6 +9,9 @@
 #import "GPKGSManagerCreateTilesViewController.h"
 #import "GPKGSCreateTilesViewController.h"
 #import "GPKGUrlTileGenerator.h"
+#import "GPKGProjectionTransform.h"
+#import "GPKGProjectionConstants.h"
+#import "GPKGTileBoundingBoxUtils.h"
 
 NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
 
@@ -20,6 +23,8 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self.databaseValue setText:self.database.name];
 }
 
 - (IBAction)cancelButton:(id)sender {
@@ -28,11 +33,15 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
 
 - (IBAction)createButton:(id)sender {
     
-    int count = 0;
-    GPKGGeoPackage * geoPackage = [self.manager open:self.database.name];
     @try {
+    
+    int count = 0;
         
         NSString * name = self.data.name;
+        
+        if(name == nil || [name length] == 0){
+            [NSException raise:@"Table Name" format:@"Table name is required"];
+        }
         
         GPKGSLoadTilesData * loadTiles = self.data.loadTiles;
         NSString * url = loadTiles.url;
@@ -45,25 +54,70 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
             [NSException raise:@"Zoom Range" format:@"Min zoom (%d) can not be larger than max zoom (%d)", minZoom, maxZoom];
         }
         
-        name = @"testtiles";
-        url = @"http://osm.geointapps.org/osm/{z}/{x}/{y}.png";
+        GPKGBoundingBox * boundingBox = generateTiles.boundingBox;
         
-        GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:name andTileUrl:url andMinZoom:minZoom andMaxZoom:maxZoom];
+        if ([boundingBox.minLatitude doubleValue] > [boundingBox.maxLatitude doubleValue]) {
+            [NSException raise:@"Latitude Range" format:@"Min latitude (%@) can not be larger than max latitude (%@)", boundingBox.minLatitude, boundingBox.maxLatitude];
+        }
         
-        [tileGenerator setCompressFormat:generateTiles.compressFormat];
-        [tileGenerator setCompressQualityAsIntPercentage:[generateTiles.compressQuality intValue]];
-        [tileGenerator setCompressScaleAsIntPercentage:[generateTiles.compressScale intValue]];
-        [tileGenerator setTileBoundingBox:generateTiles.boundingBox];
-        [tileGenerator setStandardWebMercatorFormat:generateTiles.standardWebMercatorFormat];
+        if ([boundingBox.minLongitude doubleValue] > [boundingBox.maxLongitude doubleValue]) {
+            [NSException raise:@"Longitude Range" format:@"Min longitude (%@) can not be larger than max longitude (%@)", boundingBox.minLongitude, boundingBox.maxLongitude];
+        }
         
-        count = [tileGenerator generateTiles];
-    }
-    @finally {
-        [geoPackage close];
-    }
+        if(url == nil || [url length] == 0){
+            
+            GPKGBoundingBox * webMercatorBoundingBox = [GPKGTileBoundingBoxUtils toWebMercatorWithBoundingBox:boundingBox];
+            
+            GPKGGeoPackage * geoPackage = [self.manager open:self.database.name];
+            @try {
+                // Create the web mercator srs if needed
+                GPKGSpatialReferenceSystemDao * srsDao = [geoPackage getSpatialReferenceSystemDao];
+                [srsDao getOrCreateWithSrsId:[NSNumber numberWithInt:PROJ_EPSG_WEB_MERCATOR]];
+                // Create the tile table
+                [geoPackage createTileTableWithTableName:name andContentsBoundingBox:boundingBox andContentsSrsId:[NSNumber numberWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM] andTileMatrixSetBoundingBox:webMercatorBoundingBox andTileMatrixSetSrsId:[NSNumber numberWithInt:PROJ_EPSG_WEB_MERCATOR]];
+            }
+            @finally {
+                [geoPackage close];
+            }
+
+            if(self.delegate != nil){
+                [self.delegate createManagerTilesViewController:self createdTiles:true withError:nil];
+            }
+            
+        }else{
+        
+            // TODO change this to be a tile generator task
+            GPKGGeoPackage * geoPackage = [self.manager open:self.database.name];
+            @try {
+            
+                GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:name andTileUrl:url andMinZoom:minZoom andMaxZoom:maxZoom];
+                
+                [tileGenerator setCompressFormat:generateTiles.compressFormat];
+                [tileGenerator setCompressQualityAsIntPercentage:[generateTiles.compressQuality intValue]];
+                [tileGenerator setCompressScaleAsIntPercentage:[generateTiles.compressScale intValue]];
+                [tileGenerator setTileBoundingBox:boundingBox];
+                [tileGenerator setStandardWebMercatorFormat:generateTiles.standardWebMercatorFormat];
+                
+                count = [tileGenerator generateTiles];
+            }
+            @finally {
+                [geoPackage close];
+            }
+            
+            if(self.delegate != nil){
+                [self.delegate createManagerTilesViewController:self createdTiles:true withError:nil];
+            }
+        }
     
-    [self.delegate createManagerTilesViewController:self createdTiles:true withError:nil];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    @catch (NSException *e) {
+        if(self.delegate != nil){
+            [self.delegate createManagerTilesViewController:self createdTiles:false withError:[e description]];
+        }
+    }
+    @finally{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{

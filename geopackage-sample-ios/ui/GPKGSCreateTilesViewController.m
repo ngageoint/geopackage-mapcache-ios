@@ -30,13 +30,23 @@ NSString * const GPKGS_CREATE_TILES_SEG_LOAD_TILES = @"loadTiles";
     [self.nameTextField resignFirstResponder];
 }
 
+- (IBAction)nameChanged:(id)sender {
+    [self.data setName:self.nameTextField.text];
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if([segue.identifier isEqualToString:GPKGS_CREATE_TILES_SEG_LOAD_TILES])
     {
         GPKGSLoadTilesViewController *loadTilesViewController = segue.destinationViewController;
+        loadTilesViewController.delegate = self;
         loadTilesViewController.data = self.data.loadTiles;
     }
+}
+
+- (void)loadTilesViewControllerUrlName:(NSString *) urlName{
+    [self.data setName:urlName];
+    [self.nameTextField setText:urlName];
 }
 
 @end

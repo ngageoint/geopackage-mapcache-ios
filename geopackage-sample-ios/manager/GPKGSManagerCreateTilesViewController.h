@@ -23,5 +23,6 @@
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) GPKGSDatabase *database;
 @property (nonatomic, strong) GPKGSCreateTilesData *data;
+@property (weak, nonatomic) IBOutlet UITextField *databaseValue;
 
 @end

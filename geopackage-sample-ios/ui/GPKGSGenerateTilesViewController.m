@@ -73,6 +73,11 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
     self.compressScaleTextField.inputAccessoryView = keyboardToolbar;
 }
 
+-(void) setAllowedZoomRangeWithMin: (int) minZoom andMax: (int) maxZoom{
+    [self.zoomValidator setMin:[[NSDecimalNumber alloc] initWithInt:minZoom]];
+    [self.zoomValidator setMax:[[NSDecimalNumber alloc] initWithInt:maxZoom]];
+}
+
 - (IBAction)minZoomChanged:(id)sender {
     self.data.minZoom = [self.numberFormatter numberFromString:self.minZoomTextField.text];
 }

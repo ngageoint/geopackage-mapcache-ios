@@ -158,13 +158,17 @@
 }
 
 -(void) completed{
-    [self.delegate downloadFileViewController:self downloadedFile:true withError:nil];
+    if(self.delegate != nil){
+        [self.delegate downloadFileViewController:self downloadedFile:true withError:nil];
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void) failureWithError: (NSString *) error{
     NSString * errorMessage = self.active ? error : nil;
-    [self.delegate downloadFileViewController:self downloadedFile:false withError:errorMessage];
+    if(self.delegate != nil){
+        [self.delegate downloadFileViewController:self downloadedFile:false withError:errorMessage];
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

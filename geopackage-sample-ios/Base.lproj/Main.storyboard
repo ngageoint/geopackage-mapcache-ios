@@ -354,7 +354,7 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="http://" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="v6S-Wy-OmP" userLabel="URLTextField">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="http://" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="v6S-Wy-OmP" userLabel="URLTextField">
                                         <rect key="frame" x="16" y="104" width="568" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
@@ -362,7 +362,7 @@
                                             <action selector="urlChanged:" destination="BbS-qo-Mou" eventType="editingChanged" id="bFP-gc-uU0"/>
                                         </connections>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PcG-6o-G6X" userLabel="PreloadedButton">
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PcG-6o-G6X" userLabel="PreloadedButton">
                                         <rect key="frame" x="16" y="149" width="112" height="30"/>
                                         <state key="normal" title="Preloaded URLs">
                                             <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -372,7 +372,7 @@
                                             <action selector="preloaded:" destination="BbS-qo-Mou" eventType="touchUpInside" id="pK3-hb-Nmx"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A8w-g0-nsc" userLabel="Status">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A8w-g0-nsc" userLabel="Status">
                                         <rect key="frame" x="16" y="217" width="568" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="Kd7-HB-IpJ"/>
@@ -381,7 +381,7 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Sia-cZ-Os3">
+                                    <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sia-cZ-Os3">
                                         <rect key="frame" x="16" y="246" width="568" height="2"/>
                                         <color key="progressTintColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     </progressView>
@@ -532,7 +532,7 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JJW-Pd-zLn">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cyC-BF-8bz">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Database:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cyC-BF-8bz">
                                         <rect key="frame" x="16" y="12" width="87" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="87" id="AM2-eT-z5l"/>
@@ -788,6 +788,9 @@
                             <constraint firstAttribute="trailing" secondItem="bzH-xj-oBC" secondAttribute="trailing" id="nHh-Rw-MJ7"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="databaseValue" destination="Anh-5n-ReF" id="07I-bn-73d"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fmT-rW-g6C" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -844,6 +847,9 @@
                                 <rect key="frame" x="0.0" y="37" width="510" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="nameChanged:" destination="7Ed-ln-jxd" eventType="editingChanged" id="tcj-ci-I8a"/>
+                                </connections>
                             </textField>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dwO-zv-MWx">
                                 <rect key="frame" x="0.0" y="75" width="510" height="550"/>
@@ -996,6 +1002,9 @@
                                 <rect key="frame" x="0.0" y="37" width="510" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="urlChanged:" destination="qj0-zd-Hg5" eventType="editingChanged" id="eBS-vi-Sat"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lHY-YL-ycd" userLabel="PreloadedButton">
                                 <rect key="frame" x="0.0" y="75" width="112" height="30"/>
@@ -1005,6 +1014,7 @@
                                 </state>
                                 <connections>
                                     <action selector="preloaded:" destination="BbS-qo-Mou" eventType="touchUpInside" id="6J9-Cp-a0c"/>
+                                    <action selector="preloadedUrlsButton:" destination="qj0-zd-Hg5" eventType="touchUpInside" id="6i6-BR-6ia"/>
                                 </connections>
                             </button>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h3Z-la-6Hd">
@@ -1053,7 +1063,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="510" height="435"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Zoom:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="txG-A0-EXf">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Min Zoom:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="txG-A0-EXf">
                                 <rect key="frame" x="0.0" y="12" width="83" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="83" id="vfo-C4-g62"/>
@@ -1073,7 +1083,7 @@
                                     <action selector="minZoomChanged:" destination="epq-as-8j9" eventType="editingChanged" id="4VD-MF-VZQ"/>
                                 </connections>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Max Zoom:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VB4-Ej-iXg">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Max Zoom:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VB4-Ej-iXg">
                                 <rect key="frame" x="0.0" y="50" width="88" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="88" id="MDt-Nj-08c"/>
@@ -1102,7 +1112,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="t9U-vv-RZ0">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="t9U-vv-RZ0">
                                 <rect key="frame" x="151" y="84" width="359" height="29"/>
                                 <segments>
                                     <segment title="None"/>
@@ -1122,7 +1132,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kh2-s5-cV7" userLabel="CompressQualityValue">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kh2-s5-cV7" userLabel="CompressQualityValue">
                                 <rect key="frame" x="151" y="121" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="97" id="x6i-RG-cWG"/>
@@ -1142,7 +1152,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NUA-38-9jf" userLabel="CompressScaleValue">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NUA-38-9jf" userLabel="CompressScaleValue">
                                 <rect key="frame" x="151" y="157" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
@@ -1407,7 +1417,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="X4O-rd-xnT"/>
-        <segue reference="fV6-n6-geX"/>
+        <segue reference="E1Z-ca-WBX"/>
         <segue reference="eWo-PS-bO7"/>
     </inferredMetricsTieBreakers>
 </document>
