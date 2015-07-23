@@ -603,21 +603,6 @@ const char ConstantKey;
 -(void) createTilesDatabaseOption: (GPKGSDatabase *) database
 {
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_CREATE_TILES sender:database];
-    // TODO delete
-    /*
-    int count = 0;
-    GPKGGeoPackage * geoPackage = [self.manager open:database.name];
-    @try {
-    
-        GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:@"testtiles" andTileUrl:@"http://osm.geointapps.org/osm/{z}/{x}/{y}.png" andMinZoom:4 andMaxZoom:4];
-        count = [tileGenerator generateTiles];
-     }
-     @finally {
-         [geoPackage close];
-     }
-    [self todoAlert: [NSString stringWithFormat:@"%@ - %d",[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL], count]];
-    [self updateAndReloadData];
-     */
 }
 
 -(void) viewTableOption: (GPKGSTable *) table{
@@ -816,11 +801,9 @@ const char ConstantKey;
         [self updateAndReloadData];
     }
     if(error != nil){
-        // TODO
-        /*[GPKGSUtils showMessageWithDelegate:self
+        [GPKGSUtils showMessageWithDelegate:self
                                    andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]
-                                 andMessage:[NSString stringWithFormat:@"Error creating tiles table '%@' in database: '%@'\n\nError: %@", controller.nameValue.text, controller.database.name, error]];
-         */
+                                 andMessage:[NSString stringWithFormat:@"Error creating tiles table '%@' in database: '%@'\n\nError: %@", controller.data.name, controller.database.name, error]];
     }
 }
 
@@ -853,6 +836,7 @@ const char ConstantKey;
         createTilesViewController.delegate = self;
         createTilesViewController.database = database;
         createTilesViewController.manager = self.manager;
+        createTilesViewController.data = [[GPKGSCreateTilesData alloc] init];
     }
 }
 

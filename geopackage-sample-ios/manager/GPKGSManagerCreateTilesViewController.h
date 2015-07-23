@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GPKGSDatabase.h"
 #import "GPKGGeoPackageManager.h"
+#import "GPKGSCreateTilesData.h"
 
 @class GPKGSManagerCreateTilesViewController;
 
@@ -21,5 +22,6 @@
 @property (nonatomic, weak) id <GPKGSManagerCreateTilesDelegate> delegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) GPKGSDatabase *database;
+@property (nonatomic, strong) GPKGSCreateTilesData *data;
 
 @end

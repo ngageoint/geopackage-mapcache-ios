@@ -22,6 +22,18 @@
 	<string>OK</string>
 	<key>cancel_label</key>
 	<string>Cancel</string>
+	<key>load_tiles_min_zoom_default</key>
+	<integer>0</integer>
+	<key>load_tiles_max_zoom_default</key>
+	<integer>21</integer>
+	<key>load_tiles_default_min_zoom_default</key>
+	<integer>0</integer>
+	<key>load_tiles_default_max_zoom_default</key>
+	<integer>5</integer>
+	<key>load_tiles_compress_quality_default</key>
+	<integer>100</integer>
+	<key>load_tiles_compress_scale_default</key>
+	<integer>100</integer>
 	<key>bounding_box_preloaded_label</key>
 	<string>Preloaded Locations</string>
 	<key>bounding_box_default_min_latitude</key>

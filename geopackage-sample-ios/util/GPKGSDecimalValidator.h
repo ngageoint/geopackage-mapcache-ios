@@ -14,4 +14,8 @@
 
 -(instancetype) initWithMinimumDouble: (double) minimum andMaximumDouble: (double) maximum;
 
+-(instancetype) initWithMinimumNumber: (NSNumber *) minimum andMaximumNumber: (NSNumber *) maximum;
+
+-(instancetype) initWithMinimumInt: (int) minimum andMaximumInt: (int) maximum;
+
 @end

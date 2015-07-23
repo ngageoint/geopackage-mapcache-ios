@@ -754,7 +754,7 @@
                                             <constraint firstAttribute="height" constant="625" id="a1E-F1-ECO"/>
                                         </constraints>
                                         <connections>
-                                            <segue destination="7Ed-ln-jxd" kind="embed" id="X4O-rd-xnT"/>
+                                            <segue destination="7Ed-ln-jxd" kind="embed" identifier="createTiles" id="X4O-rd-xnT"/>
                                         </connections>
                                     </containerView>
                                     <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Anh-5n-ReF" userLabel="DatabaseValue">
@@ -822,7 +822,7 @@
         <!--Create Tiles View Controller-->
         <scene sceneID="Nsy-ws-cTQ">
             <objects>
-                <viewController id="7Ed-ln-jxd" userLabel="Create Tiles View Controller" sceneMemberID="viewController">
+                <viewController id="7Ed-ln-jxd" userLabel="Create Tiles View Controller" customClass="GPKGSCreateTilesViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="oEn-Pf-MmA"/>
                         <viewControllerLayoutGuide type="bottom" id="uvq-rh-sph"/>
@@ -851,7 +851,7 @@
                                     <constraint firstAttribute="height" constant="550" id="2Mo-Mv-G9M"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="qj0-zd-Hg5" kind="embed" id="aLP-Cc-axH"/>
+                                    <segue destination="qj0-zd-Hg5" kind="embed" identifier="loadTiles" id="aLP-Cc-axH"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -869,6 +869,9 @@
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="510" height="625"/>
+                    <connections>
+                        <outlet property="nameTextField" destination="cn7-go-ZQk" id="woF-Nv-RFV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qKz-CR-UjC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -971,7 +974,7 @@
         <!--Load Tiles View Controller-->
         <scene sceneID="YXp-sY-p0Y">
             <objects>
-                <viewController id="qj0-zd-Hg5" userLabel="Load Tiles View Controller" sceneMemberID="viewController">
+                <viewController id="qj0-zd-Hg5" userLabel="Load Tiles View Controller" customClass="GPKGSLoadTilesViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7Xc-gr-vkb"/>
                         <viewControllerLayoutGuide type="bottom" id="eLS-Pz-PG6"/>
@@ -1010,7 +1013,7 @@
                                     <constraint firstAttribute="height" constant="435" id="G66-KI-5bB"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="epq-as-8j9" kind="embed" id="E1Z-ca-WBX"/>
+                                    <segue destination="epq-as-8j9" kind="embed" identifier="generateTiles" id="E1Z-ca-WBX"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -1030,6 +1033,9 @@
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="510" height="550"/>
+                    <connections>
+                        <outlet property="urlTextField" destination="gTI-kL-4gd" id="O5a-fm-lcL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SgA-1m-pBJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1038,7 +1044,7 @@
         <!--Generate Tiles View Controller-->
         <scene sceneID="02H-sg-9iW">
             <objects>
-                <viewController id="epq-as-8j9" userLabel="Generate Tiles View Controller" sceneMemberID="viewController">
+                <viewController id="epq-as-8j9" userLabel="Generate Tiles View Controller" customClass="GPKGSGenerateTilesViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="WKu-ou-cUW"/>
                         <viewControllerLayoutGuide type="bottom" id="P6V-hZ-SOI"/>
@@ -1062,7 +1068,10 @@
                                     <constraint firstAttribute="width" constant="97" id="Dc6-A2-pGO"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <action selector="minZoomChanged:" destination="epq-as-8j9" eventType="editingChanged" id="4VD-MF-VZQ"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Max Zoom:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VB4-Ej-iXg">
                                 <rect key="frame" x="0.0" y="50" width="88" height="21"/>
@@ -1079,7 +1088,10 @@
                                     <constraint firstAttribute="width" constant="97" id="vaU-px-tRe"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <action selector="maxZoomChanged:" destination="epq-as-8j9" eventType="editingChanged" id="k6H-AR-jyD"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compress Format:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hhh-Vu-rbw">
                                 <rect key="frame" x="0.0" y="87" width="143" height="21"/>
@@ -1097,6 +1109,9 @@
                                     <segment title="JPEG"/>
                                     <segment title="PNG"/>
                                 </segments>
+                                <connections>
+                                    <action selector="compressFormatChanged:" destination="epq-as-8j9" eventType="valueChanged" id="kIG-CT-Jhu"/>
+                                </connections>
                             </segmentedControl>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compress Quality:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e2a-tB-YdF">
                                 <rect key="frame" x="0.0" y="125" width="142" height="21"/>
@@ -1113,7 +1128,10 @@
                                     <constraint firstAttribute="width" constant="97" id="x6i-RG-cWG"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <action selector="compressQualityChanged:" destination="epq-as-8j9" eventType="editingChanged" id="tnV-WX-37C"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compress Scale:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wuc-Gc-x6u">
                                 <rect key="frame" x="0.0" y="161" width="131" height="21"/>
@@ -1127,7 +1145,10 @@
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NUA-38-9jf" userLabel="CompressScaleValue">
                                 <rect key="frame" x="151" y="157" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <action selector="compressScaleChanged:" destination="epq-as-8j9" eventType="editingChanged" id="H2C-1u-qZV"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tile Format:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zsM-wc-Qqn">
                                 <rect key="frame" x="0.0" y="199" width="91" height="21"/>
@@ -1144,6 +1165,9 @@
                                     <segment title="GeoPackage"/>
                                     <segment title="Standard"/>
                                 </segments>
+                                <connections>
+                                    <action selector="tileFormatChanged:" destination="epq-as-8j9" eventType="valueChanged" id="edO-Wk-N1q"/>
+                                </connections>
                             </segmentedControl>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v10-AN-6fs">
                                 <rect key="frame" x="0.0" y="235" width="300" height="200"/>
@@ -1198,6 +1222,14 @@
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="510" height="435"/>
+                    <connections>
+                        <outlet property="compressFormatSegmentedControl" destination="t9U-vv-RZ0" id="9al-6j-gGe"/>
+                        <outlet property="compressQualityTextField" destination="kh2-s5-cV7" id="1Wf-Hh-qV2"/>
+                        <outlet property="compressScaleTextField" destination="NUA-38-9jf" id="iC8-5l-XmQ"/>
+                        <outlet property="maxZoomTextField" destination="veO-IO-BiM" id="KwQ-Zs-uF9"/>
+                        <outlet property="minZoomTextField" destination="vta-gL-kss" id="VYG-zv-deA"/>
+                        <outlet property="tileFormatSegmentedControl" destination="Afx-gq-LqQ" id="ZDy-Me-oxO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r8A-JV-0y9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1375,7 +1407,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="X4O-rd-xnT"/>
-        <segue reference="E1Z-ca-WBX"/>
+        <segue reference="fV6-n6-geX"/>
         <segue reference="eWo-PS-bO7"/>
     </inferredMetricsTieBreakers>
 </document>
