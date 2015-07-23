@@ -10,6 +10,9 @@
 
 @interface GPKGSDecimalValidator : NSObject<UITextFieldDelegate>
 
+@property (nonatomic, strong) NSDecimalNumber *min;
+@property (nonatomic, strong) NSDecimalNumber *max;
+
 -(instancetype) initWithMinimum: (NSDecimalNumber *) minimum andMaximum: (NSDecimalNumber *) maximum;
 
 -(instancetype) initWithMinimumDouble: (double) minimum andMaximumDouble: (double) maximum;

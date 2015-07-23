@@ -54,6 +54,7 @@ NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL = @"geopa
 NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL = @"geopackage_table_tiles_load_label";
 NSString * const GPKGS_PROP_IMPORT_URL_PRELOADED_LABEL = @"import_url_preloaded_label";
 NSString * const GPKGS_PROP_IMPORT_URL_ERROR = @"import_url_error";
+NSString * const GPKGS_PROP_LOAD_TILES_PRELOADED_LABEL = @"load_tiles_preloaded_label";
 NSString * const GPKGS_PROP_CLEAR_ACTIVE_LABEL = @"clear_active_label";
 NSString * const GPKGS_PROP_MAP_MAX_FEATURES = @"map_max_features";
 NSString * const GPKGS_PROP_MAP_MAX_FEATURES_MESSAGE = @"map_max_features_message";
@@ -71,13 +72,20 @@ NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS = @"preloaded_geopackage_u
 NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_LABEL = @"label";
 NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_URL = @"url";
 NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_NAME = @"name";
+NSString * const GPKGS_PROP_PRELOADED_TILE_URLS = @"preloaded_tile_urls";
+NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_LABEL = @"label";
+NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_URL = @"url";
+NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_NAME = @"name";
+NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_MIN_ZOOM = @"min_zoom";
+NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_MAX_ZOOM = @"max_zoom";
+NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_DEFAULT_MIN_ZOOM = @"default_min_zoom";
+NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_DEFAULT_MAX_ZOOM = @"default_max_zoom";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES = @"preloaded_bounding_boxes";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_LABEL = @"label";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LAT = @"min_lat";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LAT = @"max_lat";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LON = @"min_lon";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LON = @"max_lon";
-
 
 @implementation GPKGSConstants
 

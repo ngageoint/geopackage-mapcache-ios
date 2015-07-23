@@ -20,4 +20,6 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *tileFormatSegmentedControl;
 @property (nonatomic, strong) GPKGSGenerateTilesData * data;
 
+-(void) setAllowedZoomRangeWithMin: (int) minZoom andMax: (int) maxZoom;
+
 @end

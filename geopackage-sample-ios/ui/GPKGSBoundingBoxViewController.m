@@ -140,7 +140,9 @@
 }
 
 -(void) boundingBoxUpdated{
-    [self.delegate boundingBoxViewController:self.boundingBox];
+    if(self.delegate != nil){
+        [self.delegate boundingBoxViewController:self.boundingBox];
+    }
 }
 
 @end

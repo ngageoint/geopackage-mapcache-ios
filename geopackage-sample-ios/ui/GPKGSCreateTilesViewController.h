@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "GPKGSCreateTilesData.h"
+#import "GPKGSLoadTilesViewController.h"
 
-@interface GPKGSCreateTilesViewController : UIViewController
+@interface GPKGSCreateTilesViewController : UIViewController <GPKGSLoadTilesDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (nonatomic, strong) GPKGSCreateTilesData * data;

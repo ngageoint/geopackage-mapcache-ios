@@ -10,9 +10,6 @@
 
 @interface GPKGSDecimalValidator ()
 
-@property (nonatomic, strong) NSDecimalNumber *min;
-@property (nonatomic, strong) NSDecimalNumber *max;
-
 @end
 
 @implementation GPKGSDecimalValidator
