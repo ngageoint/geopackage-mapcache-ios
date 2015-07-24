@@ -59,6 +59,12 @@ const char ConstantKey;
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateAndReloadDataNotification:)
+                                                 name:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION
+                                               object:nil];
+    
     self.manager = [GPKGGeoPackageFactory getManager];
     self.active = [GPKGSDatabases getInstance];
     self.settings = [NSUserDefaults standardUserDefaults];
@@ -68,6 +74,13 @@ const char ConstantKey;
         [self.databases setObject:[[GPKGSDatabase alloc] initWithName:expandedDatabase andExpanded:true] forKey:expandedDatabase];
     }
     [self update];
+}
+
+- (void) updateAndReloadDataNotification:(NSNotification *) notification
+{
+    if ([[notification name] isEqualToString:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION]){
+        [self updateAndReloadData];
+    }
 }
 
 -(void) update{

@@ -9,6 +9,7 @@
 #import "GPKGSConstants.h"
 
 NSString * const GPKGS_SAMPLE_RESOURCES_PROPERTIES = @"sample";
+NSString * const GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION = @"ImportGeoPackageNotification";
 NSString * const GPKGS_CELL_DATABASE = @"GeoPackageDatabaseCell";
 NSString * const GPKGS_CELL_TABLE = @"GeoPackageTableCell";
 NSString * const GPKGS_PROP_ICON_GEOMETRY = @"icon_geometry";
