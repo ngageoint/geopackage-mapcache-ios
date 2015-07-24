@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 extern NSString * const GPKGS_SAMPLE_RESOURCES_PROPERTIES;
+extern NSString * const GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION;
 extern NSString * const GPKGS_CELL_DATABASE;
 extern NSString * const GPKGS_CELL_TABLE;
 extern NSString * const GPKGS_PROP_ICON_GEOMETRY;

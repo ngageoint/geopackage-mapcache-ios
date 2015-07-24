@@ -7,6 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#import "GPKGGeoPackageFactory.h"
+#import "GPKGSManagerViewController.h"
+#import "GPKGSConstants.h"
 
 @interface AppDelegate ()
 
@@ -40,6 +43,30 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (BOOL) application:(UIApplication *)application openURL:(NSURL *)
+url sourceApplication:(NSString *) sourceApplication annotation:(id)
+annotation {
+    
+    if (!url) {
+        return NO;
+    }
+
+    if (url.isFileURL) {
+        NSString * fileUrl = [url path];
+        
+        GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory getManager];
+        BOOL imported = [manager importGeoPackageFromPath:fileUrl andOverride:true andMove:true];
+        
+        if(imported){
+            [[NSNotificationCenter defaultCenter] postNotificationName:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION object:self];
+        }else{
+            NSLog(@"Error importing file %@", fileUrl);
+        }
+    }
+
+    return YES;
 }
 
 @end

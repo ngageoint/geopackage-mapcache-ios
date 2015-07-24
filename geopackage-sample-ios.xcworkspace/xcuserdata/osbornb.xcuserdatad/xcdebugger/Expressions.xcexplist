@@ -23,6 +23,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "main:main.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "tabBar.items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[GPKGBoundingBox getCenter]:GPKGBoundingBox.m">
       </ContextState>
       <ContextState
@@ -146,6 +154,17 @@
          <PersistentStrings>
             <PersistentString
                value = "image.size.width">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[AppDelegate application:openURL:sourceApplication:annotation:]:AppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "tabBar.tabBar.items">
+            </PersistentString>
+            <PersistentString
+               value = "[tabBarController.tabBar.items objectAtIndex:0]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
