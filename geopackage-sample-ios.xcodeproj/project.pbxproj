@@ -25,6 +25,7 @@
 		044648141B4B20950052913B /* GPKGSDatabaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 044648131B4B20950052913B /* GPKGSDatabaseCell.m */; };
 		0446481A1B4C24AD0052913B /* GPKGSActiveTableSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 044648191B4C24AD0052913B /* GPKGSActiveTableSwitch.m */; };
 		0446481E1B4C26DF0052913B /* GPKGSConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0446481D1B4C26DF0052913B /* GPKGSConstants.m */; };
+		044D6B4B1B627B0000527745 /* GPKGSLoadTilesTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 044D6B4A1B627B0000527745 /* GPKGSLoadTilesTask.m */; };
 		045C94831B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94821B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m */; };
 		045C94861B50226D0005CCD0 /* GPKGSFeatureOverlayTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94851B50226D0005CCD0 /* GPKGSFeatureOverlayTable.m */; };
 		045C94891B5026E00005CCD0 /* GPKGSDatabases.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94881B5026E00005CCD0 /* GPKGSDatabases.m */; };
@@ -100,6 +101,9 @@
 		044648191B4C24AD0052913B /* GPKGSActiveTableSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSActiveTableSwitch.m; sourceTree = "<group>"; };
 		0446481C1B4C26DF0052913B /* GPKGSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSConstants.h; sourceTree = "<group>"; };
 		0446481D1B4C26DF0052913B /* GPKGSConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSConstants.m; sourceTree = "<group>"; };
+		044D6B491B627B0000527745 /* GPKGSLoadTilesTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSLoadTilesTask.h; sourceTree = "<group>"; };
+		044D6B4A1B627B0000527745 /* GPKGSLoadTilesTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSLoadTilesTask.m; sourceTree = "<group>"; };
+		044D6B4C1B627B2200527745 /* GPKGSLoadTilesProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSLoadTilesProtocol.h; sourceTree = "<group>"; };
 		045C94811B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSDisplayTextViewController.h; sourceTree = "<group>"; };
 		045C94821B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSDisplayTextViewController.m; sourceTree = "<group>"; };
 		045C94841B50226D0005CCD0 /* GPKGSFeatureOverlayTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSFeatureOverlayTable.h; sourceTree = "<group>"; };
@@ -195,6 +199,7 @@
 		040136711AF94FB200C92AFC /* geopackage-sample-ios */ = {
 			isa = PBXGroup;
 			children = (
+				044D6B481B627AB400527745 /* load */,
 				04CCC8571B5EC1EF0001296D /* 0.png */,
 				045C949C1B5D89E80005CCD0 /* ui */,
 				045C94911B56DEFA0005CCD0 /* indexer */,
@@ -300,6 +305,16 @@
 				045C949A1B5D4C560005CCD0 /* GPKGSDecimalValidator.m */,
 			);
 			path = util;
+			sourceTree = "<group>";
+		};
+		044D6B481B627AB400527745 /* load */ = {
+			isa = PBXGroup;
+			children = (
+				044D6B491B627B0000527745 /* GPKGSLoadTilesTask.h */,
+				044D6B4A1B627B0000527745 /* GPKGSLoadTilesTask.m */,
+				044D6B4C1B627B2200527745 /* GPKGSLoadTilesProtocol.h */,
+			);
+			path = load;
 			sourceTree = "<group>";
 		};
 		045C948A1B50785B0005CCD0 /* map */ = {
@@ -512,6 +527,7 @@
 				045C94A91B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m in Sources */,
 				0446481A1B4C24AD0052913B /* GPKGSActiveTableSwitch.m in Sources */,
 				045C94891B5026E00005CCD0 /* GPKGSDatabases.m in Sources */,
+				044D6B4B1B627B0000527745 /* GPKGSLoadTilesTask.m in Sources */,
 				04CCC8681B6114EE0001296D /* GPKGSGenerateTilesData.m in Sources */,
 				04082B531B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.m in Sources */,
 				04CCC8651B61122A0001296D /* GPKGSGenerateTilesViewController.m in Sources */,

@@ -102,10 +102,10 @@
                                                         <constraint firstAttribute="width" constant="36" id="htW-FP-tRs"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="(Count)" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hdD-c1-2w5" userLabel="Count">
-                                                    <rect key="frame" x="475" y="0.0" width="68" height="43"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="GeoPackage Table" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p1E-p4-Jrt">
+                                                    <rect key="frame" x="116" y="0.0" width="351" height="43"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -122,10 +122,10 @@
                                                         <action selector="tableOptions:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="c5S-i2-SGw"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="GeoPackage Table" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p1E-p4-Jrt">
-                                                    <rect key="frame" x="116" y="0.0" width="351" height="43"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="(Count)" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hdD-c1-2w5" userLabel="Count">
+                                                    <rect key="frame" x="475" y="0.0" width="68" height="43"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -137,6 +137,7 @@
                                                 <constraint firstItem="wxQ-iP-psd" firstAttribute="trailing" secondItem="GPZ-KS-nY6" secondAttribute="trailingMargin" id="RgJ-C2-9h4"/>
                                                 <constraint firstItem="YE8-aA-r1h" firstAttribute="leading" secondItem="GPZ-KS-nY6" secondAttribute="leadingMargin" id="dLZ-Nu-K3g"/>
                                                 <constraint firstItem="wxQ-iP-psd" firstAttribute="leading" secondItem="hdD-c1-2w5" secondAttribute="trailing" constant="15" id="np3-9u-JSq"/>
+                                                <constraint firstItem="hdD-c1-2w5" firstAttribute="top" secondItem="wxQ-iP-psd" secondAttribute="top" constant="-4" id="po5-nH-aA6"/>
                                                 <constraint firstAttribute="centerY" secondItem="YE8-aA-r1h" secondAttribute="centerY" id="pod-aR-d4l"/>
                                                 <constraint firstItem="hdD-c1-2w5" firstAttribute="leading" secondItem="wxQ-iP-psd" secondAttribute="leading" constant="-83" id="wht-yi-J1Q"/>
                                                 <constraint firstItem="YE8-aA-r1h" firstAttribute="trailing" secondItem="5qY-ko-fnp" secondAttribute="trailing" constant="-44" id="xXY-AC-37t"/>

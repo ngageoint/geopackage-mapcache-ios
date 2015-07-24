@@ -12,6 +12,7 @@
 #import "GPKGProjectionTransform.h"
 #import "GPKGProjectionConstants.h"
 #import "GPKGTileBoundingBoxUtils.h"
+#import "GPKGSLoadTilesTask.h"
 
 NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
 
@@ -34,8 +35,6 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
 - (IBAction)createButton:(id)sender {
     
     @try {
-    
-    int count = 0;
         
         NSString * name = self.data.name;
         
@@ -64,6 +63,7 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
             [NSException raise:@"Longitude Range" format:@"Min longitude (%@) can not be larger than max longitude (%@)", boundingBox.minLongitude, boundingBox.maxLongitude];
         }
         
+        // If not importing tiles, just create the table
         if(url == nil || [url length] == 0){
             
             GPKGBoundingBox * webMercatorBoundingBox = [GPKGTileBoundingBoxUtils toWebMercatorWithBoundingBox:boundingBox];
@@ -83,30 +83,11 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
             if(self.delegate != nil){
                 [self.delegate createManagerTilesViewController:self createdTiles:true withError:nil];
             }
+            [self dismissViewControllerAnimated:YES completion:nil];
             
         }else{
-        
-            // TODO change this to be a tile generator task
-            GPKGGeoPackage * geoPackage = [self.manager open:self.database.name];
-            @try {
-            
-                GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:name andTileUrl:url andMinZoom:minZoom andMaxZoom:maxZoom];
-                
-                [tileGenerator setCompressFormat:generateTiles.compressFormat];
-                [tileGenerator setCompressQualityAsIntPercentage:[generateTiles.compressQuality intValue]];
-                [tileGenerator setCompressScaleAsIntPercentage:[generateTiles.compressScale intValue]];
-                [tileGenerator setTileBoundingBox:boundingBox];
-                [tileGenerator setStandardWebMercatorFormat:generateTiles.standardWebMercatorFormat];
-                
-                count = [tileGenerator generateTiles];
-            }
-            @finally {
-                [geoPackage close];
-            }
-            
-            if(self.delegate != nil){
-                [self.delegate createManagerTilesViewController:self createdTiles:true withError:nil];
-            }
+            // Load tiles
+            [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:self.database.name andTable:name andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox];
         }
     
     }
@@ -114,8 +95,6 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
         if(self.delegate != nil){
             [self.delegate createManagerTilesViewController:self createdTiles:false withError:[e description]];
         }
-    }
-    @finally{
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
@@ -127,6 +106,27 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
         GPKGSCreateTilesViewController *createTilesViewController = segue.destinationViewController;
         createTilesViewController.data = self.data;
     }
+}
+
+-(void) onLoadTilesCanceled: (NSString *) result withCount:(int)count{
+    if(self.delegate != nil){
+        [self.delegate createManagerTilesViewController:self createdTiles:count withError:nil];
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void) onLoadTilesFailure: (NSString *) result{
+    if(self.delegate != nil){
+        [self.delegate createManagerTilesViewController:self createdTiles:0 withError:result];
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void) onLoadTilesCompleted:(int)count{
+    if(self.delegate != nil){
+        [self.delegate createManagerTilesViewController:self createdTiles:count withError:nil];
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
