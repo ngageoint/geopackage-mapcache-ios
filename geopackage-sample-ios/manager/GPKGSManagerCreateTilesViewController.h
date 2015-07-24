@@ -10,14 +10,16 @@
 #import "GPKGSDatabase.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGSCreateTilesData.h"
+#import "GPKGSLoadTilesProtocol.h"
+#import "GPKGSDatabases.h"
 
 @class GPKGSManagerCreateTilesViewController;
 
 @protocol GPKGSManagerCreateTilesDelegate <NSObject>
-- (void)createManagerTilesViewController:(GPKGSManagerCreateTilesViewController *)controller createdTiles:(BOOL)created withError: (NSString *) error;
+- (void)createManagerTilesViewController:(GPKGSManagerCreateTilesViewController *)controller createdTiles:(int)count withError: (NSString *) error;
 @end
 
-@interface GPKGSManagerCreateTilesViewController : UIViewController
+@interface GPKGSManagerCreateTilesViewController : UIViewController <GPKGSLoadTilesProtocol>
 
 @property (nonatomic, weak) id <GPKGSManagerCreateTilesDelegate> delegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;

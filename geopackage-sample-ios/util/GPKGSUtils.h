@@ -21,4 +21,6 @@
 
 +(UIToolbar *) buildKeyboardDoneToolbarWithTarget: (id) target andAction:(SEL)action;
 
++(UIProgressView *) buildProgressBarView;
+
 @end

@@ -15,7 +15,7 @@
 
 -(void) onIndexerFailure: (NSString *) result;
 
--(void) onIndexerCompleted: (NSString *) result;
+-(void) onIndexerCompleted: (int) count;
 
 @end
 

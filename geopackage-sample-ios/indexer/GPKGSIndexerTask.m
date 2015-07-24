@@ -13,6 +13,7 @@
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
+#import "GPKGSUtils.h"
 
 @interface GPKGSIndexerTask ()
 
@@ -52,11 +53,7 @@
                               delegate:indexTask
                               cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
                               otherButtonTitles:nil];
-    UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleBar];
-    progressView.frame = CGRectMake(0, 0, 200, 15);
-    progressView.bounds = CGRectMake(0, 0, 200, 15);
-    [progressView setUserInteractionEnabled:NO];
-    [progressView setProgressTintColor:[UIColor greenColor]];
+    UIProgressView *progressView = [GPKGSUtils buildProgressBarView];
     [alertView setValue:progressView forKey:@"accessoryView"];
     
     indexTask.alertView = alertView;
@@ -92,8 +89,10 @@
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
         
+        int count = 0;
+        
         @try {
-            int count = [self.indexer index];
+            count = [self.indexer index];
             if(count < [self.maxIndex intValue]){
                 NSString * countError = [NSString stringWithFormat:@"Fewer features were indexed than expected. Expected: %@, Actual: %u", self.maxIndex, count];
                 if(self.error != nil){
@@ -113,7 +112,7 @@
             [self.alertView dismissWithClickedButtonIndex:-1 animated:true];
 
             if(self.error == nil){
-                [self.callback onIndexerCompleted:nil];
+                [self.callback onIndexerCompleted:count];
             }else{
                 if(self.canceled){
                     [self.callback onIndexerCanceled:[self.error description]];

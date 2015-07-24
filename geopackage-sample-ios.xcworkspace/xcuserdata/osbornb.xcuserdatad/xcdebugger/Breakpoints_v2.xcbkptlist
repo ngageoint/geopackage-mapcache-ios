@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../geopackage-ios/geopackage-ios/tiles/GPKGTileGenerator.m"
-            timestampString = "459437087.446076"
+            timestampString = "459443243.70764"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
+            startingLineNumber = "215"
+            endingLineNumber = "215"
             landmarkName = "-updateTileBoundsWithTileMatrixSet:"
             landmarkType = "5">
          </BreakpointContent>
@@ -144,6 +144,102 @@
             startingLineNumber = "177"
             endingLineNumber = "177"
             landmarkName = "-loadTileAtPath:result:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "geopackage-sample-ios/manager/GPKGSManagerCreateTilesViewController.m"
+            timestampString = "459451757.288304"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "-createButton:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "geopackage-sample-ios/manager/GPKGSManagerViewController.m"
+            timestampString = "459447285.356504"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "380"
+            endingLineNumber = "380"
+            landmarkName = "-tableOptions:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "geopackage-sample-ios/load/GPKGSLoadTilesTask.m"
+            timestampString = "459451757.288304"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "+loadTilesWithCallback:andDatabase:andTable:andUrl:andMinZoom:andMaxZoom:andCompressFormat:andCompressQuality:andCompressScale:andStandardFormat:andBoundingBox:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../geopackage-ios/geopackage-ios/tiles/GPKGTileGenerator.m"
+            timestampString = "459449327.309246"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "-generateTiles"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../geopackage-ios/geopackage-ios/tiles/GPKGTileGenerator.m"
+            timestampString = "459450011.061999"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "416"
+            endingLineNumber = "416"
+            landmarkName = "-generateTilesWithTileMatrixDao:andTileDao:andContents:andZoomLevel:andTileGrid:andLocalTileGrid:andMatrixWidth:andMatrixHeight:andUpdate:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../geopackage-ios/geopackage-ios/tiles/GPKGTileGenerator.m"
+            timestampString = "459450037.287896"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "436"
+            endingLineNumber = "436"
+            landmarkName = "-generateTilesWithTileMatrixDao:andTileDao:andContents:andZoomLevel:andTileGrid:andLocalTileGrid:andMatrixWidth:andMatrixHeight:andUpdate:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

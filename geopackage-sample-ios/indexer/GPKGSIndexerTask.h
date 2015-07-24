@@ -16,6 +16,4 @@
                       andDatabase: (NSString *) database
                          andTable: (NSString *) tableName;
 
--(void) execute;
-
 @end

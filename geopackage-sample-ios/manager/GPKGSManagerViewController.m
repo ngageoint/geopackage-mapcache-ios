@@ -796,9 +796,10 @@ const char ConstantKey;
     }
 }
 
-- (void)createManagerTilesViewController:(GPKGSManagerCreateTilesViewController *)controller createdTiles:(BOOL)created withError: (NSString *) error{
-    if(created){
-        [self updateAndReloadData];
+- (void)createManagerTilesViewController:(GPKGSManagerCreateTilesViewController *)controller createdTiles:(int)count withError: (NSString *) error{
+    [self updateAndReloadData];
+    if(count > 0){
+        [self.active setModified:true];
     }
     if(error != nil){
         [GPKGSUtils showMessageWithDelegate:self
@@ -1037,7 +1038,7 @@ const char ConstantKey;
     
 }
 
--(void) onIndexerCompleted: (NSString *) result{
+-(void) onIndexerCompleted: (int) count{
     
 }
 

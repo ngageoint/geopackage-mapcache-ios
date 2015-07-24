@@ -109,8 +109,9 @@
         NSURL *url = [NSURL URLWithString:self.urlTextField.text];
         [manager importGeoPackageFromUrl:url withName:self.nameTextField.text andProgress:self];
     }
-    @catch (NSException *exception) {
-        [self failureWithError:[exception description]];
+    @catch (NSException *e) {
+        NSLog(@"Download File Error for url '%@' with error: %@", self.urlTextField.text, [e description]);
+        [self failureWithError:[e description]];
     }
 
 }
