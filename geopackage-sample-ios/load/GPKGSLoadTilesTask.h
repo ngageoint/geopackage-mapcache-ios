@@ -27,7 +27,8 @@
            andCompressQuality: (int) compressQuality
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
-               andBoundingBox: (GPKGBoundingBox *) boundingBox;
+               andBoundingBox: (GPKGBoundingBox *) boundingBox
+                     andLabel: (NSString *) label;
 
 +(void) loadTilesWithCallback: (NSObject<GPKGSLoadTilesProtocol> *) callback
                   andGeoPackage: (GPKGGeoPackage *) geoPackage
@@ -39,6 +40,7 @@
            andCompressQuality: (int) compressQuality
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
-               andBoundingBox: (GPKGBoundingBox *) boundingBox;
+               andBoundingBox: (GPKGBoundingBox *) boundingBox
+                     andLabel: (NSString *) label;
 
 @end

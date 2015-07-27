@@ -1,13 +1,13 @@
 //
-//  GPKGSManagerCreateTilesViewController.m
+//  GPKGSManagerLoadTilesViewController.m
 //  geopackage-sample-ios
 //
-//  Created by Brian Osborn on 7/22/15.
+//  Created by Brian Osborn on 7/27/15.
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSManagerCreateTilesViewController.h"
-#import "GPKGSCreateTilesViewController.h"
+#import "GPKGSManagerLoadTilesViewController.h"
+#import "GPKGSLoadTilesViewController.h"
 #import "GPKGUrlTileGenerator.h"
 #import "GPKGProjectionTransform.h"
 #import "GPKGProjectionConstants.h"
@@ -16,35 +16,25 @@
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
 
-NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
+NSString * const GPKGS_MANAGER_LOAD_TILES_SEG_LOAD_TILES = @"loadTiles";
 
-@interface GPKGSManagerCreateTilesViewController ()
-
-@end
-
-@implementation GPKGSManagerCreateTilesViewController
+@implementation GPKGSManagerLoadTilesViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self.databaseValue setText:self.database.name];
 }
 
 - (IBAction)cancelButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)createButton:(id)sender {
+- (IBAction)loadButton:(id)sender {
     
     @try {
         
-        NSString * name = self.data.name;
+        NSString * name = self.table.name;
         
-        if(name == nil || [name length] == 0){
-            [NSException raise:@"Table Name" format:@"Table name is required"];
-        }
-        
-        GPKGSLoadTilesData * loadTiles = self.data.loadTiles;
+        GPKGSLoadTilesData * loadTiles = self.data;
         NSString * url = loadTiles.url;
         
         GPKGSGenerateTilesData * generateTiles = loadTiles.generateTiles;
@@ -70,7 +60,7 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
             
             GPKGBoundingBox * webMercatorBoundingBox = [GPKGTileBoundingBoxUtils toWebMercatorWithBoundingBox:boundingBox];
             
-            GPKGGeoPackage * geoPackage = [self.manager open:self.database.name];
+            GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
             @try {
                 // Create the web mercator srs if needed
                 GPKGSpatialReferenceSystemDao * srsDao = [geoPackage getSpatialReferenceSystemDao];
@@ -81,21 +71,21 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
             @finally {
                 [geoPackage close];
             }
-
+            
             if(self.delegate != nil){
-                [self.delegate createManagerTilesViewController:self createdTiles:0 withError:nil];
+                [self.delegate loadManagerTilesViewController:self loadedTiles:0 withError:nil];
             }
             [self dismissViewControllerAnimated:YES completion:nil];
             
         }else{
             // Load tiles
-            [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:self.database.name andTable:name andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
+            [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:self.table.database andTable:name andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
         }
-    
+        
     }
     @catch (NSException *e) {
         if(self.delegate != nil){
-            [self.delegate createManagerTilesViewController:self createdTiles:0 withError:[e description]];
+            [self.delegate loadManagerTilesViewController:self loadedTiles:0 withError:[e description]];
         }
         [self dismissViewControllerAnimated:YES completion:nil];
     }
@@ -103,30 +93,30 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
-    if([segue.identifier isEqualToString:GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES])
+    if([segue.identifier isEqualToString:GPKGS_MANAGER_LOAD_TILES_SEG_LOAD_TILES])
     {
-        GPKGSCreateTilesViewController *createTilesViewController = segue.destinationViewController;
-        createTilesViewController.data = self.data;
+        GPKGSLoadTilesViewController *loadTilesViewController = segue.destinationViewController;
+        loadTilesViewController.data = self.data;
     }
 }
 
 -(void) onLoadTilesCanceled: (NSString *) result withCount:(int)count{
     if(self.delegate != nil){
-        [self.delegate createManagerTilesViewController:self createdTiles:count withError:nil];
+        [self.delegate loadManagerTilesViewController:self loadedTiles:count withError:nil];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void) onLoadTilesFailure: (NSString *) result{
     if(self.delegate != nil){
-        [self.delegate createManagerTilesViewController:self createdTiles:0 withError:result];
+        [self.delegate loadManagerTilesViewController:self loadedTiles:0 withError:result];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void) onLoadTilesCompleted:(int)count{
     if(self.delegate != nil){
-        [self.delegate createManagerTilesViewController:self createdTiles:count withError:nil];
+        [self.delegate loadManagerTilesViewController:self loadedTiles:count withError:nil];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
