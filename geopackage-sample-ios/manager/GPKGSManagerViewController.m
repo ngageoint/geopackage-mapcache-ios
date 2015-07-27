@@ -720,11 +720,6 @@ const char ConstantKey;
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DOWNLOAD_FILE sender:self];
 }
 
-- (IBAction)importFile:(id)sender {
-    //TODO
-    [self todoAlert: @"Import File"];
-}
-
 - (IBAction)create:(id)sender {
     UIAlertView * alert = [[UIAlertView alloc]
                            initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_LABEL]

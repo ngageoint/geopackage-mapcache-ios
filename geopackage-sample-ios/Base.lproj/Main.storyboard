@@ -175,19 +175,6 @@
                                         </button>
                                     </barButtonItem>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="1ia-2M-KEg"/>
-                                    <barButtonItem style="plain" id="obT-uD-lAh" userLabel="ImportItem">
-                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="18x-xb-Q7F" userLabel="ImportButton">
-                                            <rect key="frame" x="354" y="5" width="30" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" image="Import">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="importFile:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="ldR-fM-ihb"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="0Jd-8i-fXz"/>
                                     <barButtonItem style="plain" id="wgg-MR-5gp" userLabel="CreateItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="CpK-5P-0Ub" userLabel="CreateButton">
                                             <rect key="frame" x="404" y="5" width="30" height="30"/>
@@ -1504,7 +1491,6 @@
         <image name="Down" width="50" height="50"/>
         <image name="Download" width="50" height="50"/>
         <image name="Geometry" width="108" height="108"/>
-        <image name="Import" width="50" height="50"/>
         <image name="Manager" width="32" height="32"/>
         <image name="Map" width="32" height="32"/>
         <image name="More" width="50" height="50"/>
