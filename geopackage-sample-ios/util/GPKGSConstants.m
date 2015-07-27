@@ -38,7 +38,6 @@ NSString * const GPKGS_PROP_GEOPACKAGE_DELETE_LABEL = @"geopackage_delete_label"
 NSString * const GPKGS_PROP_GEOPACKAGE_RENAME_LABEL = @"geopackage_rename_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_COPY_LABEL = @"geopackage_copy_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_COPY_SUFFIX = @"geopackage_copy_suffix";
-NSString * const GPKGS_PROP_GEOPACKAGE_EXPORT_LABEL = @"geopackage_export_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_SHARE_LABEL = @"geopackage_share_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_CREATE_LABEL = @"geopackage_create_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL = @"geopackage_create_features_label";
