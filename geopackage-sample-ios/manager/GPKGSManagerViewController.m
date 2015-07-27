@@ -374,7 +374,7 @@ const char ConstantKey;
                 [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_EXPORT_LABEL]];
                 break;
             case 6:
-                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_SHARE_LABEL]];
+                [self shareDatabaseOption:database.name];
                 break;
             case 7:
                 [self createFeaturesDatabaseOption:database];
@@ -605,6 +605,20 @@ const char ConstantKey;
                                          andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
             }
         }
+    }
+}
+
+-(void) shareDatabaseOption: (NSString *) database{
+    NSString * path = [self.manager documentsPathForDatabase:database];
+    if(path != nil){
+        NSURL * databaseUrl = [NSURL fileURLWithPath:path];
+        NSArray * items = [[NSArray alloc] initWithObjects:databaseUrl, nil];
+        UIActivityViewController * activityViewController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
+        [self presentViewController:activityViewController animated:true completion:nil];
+    }else{
+        [GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:[NSString stringWithFormat:@"Share Database %@", database]
+                                 andMessage:[NSString stringWithFormat:@"No path was found for database %@", database]];
     }
 }
 
