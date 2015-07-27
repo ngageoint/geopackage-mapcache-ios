@@ -11,7 +11,6 @@
 #import "GPKGGeoPackageManager.h"
 #import "GPKGSCreateTilesData.h"
 #import "GPKGSLoadTilesProtocol.h"
-#import "GPKGSDatabases.h"
 
 @class GPKGSManagerCreateTilesViewController;
 

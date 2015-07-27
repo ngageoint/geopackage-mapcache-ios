@@ -40,7 +40,8 @@
            andCompressQuality: (int) compressQuality
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
-               andBoundingBox: (GPKGBoundingBox *) boundingBox{
+               andBoundingBox: (GPKGBoundingBox *) boundingBox
+                     andLabel: (NSString *) label{
     
     GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory getManager];
     GPKGGeoPackage * geoPackage = [manager open:database];
@@ -48,7 +49,7 @@
     GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andTileUrl:tileUrl andMinZoom:minZoom andMaxZoom:maxZoom];
     [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andStandardFormat:standardWebMercatorFormat andBoundingBox:boundingBox];
     
-    [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator];
+    [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
 }
 
 +(void) loadTilesWithCallback: (NSObject<GPKGSLoadTilesProtocol> *) callback
@@ -61,12 +62,13 @@
            andCompressQuality: (int) compressQuality
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
-               andBoundingBox: (GPKGBoundingBox *) boundingBox{
+               andBoundingBox: (GPKGBoundingBox *) boundingBox
+                     andLabel: (NSString *) label{
     
     GPKGTileGenerator * tileGenerator = [[GPKGFeatureTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andFeatureTiles:featureTiles andMinZoom:minZoom andMaxZoom:maxZoom];
     [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andStandardFormat:standardWebMercatorFormat andBoundingBox:boundingBox];
     
-    [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator];
+    [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
 }
 
 +(void) setTileGenerator: (GPKGTileGenerator *) tileGenerator
@@ -89,7 +91,7 @@
     [tileGenerator setStandardWebMercatorFormat:standardWebMercatorFormat];
 }
 
-+(void) loadTilesWithCallback:(NSObject<GPKGSLoadTilesProtocol> *)callback andGeoPackage:(GPKGGeoPackage *)geoPackage andTable:(NSString *)tableName andTileGenerator: (GPKGTileGenerator *) tileGenerator{
++(void) loadTilesWithCallback:(NSObject<GPKGSLoadTilesProtocol> *)callback andGeoPackage:(GPKGGeoPackage *)geoPackage andTable:(NSString *)tableName andTileGenerator: (GPKGTileGenerator *) tileGenerator andLabel: (NSString *) label{
     
     GPKGSLoadTilesTask * loadTilesTask = [[GPKGSLoadTilesTask alloc] initWithCallback:callback];
     
@@ -98,7 +100,7 @@
     [loadTilesTask setTileGenerator:tileGenerator];
     
     UIAlertView *alertView = [[UIAlertView alloc]
-                              initWithTitle:[NSString stringWithFormat:@"%@ %@ - %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL], geoPackage.name, tableName]
+                              initWithTitle:[NSString stringWithFormat:@"%@ %@ - %@", label, geoPackage.name, tableName]
                               message:@""
                               delegate:loadTilesTask
                               cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]

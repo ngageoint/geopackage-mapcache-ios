@@ -266,11 +266,12 @@
                         <segue destination="LNZ-6o-75L" kind="presentation" identifier="displayText" id="5H4-Qu-fu7"/>
                         <segue destination="gvl-cw-nga" kind="presentation" identifier="createFeatures" id="IPt-5d-udt"/>
                         <segue destination="PQk-O1-1cc" kind="presentation" identifier="createTiles" id="UUW-bJ-lHi"/>
+                        <segue destination="KPw-P3-KBd" kind="presentation" identifier="loadTiles" id="fka-Wv-zS3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ter-A5-hWz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="379" y="-1182"/>
+            <point key="canvasLocation" x="391" y="-1366"/>
         </scene>
         <!--Download File View Controller-->
         <scene sceneID="I64-UR-e60">
@@ -444,7 +445,7 @@
                     </items>
                 </navigationBar>
             </objects>
-            <point key="canvasLocation" x="1597" y="-2677"/>
+            <point key="canvasLocation" x="1633" y="-3392"/>
         </scene>
         <!--Display Text View Controller-->
         <scene sceneID="FNm-e3-4hK">
@@ -517,7 +518,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uCQ-67-bpm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1597" y="-2005"/>
+            <point key="canvasLocation" x="1633" y="-2748"/>
         </scene>
         <!--Create Features View Controller-->
         <scene sceneID="q0j-fG-Dbz">
@@ -678,7 +679,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qmv-bh-7h3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1597" y="-1340"/>
+            <point key="canvasLocation" x="1633" y="-2103"/>
         </scene>
         <!--Manager Create Tiles View Controller-->
         <scene sceneID="owo-pe-IHx">
@@ -750,8 +751,8 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9uM-CI-PDF">
-                                        <rect key="frame" x="16" y="47" width="568" height="489"/>
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9uM-CI-PDF">
+                                        <rect key="frame" x="16" y="47" width="568" height="625"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="625" id="a1E-F1-ECO"/>
                                         </constraints>
@@ -796,7 +797,105 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fmT-rW-g6C" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1597" y="-666"/>
+            <point key="canvasLocation" x="1633" y="-805"/>
+        </scene>
+        <!--Manager Load Tiles View Controller-->
+        <scene sceneID="BvJ-eG-sBX">
+            <objects>
+                <viewController id="KPw-P3-KBd" userLabel="Manager Load Tiles View Controller" customClass="GPKGSManagerLoadTilesViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mVk-eb-dCD"/>
+                        <viewControllerLayoutGuide type="bottom" id="Ve3-3T-oj8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="azC-BM-VYJ">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6rx-Si-LmG">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Qn-Lx-SLH">
+                                        <rect key="frame" x="16" y="0.0" width="568" height="550"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="550" id="tD0-1R-xSs"/>
+                                        </constraints>
+                                        <connections>
+                                            <segue destination="qj0-zd-Hg5" kind="embed" identifier="loadTiles" id="AFX-xb-2xo"/>
+                                        </connections>
+                                    </containerView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="5Qn-Lx-SLH" firstAttribute="top" secondItem="6rx-Si-LmG" secondAttribute="top" id="3fT-bE-Snn"/>
+                                    <constraint firstAttribute="centerX" secondItem="5Qn-Lx-SLH" secondAttribute="centerX" id="3iY-Wf-7fA"/>
+                                    <constraint firstAttribute="trailing" secondItem="5Qn-Lx-SLH" secondAttribute="trailing" constant="16" id="9qe-r1-B1Z"/>
+                                    <constraint firstItem="5Qn-Lx-SLH" firstAttribute="leading" secondItem="6rx-Si-LmG" secondAttribute="leading" constant="16" id="DES-AG-ccA"/>
+                                    <constraint firstAttribute="bottom" secondItem="5Qn-Lx-SLH" secondAttribute="bottom" id="zO9-SJ-qg3"/>
+                                </constraints>
+                            </scrollView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WR2-mv-isD">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" id="0T2-x9-9Yd" userLabel="CancelButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="UXI-ee-bdy" userLabel="CancelButton">
+                                            <rect key="frame" x="16" y="7" width="48" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Cancel">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="cancelButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="t9s-5V-5Lv"/>
+                                                <action selector="cancelButton:" destination="KPw-P3-KBd" eventType="touchUpInside" id="ynH-Gr-81a"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="hjw-Dv-e6v"/>
+                                    <barButtonItem style="plain" id="1Ex-AE-gia" userLabel="TitleButtonItem">
+                                        <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="py3-2J-SAk" userLabel="TitleButton">
+                                            <rect key="frame" x="95" y="7" width="410" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Load Tiles">
+                                                <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="TjY-qp-Fxc"/>
+                                    <barButtonItem style="plain" id="xR2-vt-N0O" userLabel="LoadButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="JNG-gc-1cw" userLabel="LoadButton">
+                                            <rect key="frame" x="537" y="7" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Load">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="createButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="Qrn-8w-FmW"/>
+                                                <action selector="loadButton:" destination="KPw-P3-KBd" eventType="touchUpInside" id="Nr7-37-zGc"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                </items>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="WR2-mv-isD" firstAttribute="leading" secondItem="azC-BM-VYJ" secondAttribute="leading" id="3j0-Cc-k5g"/>
+                            <constraint firstItem="6rx-Si-LmG" firstAttribute="leading" secondItem="WR2-mv-isD" secondAttribute="leading" id="MSp-Bs-T0R"/>
+                            <constraint firstItem="6rx-Si-LmG" firstAttribute="trailing" secondItem="WR2-mv-isD" secondAttribute="trailing" id="U4X-Sd-8IL"/>
+                            <constraint firstItem="6rx-Si-LmG" firstAttribute="top" secondItem="WR2-mv-isD" secondAttribute="bottom" id="qHJ-3j-DZ1"/>
+                            <constraint firstItem="WR2-mv-isD" firstAttribute="top" secondItem="mVk-eb-dCD" secondAttribute="bottom" id="qbo-nK-rjW"/>
+                            <constraint firstItem="Ve3-3T-oj8" firstAttribute="top" secondItem="6rx-Si-LmG" secondAttribute="bottom" id="qdO-ns-kPZ"/>
+                            <constraint firstAttribute="trailing" secondItem="WR2-mv-isD" secondAttribute="trailing" id="vTO-2F-Km0"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L3B-Pg-FUZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1633" y="-1453"/>
         </scene>
         <!--Map Create Tiles View Controller-->
         <scene sceneID="KYg-Vt-pK4">
@@ -822,7 +921,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6PB-Kx-RNO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="986" y="544"/>
+            <point key="canvasLocation" x="998" y="616"/>
         </scene>
         <!--Create Tiles View Controller-->
         <scene sceneID="Nsy-ws-cTQ">
@@ -883,7 +982,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qKz-CR-UjC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1698" y="219.5"/>
+            <point key="canvasLocation" x="1633" y="-67.5"/>
         </scene>
         <!--Bounding Box View Controller-->
         <scene sceneID="pkt-mU-i2e">
@@ -977,7 +1076,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bxY-c6-zoh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2928.5" y="-1025"/>
+            <point key="canvasLocation" x="3388" y="-1049"/>
         </scene>
         <!--Load Tiles View Controller-->
         <scene sceneID="YXp-sY-p0Y">
@@ -1051,7 +1150,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SgA-1m-pBJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2393" y="185"/>
+            <point key="canvasLocation" x="2409" y="-935"/>
         </scene>
         <!--Generate Tiles View Controller-->
         <scene sceneID="02H-sg-9iW">
@@ -1245,7 +1344,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r8A-JV-0y9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3078" y="-388"/>
+            <point key="canvasLocation" x="2409" y="-288.5"/>
         </scene>
         <!--Feature Tiles View Controller-->
         <scene sceneID="Spa-Yu-cTP">
@@ -1271,7 +1370,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TSR-ZW-f20" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3426" y="468"/>
+            <point key="canvasLocation" x="1814" y="628"/>
         </scene>
         <!--MapViewController-->
         <scene sceneID="gC6-Wh-fym">
@@ -1396,7 +1495,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oVD-8B-yJy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="379" y="-43"/>
+            <point key="canvasLocation" x="391" y="-55"/>
         </scene>
     </scenes>
     <resources>
@@ -1418,8 +1517,9 @@
         <image name="search" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="X4O-rd-xnT"/>
-        <segue reference="E1Z-ca-WBX"/>
-        <segue reference="eWo-PS-bO7"/>
+        <segue reference="SDT-vo-ke2"/>
+        <segue reference="fV6-n6-geX"/>
+        <segue reference="S4V-Zx-x7V"/>
+        <segue reference="aLP-Cc-axH"/>
     </inferredMetricsTieBreakers>
 </document>

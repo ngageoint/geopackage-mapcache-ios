@@ -51,6 +51,7 @@
 		04CCC86E1B6122040001296D /* GPKGSLoadTilesData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CCC86D1B6122040001296D /* GPKGSLoadTilesData.m */; };
 		04CCC8711B6122480001296D /* GPKGSCreateTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CCC8701B6122480001296D /* GPKGSCreateTilesViewController.m */; };
 		04CCC8741B61228D0001296D /* GPKGSCreateTilesData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CCC8731B61228D0001296D /* GPKGSCreateTilesData.m */; };
+		04E1D8CD1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8CC1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m */; };
 		79B230F4F60AF2BE7816B2CB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02FF687C0F94F922C6DBA093 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -151,6 +152,8 @@
 		04CCC8701B6122480001296D /* GPKGSCreateTilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSCreateTilesViewController.m; sourceTree = "<group>"; };
 		04CCC8721B61228D0001296D /* GPKGSCreateTilesData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSCreateTilesData.h; sourceTree = "<group>"; };
 		04CCC8731B61228D0001296D /* GPKGSCreateTilesData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSCreateTilesData.m; sourceTree = "<group>"; };
+		04E1D8CB1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSManagerLoadTilesViewController.h; sourceTree = "<group>"; };
+		04E1D8CC1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSManagerLoadTilesViewController.m; sourceTree = "<group>"; };
 		5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -288,6 +291,8 @@
 				045C94971B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m */,
 				04CCC85A1B5FF1830001296D /* GPKGSManagerCreateTilesViewController.h */,
 				04CCC85B1B5FF1830001296D /* GPKGSManagerCreateTilesViewController.m */,
+				04E1D8CB1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.h */,
+				04E1D8CC1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m */,
 			);
 			path = manager;
 			sourceTree = "<group>";
@@ -520,6 +525,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04E1D8CD1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m in Sources */,
 				045C94901B53EEB80005CCD0 /* GPKGSMapViewController.m in Sources */,
 				045C94941B56DF620005CCD0 /* GPKGSIndexerTask.m in Sources */,
 				047733C91B4C496600E523BD /* GPKGSTableOptionsButton.m in Sources */,

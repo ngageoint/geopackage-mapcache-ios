@@ -25,12 +25,14 @@
 #import "GPKGSIndexerTask.h"
 #import "GPKGSCreateFeaturesViewController.h"
 #import "GPKGSManagerCreateTilesViewController.h"
+#import "GPKGSManagerLoadTilesViewController.h"
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
 NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
 NSString * const GPKGS_MANAGER_SEG_CREATE_FEATURES = @"createFeatures";
 NSString * const GPKGS_MANAGER_SEG_CREATE_TILES = @"createTiles";
 NSString * const GPKGS_EXPANDED_PREFERENCE = @"expanded";
+NSString * const GPKGS_MANAGER_SEG_LOAD_TILES = @"loadTiles";
 
 const char ConstantKey;
 
@@ -468,7 +470,7 @@ const char ConstantKey;
                         [self indexFeaturesOption:table];
                         break;
                     case GPKGS_TT_TILE:
-                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
+                        [self loadTilesTableOption:table];
                         break;
                     default:
                         break;
@@ -710,6 +712,10 @@ const char ConstantKey;
     }
 }
 
+-(void) loadTilesTableOption: (GPKGSTable *) table{
+    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_LOAD_TILES sender:table];
+}
+
 - (IBAction)downloadFile:(id)sender {
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DOWNLOAD_FILE sender:self];
 }
@@ -831,6 +837,18 @@ const char ConstantKey;
     }
 }
 
+- (void)loadManagerTilesViewController:(GPKGSManagerLoadTilesViewController *)controller loadedTiles:(int)count withError: (NSString *) error{
+    [self updateAndReloadData];
+    if(count > 0){
+        [self.active setModified:true];
+    }
+    if(error != nil){
+        [GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]
+                                 andMessage:[NSString stringWithFormat:@"Error loading tiles into table '%@' in database: '%@'\n\nError: %@", controller.table.name, controller.table.database, error]];
+    }
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DOWNLOAD_FILE])
@@ -861,6 +879,13 @@ const char ConstantKey;
         createTilesViewController.database = database;
         createTilesViewController.manager = self.manager;
         createTilesViewController.data = [[GPKGSCreateTilesData alloc] init];
+    }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_LOAD_TILES]){
+        GPKGSManagerLoadTilesViewController *loadTilesViewController = segue.destinationViewController;
+        GPKGSTable * table = (GPKGSTable *)sender;
+        loadTilesViewController.delegate = self;
+        loadTilesViewController.table = table;
+        loadTilesViewController.manager = self.manager;
+        loadTilesViewController.data = [[GPKGSLoadTilesData alloc] init];
     }
 }
 
