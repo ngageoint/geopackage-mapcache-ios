@@ -340,7 +340,6 @@ const char ConstantKey;
                           [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_DELETE_LABEL],
                           [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL],
                           [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL],
-                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_EXPORT_LABEL],
                           [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_SHARE_LABEL],
                           [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL],
                           [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL],
@@ -371,15 +370,12 @@ const char ConstantKey;
                 [self copyDatabaseOption:database.name];
                 break;
             case 5:
-                [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_EXPORT_LABEL]];
-                break;
-            case 6:
                 [self shareDatabaseOption:database.name];
                 break;
-            case 7:
+            case 6:
                 [self createFeaturesDatabaseOption:database];
                 break;
-            case 8:
+            case 7:
                 [self createTilesDatabaseOption:database];
                 break;
             default:

@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "geopackage-sample-ios/manager/GPKGSManagerViewController.m"
-            timestampString = "459463480.154622"
+            timestampString = "459696977.392109"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "393"
-            endingLineNumber = "393"
+            startingLineNumber = "389"
+            endingLineNumber = "389"
             landmarkName = "-tableOptions:"
             landmarkType = "5">
          </BreakpointContent>
@@ -474,11 +474,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "geopackage-sample-ios/manager/GPKGSManagerViewController.m"
-            timestampString = "459695702.135397"
+            timestampString = "459696977.392109"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "614"
-            endingLineNumber = "614"
+            startingLineNumber = "610"
+            endingLineNumber = "610"
             landmarkName = "-shareDatabaseOption:"
             landmarkType = "5">
          </BreakpointContent>
