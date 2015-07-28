@@ -720,6 +720,7 @@
                         <outlet property="downloadedLabel" destination="A8w-g0-nsc" id="BYM-JR-xNC"/>
                         <outlet property="importButton" destination="yu8-gS-Y0m" id="NQP-BN-IJV"/>
                         <outlet property="nameTextField" destination="fc8-0r-K8o" id="IoD-Mc-NOz"/>
+                        <outlet property="preloadedButton" destination="PcG-6o-G6X" id="1gX-Qc-YjJ"/>
                         <outlet property="progressView" destination="Sia-cZ-Os3" id="jJA-gr-l6N"/>
                         <outlet property="urlTextField" destination="v6S-Wy-OmP" id="gbu-gs-wLg"/>
                     </connections>
