@@ -12,6 +12,7 @@
 #import "GPKGSCreateFeaturesViewController.h"
 #import "GPKGSManagerCreateTilesViewController.h"
 #import "GPKGSManagerLoadTilesViewController.h"
+#import "GPKGSEditFeaturesViewController.h"
 
 extern NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE;
 extern NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT;
@@ -21,7 +22,7 @@ extern NSString * const GPKGS_EXPANDED_PREFERENCE;
 
 extern const char ConstantKey;
 
-@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadFileDelegate, GPKGSIndexerProtocol, GPKGSCreateFeaturesDelegate, GPKGSManagerCreateTilesDelegate, GPKGSManagerLoadTilesDelegate>
+@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadFileDelegate, GPKGSIndexerProtocol, GPKGSCreateFeaturesDelegate, GPKGSManagerCreateTilesDelegate, GPKGSManagerLoadTilesDelegate, GPKGSEditFeaturesDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *clearActiveButton;
 
