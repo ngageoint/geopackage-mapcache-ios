@@ -57,13 +57,13 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AW4-6G-xP2" userLabel="OptionsButton" customClass="GPKGSDatabaseOptionsButton">
-                                                    <rect key="frame" x="558" y="0.0" width="34" height="34"/>
+                                                <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AW4-6G-xP2" userLabel="OptionsButton" customClass="GPKGSDatabaseOptionsButton">
+                                                    <rect key="frame" x="558" y="6" width="34" height="32"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="32" id="Nuc-qs-vbX"/>
                                                         <constraint firstAttribute="width" constant="34" id="tRw-G3-hDu"/>
                                                     </constraints>
-                                                    <state key="normal" image="More">
+                                                    <state key="normal" image="MoreFilled">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
@@ -109,8 +109,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wxQ-iP-psd" userLabel="OptionsButton" customClass="GPKGSTableOptionsButton">
-                                                    <rect key="frame" x="558" y="4" width="34" height="34"/>
+                                                <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wxQ-iP-psd" userLabel="OptionsButton" customClass="GPKGSTableOptionsButton">
+                                                    <rect key="frame" x="558" y="5" width="34" height="32"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="32" id="Pnf-Q0-MvH"/>
                                                         <constraint firstAttribute="width" constant="34" id="T7i-eq-FJ9"/>
@@ -122,8 +122,8 @@
                                                         <action selector="tableOptions:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="c5S-i2-SGw"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="(Count)" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hdD-c1-2w5" userLabel="Count">
-                                                    <rect key="frame" x="475" y="0.0" width="68" height="43"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Count)" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hdD-c1-2w5" userLabel="Count">
+                                                    <rect key="frame" x="475" y="1" width="68" height="41"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -632,7 +632,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fc8-0r-K8o" userLabel="NameTextField">
-                                        <rect key="frame" x="16" y="37" width="568" height="30"/>
+                                        <rect key="frame" x="16" y="36" width="568" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                         <connections>
@@ -640,21 +640,21 @@
                                         </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="URL:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dPA-fs-knX">
-                                        <rect key="frame" x="16" y="75" width="58" height="21"/>
+                                        <rect key="frame" x="16" y="74" width="58" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="http://" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="v6S-Wy-OmP" userLabel="URLTextField">
-                                        <rect key="frame" x="16" y="104" width="568" height="30"/>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="http://" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="v6S-Wy-OmP" userLabel="URLTextField">
+                                        <rect key="frame" x="16" y="103" width="568" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                         <connections>
                                             <action selector="urlChanged:" destination="BbS-qo-Mou" eventType="editingChanged" id="bFP-gc-uU0"/>
                                         </connections>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PcG-6o-G6X" userLabel="PreloadedButton">
-                                        <rect key="frame" x="16" y="149" width="112" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PcG-6o-G6X" userLabel="PreloadedButton">
+                                        <rect key="frame" x="16" y="148" width="112" height="30"/>
                                         <state key="normal" title="Preloaded URLs">
                                             <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -663,8 +663,8 @@
                                             <action selector="preloaded:" destination="BbS-qo-Mou" eventType="touchUpInside" id="pK3-hb-Nmx"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A8w-g0-nsc" userLabel="Status">
-                                        <rect key="frame" x="16" y="217" width="568" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A8w-g0-nsc" userLabel="Status">
+                                        <rect key="frame" x="16" y="216" width="568" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="Kd7-HB-IpJ"/>
                                         </constraints>
@@ -672,8 +672,8 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sia-cZ-Os3">
-                                        <rect key="frame" x="16" y="246" width="568" height="2"/>
+                                    <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Sia-cZ-Os3">
+                                        <rect key="frame" x="16" y="245" width="568" height="2"/>
                                         <color key="progressTintColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     </progressView>
                                 </subviews>
@@ -948,8 +948,8 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JJW-Pd-zLn">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Database:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cyC-BF-8bz">
-                                        <rect key="frame" x="16" y="12" width="87" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cyC-BF-8bz">
+                                        <rect key="frame" x="16" y="13" width="87" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="87" id="AM2-eT-z5l"/>
                                         </constraints>
@@ -1577,7 +1577,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="510" height="435"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Min Zoom:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="txG-A0-EXf">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Zoom:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="txG-A0-EXf">
                                 <rect key="frame" x="0.0" y="12" width="83" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="83" id="vfo-C4-g62"/>
@@ -1597,7 +1597,7 @@
                                     <action selector="minZoomChanged:" destination="epq-as-8j9" eventType="editingChanged" id="4VD-MF-VZQ"/>
                                 </connections>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Max Zoom:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VB4-Ej-iXg">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Max Zoom:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VB4-Ej-iXg">
                                 <rect key="frame" x="0.0" y="50" width="88" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="88" id="MDt-Nj-08c"/>
@@ -1920,6 +1920,7 @@
         <image name="Manager" width="32" height="32"/>
         <image name="Map" width="32" height="32"/>
         <image name="More" width="50" height="50"/>
+        <image name="MoreFilled" width="50" height="50"/>
         <image name="Up" width="50" height="50"/>
         <image name="boundingbox" width="50" height="50"/>
         <image name="features" width="50" height="50"/>
