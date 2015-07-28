@@ -858,6 +858,12 @@ const char ConstantKey;
     }
 }
 
+- (void)editFeaturesViewController:(GPKGSEditFeaturesViewController *)controller editedFeatures:(BOOL)edited withError: (NSString *) error{
+    if(edited){
+        [self updateAndReloadData];
+    }
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DOWNLOAD_FILE])
@@ -900,6 +906,7 @@ const char ConstantKey;
         GPKGSTable * table = (GPKGSTable *)sender;
         editFeaturesViewController.table = table;
         editFeaturesViewController.manager = self.manager;
+        editFeaturesViewController.delegate = self;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_EDIT_TILES]){
         GPKGSEditTilesViewController *editTilesViewController = segue.destinationViewController;
         GPKGSTable * table = (GPKGSTable *)sender;

@@ -9,12 +9,14 @@
 #import "GPKGSEditTilesViewController.h"
 #import "GPKGSEditContentsViewController.h"
 #import "GPKGSUtils.h"
+#import "GPKGSDecimalValidator.h"
 
 NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
 
 @interface GPKGSEditTilesViewController ()
 
 @property (nonatomic, strong) GPKGSEditContentsData *data;
+@property (nonatomic, strong) GPKGSDecimalValidator * xAndYValidator;
 
 @end
 
@@ -22,6 +24,12 @@ NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.xAndYValidator = [[GPKGSDecimalValidator alloc] initWithMinimum:nil andMaximum:nil];
+    [self.minYTextField setDelegate:self.xAndYValidator];
+    [self.maxYTextField setDelegate:self.xAndYValidator];
+    [self.minXTextField setDelegate:self.xAndYValidator];
+    [self.maxXTextField setDelegate:self.xAndYValidator];
     
     UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
@@ -60,15 +68,40 @@ NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
         [contents setLastChange:[NSDate date]];
         [contentsDao update:contents];
         
-        double minY = [self.minYTextField.text doubleValue];
-        [tileMatrixSet setMinY:[[NSDecimalNumber alloc] initWithDouble:minY]];
-        double maxY = [self.maxYTextField.text doubleValue];
-        [tileMatrixSet setMaxY:[[NSDecimalNumber alloc] initWithDouble:maxY]];
-        double minX = [self.minXTextField.text doubleValue];
-        [tileMatrixSet setMinX:[[NSDecimalNumber alloc] initWithDouble:minX]];
-        double maxX = [self.maxXTextField.text doubleValue];
-        [tileMatrixSet setMaxX:[[NSDecimalNumber alloc] initWithDouble:maxX]];
+        NSDecimalNumber * minYNumber = nil;
+        if(self.minYTextField.text.length > 0){
+            int minY = [self.minYTextField.text doubleValue];
+            minYNumber = [[NSDecimalNumber alloc] initWithDouble:minY];
+        }
+        [tileMatrixSet setMinY:minYNumber];
+        
+        NSDecimalNumber * maxYNumber = nil;
+        if(self.maxYTextField.text.length > 0){
+            int maxY = [self.maxYTextField.text doubleValue];
+            maxYNumber = [[NSDecimalNumber alloc] initWithDouble:maxY];
+        }
+        [tileMatrixSet setMaxY:maxYNumber];
+        
+        NSDecimalNumber * minXNumber = nil;
+        if(self.minXTextField.text.length > 0){
+            int minX = [self.minXTextField.text doubleValue];
+            minXNumber = [[NSDecimalNumber alloc] initWithDouble:minX];
+        }
+        [tileMatrixSet setMinX:minXNumber];
+        
+        NSDecimalNumber * maxXNumber = nil;
+        if(self.maxXTextField.text.length > 0){
+            int maxX = [self.maxXTextField.text doubleValue];
+            maxXNumber = [[NSDecimalNumber alloc] initWithDouble:maxX];
+        }
+        [tileMatrixSet setMaxX:maxXNumber];
+
         [tileMatrixSetDao update:tileMatrixSet];
+    }
+    @catch (NSException *e) {
+        [GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:@"Edit Tiles"
+                                 andMessage:[NSString stringWithFormat:@"Error editing tiles table '%@' in database: '%@'\n\nError: %@", self.table.name, self.table.database, [e description]]];
     }
     @finally {
         [geoPackage close];
