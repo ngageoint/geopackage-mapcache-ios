@@ -26,6 +26,8 @@
 #import "GPKGSCreateFeaturesViewController.h"
 #import "GPKGSManagerCreateTilesViewController.h"
 #import "GPKGSManagerLoadTilesViewController.h"
+#import "GPKGSEditFeaturesViewController.h"
+#import "GPKGSEditTilesViewController.h"
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
 NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
@@ -33,6 +35,8 @@ NSString * const GPKGS_MANAGER_SEG_CREATE_FEATURES = @"createFeatures";
 NSString * const GPKGS_MANAGER_SEG_CREATE_TILES = @"createTiles";
 NSString * const GPKGS_EXPANDED_PREFERENCE = @"expanded";
 NSString * const GPKGS_MANAGER_SEG_LOAD_TILES = @"loadTiles";
+NSString * const GPKGS_MANAGER_SEG_EDIT_FEATURES = @"editFeatures";
+NSString * const GPKGS_MANAGER_SEG_EDIT_TILES = @"editTiles";
 
 const char ConstantKey;
 
@@ -444,8 +448,10 @@ const char ConstantKey;
             case 1:
                 switch([table getType]){
                     case GPKGS_TT_FEATURE:
+                        [self editFeaturesTableOption:table];
+                        break;
                     case GPKGS_TT_TILE:
-                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_EDIT_LABEL]];
+                        [self editTilesTableOption:table];
                         break;
                     case GPKGS_TT_FEATURE_OVERLAY:
                         [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_EDIT_LABEL]];
@@ -632,6 +638,14 @@ const char ConstantKey;
 
 -(void) viewTableOption: (GPKGSTable *) table{
         [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DISPLAY_TEXT sender:table];
+}
+
+-(void) editFeaturesTableOption: (GPKGSTable *) table{
+    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_EDIT_FEATURES sender:table];
+}
+
+-(void) editTilesTableOption: (GPKGSTable *) table{
+    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_EDIT_TILES sender:table];
 }
 
 -(void) deleteTableOption: (GPKGSTable *) table{
@@ -881,7 +895,18 @@ const char ConstantKey;
         loadTilesViewController.table = table;
         loadTilesViewController.manager = self.manager;
         loadTilesViewController.data = [[GPKGSLoadTilesData alloc] init];
+    }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_EDIT_FEATURES]){
+        GPKGSEditFeaturesViewController *editFeaturesViewController = segue.destinationViewController;
+        GPKGSTable * table = (GPKGSTable *)sender;
+        editFeaturesViewController.table = table;
+        editFeaturesViewController.manager = self.manager;
+    }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_EDIT_TILES]){
+        GPKGSEditTilesViewController *editTilesViewController = segue.destinationViewController;
+        GPKGSTable * table = (GPKGSTable *)sender;
+        editTilesViewController.table = table;
+        editTilesViewController.manager = self.manager;
     }
+    
 }
 
 -(NSString *) buildTextForDatabase: (GPKGSDatabase *) database{
