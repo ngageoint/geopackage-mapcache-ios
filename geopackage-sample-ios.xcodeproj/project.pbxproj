@@ -52,6 +52,10 @@
 		04CCC8711B6122480001296D /* GPKGSCreateTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CCC8701B6122480001296D /* GPKGSCreateTilesViewController.m */; };
 		04CCC8741B61228D0001296D /* GPKGSCreateTilesData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CCC8731B61228D0001296D /* GPKGSCreateTilesData.m */; };
 		04E1D8CD1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8CC1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m */; };
+		04E1D8D01B66D366002BD947 /* GPKGSEditContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8CF1B66D366002BD947 /* GPKGSEditContentsViewController.m */; };
+		04E1D8D31B66D41E002BD947 /* GPKGSEditFeaturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8D21B66D41E002BD947 /* GPKGSEditFeaturesViewController.m */; };
+		04E1D8D61B66D439002BD947 /* GPKGSEditTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8D51B66D439002BD947 /* GPKGSEditTilesViewController.m */; };
+		04E1D8D91B66D4CA002BD947 /* GPKGSEditContentsData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8D81B66D4CA002BD947 /* GPKGSEditContentsData.m */; };
 		79B230F4F60AF2BE7816B2CB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02FF687C0F94F922C6DBA093 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -154,6 +158,14 @@
 		04CCC8731B61228D0001296D /* GPKGSCreateTilesData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSCreateTilesData.m; sourceTree = "<group>"; };
 		04E1D8CB1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSManagerLoadTilesViewController.h; sourceTree = "<group>"; };
 		04E1D8CC1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSManagerLoadTilesViewController.m; sourceTree = "<group>"; };
+		04E1D8CE1B66D366002BD947 /* GPKGSEditContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSEditContentsViewController.h; sourceTree = "<group>"; };
+		04E1D8CF1B66D366002BD947 /* GPKGSEditContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSEditContentsViewController.m; sourceTree = "<group>"; };
+		04E1D8D11B66D41E002BD947 /* GPKGSEditFeaturesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSEditFeaturesViewController.h; sourceTree = "<group>"; };
+		04E1D8D21B66D41E002BD947 /* GPKGSEditFeaturesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSEditFeaturesViewController.m; sourceTree = "<group>"; };
+		04E1D8D41B66D439002BD947 /* GPKGSEditTilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSEditTilesViewController.h; sourceTree = "<group>"; };
+		04E1D8D51B66D439002BD947 /* GPKGSEditTilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSEditTilesViewController.m; sourceTree = "<group>"; };
+		04E1D8D71B66D4CA002BD947 /* GPKGSEditContentsData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSEditContentsData.h; sourceTree = "<group>"; };
+		04E1D8D81B66D4CA002BD947 /* GPKGSEditContentsData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSEditContentsData.m; sourceTree = "<group>"; };
 		5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -293,6 +305,10 @@
 				04CCC85B1B5FF1830001296D /* GPKGSManagerCreateTilesViewController.m */,
 				04E1D8CB1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.h */,
 				04E1D8CC1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m */,
+				04E1D8D11B66D41E002BD947 /* GPKGSEditFeaturesViewController.h */,
+				04E1D8D21B66D41E002BD947 /* GPKGSEditFeaturesViewController.m */,
+				04E1D8D41B66D439002BD947 /* GPKGSEditTilesViewController.h */,
+				04E1D8D51B66D439002BD947 /* GPKGSEditTilesViewController.m */,
 			);
 			path = manager;
 			sourceTree = "<group>";
@@ -364,6 +380,10 @@
 				04CCC8701B6122480001296D /* GPKGSCreateTilesViewController.m */,
 				04CCC8721B61228D0001296D /* GPKGSCreateTilesData.h */,
 				04CCC8731B61228D0001296D /* GPKGSCreateTilesData.m */,
+				04E1D8CE1B66D366002BD947 /* GPKGSEditContentsViewController.h */,
+				04E1D8CF1B66D366002BD947 /* GPKGSEditContentsViewController.m */,
+				04E1D8D71B66D4CA002BD947 /* GPKGSEditContentsData.h */,
+				04E1D8D81B66D4CA002BD947 /* GPKGSEditContentsData.m */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -536,6 +556,7 @@
 				044D6B4B1B627B0000527745 /* GPKGSLoadTilesTask.m in Sources */,
 				04CCC8681B6114EE0001296D /* GPKGSGenerateTilesData.m in Sources */,
 				04082B531B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.m in Sources */,
+				04E1D8D61B66D439002BD947 /* GPKGSEditTilesViewController.m in Sources */,
 				04CCC8651B61122A0001296D /* GPKGSGenerateTilesViewController.m in Sources */,
 				044648081B4AF6A70052913B /* GPKGSTileTable.m in Sources */,
 				047733C41B4C3D1200E523BD /* GPKGSProperties.m in Sources */,
@@ -546,6 +567,7 @@
 				044647FF1B4AF3870052913B /* GPKGSTable.m in Sources */,
 				04CCC85F1B60225C0001296D /* GPKGSKeyboardConstraint.m in Sources */,
 				040136781AF94FB200C92AFC /* AppDelegate.m in Sources */,
+				04E1D8D01B66D366002BD947 /* GPKGSEditContentsViewController.m in Sources */,
 				044648021B4AF4250052913B /* GPKGSTableTypes.m in Sources */,
 				045C948D1B50789D0005CCD0 /* GPKGSMapView.m in Sources */,
 				045C949B1B5D4C560005CCD0 /* GPKGSDecimalValidator.m in Sources */,
@@ -555,11 +577,13 @@
 				04CCC86E1B6122040001296D /* GPKGSLoadTilesData.m in Sources */,
 				044648051B4AF6990052913B /* GPKGSFeatureTable.m in Sources */,
 				045C94831B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m in Sources */,
+				04E1D8D31B66D41E002BD947 /* GPKGSEditFeaturesViewController.m in Sources */,
 				045C94861B50226D0005CCD0 /* GPKGSFeatureOverlayTable.m in Sources */,
 				04082B561B4F18A000D65E6B /* GPKGSUtils.m in Sources */,
 				04CCC8741B61228D0001296D /* GPKGSCreateTilesData.m in Sources */,
 				045C94981B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m in Sources */,
 				0446480B1B4AFC100052913B /* GPKGSDatabase.m in Sources */,
+				04E1D8D91B66D4CA002BD947 /* GPKGSEditContentsData.m in Sources */,
 				040136751AF94FB200C92AFC /* main.m in Sources */,
 				044648141B4B20950052913B /* GPKGSDatabaseCell.m in Sources */,
 			);
