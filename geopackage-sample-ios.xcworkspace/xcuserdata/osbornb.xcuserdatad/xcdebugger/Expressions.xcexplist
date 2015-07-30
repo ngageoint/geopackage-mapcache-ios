@@ -15,18 +15,18 @@
          contextName = "+[GPKGProjectionFactory getProjectionWithNumber:]:GPKGProjectionFactory.m">
       </ContextState>
       <ContextState
-         contextName = "-[GPKGSManagerViewController alertView:clickedButtonAtIndex:]:GPKGSManagerViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "alertView.tag">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "main:main.m">
          <PersistentStrings>
             <PersistentString
                value = "tabBar.items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGSManagerViewController alertView:clickedButtonAtIndex:]:GPKGSManagerViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "alertView.tag">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -81,6 +81,14 @@
          contextName = "-[GPKGFeatureDao newRow]:GPKGFeatureDao.m">
       </ContextState>
       <ContextState
+         contextName = "-[GPKGFeatureTiles drawPointWithBoundingBox:andTransform:andContext:andPoint:]:GPKGFeatureTiles.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.pointIcon.getIcon">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[GPKGMapShapeConverter toMapPolygonWithPolygon:]:GPKGMapShapeConverter.m">
       </ContextState>
       <ContextState
@@ -117,6 +125,33 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[GPKGTileGenerator generateTilesWithTileMatrixDao:andTileDao:andContents:andZoomLevel:andTileGrid:andLocalTileGrid:andMatrixWidth:andMatrixHeight:andUpdate:]:GPKGTileGenerator.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "image.size.width">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGSMapViewController locationManager:didUpdateToLocation:fromLocation:]:GPKGSMapViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "userLocation.locationd">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[AppDelegate application:openURL:sourceApplication:annotation:]:AppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "tabBar.tabBar.items">
+            </PersistentString>
+            <PersistentString
+               value = "[tabBarController.tabBar.items objectAtIndex:0]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MasterViewController buttonTapped:]:MasterViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -140,33 +175,6 @@
       </ContextState>
       <ContextState
          contextName = "-[GPKGBoundingBox getMapRect]:GPKGBoundingBox.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[GPKGSMapViewController locationManager:didUpdateToLocation:fromLocation:]:GPKGSMapViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "userLocation.locationd">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[GPKGTileGenerator generateTilesWithTileMatrixDao:andTileDao:andContents:andZoomLevel:andTileGrid:andLocalTileGrid:andMatrixWidth:andMatrixHeight:andUpdate:]:GPKGTileGenerator.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "image.size.width">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[AppDelegate application:openURL:sourceApplication:annotation:]:AppDelegate.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "tabBar.tabBar.items">
-            </PersistentString>
-            <PersistentString
-               value = "[tabBarController.tabBar.items objectAtIndex:0]">
-            </PersistentString>
-         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[GPKGSMapViewController displayTilesWithOverlay:andGeoPackage:andContents:andSpecifiedBoundingBox:]:GPKGSMapViewController.m">

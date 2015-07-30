@@ -15,6 +15,7 @@
 #import "GPKGSLoadTilesTask.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
+#import "GPKGSUtils.h"
 
 NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
 
@@ -28,6 +29,14 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
     [super viewDidLoad];
     
     [self.databaseValue setText:self.database.name];
+    
+    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    
+    self.databaseValue.inputAccessoryView = keyboardToolbar;
+}
+
+- (void) doneButtonPressed {
+    [self.databaseValue resignFirstResponder];
 }
 
 - (IBAction)cancelButton:(id)sender {

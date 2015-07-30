@@ -103,7 +103,7 @@
                               initWithTitle:[NSString stringWithFormat:@"%@ %@ - %@", label, geoPackage.name, tableName]
                               message:@""
                               delegate:loadTilesTask
-                              cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                              cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_STOP_LABEL]
                               otherButtonTitles:nil];
     UIProgressView *progressView = [GPKGSUtils buildProgressBarView];
     [alertView setValue:progressView forKey:@"accessoryView"];
@@ -177,6 +177,7 @@
 
 -(void) setMax: (int) max{
     self.maxTiles = [NSNumber numberWithInt:max];
+    [self addProgress:0];
 }
 
 -(void) addProgress: (int) progress{

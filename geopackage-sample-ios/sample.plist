@@ -22,6 +22,8 @@
 	<string>OK</string>
 	<key>cancel_label</key>
 	<string>Cancel</string>
+	<key>stop_label</key>
+	<string>Stop</string>
 	<key>load_tiles_min_zoom_default</key>
 	<integer>0</integer>
 	<key>load_tiles_max_zoom_default</key>
@@ -34,6 +36,14 @@
 	<integer>100</integer>
 	<key>load_tiles_compress_scale_default</key>
 	<integer>100</integer>
+	<key>feature_tiles_index_warning</key>
+	<string>WARNING: Table is not indexed!</string>
+	<key>feature_tiles_name_suffix</key>
+	<string>_tiles</string>
+	<key>feature_overlay_tiles_name_suffix</key>
+	<string>_overlay</string>
+	<key>edit_feature_overlay_index_warning</key>
+	<string>WARNING: Table is not indexed!</string>
 	<key>bounding_box_preloaded_label</key>
 	<string>Preloaded Locations</string>
 	<key>bounding_box_default_min_latitude</key>
@@ -282,6 +292,18 @@
 			<key>max_lon</key>
 			<string>-104.801516</string>
 		</dict>
+        <dict>
+            <key>label</key>
+            <string>Face Test</string>
+            <key>min_lat</key>
+            <string>-4.04919321231</string>
+            <key>max_lat</key>
+            <string>55.1601162665</string>
+            <key>min_lon</key>
+            <string>-130.622869245708</string>
+            <key>max_lon</key>
+            <string>-68.504681736231</string>
+        </dict>
 	</array>
 </dict>
 </plist>
