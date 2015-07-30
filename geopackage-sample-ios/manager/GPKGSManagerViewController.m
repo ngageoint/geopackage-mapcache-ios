@@ -28,6 +28,9 @@
 #import "GPKGSManagerLoadTilesViewController.h"
 #import "GPKGSEditFeaturesViewController.h"
 #import "GPKGSEditTilesViewController.h"
+#import "GPKGSCreateFeatureTilesViewController.h"
+#import "GPKGSAddTileOverlayViewController.h"
+#import "GPKGSManagerEditTileOverlayViewController.h"
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
 NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
@@ -37,6 +40,9 @@ NSString * const GPKGS_EXPANDED_PREFERENCE = @"expanded";
 NSString * const GPKGS_MANAGER_SEG_LOAD_TILES = @"loadTiles";
 NSString * const GPKGS_MANAGER_SEG_EDIT_FEATURES = @"editFeatures";
 NSString * const GPKGS_MANAGER_SEG_EDIT_TILES = @"editTiles";
+NSString * const GPKGS_MANAGER_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
+NSString * const GPKGS_MANAGER_SEG_ADD_TILE_OVERLAY = @"addTileOverlay";
+NSString * const GPKGS_MANAGER_SEG_EDIT_TILE_OVERLAY = @"editTileOverlay";
 
 const char ConstantKey;
 
@@ -324,18 +330,6 @@ const char ConstantKey;
     }
 }
 
-// TODO delete when no longer used
--(void) todoAlert: (NSString *) name{
-    UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:[NSString stringWithFormat:@"TODO: %@", name]
-                          message:nil
-                          delegate:self
-                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
-                          otherButtonTitles:
-                          nil];
-    [alert show];
-}
-
 - (IBAction)databaseOptions:(GPKGSDatabaseOptionsButton *)sender {
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle:sender.database.name
@@ -454,7 +448,7 @@ const char ConstantKey;
                         [self editTilesTableOption:table];
                         break;
                     case GPKGS_TT_FEATURE_OVERLAY:
-                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_EDIT_LABEL]];
+                        [self editFeatureOverlayTableOption:table];
                         break;
                 }
                 break;
@@ -485,7 +479,7 @@ const char ConstantKey;
             case 4:
                 switch([table getType]){
                     case GPKGS_TT_FEATURE:
-                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]];
+                        [self createFeatureTilesTableOption:table];
                         break;
                     default:
                         break;
@@ -494,7 +488,7 @@ const char ConstantKey;
             case 5:
                 switch([table getType]){
                     case GPKGS_TT_FEATURE:
-                        [self todoAlert: [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL]];
+                        [self addFeatureOverlayTableOption:table];
                         break;
                     default:
                         break;
@@ -648,6 +642,10 @@ const char ConstantKey;
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_EDIT_TILES sender:table];
 }
 
+-(void) editFeatureOverlayTableOption: (GPKGSTable *) table{
+    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_EDIT_TILE_OVERLAY sender:table];
+}
+
 -(void) deleteTableOption: (GPKGSTable *) table{
     NSString * label = [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL];
     UIAlertView *alert = [[UIAlertView alloc]
@@ -728,6 +726,14 @@ const char ConstantKey;
 
 -(void) loadTilesTableOption: (GPKGSTable *) table{
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_LOAD_TILES sender:table];
+}
+
+-(void) createFeatureTilesTableOption: (GPKGSTable *) table{
+    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_CREATE_FEATURE_TILES sender:table];
+}
+
+-(void) addFeatureOverlayTableOption: (GPKGSTable *) table{
+    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_ADD_TILE_OVERLAY sender:table];
 }
 
 - (IBAction)downloadFile:(id)sender {
@@ -864,6 +870,18 @@ const char ConstantKey;
     }
 }
 
+- (void)createFeatureTilesViewController:(GPKGSCreateFeatureTilesViewController *)controller createdTiles:(int)count withError: (NSString *) error{
+    [self updateAndReloadData];
+    if(count > 0){
+        [self.active setModified:true];
+    }
+    if(error != nil){
+        [GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]
+                                 andMessage:[NSString stringWithFormat:@"Error creating feature tiles table '%@' for feature table '%@' in database: '%@'\n\nError: %@", controller.nameValue.text, controller.table.name, controller.table.database, error]];
+    }
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DOWNLOAD_FILE])
@@ -912,6 +930,20 @@ const char ConstantKey;
         GPKGSTable * table = (GPKGSTable *)sender;
         editTilesViewController.table = table;
         editTilesViewController.manager = self.manager;
+    }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_CREATE_FEATURE_TILES]){
+        GPKGSCreateFeatureTilesViewController *createFeatureTilesViewController = segue.destinationViewController;
+        GPKGSTable * table = (GPKGSTable *)sender;
+        createFeatureTilesViewController.delegate = self;
+        createFeatureTilesViewController.table = table;
+        createFeatureTilesViewController.manager = self.manager;
+    }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_ADD_TILE_OVERLAY]){
+        GPKGSAddTileOverlayViewController *addTileOverlayViewController = segue.destinationViewController;
+        GPKGSTable * table = (GPKGSTable *)sender;
+        // TODO
+    }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_EDIT_TILE_OVERLAY]){
+        GPKGSManagerEditTileOverlayViewController *editTileOverlayViewController = segue.destinationViewController;
+        GPKGSTable * table = (GPKGSTable *)sender;
+        // TODO
     }
     
 }
