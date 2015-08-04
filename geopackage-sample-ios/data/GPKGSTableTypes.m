@@ -37,6 +37,7 @@ NSString * const GPKGS_TT_FEATURE_OVERLAY_NAME = @"FEATURE_OVERLAY";
     enum GPKGSTableType value = -1;
     
     if(name != nil){
+        name = [name uppercaseString];
         NSDictionary *types = [NSDictionary dictionaryWithObjectsAndKeys:
                                [NSNumber numberWithInteger:GPKGS_TT_FEATURE], GPKGS_TT_FEATURE_NAME,
                                [NSNumber numberWithInteger:GPKGS_TT_TILE], GPKGS_TT_TILE_NAME,
