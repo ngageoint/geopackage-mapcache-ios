@@ -7,7 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GPKGSBoundingBoxViewController.h"
+#import "GPKGSEditTileOverlayData.h"
+#import "GPKGGeoPackageManager.h"
+#import "GPKGSTable.h"
 
-@interface GPKGSEditTileOverlayViewController : UIViewController
+@interface GPKGSEditTileOverlayViewController : UIViewController <GPKGSBoundingBoxDelegate>
+
+@property (weak, nonatomic) IBOutlet UILabel *warningLabel;
+@property (weak, nonatomic) IBOutlet UITextField *minZoomTextField;
+@property (weak, nonatomic) IBOutlet UITextField *maxZoomTextField;
+@property (nonatomic, strong) GPKGSEditTileOverlayData * data;
+@property (nonatomic, strong) GPKGGeoPackageManager *manager;
+@property (nonatomic, strong) GPKGSTable *table;
 
 @end

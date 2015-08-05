@@ -36,6 +36,8 @@
 	<integer>100</integer>
 	<key>load_tiles_compress_scale_default</key>
 	<integer>100</integer>
+	<key>feature_tiles_index_validation</key>
+	<string>√ Table is indexed</string>
 	<key>feature_tiles_index_warning</key>
 	<string>WARNING: Table is not indexed!</string>
 	<key>feature_tiles_name_suffix</key>
@@ -201,6 +203,8 @@
 			<real>1</real>
 		</dict>
 	</array>
+	<key>edit_feature_overlay_index_validation</key>
+	<string>√ Table is indexed</string>
 	<key>edit_feature_overlay_index_warning</key>
 	<string>WARNING: Table is not indexed!</string>
 	<key>bounding_box_preloaded_label</key>

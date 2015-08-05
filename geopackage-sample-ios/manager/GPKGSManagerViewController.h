@@ -14,6 +14,7 @@
 #import "GPKGSManagerLoadTilesViewController.h"
 #import "GPKGSEditFeaturesViewController.h"
 #import "GPKGSCreateFeatureTilesViewController.h"
+#import "GPKGSAddTileOverlayViewController.h"
 
 extern NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE;
 extern NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT;
@@ -23,7 +24,7 @@ extern NSString * const GPKGS_EXPANDED_PREFERENCE;
 
 extern const char ConstantKey;
 
-@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadFileDelegate, GPKGSIndexerProtocol, GPKGSCreateFeaturesDelegate, GPKGSManagerCreateTilesDelegate, GPKGSManagerLoadTilesDelegate, GPKGSEditFeaturesDelegate, GPKGSCreateFeatureTilesDelegate>
+@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadFileDelegate, GPKGSIndexerProtocol, GPKGSCreateFeaturesDelegate, GPKGSManagerCreateTilesDelegate, GPKGSManagerLoadTilesDelegate, GPKGSEditFeaturesDelegate, GPKGSCreateFeatureTilesDelegate, GPKGSAddTileOverlayDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *clearActiveButton;
 

@@ -7,7 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GPKGBoundingBox.h"
+#import "GPKGSFeatureTilesDrawData.h"
 
 @interface GPKGSEditTileOverlayData : NSObject
+
+@property (nonatomic, strong) NSNumber * minZoom;
+@property (nonatomic, strong) NSNumber * maxZoom;
+@property (nonatomic, strong) GPKGBoundingBox * boundingBox;
+@property (nonatomic, strong) GPKGSFeatureTilesDrawData * featureTilesDraw;
+@property (nonatomic) BOOL indexed;
 
 @end
