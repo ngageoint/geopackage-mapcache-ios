@@ -1975,9 +1975,12 @@
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUi-C3-Jlc" userLabel="PointColorButton">
                                 <rect key="frame" x="71" y="33" width="268" height="30"/>
-                                <state key="normal" title="color">
+                                <state key="normal" title="Black">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="pointColorButton:" destination="Tt7-So-oLd" eventType="touchUpInside" id="XRz-IV-kha"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Alpha:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6j8-Gj-rXY">
                                 <rect key="frame" x="16" y="70" width="49" height="21"/>
@@ -1989,6 +1992,9 @@
                                 <rect key="frame" x="71" y="66" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <action selector="pointAlphaChanged:" destination="Tt7-So-oLd" eventType="editingChanged" id="ROn-cK-gRl"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Radius:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gfs-ZE-uoN">
                                 <rect key="frame" x="176" y="70" width="58" height="21"/>
@@ -2000,6 +2006,9 @@
                                 <rect key="frame" x="242" y="66" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
+                                <connections>
+                                    <action selector="pointRadiusChanged:" destination="Tt7-So-oLd" eventType="editingChanged" id="1zw-Jo-HDf"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Lines -" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7To-MO-d59">
                                 <rect key="frame" x="0.0" y="104" width="53" height="21"/>
@@ -2015,9 +2024,12 @@
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WRe-i6-CbF" userLabel="LineColorButton">
                                 <rect key="frame" x="71" y="129" width="268" height="30"/>
-                                <state key="normal" title="color">
+                                <state key="normal" title="Black">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="lineColorButton:" destination="Tt7-So-oLd" eventType="touchUpInside" id="xqZ-zc-cnv"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Alpha:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cTv-ar-7Fr">
                                 <rect key="frame" x="16" y="166" width="49" height="21"/>
@@ -2029,6 +2041,9 @@
                                 <rect key="frame" x="71" y="162" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <action selector="lineAlphaChanged:" destination="Tt7-So-oLd" eventType="editingChanged" id="Vhf-n7-aSc"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Stroke:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e9e-nF-Gfa">
                                 <rect key="frame" x="176" y="166" width="55" height="21"/>
@@ -2040,6 +2055,9 @@
                                 <rect key="frame" x="242" y="162" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
+                                <connections>
+                                    <action selector="lineStrokeChanged:" destination="Tt7-So-oLd" eventType="editingChanged" id="Rve-Ox-4Yk"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Polygons -" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xpg-fO-xVe">
                                 <rect key="frame" x="0.0" y="200" width="83" height="21"/>
@@ -2055,9 +2073,12 @@
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="50b-ks-sIM" userLabel="PolygonColorButton">
                                 <rect key="frame" x="71" y="225" width="268" height="30"/>
-                                <state key="normal" title="color">
+                                <state key="normal" title="Black">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="polygonColorButton:" destination="Tt7-So-oLd" eventType="touchUpInside" id="2Hg-fA-qC1"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Alpha:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tjs-Lg-rYK">
                                 <rect key="frame" x="16" y="262" width="49" height="21"/>
@@ -2069,6 +2090,9 @@
                                 <rect key="frame" x="71" y="258" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <action selector="polygonAlphaChanged:" destination="Tt7-So-oLd" eventType="editingChanged" id="eah-oz-pHI"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Stroke:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3fO-On-wBn">
                                 <rect key="frame" x="176" y="262" width="55" height="21"/>
@@ -2080,6 +2104,9 @@
                                 <rect key="frame" x="242" y="258" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
+                                <connections>
+                                    <action selector="polygonStrokeChanged:" destination="Tt7-So-oLd" eventType="editingChanged" id="eMi-eW-5GD"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fill?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="esK-mF-4vQ">
                                 <rect key="frame" x="34" y="304" width="31" height="21"/>
@@ -2089,6 +2116,9 @@
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="QOq-UM-qsa" userLabel="FillSwitch">
                                 <rect key="frame" x="95" y="299" width="51" height="31"/>
+                                <connections>
+                                    <action selector="polygonFillChanged:" destination="Tt7-So-oLd" eventType="valueChanged" id="oNB-eW-wzO"/>
+                                </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fill Color:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qvK-fV-lC3">
                                 <rect key="frame" x="34" y="342" width="73" height="21"/>
@@ -2098,9 +2128,12 @@
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lLv-WC-8J5" userLabel="PolygonFillColorButton">
                                 <rect key="frame" x="115" y="338" width="453" height="30"/>
-                                <state key="normal" title="color">
+                                <state key="normal" title="Black">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="polygonFillColorButton:" destination="Tt7-So-oLd" eventType="touchUpInside" id="ILc-Xw-UIF"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fill Alpha:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IMZ-aC-K1s">
                                 <rect key="frame" x="34" y="375" width="75" height="21"/>
@@ -2112,6 +2145,9 @@
                                 <rect key="frame" x="115" y="371" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <action selector="polygonFillAlphaChanged:" destination="Tt7-So-oLd" eventType="editingChanged" id="nQh-s9-ZJU"/>
+                                </connections>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2290,6 +2326,7 @@
                     <connections>
                         <outlet property="databaseValue" destination="SdL-DO-l1t" id="hJY-Ak-syn"/>
                         <outlet property="nameValue" destination="vyZ-tv-uEY" id="ePO-ti-eFA"/>
+                        <outlet property="view" destination="6LP-8L-yFr" id="CX7-Do-ujl"/>
                         <outlet property="warningLabel" destination="whc-xD-3Zn" id="khl-FY-xhW"/>
                     </connections>
                 </viewController>
@@ -2445,10 +2482,10 @@
     <inferredMetricsTieBreakers>
         <segue reference="fV6-n6-geX"/>
         <segue reference="jHg-uD-xkx"/>
-        <segue reference="eWo-PS-bO7"/>
+        <segue reference="SDT-vo-ke2"/>
         <segue reference="AFX-xb-2xo"/>
+        <segue reference="wE4-9I-IMh"/>
         <segue reference="EXh-8z-gcM"/>
         <segue reference="X4O-rd-xnT"/>
-        <segue reference="Zt4-kZ-Aob"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -72,7 +72,7 @@
 - (IBAction)minYChanged:(id)sender {
     NSDecimalNumber * minYNumber = nil;
     if(self.minYTextField.text.length > 0){
-        int minY = [self.minYTextField.text doubleValue];
+        double minY = [self.minYTextField.text doubleValue];
         minYNumber = [[NSDecimalNumber alloc] initWithDouble:minY];
     }
     [self.data setMinY:minYNumber];
@@ -81,7 +81,7 @@
 - (IBAction)maxYChanged:(id)sender {
     NSDecimalNumber * maxYNumber = nil;
     if(self.maxYTextField.text.length > 0){
-        int maxY = [self.maxYTextField.text doubleValue];
+        double maxY = [self.maxYTextField.text doubleValue];
         maxYNumber = [[NSDecimalNumber alloc] initWithDouble:maxY];
     }
     [self.data setMaxY:maxYNumber];
@@ -90,7 +90,7 @@
 - (IBAction)minXChanged:(id)sender {
     NSDecimalNumber * minXNumber = nil;
     if(self.minXTextField.text.length > 0){
-        int minX = [self.minXTextField.text doubleValue];
+        double minX = [self.minXTextField.text doubleValue];
         minXNumber = [[NSDecimalNumber alloc] initWithDouble:minX];
     }
     [self.data setMinX:minXNumber];
@@ -99,7 +99,7 @@
 - (IBAction)maxXChanged:(id)sender {
     NSDecimalNumber * maxXNumber = nil;
     if(self.maxXTextField.text.length > 0){
-        int maxX = [self.maxXTextField.text doubleValue];
+        double maxX = [self.maxXTextField.text doubleValue];
         maxXNumber = [[NSDecimalNumber alloc] initWithDouble:maxX];
     }
     [self.data setMaxX:maxXNumber];
