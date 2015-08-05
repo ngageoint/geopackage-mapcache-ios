@@ -42,6 +42,165 @@
 	<string>_tiles</string>
 	<key>feature_overlay_tiles_name_suffix</key>
 	<string>_overlay</string>
+	<key>feature_tiles_draw_point_color_label</key>
+	<string>Point Color</string>
+	<key>feature_tiles_draw_line_color_label</key>
+	<string>Line Color</string>
+	<key>feature_tiles_draw_polygon_color_label</key>
+	<string>Polygon Color</string>
+	<key>feature_tiles_draw_polygon_fill_color_label</key>
+	<string>Polygon Fill Color</string>
+	<key>feature_tiles_draw_colors</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>Black</string>
+			<key>white</key>
+			<real>0</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Blue</string>
+			<key>red</key>
+			<real>0</real>
+			<key>green</key>
+			<real>0</real>
+			<key>blue</key>
+			<real>1</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Brown</string>
+			<key>red</key>
+			<real>0.6</real>
+			<key>green</key>
+			<real>0.4</real>
+			<key>blue</key>
+			<real>0.2</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Cyan</string>
+			<key>red</key>
+			<real>0</real>
+			<key>green</key>
+			<real>1</real>
+			<key>blue</key>
+			<real>1</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Dark Gray</string>
+			<key>white</key>
+			<real>0.33333333333333</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Gray</string>
+			<key>white</key>
+			<real>0.5</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Green</string>
+			<key>red</key>
+			<real>0</real>
+			<key>green</key>
+			<real>1</real>
+			<key>blue</key>
+			<real>0</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Light Gray</string>
+			<key>white</key>
+			<real>0.66666666666666</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Magenta</string>
+			<key>red</key>
+			<real>1</real>
+			<key>green</key>
+			<real>0</real>
+			<key>blue</key>
+			<real>1</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Orange</string>
+			<key>red</key>
+			<real>1</real>
+			<key>green</key>
+			<real>0.5</real>
+			<key>blue</key>
+			<real>0</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Purple</string>
+			<key>red</key>
+			<real>0.5</real>
+			<key>green</key>
+			<real>0</real>
+			<key>blue</key>
+			<real>0.5</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Red</string>
+			<key>red</key>
+			<real>1</real>
+			<key>green</key>
+			<real>0</real>
+			<key>blue</key>
+			<real>0</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>White</string>
+			<key>white</key>
+			<real>1</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Yellow</string>
+			<key>red</key>
+			<real>1</real>
+			<key>green</key>
+			<real>1</real>
+			<key>blue</key>
+			<real>0</real>
+			<key>alpha</key>
+			<real>1</real>
+		</dict>
+	</array>
 	<key>edit_feature_overlay_index_warning</key>
 	<string>WARNING: Table is not indexed!</string>
 	<key>bounding_box_preloaded_label</key>
@@ -292,18 +451,18 @@
 			<key>max_lon</key>
 			<string>-104.801516</string>
 		</dict>
-        <dict>
-            <key>label</key>
-            <string>Face Test</string>
-            <key>min_lat</key>
-            <string>-4.04919321231</string>
-            <key>max_lat</key>
-            <string>55.1601162665</string>
-            <key>min_lon</key>
-            <string>-130.622869245708</string>
-            <key>max_lon</key>
-            <string>-68.504681736231</string>
-        </dict>
+		<dict>
+			<key>label</key>
+			<string>Face Test</string>
+			<key>min_lat</key>
+			<string>-4.04919321231</string>
+			<key>max_lat</key>
+			<string>55.1601162665</string>
+			<key>min_lon</key>
+			<string>-130.622869245708</string>
+			<key>max_lon</key>
+			<string>-68.504681736231</string>
+		</dict>
 	</array>
 </dict>
 </plist>
