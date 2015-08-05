@@ -29,7 +29,9 @@
 -(UIColor *) getColor: (UIColor *) color withAlpha: (int) alpha{
     UIColor * alphaColor = nil;
     if(alpha < 255){
-        alphaColor = [UIColor colorWithCGColor:CGColorCreateCopyWithAlpha(color.CGColor, alpha/255.0)];
+        CGColorRef cgColor = CGColorCreateCopyWithAlpha(color.CGColor, alpha/255.0);
+        alphaColor = [UIColor colorWithCGColor:cgColor];
+        CGColorRelease(cgColor);
     }else{
         alphaColor = color;
     }
