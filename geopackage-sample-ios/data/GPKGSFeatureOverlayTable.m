@@ -28,7 +28,7 @@ NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MAX_LON = @"max_lon";
 
 -(instancetype) initWithValues: (NSDictionary *) values{
     
-    self = [self initWithValues:values];
+    self = [super initWithValues:values];
     if(self != nil){
         self.featureTable = [values objectForKey:GPKGS_FEATURE_OVERLAY_TABLE_FEATURE_TABLE];
         NSNumber * minZoom = [values objectForKey:GPKGS_FEATURE_OVERLAY_TABLE_MIN_ZOOM];

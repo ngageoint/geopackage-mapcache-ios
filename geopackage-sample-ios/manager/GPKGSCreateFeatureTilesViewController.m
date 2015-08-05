@@ -43,7 +43,8 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
         GPKGFeatureIndexer * indexer = [[GPKGFeatureIndexer alloc] initWithFeatureDao:featureDao];
         self.indexed = [indexer isIndexed];
         if(self.indexed){
-            [self.warningLabel setHidden:true];
+            [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_INDEX_VALIDATION]];
+            [self.warningLabel setTextColor:[UIColor greenColor]];
         }else{
             [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_INDEX_WARNING]];
         }

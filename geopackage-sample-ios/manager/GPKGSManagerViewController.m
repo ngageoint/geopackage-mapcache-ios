@@ -200,7 +200,9 @@ const char ConstantKey;
         GPKGSTableCell * tableCell = (GPKGSTableCell *) cell;
         GPKGSTable * table = (GPKGSTable *) cellObject;
         NSString * typeImage = nil;
-        if([cellObject isKindOfClass:[GPKGSFeatureTable class]]){
+        if([cellObject isKindOfClass:[GPKGSFeatureOverlayTable class]]){
+            typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_PAINT];
+        }else if([cellObject isKindOfClass:[GPKGSFeatureTable class]]){
             GPKGSFeatureTable * featureTable = (GPKGSFeatureTable *) cellObject;
             typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
             if(featureTable.geometryType != WKB_NONE){
@@ -236,8 +238,6 @@ const char ConstantKey;
             }
         }else if([cellObject isKindOfClass:[GPKGSTileTable class]]){
             typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_TILES];
-        } else{
-            typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_PAINT];
         }
         tableCell.active.on = table.active;
         if(typeImage != nil){
@@ -882,6 +882,11 @@ const char ConstantKey;
     }
 }
 
+- (void)createFeatureTilesViewController:(GPKGSAddTileOverlayViewController *)controller featureOverlayTable:(GPKGSFeatureOverlayTable *)featureOverlayTable{
+    [self.active addTable:featureOverlayTable];
+    [self updateAndReloadData];
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DOWNLOAD_FILE])
@@ -939,7 +944,9 @@ const char ConstantKey;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_ADD_TILE_OVERLAY]){
         GPKGSAddTileOverlayViewController *addTileOverlayViewController = segue.destinationViewController;
         GPKGSTable * table = (GPKGSTable *)sender;
-        // TODO
+        addTileOverlayViewController.delegate = self;
+        addTileOverlayViewController.table = table;
+        addTileOverlayViewController.manager = self.manager;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_EDIT_TILE_OVERLAY]){
         GPKGSManagerEditTileOverlayViewController *editTileOverlayViewController = segue.destinationViewController;
         GPKGSTable * table = (GPKGSTable *)sender;

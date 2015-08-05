@@ -10,4 +10,12 @@
 
 @implementation GPKGSEditTileOverlayData
 
+-(instancetype) init{
+    self = [super init];
+    if(self){
+        self.featureTilesDraw = [[GPKGSFeatureTilesDrawData alloc] init];
+    }
+    return self;
+}
+
 @end

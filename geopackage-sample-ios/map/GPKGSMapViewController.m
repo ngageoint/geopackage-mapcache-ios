@@ -14,11 +14,15 @@
 #import "GPKGOverlayFactory.h"
 #import "GPKGProjectionTransform.h"
 #import "GPKGProjectionConstants.h"
+#import "GPKGProjectionFactory.h"
 #import "GPKGTileBoundingBoxUtils.h"
 #import "GPKGSFeatureOverlayTable.h"
 #import "GPKGMapShapeConverter.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
+#import "GPKGFeatureTiles.h"
+#import "GPKGFeatureIndexer.h"
+#import "GPKGFeatureOverlay.h"
 
 @interface GPKGSMapViewController ()
 
@@ -245,7 +249,12 @@
                 }
              
                 for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
-                    // TODO
+                    @try {
+                        [self displayFeatureTiles:featureOverlay];
+                    }
+                    @catch (NSException *e) {
+                        NSLog(@"%@", [e description]);
+                    }
                     if([self updateCanceled:updateId]){
                         break;
                     }
@@ -345,6 +354,37 @@
     GPKGContents * contents = [[geoPackage getTileMatrixSetDao] getContents:tileMatrixSet];
     
     [self displayTilesWithOverlay:overlay andGeoPackage:geoPackage andContents:contents andSpecifiedBoundingBox:nil];
+}
+
+-(void) displayFeatureTiles: (GPKGSFeatureOverlayTable *) featureOverlay{
+    
+    GPKGGeoPackage * geoPackage = [self.geoPackages objectForKey:featureOverlay.database];
+    
+    GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:featureOverlay.featureTable];
+    
+    GPKGBoundingBox * boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:featureOverlay.minLon andMaxLongitudeDouble:featureOverlay.maxLon andMinLatitudeDouble:featureOverlay.minLat andMaxLatitudeDouble:featureOverlay.maxLat];
+    
+    // Load tiles
+    GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithFeatureDao:featureDao];
+    
+    GPKGFeatureIndexer * indexer = [[GPKGFeatureIndexer alloc] initWithFeatureDao:featureDao];
+    [featureTiles setIndexQuery:[indexer isIndexed]];
+    
+    // TODO color, styles, etc
+    
+    [featureTiles calculateDrawOverlap];
+    
+    GPKGFeatureOverlay * overlay = [[GPKGFeatureOverlay alloc] initWithFeatureTiles:featureTiles];
+    [overlay setBoundingBox:boundingBox withProjection:[GPKGProjectionFactory getProjectionWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
+    [overlay setMinZoom:[NSNumber numberWithInt:featureOverlay.minZoom]];
+    [overlay setMaxZoom:[NSNumber numberWithInt:featureOverlay.maxZoom]];
+    
+    GPKGGeometryColumns * geometryColumns = featureDao.geometryColumns;
+    GPKGContents * contents = [[geoPackage getGeometryColumnsDao] getContents:geometryColumns];
+    
+    self.featureOverlayTiles = true;
+    
+    [self displayTilesWithOverlay:overlay andGeoPackage:geoPackage andContents:contents andSpecifiedBoundingBox:boundingBox];
 }
 
 -(void) displayTilesWithOverlay: (MKTileOverlay *) overlay andGeoPackage: (GPKGGeoPackage *) geoPackage andContents: (GPKGContents *) contents andSpecifiedBoundingBox: (GPKGBoundingBox *) specifiedBoundingBox{

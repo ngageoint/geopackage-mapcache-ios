@@ -21,7 +21,7 @@ NSString * const GPKGS_FEATURE_TABLE_GEOMETRY_TYPE = @"geometry_type";
 }
 
 -(instancetype) initWithValues: (NSDictionary *) values{
-    self = [self initWithValues:values];
+    self = [super initWithValues:values];
     if(self != nil){
         self.geometryType = (enum WKBGeometryType)[values objectForKey:GPKGS_FEATURE_TABLE_GEOMETRY_TYPE];
     }
