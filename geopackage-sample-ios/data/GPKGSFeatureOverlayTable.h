@@ -7,6 +7,7 @@
 //
 
 #import "GPKGSFeatureTable.h"
+#import <UIKit/UIKit.h>
 
 extern NSString * const GPKGS_FEATURE_OVERLAY_TABLE_FEATURE_TABLE;
 extern NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MIN_ZOOM;
@@ -25,6 +26,14 @@ extern NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MAX_LON;
 @property (nonatomic) double maxLat;
 @property (nonatomic) double minLon;
 @property (nonatomic) double maxLon;
+@property (nonatomic, strong) UIColor * pointColor;
+@property (nonatomic) double pointRadius;
+@property (nonatomic, strong) UIColor * lineColor;
+@property (nonatomic) double lineStroke;
+@property (nonatomic, strong) UIColor * polygonColor;
+@property (nonatomic) double polygonStroke;
+@property (nonatomic) BOOL polygonFill;
+@property (nonatomic, strong) UIColor * polygonFillColor;
 
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andFeatureTable: (NSString *) featureTable andGeometryType: (enum WKBGeometryType) geometryType andCount: (int) count;
 
