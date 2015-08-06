@@ -457,15 +457,15 @@
 		</dict>
 		<dict>
 			<key>label</key>
-			<string>Face Test</string>
+			<string>Port-au-Prince</string>
 			<key>min_lat</key>
-			<string>-4.04919321231</string>
+			<string>18.498949</string>
 			<key>max_lat</key>
-			<string>55.1601162665</string>
+			<string>18.661896</string>
 			<key>min_lon</key>
-			<string>-130.622869245708</string>
+			<string>-72.371578</string>
 			<key>max_lon</key>
-			<string>-68.504681736231</string>
+			<string>-72.198246</string>
 		</dict>
 	</array>
 </dict>

@@ -56,13 +56,21 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
     [overlayTable setMinLon:[self.editTileOverlayData.boundingBox.minLongitude doubleValue]];
     [overlayTable setMaxLon:[self.editTileOverlayData.boundingBox.maxLongitude doubleValue]];
     [overlayTable setPointColor:[self.editTileOverlayData.featureTilesDraw getPointAlphaColor]];
+    [overlayTable setPointColorName:self.editTileOverlayData.featureTilesDraw.pointColorName];
+    [overlayTable setPointAlpha:[self.editTileOverlayData.featureTilesDraw.pointAlpha intValue]];
     [overlayTable setPointRadius:[self.editTileOverlayData.featureTilesDraw.pointRadius doubleValue]];
     [overlayTable setLineColor:[self.editTileOverlayData.featureTilesDraw getLineAlphaColor]];
+    [overlayTable setLineColorName:self.editTileOverlayData.featureTilesDraw.lineColorName];
+    [overlayTable setLineAlpha:[self.editTileOverlayData.featureTilesDraw.lineAlpha intValue]];
     [overlayTable setLineStroke:[self.editTileOverlayData.featureTilesDraw.lineStroke doubleValue]];
     [overlayTable setPolygonColor:[self.editTileOverlayData.featureTilesDraw getPolygonAlphaColor]];
+    [overlayTable setPolygonColorName:self.editTileOverlayData.featureTilesDraw.polygonColorName];
+    [overlayTable setPolygonAlpha:[self.editTileOverlayData.featureTilesDraw.polygonAlpha intValue]];
     [overlayTable setPolygonStroke:[self.editTileOverlayData.featureTilesDraw.polygonStroke doubleValue]];
     [overlayTable setPolygonFill:self.editTileOverlayData.featureTilesDraw.polygonFill];
     [overlayTable setPolygonFillColor:[self.editTileOverlayData.featureTilesDraw getPolygonFillAlphaColor]];
+    [overlayTable setPolygonFillColorName:self.editTileOverlayData.featureTilesDraw.polygonFillColorName];
+    [overlayTable setPolygonFillAlpha:[self.editTileOverlayData.featureTilesDraw.polygonFillAlpha intValue]];
     
     if(self.delegate != nil){
         [self.delegate addTileOverlayViewController:self featureOverlayTable:overlayTable];
@@ -79,7 +87,8 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
         GPKGSEditTileOverlayViewController *editTileOverlayViewController = segue.destinationViewController;
         editTileOverlayViewController.data = self.editTileOverlayData;
         editTileOverlayViewController.manager = self.manager;
-        editTileOverlayViewController.table = self.table;
+        editTileOverlayViewController.database = self.table.database;
+        editTileOverlayViewController.featureTable = self.table.name;
     }
 }
 

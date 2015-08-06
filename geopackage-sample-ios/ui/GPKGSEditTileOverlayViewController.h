@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *maxZoomTextField;
 @property (nonatomic, strong) GPKGSEditTileOverlayData * data;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) GPKGSTable *table;
+@property (nonatomic, strong) NSString *database;
+@property (nonatomic, strong) NSString *featureTable;
 
 @end
