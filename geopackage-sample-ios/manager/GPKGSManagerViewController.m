@@ -527,7 +527,6 @@ const char ConstantKey;
         NSString *database = objc_getAssociatedObject(alertView, &ConstantKey);
         [self.manager delete:database];
         [self.active removeDatabase:database andPreserveOverlays:false];
-        //TODO remove from active?
         [self updateAndReloadData];
     }
 }
