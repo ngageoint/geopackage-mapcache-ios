@@ -55,7 +55,14 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
     [overlayTable setMaxLat:[self.editTileOverlayData.boundingBox.maxLatitude doubleValue]];
     [overlayTable setMinLon:[self.editTileOverlayData.boundingBox.minLongitude doubleValue]];
     [overlayTable setMaxLon:[self.editTileOverlayData.boundingBox.maxLongitude doubleValue]];
-    // TODO colors, styles
+    [overlayTable setPointColor:[self.editTileOverlayData.featureTilesDraw getPointAlphaColor]];
+    [overlayTable setPointRadius:[self.editTileOverlayData.featureTilesDraw.pointRadius doubleValue]];
+    [overlayTable setLineColor:[self.editTileOverlayData.featureTilesDraw getLineAlphaColor]];
+    [overlayTable setLineStroke:[self.editTileOverlayData.featureTilesDraw.lineStroke doubleValue]];
+    [overlayTable setPolygonColor:[self.editTileOverlayData.featureTilesDraw getPolygonAlphaColor]];
+    [overlayTable setPolygonStroke:[self.editTileOverlayData.featureTilesDraw.polygonStroke doubleValue]];
+    [overlayTable setPolygonFill:self.editTileOverlayData.featureTilesDraw.polygonFill];
+    [overlayTable setPolygonFillColor:[self.editTileOverlayData.featureTilesDraw getPolygonFillAlphaColor]];
     
     if(self.delegate != nil){
         [self.delegate createFeatureTilesViewController:self featureOverlayTable:overlayTable];

@@ -370,7 +370,16 @@
     GPKGFeatureIndexer * indexer = [[GPKGFeatureIndexer alloc] initWithFeatureDao:featureDao];
     [featureTiles setIndexQuery:[indexer isIndexed]];
     
-    // TODO color, styles, etc
+    [featureTiles setPointColor:featureOverlay.pointColor];
+    [featureTiles setPointRadius:featureOverlay.pointRadius];
+    [featureTiles setLineColor:featureOverlay.lineColor];
+    [featureTiles setLineStrokeWidth:featureOverlay.lineStroke];
+    [featureTiles setPolygonColor:featureOverlay.polygonColor];
+    [featureTiles setPolygonStrokeWidth:featureOverlay.polygonStroke];
+    [featureTiles setFillPolygon:featureOverlay.polygonFill];
+    if(featureTiles.fillPolygon){
+        [featureTiles setPolygonFillColor:featureOverlay.polygonFillColor];
+    }
     
     [featureTiles calculateDrawOverlap];
     
