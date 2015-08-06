@@ -289,8 +289,6 @@
                                             </state>
                                             <connections>
                                                 <action selector="cancelButton:" destination="F68-jD-Kv5" eventType="touchUpInside" id="Pxf-RF-ggd"/>
-                                                <action selector="cancelButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="fa1-zn-t8E"/>
-                                                <action selector="cancelButton:" destination="KPw-P3-KBd" eventType="touchUpInside" id="uLC-ox-dwk"/>
                                             </connections>
                                         </button>
                                     </barButtonItem>
@@ -314,9 +312,7 @@
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="createButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="Y5J-bv-8tl"/>
                                                 <action selector="editButton:" destination="F68-jD-Kv5" eventType="touchUpInside" id="R03-Gz-AR1"/>
-                                                <action selector="loadButton:" destination="KPw-P3-KBd" eventType="touchUpInside" id="h3P-Nn-qAa"/>
                                             </connections>
                                         </button>
                                     </barButtonItem>
@@ -378,17 +374,17 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3r0-dC-uKO" userLabel="MaxXValue">
-                                        <rect key="frame" x="100" y="410" width="163" height="30"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
-                                    </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Max X:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l8o-md-FQK">
                                         <rect key="frame" x="16" y="414" width="53" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3r0-dC-uKO" userLabel="MaxXValue">
+                                        <rect key="frame" x="100" y="410" width="163" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
+                                    </textField>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="Rvc-BO-PNK" firstAttribute="top" secondItem="xCr-Qd-Sgx" secondAttribute="top" constant="8" id="JO4-az-Vff"/>
@@ -444,8 +440,6 @@
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="cancelButton:" destination="KPw-P3-KBd" eventType="touchUpInside" id="4t6-tM-IX7"/>
-                                                <action selector="cancelButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="Kdf-ry-DW9"/>
                                                 <action selector="cancelButton:" destination="3aJ-oQ-iiu" eventType="touchUpInside" id="RJz-0a-4KV"/>
                                             </connections>
                                         </button>
@@ -470,9 +464,7 @@
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="createButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="aVR-g4-xcy"/>
                                                 <action selector="editButton:" destination="3aJ-oQ-iiu" eventType="touchUpInside" id="sSm-hx-Jmt"/>
-                                                <action selector="loadButton:" destination="KPw-P3-KBd" eventType="touchUpInside" id="uBM-Pc-h1a"/>
                                             </connections>
                                         </button>
                                     </barButtonItem>
@@ -495,22 +487,21 @@
                                             <segue destination="Oi1-SY-veg" kind="embed" identifier="editContents" id="wE4-9I-IMh"/>
                                         </connections>
                                     </containerView>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uba-1c-e6S" userLabel="GeometryTypeButton">
-                                        <rect key="frame" x="159" y="267" width="433" height="30"/>
-                                        <state key="normal" title="geometry type">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="geometryType:" destination="gvl-cw-nga" eventType="touchUpInside" id="jdw-zU-NQQ"/>
-                                            <action selector="geometryType:" destination="3aJ-oQ-iiu" eventType="touchUpInside" id="kLm-Qi-Rem"/>
-                                        </connections>
-                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Geometry Type:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QA8-8f-kqr">
                                         <rect key="frame" x="16" y="271" width="121" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uba-1c-e6S" userLabel="GeometryTypeButton">
+                                        <rect key="frame" x="159" y="267" width="433" height="30"/>
+                                        <state key="normal" title="geometry type">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="geometryType:" destination="3aJ-oQ-iiu" eventType="touchUpInside" id="kLm-Qi-Rem"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Z:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gsv-Ra-F97">
                                         <rect key="frame" x="16" y="309" width="16" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -949,6 +940,52 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xfH-aJ-H5T">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" id="Kbi-40-Wrj" userLabel="CancelButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="x3n-pb-T0M" userLabel="CancelButton">
+                                            <rect key="frame" x="16" y="7" width="48" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Cancel">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="cancelButton:" destination="gvl-cw-nga" eventType="touchUpInside" id="rhJ-5J-Lnf"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Q0Q-yn-vIk"/>
+                                    <barButtonItem style="plain" id="aTB-0q-tBq" userLabel="TitleButtonItem">
+                                        <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="iwg-Vp-G71" userLabel="TitleButton">
+                                            <rect key="frame" x="95" y="7" width="410" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Create Features">
+                                                <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="h4b-03-ItC"/>
+                                    <barButtonItem style="plain" id="geU-Wp-c7k" userLabel="CreateButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="vQG-0V-jRb" userLabel="CreateButton">
+                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Create">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="createButton:" destination="gvl-cw-nga" eventType="touchUpInside" id="sCg-Rl-Ikb"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                </items>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </toolbar>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JJW-Pd-zLn">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
@@ -1030,52 +1067,6 @@
                                     <constraint firstItem="70O-pm-3hN" firstAttribute="top" secondItem="Dow-7j-Gvn" secondAttribute="bottom" constant="8" symbolic="YES" id="tvU-YE-xfu"/>
                                 </constraints>
                             </scrollView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xfH-aJ-H5T">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
-                                <items>
-                                    <barButtonItem style="plain" id="Kbi-40-Wrj" userLabel="CancelButtonItem">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="x3n-pb-T0M" userLabel="CancelButton">
-                                            <rect key="frame" x="16" y="7" width="48" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Cancel">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="cancelButton:" destination="gvl-cw-nga" eventType="touchUpInside" id="rhJ-5J-Lnf"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Q0Q-yn-vIk"/>
-                                    <barButtonItem style="plain" id="aTB-0q-tBq" userLabel="TitleButtonItem">
-                                        <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="iwg-Vp-G71" userLabel="TitleButton">
-                                            <rect key="frame" x="95" y="7" width="410" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Create Features">
-                                                <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="h4b-03-ItC"/>
-                                    <barButtonItem style="plain" id="geU-Wp-c7k" userLabel="CreateButtonItem">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="vQG-0V-jRb" userLabel="CreateButton">
-                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Create">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="createButton:" destination="gvl-cw-nga" eventType="touchUpInside" id="sCg-Rl-Ikb"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                </items>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
-                                        <integer key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1228,27 +1219,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6rx-Si-LmG">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
-                                <subviews>
-                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Qn-Lx-SLH">
-                                        <rect key="frame" x="16" y="0.0" width="568" height="550"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="550" id="tD0-1R-xSs"/>
-                                        </constraints>
-                                        <connections>
-                                            <segue destination="qj0-zd-Hg5" kind="embed" identifier="loadTiles" id="AFX-xb-2xo"/>
-                                        </connections>
-                                    </containerView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="5Qn-Lx-SLH" firstAttribute="top" secondItem="6rx-Si-LmG" secondAttribute="top" id="3fT-bE-Snn"/>
-                                    <constraint firstAttribute="centerX" secondItem="5Qn-Lx-SLH" secondAttribute="centerX" id="3iY-Wf-7fA"/>
-                                    <constraint firstAttribute="trailing" secondItem="5Qn-Lx-SLH" secondAttribute="trailing" constant="16" id="9qe-r1-B1Z"/>
-                                    <constraint firstItem="5Qn-Lx-SLH" firstAttribute="leading" secondItem="6rx-Si-LmG" secondAttribute="leading" constant="16" id="DES-AG-ccA"/>
-                                    <constraint firstAttribute="bottom" secondItem="5Qn-Lx-SLH" secondAttribute="bottom" id="zO9-SJ-qg3"/>
-                                </constraints>
-                            </scrollView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WR2-mv-isD">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
                                 <items>
@@ -1260,7 +1230,6 @@
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="cancelButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="t9s-5V-5Lv"/>
                                                 <action selector="cancelButton:" destination="KPw-P3-KBd" eventType="touchUpInside" id="ynH-Gr-81a"/>
                                             </connections>
                                         </button>
@@ -1285,7 +1254,6 @@
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="createButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="Qrn-8w-FmW"/>
                                                 <action selector="loadButton:" destination="KPw-P3-KBd" eventType="touchUpInside" id="Nr7-37-zGc"/>
                                             </connections>
                                         </button>
@@ -1297,6 +1265,27 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </toolbar>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6rx-Si-LmG">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Qn-Lx-SLH">
+                                        <rect key="frame" x="16" y="0.0" width="568" height="550"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="550" id="tD0-1R-xSs"/>
+                                        </constraints>
+                                        <connections>
+                                            <segue destination="qj0-zd-Hg5" kind="embed" identifier="loadTiles" id="AFX-xb-2xo"/>
+                                        </connections>
+                                    </containerView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="5Qn-Lx-SLH" firstAttribute="top" secondItem="6rx-Si-LmG" secondAttribute="top" id="3fT-bE-Snn"/>
+                                    <constraint firstAttribute="centerX" secondItem="5Qn-Lx-SLH" secondAttribute="centerX" id="3iY-Wf-7fA"/>
+                                    <constraint firstAttribute="trailing" secondItem="5Qn-Lx-SLH" secondAttribute="trailing" constant="16" id="9qe-r1-B1Z"/>
+                                    <constraint firstItem="5Qn-Lx-SLH" firstAttribute="leading" secondItem="6rx-Si-LmG" secondAttribute="leading" constant="16" id="DES-AG-ccA"/>
+                                    <constraint firstAttribute="bottom" secondItem="5Qn-Lx-SLH" secondAttribute="bottom" id="zO9-SJ-qg3"/>
+                                </constraints>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1472,9 +1461,6 @@
                                             <state key="normal" title="Cancel">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
-                                            <connections>
-                                                <action selector="cancelButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="dnY-FB-CVo"/>
-                                            </connections>
                                         </button>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="qml-z5-WQq"/>
@@ -1496,9 +1482,6 @@
                                             <state key="normal" title="Edit">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
-                                            <connections>
-                                                <action selector="createButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="Kbz-pg-W64"/>
-                                            </connections>
                                         </button>
                                     </barButtonItem>
                                 </items>
@@ -1688,7 +1671,6 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="preloadedLocations:" destination="gvl-cw-nga" eventType="touchUpInside" id="8ZL-p6-NhK"/>
                                     <action selector="preloadedLocations:" destination="PK1-VY-oRA" eventType="touchUpInside" id="DZW-Un-9Nm"/>
                                 </connections>
                             </button>
@@ -1744,7 +1726,6 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="preloaded:" destination="BbS-qo-Mou" eventType="touchUpInside" id="6J9-Cp-a0c"/>
                                     <action selector="preloadedUrlsButton:" destination="qj0-zd-Hg5" eventType="touchUpInside" id="6i6-BR-6ia"/>
                                 </connections>
                             </button>
@@ -2230,15 +2211,6 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lLv-WC-8J5" userLabel="PolygonFillColorButton">
-                                <rect key="frame" x="115" y="338" width="453" height="30"/>
-                                <state key="normal" title="Black">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="polygonFillColorButton:" destination="Tt7-So-oLd" eventType="touchUpInside" id="ILc-Xw-UIF"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fill Alpha:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IMZ-aC-K1s">
                                 <rect key="frame" x="34" y="375" width="75" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -2253,6 +2225,15 @@
                                     <action selector="polygonFillAlphaChanged:" destination="Tt7-So-oLd" eventType="editingChanged" id="nQh-s9-ZJU"/>
                                 </connections>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lLv-WC-8J5" userLabel="PolygonFillColorButton">
+                                <rect key="frame" x="115" y="338" width="453" height="30"/>
+                                <state key="normal" title="Black">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="polygonFillColorButton:" destination="Tt7-So-oLd" eventType="touchUpInside" id="ILc-Xw-UIF"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -2301,7 +2282,6 @@
                                             </state>
                                             <connections>
                                                 <action selector="cancelButton:" destination="Vw0-mg-T54" eventType="touchUpInside" id="bKO-e7-aaW"/>
-                                                <action selector="cancelButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="wZ2-uC-CdV"/>
                                             </connections>
                                         </button>
                                     </barButtonItem>
@@ -2326,7 +2306,6 @@
                                             </state>
                                             <connections>
                                                 <action selector="createButton:" destination="Vw0-mg-T54" eventType="touchUpInside" id="Axy-zZ-laO"/>
-                                                <action selector="createButton:" destination="PQk-O1-1cc" eventType="touchUpInside" id="bZ8-30-8kv"/>
                                             </connections>
                                         </button>
                                     </barButtonItem>
@@ -2585,11 +2564,11 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="AFX-xb-2xo"/>
-        <segue reference="fV6-n6-geX"/>
+        <segue reference="E1Z-ca-WBX"/>
+        <segue reference="SDT-vo-ke2"/>
+        <segue reference="jHg-uD-xkx"/>
+        <segue reference="Zt4-kZ-Aob"/>
         <segue reference="X4O-rd-xnT"/>
-        <segue reference="wE4-9I-IMh"/>
-        <segue reference="EXh-8z-gcM"/>
-        <segue reference="i8u-ct-hl9"/>
-        <segue reference="eq5-Yc-eqB"/>
+        <segue reference="6XH-Lj-DXW"/>
     </inferredMetricsTieBreakers>
 </document>
