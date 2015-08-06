@@ -53,12 +53,11 @@
     
     if(self.data != nil){
         
-        // TODO configure?
-        NSDictionary * defaultColor = [colorNames objectForKey:@"Black"];
-        
-        NSDictionary * pointColor = defaultColor;
+        NSDictionary * pointColor = nil;
         if(self.data.pointColorName != nil){
             pointColor = [colorNames objectForKey:self.data.pointColorName];
+        }else{
+            pointColor = [colorNames objectForKey:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_POINT]];
         }
         [self setColor:pointColor withTag:TAG_POINT_COLOR];
         
@@ -74,9 +73,11 @@
             [self.pointRadiusTextField setText:[self.data.pointRadius stringValue]];
         }
         
-        NSDictionary * lineColor = defaultColor;
+        NSDictionary * lineColor = nil;
         if(self.data.lineColorName != nil){
             lineColor = [colorNames objectForKey:self.data.lineColorName];
+        }else{
+            lineColor = [colorNames objectForKey:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_LINE]];
         }
         [self setColor:lineColor withTag:TAG_LINE_COLOR];
         
@@ -92,9 +93,11 @@
             [self.lineStrokeTextField setText:[self.data.lineStroke stringValue]];
         }
         
-        NSDictionary * polygonColor = defaultColor;
+        NSDictionary * polygonColor = nil;
         if(self.data.polygonColorName != nil){
             polygonColor = [colorNames objectForKey:self.data.polygonColorName];
+        }else{
+            polygonColor = [colorNames objectForKey:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_POLYGON]];
         }
         [self setColor:polygonColor withTag:TAG_POLYGON_COLOR];
         
@@ -112,9 +115,11 @@
         
         [self.polygonFillSwitch setOn:self.data.polygonFill];
         
-        NSDictionary * polygonFillColor = defaultColor;
+        NSDictionary * polygonFillColor = nil;
         if(self.data.polygonFillColorName != nil){
             polygonFillColor = [colorNames objectForKey:self.data.polygonFillColorName];
+        }else{
+            polygonFillColor = [colorNames objectForKey:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_POLYGON_FILL]];
         }
         [self setColor:polygonFillColor withTag:TAG_POLYGON_FILL_COLOR];
         

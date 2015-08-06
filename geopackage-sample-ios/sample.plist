@@ -52,6 +52,14 @@
 	<string>Polygon Color</string>
 	<key>feature_tiles_draw_polygon_fill_color_label</key>
 	<string>Polygon Fill Color</string>
+	<key>feature_tiles_draw_colors_default_point</key>
+	<string>Black</string>
+	<key>feature_tiles_draw_colors_default_line</key>
+	<string>Black</string>
+	<key>feature_tiles_draw_colors_default_polygon</key>
+	<string>Black</string>
+	<key>feature_tiles_draw_colors_default_polygon_fill</key>
+	<string>Black</string>
 	<key>feature_tiles_draw_colors</key>
 	<array>
 		<dict>
