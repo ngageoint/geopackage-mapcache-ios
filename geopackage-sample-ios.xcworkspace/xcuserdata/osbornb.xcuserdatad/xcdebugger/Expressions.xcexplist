@@ -12,6 +12,9 @@
          contextName = "-[GPKGGeometryData toData]:GPKGGeometryData.m">
       </ContextState>
       <ContextState
+         contextName = "-[GPKGSAddTileOverlayViewController addButton:]:GPKGSAddTileOverlayViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "+[GPKGProjectionFactory getProjectionWithNumber:]:GPKGProjectionFactory.m">
       </ContextState>
       <ContextState
@@ -31,10 +34,16 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[GPKGSDatabases addTable:]:GPKGSDatabases.m">
+      </ContextState>
+      <ContextState
          contextName = "-[GPKGBoundingBox getCenter]:GPKGBoundingBox.m">
       </ContextState>
       <ContextState
          contextName = "-[GPKGFeatureRow setGeometry:]:GPKGFeatureRow.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGSFeatureOverlayTable getValues]:GPKGSFeatureOverlayTable.m">
       </ContextState>
       <ContextState
          contextName = "-[GPKGGeoPackageOverlay loadTileAtPath:result:]:GPKGGeoPackageOverlay.m">
@@ -64,6 +73,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[GPKGSManagerViewController createFeatureTilesViewController:featureOverlayTable:]:GPKGSManagerViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[GPKGUserDao table]:GPKGUserDao.h">
       </ContextState>
       <ContextState
@@ -78,9 +90,6 @@
          contextName = "-[GPKGSManagerViewController clearActive:]:GPKGSManagerViewController.m">
       </ContextState>
       <ContextState
-         contextName = "-[GPKGFeatureDao newRow]:GPKGFeatureDao.m">
-      </ContextState>
-      <ContextState
          contextName = "-[GPKGFeatureTiles drawPointWithBoundingBox:andTransform:andContext:andPoint:]:GPKGFeatureTiles.m">
          <PersistentStrings>
             <PersistentString
@@ -89,7 +98,13 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[GPKGFeatureDao newRow]:GPKGFeatureDao.m">
+      </ContextState>
+      <ContextState
          contextName = "-[GPKGMapShapeConverter toMapPolygonWithPolygon:]:GPKGMapShapeConverter.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGSDatabases getActiveTableCount]:GPKGSDatabases.m">
       </ContextState>
       <ContextState
          contextName = "-[GPKGGeometryData fromData:]:GPKGGeometryData.m">
@@ -98,6 +113,9 @@
                value = "[bytes bytes]">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGSFeatureOverlayTable initWithValues:]:GPKGSFeatureOverlayTable.m">
       </ContextState>
       <ContextState
          contextName = "-[GPKGTableCreator createTable:]:GPKGTableCreator.m">
@@ -125,18 +143,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[GPKGTileGenerator generateTilesWithTileMatrixDao:andTileDao:andContents:andZoomLevel:andTileGrid:andLocalTileGrid:andMatrixWidth:andMatrixHeight:andUpdate:]:GPKGTileGenerator.m">
+         contextName = "-[MasterViewController buttonTapped:]:MasterViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "image.size.width">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[GPKGSMapViewController locationManager:didUpdateToLocation:fromLocation:]:GPKGSMapViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "userLocation.locationd">
+               value = "geomColumn">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -152,10 +162,16 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[MasterViewController buttonTapped:]:MasterViewController.m">
+         contextName = "-[GPKGGeometryData readFlags:]:GPKGGeometryData.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGBoundingBox getMapRect]:GPKGBoundingBox.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGTileGenerator generateTilesWithTileMatrixDao:andTileDao:andContents:andZoomLevel:andTileGrid:andLocalTileGrid:andMatrixWidth:andMatrixHeight:andUpdate:]:GPKGTileGenerator.m">
          <PersistentStrings>
             <PersistentString
-               value = "geomColumn">
+               value = "image.size.width">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -171,13 +187,23 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[GPKGGeometryData readFlags:]:GPKGGeometryData.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[GPKGBoundingBox getMapRect]:GPKGBoundingBox.m">
+         contextName = "-[GPKGSMapViewController locationManager:didUpdateToLocation:fromLocation:]:GPKGSMapViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "userLocation.locationd">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[GPKGSMapViewController displayTilesWithOverlay:andGeoPackage:andContents:andSpecifiedBoundingBox:]:GPKGSMapViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGBoundingBox sizeInMeters]:GPKGBoundingBox.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[lowerLeft distanceFromLocation:upperLeft]">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[WKBByteReader readDouble]:WKBByteReader.m">
@@ -206,6 +232,9 @@
                value = "(PJconsts) self.crs">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[GPKGSDatabase add:]:GPKGSDatabase.m">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

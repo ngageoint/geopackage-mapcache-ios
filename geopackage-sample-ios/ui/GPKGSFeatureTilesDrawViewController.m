@@ -17,6 +17,7 @@
 @property (nonatomic, strong) GPKGSDecimalValidator * alphaValidator;
 @property (nonatomic, strong) GPKGSDecimalValidator * decimalValidator;
 @property (nonatomic, strong) NSNumberFormatter * numberFormatter;
+@property (nonatomic, strong) NSArray * colors;
 
 @end
 
@@ -44,9 +45,22 @@
     [self.polygonStrokeTextField setDelegate:self.decimalValidator];
     [self.polygonFillAlphaTextField setDelegate:self.alphaValidator];
     
+    self.colors = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS];
+    NSMutableDictionary * colorNames = [[NSMutableDictionary alloc] initWithCapacity:self.colors.count];
+    for(NSDictionary * color in self.colors){
+        [colorNames setObject:color forKey:[color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_NAME]];
+    }
+    
     if(self.data != nil){
         
-        [self.data setPointColor:[UIColor blackColor]];
+        // TODO configure?
+        NSDictionary * defaultColor = [colorNames objectForKey:@"Black"];
+        
+        NSDictionary * pointColor = defaultColor;
+        if(self.data.pointColorName != nil){
+            pointColor = [colorNames objectForKey:self.data.pointColorName];
+        }
+        [self setColor:pointColor withTag:TAG_POINT_COLOR];
         
         if(self.data.pointAlpha == nil){
             self.data.pointAlpha = [NSNumber numberWithInt:[self.pointAlphaTextField.text intValue]];
@@ -60,7 +74,11 @@
             [self.pointRadiusTextField setText:[self.data.pointRadius stringValue]];
         }
         
-        [self.data setLineColor:[UIColor blackColor]];
+        NSDictionary * lineColor = defaultColor;
+        if(self.data.lineColorName != nil){
+            lineColor = [colorNames objectForKey:self.data.lineColorName];
+        }
+        [self setColor:lineColor withTag:TAG_LINE_COLOR];
         
         if(self.data.lineAlpha == nil){
             self.data.lineAlpha = [NSNumber numberWithInt:[self.lineAlphaTextField.text intValue]];
@@ -74,7 +92,11 @@
             [self.lineStrokeTextField setText:[self.data.lineStroke stringValue]];
         }
         
-        [self.data setPolygonColor:[UIColor blackColor]];
+        NSDictionary * polygonColor = defaultColor;
+        if(self.data.polygonColorName != nil){
+            polygonColor = [colorNames objectForKey:self.data.polygonColorName];
+        }
+        [self setColor:polygonColor withTag:TAG_POLYGON_COLOR];
         
         if(self.data.polygonAlpha == nil){
             self.data.polygonAlpha = [NSNumber numberWithInt:[self.polygonAlphaTextField.text intValue]];
@@ -90,7 +112,11 @@
         
         [self.polygonFillSwitch setOn:self.data.polygonFill];
         
-        [self.data setPolygonFillColor:[UIColor blackColor]];
+        NSDictionary * polygonFillColor = defaultColor;
+        if(self.data.polygonFillColorName != nil){
+            polygonFillColor = [colorNames objectForKey:self.data.polygonFillColorName];
+        }
+        [self setColor:polygonFillColor withTag:TAG_POLYGON_FILL_COLOR];
         
         if(self.data.polygonFillAlpha == nil){
             self.data.polygonFillAlpha = [NSNumber numberWithInt:[self.polygonFillAlphaTextField.text intValue]];
@@ -163,48 +189,55 @@
     
     if(buttonIndex >= 0){
     
-        NSArray * colors = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS];
-        if(buttonIndex < [colors count]){
-            UIColor * createdColor = nil;
-            
-            NSDictionary * color = (NSDictionary *)[colors objectAtIndex:buttonIndex];
-            NSString * name = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_NAME];
-            
-            NSNumber * alpha = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_ALPHA];
-            NSNumber * white = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_WHITE];
-            if(white != nil){
-                createdColor = [UIColor colorWithWhite:[white doubleValue] alpha:[alpha doubleValue]];
-            }else{
-                NSNumber * red = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_RED];
-                NSNumber * green = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_GREEN];
-                NSNumber * blue = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_BLUE];
-                createdColor = [UIColor colorWithRed:[red doubleValue] green:[green doubleValue] blue:[blue doubleValue] alpha:[alpha doubleValue]];
-            }
-        
-            switch(alertView.tag){
-                    
-                case TAG_POINT_COLOR:
-                    [self.pointColorButton setTitle:name forState:UIControlStateNormal];
-                    [self.data setPointColor:createdColor];
-                    break;
-                    
-                case TAG_LINE_COLOR:
-                    [self.lineColorButton setTitle:name forState:UIControlStateNormal];
-                    [self.data setLineColor:createdColor];
-                    break;
-                    
-                case TAG_POLYGON_COLOR:
-                    [self.polygonColorButton setTitle:name forState:UIControlStateNormal];
-                    [self.data setPolygonColor:createdColor];
-                    break;
-                    
-                case TAG_POLYGON_FILL_COLOR:
-                    [self.polygonFillColorButton setTitle:name forState:UIControlStateNormal];
-                    [self.data setPolygonFillColor:createdColor];
-                    break;
-            }
-            
+        if(buttonIndex < [self.colors count]){
+            NSDictionary * color = (NSDictionary *)[self.colors objectAtIndex:buttonIndex];
+            [self setColor:color withTag:alertView.tag];
         }
+    }
+}
+
+-(void) setColor: (NSDictionary *) color withTag: (NSInteger) tag{
+    
+    UIColor * createdColor = nil;
+    
+    NSString * name = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_NAME];
+    
+    NSNumber * alpha = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_ALPHA];
+    NSNumber * white = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_WHITE];
+    if(white != nil){
+        createdColor = [UIColor colorWithWhite:[white doubleValue] alpha:[alpha doubleValue]];
+    }else{
+        NSNumber * red = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_RED];
+        NSNumber * green = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_GREEN];
+        NSNumber * blue = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_BLUE];
+        createdColor = [UIColor colorWithRed:[red doubleValue] green:[green doubleValue] blue:[blue doubleValue] alpha:[alpha doubleValue]];
+    }
+    
+    switch(tag){
+            
+        case TAG_POINT_COLOR:
+            [self.pointColorButton setTitle:name forState:UIControlStateNormal];
+            [self.data setPointColor:createdColor];
+            [self.data setPointColorName:name];
+            break;
+            
+        case TAG_LINE_COLOR:
+            [self.lineColorButton setTitle:name forState:UIControlStateNormal];
+            [self.data setLineColor:createdColor];
+            [self.data setLineColorName:name];
+            break;
+            
+        case TAG_POLYGON_COLOR:
+            [self.polygonColorButton setTitle:name forState:UIControlStateNormal];
+            [self.data setPolygonColor:createdColor];
+            [self.data setPolygonColorName:name];
+            break;
+            
+        case TAG_POLYGON_FILL_COLOR:
+            [self.polygonFillColorButton setTitle:name forState:UIControlStateNormal];
+            [self.data setPolygonFillColor:createdColor];
+            [self.data setPolygonFillColorName:name];
+            break;
     }
 }
 
@@ -235,28 +268,8 @@
 
 - (UIAlertView *)buildColorAlertViewWithTitle: (NSString *) title{
     
-    // Basic colors
-    /*
-     + (UIColor *)blackColor;      // 0.0 white
-     + (UIColor *)darkGrayColor;   // 0.333 white
-     + (UIColor *)lightGrayColor;  // 0.667 white
-     + (UIColor *)whiteColor;      // 1.0 white
-     + (UIColor *)grayColor;       // 0.5 white
-     + (UIColor *)redColor;        // 1.0, 0.0, 0.0 RGB
-     + (UIColor *)greenColor;      // 0.0, 1.0, 0.0 RGB
-     + (UIColor *)blueColor;       // 0.0, 0.0, 1.0 RGB
-     + (UIColor *)cyanColor;       // 0.0, 1.0, 1.0 RGB
-     + (UIColor *)yellowColor;     // 1.0, 1.0, 0.0 RGB
-     + (UIColor *)magentaColor;    // 1.0, 0.0, 1.0 RGB
-     + (UIColor *)orangeColor;     // 1.0, 0.5, 0.0 RGB
-     + (UIColor *)purpleColor;     // 0.5, 0.0, 0.5 RGB
-     + (UIColor *)brownColor;      // 0.6, 0.4, 0.2 RGB
-     + (UIColor *)clearColor;      // 0.0 white, 0.0 alpha
-     */
-    
     NSMutableArray * options = [[NSMutableArray alloc] init];
-    NSArray * colors = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS];
-    for(NSDictionary * color in colors){
+    for(NSDictionary * color in self.colors){
         [options addObject:[color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_NAME]];
     }
     

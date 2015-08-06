@@ -454,7 +454,7 @@ const char ConstantKey;
                         [self editTilesTableOption:table];
                         break;
                     case GPKGS_TT_FEATURE_OVERLAY:
-                        [self editFeatureOverlayTableOption:table];
+                        [self editFeatureOverlayTableOption:(GPKGSFeatureOverlayTable *)table];
                         break;
                 }
                 break;
@@ -645,7 +645,7 @@ const char ConstantKey;
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_EDIT_TILES sender:table];
 }
 
--(void) editFeatureOverlayTableOption: (GPKGSTable *) table{
+-(void) editFeatureOverlayTableOption: (GPKGSFeatureOverlayTable *) table{
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_EDIT_TILE_OVERLAY sender:table];
 }
 
@@ -909,6 +909,12 @@ const char ConstantKey;
     }
 }
 
+- (void)editTileOverlayViewController:(GPKGSManagerEditTileOverlayViewController *)controller featureOverlayTable:(GPKGSFeatureOverlayTable *)featureOverlayTable{
+    [self.active removeTable:featureOverlayTable];
+    [self.active addTable:featureOverlayTable];
+    [self updateAndReloadData];
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DOWNLOAD_FILE])
@@ -971,8 +977,10 @@ const char ConstantKey;
         addTileOverlayViewController.manager = self.manager;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_EDIT_TILE_OVERLAY]){
         GPKGSManagerEditTileOverlayViewController *editTileOverlayViewController = segue.destinationViewController;
-        GPKGSTable * table = (GPKGSTable *)sender;
-        // TODO
+        GPKGSFeatureOverlayTable * table = (GPKGSFeatureOverlayTable *)sender;
+        editTileOverlayViewController.delegate = self;
+        editTileOverlayViewController.table = table;
+        editTileOverlayViewController.manager = self.manager;
     }
     
 }

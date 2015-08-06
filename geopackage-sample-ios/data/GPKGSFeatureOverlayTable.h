@@ -9,14 +9,6 @@
 #import "GPKGSFeatureTable.h"
 #import <UIKit/UIKit.h>
 
-extern NSString * const GPKGS_FEATURE_OVERLAY_TABLE_FEATURE_TABLE;
-extern NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MIN_ZOOM;
-extern NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MAX_ZOOM;
-extern NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MIN_LAT;
-extern NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MAX_LAT;
-extern NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MIN_LON;
-extern NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MAX_LON;
-
 @interface GPKGSFeatureOverlayTable : GPKGSFeatureTable
 
 @property (nonatomic, strong) NSString *featureTable;
@@ -27,13 +19,21 @@ extern NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MAX_LON;
 @property (nonatomic) double minLon;
 @property (nonatomic) double maxLon;
 @property (nonatomic, strong) UIColor * pointColor;
+@property (nonatomic, strong) NSString * pointColorName;
+@property (nonatomic) int pointAlpha;
 @property (nonatomic) double pointRadius;
 @property (nonatomic, strong) UIColor * lineColor;
+@property (nonatomic, strong) NSString * lineColorName;
+@property (nonatomic) int lineAlpha;
 @property (nonatomic) double lineStroke;
 @property (nonatomic, strong) UIColor * polygonColor;
+@property (nonatomic, strong) NSString * polygonColorName;
+@property (nonatomic) int polygonAlpha;
 @property (nonatomic) double polygonStroke;
 @property (nonatomic) BOOL polygonFill;
 @property (nonatomic, strong) UIColor * polygonFillColor;
+@property (nonatomic, strong) NSString * polygonFillColorName;
+@property (nonatomic) int polygonFillAlpha;
 
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andFeatureTable: (NSString *) featureTable andGeometryType: (enum WKBGeometryType) geometryType andCount: (int) count;
 

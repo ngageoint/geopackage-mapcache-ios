@@ -38,9 +38,9 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
     self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     
     // Check if indexed
-    GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
+    GPKGGeoPackage * geoPackage = [self.manager open:self.database];
     @try {
-        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.table.name];
+        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.featureTable];
         GPKGFeatureIndexer * indexer = [[GPKGFeatureIndexer alloc] initWithFeatureDao:featureDao];
         self.data.indexed = [indexer isIndexed];
         if(self.data.indexed){
@@ -112,30 +112,32 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
 
 -(void) setBoundingBox{
     
-    GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
-    @try {
-        GPKGContentsDao * contentsDao =  [geoPackage getContentsDao];
-        GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:self.table.name];
-        if(contents != nil){
-            GPKGBoundingBox * boundingBox = [contents getBoundingBox];
-            GPKGProjection * projection = [contentsDao getProjection:contents];
-            
-            GPKGProjectionTransform * webMercatorTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
-            if([projection.epsg intValue] == PROJ_EPSG_WORLD_GEODETIC_SYSTEM){
-                boundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
+    if(self.data.boundingBox == nil){
+        GPKGGeoPackage * geoPackage = [self.manager open:self.database];
+        @try {
+            GPKGContentsDao * contentsDao =  [geoPackage getContentsDao];
+            GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:self.featureTable];
+            if(contents != nil){
+                GPKGBoundingBox * boundingBox = [contents getBoundingBox];
+                GPKGProjection * projection = [contentsDao getProjection:contents];
+                
+                GPKGProjectionTransform * webMercatorTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+                if([projection.epsg intValue] == PROJ_EPSG_WORLD_GEODETIC_SYSTEM){
+                    boundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
+                }
+                GPKGBoundingBox * webMercatorBoundingBox = [webMercatorTransform transformWithBoundingBox:boundingBox];
+                
+                GPKGProjectionTransform * worldGeodeticTransform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                GPKGBoundingBox * worldGeodeticBoundingBox = [worldGeodeticTransform transformWithBoundingBox:webMercatorBoundingBox];
+                self.data.boundingBox = worldGeodeticBoundingBox;
             }
-            GPKGBoundingBox * webMercatorBoundingBox = [webMercatorTransform transformWithBoundingBox:boundingBox];
-            
-            GPKGProjectionTransform * worldGeodeticTransform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
-            GPKGBoundingBox * worldGeodeticBoundingBox = [worldGeodeticTransform transformWithBoundingBox:webMercatorBoundingBox];
-            self.data.boundingBox = worldGeodeticBoundingBox;
         }
-    }
-    @catch (NSException *exception) {
-        // don't preset the bounding box
-    }
-    @finally {
-        [geoPackage close];
+        @catch (NSException *exception) {
+            // don't preset the bounding box
+        }
+        @finally {
+            [geoPackage close];
+        }
     }
     
 }
