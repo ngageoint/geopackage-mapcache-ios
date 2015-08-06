@@ -24,6 +24,8 @@
 
 -(NSInteger) getFeatureOverlayCount;
 
+-(NSInteger) getActiveFeatureOverlayCount;
+
 -(NSArray *) getTiles;
 
 -(NSInteger) getTileCount;
@@ -31,6 +33,8 @@
 -(NSArray *) getTables;
 
 -(NSInteger) getTableCount;
+
+-(NSInteger) getActiveTableCount;
 
 -(void) addFeature: (GPKGSTable *) table;
 

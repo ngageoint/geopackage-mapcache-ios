@@ -65,7 +65,7 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
     [overlayTable setPolygonFillColor:[self.editTileOverlayData.featureTilesDraw getPolygonFillAlphaColor]];
     
     if(self.delegate != nil){
-        [self.delegate createFeatureTilesViewController:self featureOverlayTable:overlayTable];
+        [self.delegate addTileOverlayViewController:self featureOverlayTable:overlayTable];
     }
     
     [self dismissViewControllerAnimated:YES completion:nil];

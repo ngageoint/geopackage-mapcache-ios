@@ -52,6 +52,16 @@
     return [self.featureOverlaysSet count];
 }
 
+-(NSInteger) getActiveFeatureOverlayCount{
+    int count = 0;
+    for(GPKGSTable * table in self.featureOverlaysSet){
+        if(table.active){
+            count++;
+        }
+    }
+    return count;
+}
+
 -(NSArray *) getTiles{
     return [self.tilesSet array];
 }
@@ -70,6 +80,10 @@
 
 -(NSInteger) getTableCount{
     return [self getFeatureCount] + [self getTileCount] + [self getFeatureOverlayCount];
+}
+
+-(NSInteger) getActiveTableCount{
+    return [self getFeatureCount] + [self getTileCount] + [self getActiveFeatureOverlayCount];
 }
 
 -(void) addFeature: (GPKGSTable *) table{

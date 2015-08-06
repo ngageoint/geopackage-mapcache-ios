@@ -14,7 +14,7 @@
 @class GPKGSAddTileOverlayViewController;
 
 @protocol GPKGSAddTileOverlayDelegate <NSObject>
-- (void)createFeatureTilesViewController:(GPKGSAddTileOverlayViewController *)controller featureOverlayTable:(GPKGSFeatureOverlayTable *)featureOverlayTable;
+- (void)addTileOverlayViewController:(GPKGSAddTileOverlayViewController *)controller featureOverlayTable:(GPKGSFeatureOverlayTable *)featureOverlayTable;
 @end
 
 @interface GPKGSAddTileOverlayViewController : UIViewController

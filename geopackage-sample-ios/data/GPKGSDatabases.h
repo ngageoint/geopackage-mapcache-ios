@@ -37,9 +37,13 @@ extern NSString * const GPKGS_TABLE_VALUES_PREFERENCE;
 
 -(void) removeTable: (GPKGSTable *) table;
 
+-(void) removeTable: (GPKGSTable *) table andPreserveOverlays: (BOOL) preserveOverlays;
+
 -(BOOL) isEmpty;
 
--(int) count;
+-(int) getTableCount;
+
+-(int) getActiveTableCount;
 
 -(void) clearActive;
 

@@ -289,10 +289,16 @@ const char ConstantKey;
 - (IBAction)tableActiveChanged:(GPKGSActiveTableSwitch *)sender {
     GPKGSTable * table = sender.table;
     table.active = sender.on;
-    if(table.active){
+    
+    if([table getType] == GPKGS_TT_FEATURE_OVERLAY){
+        [self.active removeTable:table];
         [self.active addTable:table];
     }else{
-        [self.active removeTable:table];
+        if(table.active){
+            [self.active addTable:table];
+        }else{
+            [self.active removeTable:table andPreserveOverlays:true];
+        }
     }
     [self updateClearActiveButton];
 }
@@ -456,11 +462,8 @@ const char ConstantKey;
                 switch([table getType]){
                     case GPKGS_TT_FEATURE:
                     case GPKGS_TT_TILE:
-                        [self deleteTableOption:table];
-                        break;
                     case GPKGS_TT_FEATURE_OVERLAY:
-                        [self.active removeTable:table];
-                        [self updateAndReloadData];
+                        [self deleteTableOption:table];
                         break;
                 }
                 break;
@@ -663,20 +666,33 @@ const char ConstantKey;
 - (void) handleDeleteTableWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex > 0){
         GPKGSTable *table = objc_getAssociatedObject(alertView, &ConstantKey);
-        GPKGGeoPackage * geoPackage = [self.manager open:table.database];
-        @try {
-            [geoPackage deleteUserTable:table.name];
-            [self.active removeTable:table];
-            [self updateAndReloadData];
+        
+        switch([table getType]){
+            case GPKGS_TT_FEATURE:
+            case GPKGS_TT_TILE:
+                {
+                    GPKGGeoPackage * geoPackage = [self.manager open:table.database];
+                    @try {
+                        [geoPackage deleteUserTable:table.name];
+                        [self.active removeTable:table];
+                        [self updateAndReloadData];
+                    }
+                    @catch (NSException *exception) {
+                        [GPKGSUtils showMessageWithDelegate:self
+                                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], table.database, table.name]
+                                                 andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
+                    }
+                    @finally {
+                        [geoPackage close];
+                    }
+                }
+                break;
+            case GPKGS_TT_FEATURE_OVERLAY:
+                [self.active removeTable:table];
+                [self updateAndReloadData];
+                break;
         }
-        @catch (NSException *exception) {
-            [GPKGSUtils showMessageWithDelegate:self
-                                       andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], table.database, table.name]
-                                     andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
-        }
-        @finally {
-            [geoPackage close];
-        }
+        
     }
 }
 
@@ -794,7 +810,7 @@ const char ConstantKey;
 - (IBAction)clearActive:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle:nil
-                          message:[NSString stringWithFormat:@"%@ - %d", [GPKGSProperties getValueOfProperty:GPKGS_PROP_CLEAR_ACTIVE_LABEL], [self.active count]]
+                          message:[NSString stringWithFormat:@"%@ - %d", [GPKGSProperties getValueOfProperty:GPKGS_PROP_CLEAR_ACTIVE_LABEL], [self.active getActiveTableCount]]
                           delegate:self
                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
@@ -811,7 +827,7 @@ const char ConstantKey;
 }
 
 -(void) updateClearActiveButton{
-    if([self.active count] > 0){
+    if([self.active getActiveTableCount] > 0){
         [GPKGSUtils enableButton:self.clearActiveButton];
     }else{
         [GPKGSUtils disableButton:self.clearActiveButton];
@@ -882,9 +898,15 @@ const char ConstantKey;
     }
 }
 
-- (void)createFeatureTilesViewController:(GPKGSAddTileOverlayViewController *)controller featureOverlayTable:(GPKGSFeatureOverlayTable *)featureOverlayTable{
-    [self.active addTable:featureOverlayTable];
-    [self updateAndReloadData];
+- (void)addTileOverlayViewController:(GPKGSAddTileOverlayViewController *)controller featureOverlayTable:(GPKGSFeatureOverlayTable *)featureOverlayTable{
+    if([self.active exists:featureOverlayTable]){
+        [GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL]
+                                 andMessage:[NSString stringWithFormat:@"Feature overlay '%@' already exists in database '%@'. Could not create for feature table '%@'", controller.nameValue.text, controller.table.database, controller.table.name]];
+    }else{
+        [self.active addTable:featureOverlayTable];
+        [self updateAndReloadData];
+    }
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{

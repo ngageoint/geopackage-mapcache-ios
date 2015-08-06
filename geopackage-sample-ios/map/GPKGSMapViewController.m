@@ -249,11 +249,13 @@
                 }
              
                 for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
-                    @try {
-                        [self displayFeatureTiles:featureOverlay];
-                    }
-                    @catch (NSException *e) {
-                        NSLog(@"%@", [e description]);
+                    if(featureOverlay.active){
+                        @try {
+                            [self displayFeatureTiles:featureOverlay];
+                        }
+                        @catch (NSException *e) {
+                            NSLog(@"%@", [e description]);
+                        }
                     }
                     if([self updateCanceled:updateId]){
                         break;
@@ -413,10 +415,18 @@
     if(self.tilesBoundingBox == nil){
         self.tilesBoundingBox = boundingBox;
     }else{
-        [self.tilesBoundingBox setMinLongitude:MIN(self.tilesBoundingBox.minLongitude, boundingBox.minLongitude)];
-        [self.tilesBoundingBox setMaxLongitude:MAX(self.tilesBoundingBox.maxLongitude, boundingBox.maxLongitude)];
-        [self.tilesBoundingBox setMinLatitude:MIN(self.tilesBoundingBox.minLatitude, boundingBox.minLatitude)];
-        [self.tilesBoundingBox setMaxLatitude:MAX(self.tilesBoundingBox.maxLatitude, boundingBox.maxLatitude)];
+        if([boundingBox.minLongitude compare:self.tilesBoundingBox.minLongitude] == NSOrderedAscending){
+            [self.tilesBoundingBox setMinLongitude:boundingBox.minLongitude];
+        }
+        if([boundingBox.maxLongitude compare:self.tilesBoundingBox.maxLongitude] == NSOrderedDescending){
+            [self.tilesBoundingBox setMaxLongitude:boundingBox.maxLongitude];
+        }
+        if([boundingBox.minLatitude compare:self.tilesBoundingBox.minLatitude] == NSOrderedAscending){
+            [self.tilesBoundingBox setMinLatitude:boundingBox.minLatitude];
+        }
+        if([boundingBox.maxLatitude compare:self.tilesBoundingBox.maxLatitude] == NSOrderedDescending){
+            [self.tilesBoundingBox setMaxLatitude:boundingBox.maxLatitude];
+        }
     }
     
     dispatch_sync(dispatch_get_main_queue(), ^{
