@@ -10,6 +10,7 @@
 #import "GPKGSTileTable.h"
 #import "GPKGSFeatureTable.h"
 #import "GPKGSFeatureOverlayTable.h"
+#import "GPKGSFeatureTable.h"
 
 NSString * const GPKGS_DATABASES_PREFERENCE = @"databases";
 NSString * const GPKGS_TILE_TABLES_PREFERENCE_SUFFIX = @"_tile_tables";
@@ -103,27 +104,49 @@ static GPKGSDatabases * instance;
 }
 
 -(void) removeTable: (GPKGSTable *) table{
+    [self removeTable:table andPreserveOverlays:false];
+}
+
+-(void) removeTable: (GPKGSTable *) table andPreserveOverlays: (BOOL) preserveOverlays{
     GPKGSDatabase * database = [self.databases objectForKey:table.database];
     if(database != nil){
         [database remove:table];
         [self removeTableFromPreferences:table];
         if([database isEmpty]){
             [self.databases removeObjectForKey:database.name];
-            [self removeDatabaseFromPreferences:database.name andPreserveOverlays:false];
+            [self removeDatabaseFromPreferences:database.name andPreserveOverlays:preserveOverlays];
+        }
+        if(!preserveOverlays && [table getType] == GPKGS_TT_FEATURE){
+            NSMutableArray * deleteFeatureOverlays = [[NSMutableArray alloc] init];
+            for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
+                if([featureOverlay.featureTable isEqualToString:table.name]){
+                    [deleteFeatureOverlays addObject:featureOverlay];
+                }
+            }
+            for(GPKGSFeatureOverlayTable * featureOverlay in deleteFeatureOverlays){
+                [self removeTable:featureOverlay];
+            }
         }
         self.modified = true;
     }
 }
 
 -(BOOL) isEmpty{
-    return [self count] == 0;
+    return [self getTableCount] == 0;
 }
 
--(int) count{
+-(int) getTableCount{
     int count = 0;
-    for(GPKGSTable * database in [self.databases allValues]){
-        GPKGSDatabase * db = [self.databases objectForKey:database.name];
-        count += [db getTableCount];
+    for(GPKGSDatabase * database in [self.databases allValues]){
+        count += [database getTableCount];
+    }
+    return count;
+}
+
+-(int) getActiveTableCount{
+    int count = 0;
+    for(GPKGSDatabase * database in [self.databases allValues]){
+        count += [database getActiveTableCount];
     }
     return count;
 }
