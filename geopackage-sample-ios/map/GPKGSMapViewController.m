@@ -339,6 +339,14 @@
         CLLocationCoordinate2D center = [bbox getCenter];
         MKCoordinateRegion expandedRegion = MKCoordinateRegionMakeWithDistance(center, expandedHeight, expandedWidth);
         
+        double latitudeRange = expandedRegion.span.latitudeDelta / 2.0;
+        double longitudeRange = expandedRegion.span.longitudeDelta / 2.0;
+        
+        if(expandedRegion.center.latitude + latitudeRange > 90.0 || expandedRegion.center.latitude - latitudeRange < -90.0
+           || expandedRegion.center.longitude + longitudeRange > 180.0 || expandedRegion.center.longitude - longitudeRange < -180.0){
+            expandedRegion = MKCoordinateRegionMake(self.mapView.centerCoordinate, MKCoordinateSpanMake(180, 360));
+        }
+        
         [self.mapView setRegion:expandedRegion animated:true];
     }
 }
@@ -404,7 +412,13 @@
     GPKGProjection * projection = [contentsDao getProjection:contents];
     
     GPKGProjectionTransform * transformToWebMercator = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
-    GPKGBoundingBox * webMercatorBoundingBox = [transformToWebMercator transformWithBoundingBox:[contents getBoundingBox]];
+    
+    GPKGBoundingBox * contentsBoundingBox = [contents getBoundingBox];
+    if([projection.epsg intValue] == PROJ_EPSG_WORLD_GEODETIC_SYSTEM){
+        contentsBoundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:contentsBoundingBox];
+    }
+
+    GPKGBoundingBox * webMercatorBoundingBox = [transformToWebMercator transformWithBoundingBox:contentsBoundingBox];
     GPKGProjectionTransform * transform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
     GPKGBoundingBox * boundingBox = [transform transformWithBoundingBox:webMercatorBoundingBox];
     
