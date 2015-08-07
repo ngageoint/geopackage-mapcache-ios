@@ -1,8 +1,6 @@
 .DS_Store
-
-GeoPackage.xcworkspace
-
+*.xcworkspace
 Podfile.lock
-
 Pods
-
+xcuserdata/
+*.swp
