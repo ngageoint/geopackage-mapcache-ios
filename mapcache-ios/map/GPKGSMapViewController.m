@@ -23,6 +23,7 @@
 #import "GPKGFeatureTiles.h"
 #import "GPKGFeatureIndexer.h"
 #import "GPKGFeatureOverlay.h"
+#import "GPKGSUtils.h"
 
 @interface GPKGSMapViewController ()
 
@@ -35,6 +36,17 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (nonatomic, strong) NSUserDefaults * settings;
 @property (atomic) int updateCountId;
+@property (nonatomic) BOOL boundingBoxMode;
+@property (nonatomic) BOOL editFeaturesMode;
+@property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
+@property (nonatomic) CLLocationCoordinate2D boundingBoxEndCorner;
+@property (nonatomic, strong) MKPolygon * boundingBox;
+@property (nonatomic) BOOL drawing;
+@property (nonatomic, strong) NSString * editFeaturesDatabase;
+@property (nonatomic, strong) NSString * editFeaturesTable;
+@property (nonatomic, strong) UIColor * boundingBoxColor;
+@property (nonatomic) double boundingBoxLineWidth;
+@property (nonatomic, strong) UIColor * boundingBoxFillColor;
 
 @end
 
@@ -55,6 +67,18 @@
     self.locationManager = [[CLLocationManager alloc] init];
     [self.locationManager setDelegate:self];
     [self.locationManager requestWhenInUseAuthorization];
+    [self resetBoundingBox];
+    [self resetEditFeatures];
+    [self.mapView addGestureRecognizer:[[UILongPressGestureRecognizer alloc]
+                                        initWithTarget:self action:@selector(longPressGesture:)]];
+    self.boundingBoxStartCorner = kCLLocationCoordinate2DInvalid;
+    self.boundingBoxEndCorner = kCLLocationCoordinate2DInvalid;
+    
+    self.boundingBoxColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_COLOR]];
+    self.boundingBoxLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_LINE_WIDTH] doubleValue];
+    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL]){
+        self.boundingBoxFillColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
+    }
 }
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -62,9 +86,38 @@
     
     if(self.active.modified){
         [self.active setModified:false];
-        // TODO
+        [self resetBoundingBox];
+        [self resetEditFeatures];
         [self updateInBackgroundWithZoom:true];
     }
+}
+
+- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id)overlay {
+    MKOverlayRenderer * rendered = nil;
+    if ([overlay isKindOfClass:[MKPolygon class]]) {
+        if(self.drawing){
+            MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
+            polygonRenderer.strokeColor = self.boundingBoxColor;
+            polygonRenderer.lineWidth = self.boundingBoxLineWidth;
+            if(self.boundingBoxFillColor != nil){
+                polygonRenderer.fillColor = self.boundingBoxFillColor;
+            }
+            rendered = polygonRenderer;
+        }else{
+            MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
+            polygonRenderer.strokeColor = [UIColor blackColor];
+            polygonRenderer.lineWidth = 1.0;
+            rendered = polygonRenderer;
+        }
+    }else if ([overlay isKindOfClass:[MKPolyline class]]) {
+        MKPolylineRenderer * polylineRenderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
+        polylineRenderer.strokeColor = [UIColor blackColor];
+        polylineRenderer.lineWidth = 1.0;
+        rendered = polylineRenderer;
+    }else if ([overlay isKindOfClass:[MKTileOverlay class]]) {
+        rendered = [[MKTileOverlayRenderer alloc] initWithTileOverlay:overlay];
+    }
+    return rendered;
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -79,16 +132,164 @@
     }
 }
 
+-(void) longPressGesture:(UILongPressGestureRecognizer *) longPressGestureRecognizer{
+    
+    CGPoint cgPoint = [longPressGestureRecognizer locationInView:self.mapView];
+    CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
+    
+    if(self.boundingBoxMode){
+    
+        if(longPressGestureRecognizer.state == UIGestureRecognizerStateBegan){
+            
+            // Check to see if editing any of the bounding box corners
+            if (self.boundingBox != nil && CLLocationCoordinate2DIsValid(self.boundingBoxEndCorner)) {
+                
+                double allowableScreenPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_LONG_CLICK_SCREEN_PERCENTAGE] intValue] / 100.0;
+                if([self isWithinDistanceWithPoint:cgPoint andLocation:self.boundingBoxEndCorner andAllowableScreenPercentage:allowableScreenPercentage]){
+                    [self setDrawing:true];
+                }else if([self isWithinDistanceWithPoint:cgPoint andLocation:self.boundingBoxStartCorner andAllowableScreenPercentage:allowableScreenPercentage]){
+                    CLLocationCoordinate2D temp = self.boundingBoxStartCorner;
+                    self.boundingBoxStartCorner = self.boundingBoxEndCorner;
+                    self.boundingBoxEndCorner = temp;
+                    [self setDrawing:true];
+                }else{
+                    CLLocationCoordinate2D corner1 = CLLocationCoordinate2DMake(self.boundingBoxStartCorner.latitude, self.boundingBoxEndCorner.longitude);
+                    CLLocationCoordinate2D corner2 = CLLocationCoordinate2DMake(self.boundingBoxEndCorner.latitude, self.boundingBoxStartCorner.longitude);
+                    if([self isWithinDistanceWithPoint:cgPoint andLocation:corner1 andAllowableScreenPercentage:allowableScreenPercentage]){
+                        self.boundingBoxStartCorner = corner2;
+                        self.boundingBoxEndCorner = corner1;
+                        [self setDrawing:true];
+                    }else if([self isWithinDistanceWithPoint:cgPoint andLocation:corner2 andAllowableScreenPercentage:allowableScreenPercentage]){
+                        self.boundingBoxStartCorner = corner1;
+                        self.boundingBoxEndCorner = corner2;
+                        [self setDrawing:true];
+                    }
+                }
+            }
+            
+            // Start drawing a new polygon
+            if(!self.drawing){
+                if(self.boundingBox != nil){
+                    [self.mapView removeOverlay:self.boundingBox];
+                }
+                self.boundingBoxStartCorner = point;
+                self.boundingBoxEndCorner = point;
+                CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
+                self.boundingBox = [MKPolygon polygonWithCoordinates:points count:4];
+                [self.mapView addOverlay:self.boundingBox];
+                [self setDrawing:true];
+                [self.boundingBoxClearButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_CLEAR_ACTIVE_IMAGE] forState:UIControlStateNormal];
+            }
+            
+        }else{
+            switch(longPressGestureRecognizer.state){
+                case UIGestureRecognizerStateChanged:
+                case UIGestureRecognizerStateEnded:
+                    if(self.boundingBoxMode){
+                        if(self.drawing && self.boundingBox != nil){
+                            self.boundingBoxEndCorner = point;
+                            CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
+                            MKPolygon * newBoundingBox = [MKPolygon polygonWithCoordinates:points count:4];
+                            [self.mapView removeOverlay:self.boundingBox];
+                            [self.mapView addOverlay:newBoundingBox];
+                            self.boundingBox = newBoundingBox;
+                        }
+                        if(longPressGestureRecognizer.state == UIGestureRecognizerStateEnded){
+                            [self setDrawing:false];
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+}
+
+-(BOOL) isWithinDistanceWithPoint: (CGPoint) point andLocation: (CLLocationCoordinate2D) location andAllowableScreenPercentage: (double) allowableScreenPercentage{
+    
+    CGPoint locationPoint = [self.mapView convertCoordinate:location toPointToView:self.mapView];
+    double distance = sqrt(pow(point.x - locationPoint.x, 2) + pow(point.y - locationPoint.y, 2));
+    
+    BOOL withinDistance = distance / MIN(self.mapView.frame.size.width, self.mapView.frame.size.height) <= allowableScreenPercentage;
+    return withinDistance;
+}
+
+-(CLLocationCoordinate2D *) getPolygonPointsWithPoint1: (CLLocationCoordinate2D) point1 andPoint2: (CLLocationCoordinate2D) point2{
+    CLLocationCoordinate2D *coordinates = calloc(4, sizeof(CLLocationCoordinate2D));
+    coordinates[0] = CLLocationCoordinate2DMake(point1.latitude, point1.longitude);
+    coordinates[1] = CLLocationCoordinate2DMake(point1.latitude, point2.longitude);
+    coordinates[2] = CLLocationCoordinate2DMake(point2.latitude, point2.longitude);
+    coordinates[3] = CLLocationCoordinate2DMake(point2.latitude, point1.longitude);
+    return coordinates;
+}
+
 - (IBAction)zoomToActiveButton:(id)sender {
     [self zoomToActive];
 }
 
 - (IBAction)featuresButton:(id)sender {
-    //TODO
+    //TODO features button
 }
 
 - (IBAction)boundingBoxButton:(id)sender {
-    //TODO
+    if(!self.boundingBoxMode){
+        
+        if(self.editFeaturesMode){
+            [self resetEditFeatures];
+            [self updateInBackgroundWithZoom:false];
+        }
+        
+        self.boundingBoxMode = true;
+        [self.downloadTilesButton setHidden:false];
+        [self.featureTilesButton setHidden:false];
+        [self.boundingBoxClearButton setHidden:false];
+        [self.boundingBoxButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_ACTIVE_IMAGE] forState:UIControlStateNormal];
+    }else{
+        [self resetBoundingBox];
+    }
+}
+
+- (IBAction)downloadTilesButton:(id)sender {
+    //TODO download tiles button
+}
+
+- (IBAction)featureTilesButton:(id)sender {
+    //TODO feature tiles button
+}
+
+- (IBAction)boundingBoxClearButton:(id)sender {
+    [self clearBoundingBox];
+}
+
+-(void) resetBoundingBox{
+    self.boundingBoxMode = false;
+    [self.downloadTilesButton setHidden:true];
+    [self.featureTilesButton setHidden:true];
+    [self.boundingBoxClearButton setHidden:true];
+    [self.boundingBoxButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_IMAGE] forState:UIControlStateNormal];
+    [self clearBoundingBox];
+}
+
+-(void) resetEditFeatures{
+    self.editFeaturesMode = false;
+    //TODO reset edit features
+    [self clearEditFeatures];
+}
+
+-(void) clearBoundingBox{
+    [self.boundingBoxClearButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_CLEAR_IMAGE] forState:UIControlStateNormal];
+    if(self.boundingBox != nil){
+        [self.mapView removeOverlay:self.boundingBox];
+    }
+    self.boundingBoxStartCorner = kCLLocationCoordinate2DInvalid;
+    self.boundingBoxEndCorner = kCLLocationCoordinate2DInvalid;
+    self.boundingBox = nil;
+    [self setDrawing:false];
+}
+
+-(void) clearEditFeatures{
+    //TODO clear edit features
 }
 
 - (IBAction)userLocation:(id)sender {
@@ -174,25 +375,6 @@
     }
 }
 
-- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id)overlay {
-    MKOverlayRenderer * rendered = nil;
-    if ([overlay isKindOfClass:[MKTileOverlay class]]) {
-        rendered = [[MKTileOverlayRenderer alloc] initWithTileOverlay:overlay];
-    }else if ([overlay isKindOfClass:[MKPolyline class]]) {
-        MKPolylineRenderer * polylineRenderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
-        polylineRenderer.strokeColor = [UIColor blackColor];
-        polylineRenderer.lineWidth = 1.0;
-        rendered = polylineRenderer;
-    }
-    else if ([overlay isKindOfClass:[MKPolygon class]]) {
-        MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
-        polygonRenderer.strokeColor = [UIColor blackColor];
-        polygonRenderer.lineWidth = 1.0;
-        rendered = polygonRenderer;
-    }
-    return rendered;
-}
-
 -(int) updateInBackgroundWithZoom: (BOOL) zoom{
     
     int updateId = ++self.updateCountId;
@@ -271,15 +453,17 @@
         }
         
         NSMutableDictionary * featureTables = [[NSMutableDictionary alloc] init];
-        // TODO edit feature mode
-        
-        for(GPKGSDatabase * database in [self.active getDatabases]){
-            NSArray * features = [database getFeatures];
-            if([features count] > 0){
-                NSMutableArray * databaseFeatures = [[NSMutableArray alloc] init];
-                [featureTables setObject:databaseFeatures forKey:database.name];
-                for(GPKGSTable * features in [database getFeatures]){
-                    [databaseFeatures addObject:features.name];
+        if(self.editFeaturesMode){
+            // TODO edit feature mode
+        }else{
+            for(GPKGSDatabase * database in [self.active getDatabases]){
+                NSArray * features = [database getFeatures];
+                if([features count] > 0){
+                    NSMutableArray * databaseFeatures = [[NSMutableArray alloc] init];
+                    [featureTables setObject:databaseFeatures forKey:database.name];
+                    for(GPKGSTable * features in [database getFeatures]){
+                        [databaseFeatures addObject:features.name];
+                    }
                 }
             }
         }

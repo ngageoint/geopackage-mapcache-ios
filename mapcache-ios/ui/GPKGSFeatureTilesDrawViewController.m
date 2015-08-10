@@ -48,7 +48,7 @@
     self.colors = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS];
     NSMutableDictionary * colorNames = [[NSMutableDictionary alloc] initWithCapacity:self.colors.count];
     for(NSDictionary * color in self.colors){
-        [colorNames setObject:color forKey:[color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_NAME]];
+        [colorNames setObject:color forKey:[color objectForKey:GPKGS_PROP_COLORS_NAME]];
     }
     
     if(self.data != nil){
@@ -203,20 +203,9 @@
 
 -(void) setColor: (NSDictionary *) color withTag: (NSInteger) tag{
     
-    UIColor * createdColor = nil;
+    UIColor * createdColor = [GPKGSUtils getColor:color];
     
-    NSString * name = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_NAME];
-    
-    NSNumber * alpha = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_ALPHA];
-    NSNumber * white = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_WHITE];
-    if(white != nil){
-        createdColor = [UIColor colorWithWhite:[white doubleValue] alpha:[alpha doubleValue]];
-    }else{
-        NSNumber * red = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_RED];
-        NSNumber * green = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_GREEN];
-        NSNumber * blue = [color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_BLUE];
-        createdColor = [UIColor colorWithRed:[red doubleValue] green:[green doubleValue] blue:[blue doubleValue] alpha:[alpha doubleValue]];
-    }
+    NSString * name = [color objectForKey:GPKGS_PROP_COLORS_NAME];
     
     switch(tag){
             
@@ -275,7 +264,7 @@
     
     NSMutableArray * options = [[NSMutableArray alloc] init];
     for(NSDictionary * color in self.colors){
-        [options addObject:[color objectForKey:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_NAME]];
+        [options addObject:[color objectForKey:GPKGS_PROP_COLORS_NAME]];
     }
     
     UIAlertView *alert = [[UIAlertView alloc]

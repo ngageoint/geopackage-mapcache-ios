@@ -66,6 +66,19 @@ static NSDictionary * properties;
     return value;
 }
 
++(BOOL) getBoolOfProperty: (NSString *) property{
+    
+    [self loadProperties];
+    
+    NSNumber * value = [properties valueForKey:property];
+    
+    if(value == nil){
+        [NSException raise:@"Required Property" format:@"Required property not found: %@", property];
+    }
+    
+    return value.boolValue;
+}
+
 +(void) loadProperties{
     if(properties == nil){
         NSString * propertiesPath = [GPKGIOUtils getPropertyListPathWithName:GPKGS_MAPCACHE_RESOURCES_PROPERTIES];

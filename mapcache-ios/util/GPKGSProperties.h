@@ -18,4 +18,6 @@
 
 +(NSDictionary *) getDictionaryOfProperty: (NSString *) property;
 
++(BOOL) getBoolOfProperty: (NSString *) property;
+
 @end
