@@ -12,5 +12,10 @@
 @interface GPKGSMapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet GPKGSMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIButton *boundingBoxButton;
+@property (weak, nonatomic) IBOutlet UIButton *featuresButton;
+@property (weak, nonatomic) IBOutlet UIButton *downloadTilesButton;
+@property (weak, nonatomic) IBOutlet UIButton *featureTilesButton;
+@property (weak, nonatomic) IBOutlet UIButton *boundingBoxClearButton;
 
 @end

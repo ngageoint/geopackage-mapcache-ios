@@ -23,4 +23,6 @@
 
 +(UIProgressView *) buildProgressBarView;
 
++(UIColor *) getColor: (NSDictionary *) color;
+
 @end

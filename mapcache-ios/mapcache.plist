@@ -225,6 +225,24 @@
 	<string>-180.0</string>
 	<key>bounding_box_default_max_longitude</key>
 	<string>180.0</string>
+	<key>bounding_box_draw_color</key>
+	<dict>
+		<key>white</key>
+		<integer>0</integer>
+		<key>alpha</key>
+		<integer>1</integer>
+	</dict>
+	<key>bounding_box_draw_fill</key>
+	<true/>
+	<key>bounding_box_draw_fill_color</key>
+	<dict>
+		<key>white</key>
+		<string>0</string>
+		<key>alpha</key>
+		<string>.2</string>
+	</dict>
+	<key>bounding_box_draw_line_width</key>
+	<integer>1</integer>
 	<key>geopackage_view_label</key>
 	<string>View</string>
 	<key>geopackage_delete_label</key>
@@ -289,6 +307,8 @@
 	<integer>10</integer>
 	<key>map_tiles_zoom_padding_percentage</key>
 	<integer>0</integer>
+	<key>map_tiles_long_click_screen_percentage</key>
+	<integer>8</integer>
 	<key>map_feature_tiles_zoom_padding_percentage</key>
 	<integer>10</integer>
 	<key>edit_features_geometry_type_label</key>
