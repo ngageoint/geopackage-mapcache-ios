@@ -23,7 +23,10 @@
 
 @property (nonatomic, weak) id <GPKGSCreateFeatureTilesDelegate> delegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) GPKGSTable *table;
+@property (nonatomic, strong) NSString *database;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) GPKGSGenerateTilesData *generateTilesData;
+@property (nonatomic, strong) GPKGSFeatureTilesDrawData *featureTilesDrawData;
 @property (weak, nonatomic) IBOutlet UILabel *warningLabel;
 @property (weak, nonatomic) IBOutlet UITextField *databaseValue;
 @property (weak, nonatomic) IBOutlet UITextField *nameValue;

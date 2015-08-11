@@ -82,6 +82,7 @@
 }
 
 - (IBAction)selectButton:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
     if(self.delegate != nil){
         NSInteger databaseRow = [self.databasePicker selectedRowInComponent:0];
         NSString * database = [self.databases objectAtIndex:databaseRow];
@@ -89,7 +90,6 @@
         NSString * table = [self.tables objectAtIndex:tableRow];
         [self.delegate selectFeatureTableViewController:self database:database table:table request:self.request];
     }
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{

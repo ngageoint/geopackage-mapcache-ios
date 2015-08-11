@@ -27,11 +27,13 @@
 #import "GPKGSDownloadTilesViewController.h"
 #import "GPKGSCreateTilesData.h"
 #import "GPKGSSelectFeatureTableViewController.h"
+#import "GPKGSCreateFeatureTilesViewController.h"
 
 NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 NSString * const GPKGS_MAP_SEG_SELECT_FEATURE_TABLE = @"selectFeatureTable";
 NSString * const GPKGS_MAP_SEG_FEATURE_TILES_REQUEST = @"featureTiles";
 NSString * const GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST = @"editFeatures";
+NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
 
 @interface GPKGSMapViewController ()
 
@@ -89,6 +91,7 @@ NSString * const GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST = @"editFeatures";
     if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL]){
         self.boundingBoxFillColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
     }
+    [self.active setModified:true];
 }
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -721,8 +724,8 @@ NSString * const GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST = @"editFeatures";
 }
 
 - (void)downloadTilesViewController:(GPKGSDownloadTilesViewController *)controller downloadedTiles:(int)count withError: (NSString *) error{
+    self.internalSeg = true;
     if(count > 0){
-        
         GPKGSTable * table = [[GPKGSTileTable alloc] initWithDatabase:controller.databaseValue.text andName:controller.data.name andCount:0];
         [self.active addTable:table];
         
@@ -737,18 +740,33 @@ NSString * const GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST = @"editFeatures";
 }
 
 - (void)selectFeatureTableViewController:(GPKGSSelectFeatureTableViewController *)controller database:(NSString *)database table: (NSString *) table request: (NSString *) request{
-    
+    self.internalSeg = true;
     if([request isEqualToString:GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST]){
         // TODO
     }else if ([request isEqualToString:GPKGS_MAP_SEG_FEATURE_TILES_REQUEST]){
-        // TODO
+        GPKGSTable * dbTable = [[GPKGSTable alloc] initWithDatabase:database andName:table andCount:0];
+        [self performSegueWithIdentifier:GPKGS_MAP_SEG_CREATE_FEATURE_TILES sender:dbTable];
     }
     
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    
+- (void)createFeatureTilesViewController:(GPKGSCreateFeatureTilesViewController *)controller createdTiles:(int)count withError: (NSString *) error{
     self.internalSeg = true;
+    if(count > 0){
+        GPKGSTable * table = [[GPKGSTileTable alloc] initWithDatabase:controller.databaseValue.text andName:controller.nameValue.text andCount:0];
+        [self.active addTable:table];
+        
+        [self updateInBackgroundWithZoom:false];
+        [self.active setModified:true];
+    }
+    if(error != nil){
+        [GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]
+                                 andMessage:[NSString stringWithFormat:@"Error creating feature tiles table '%@' for feature table '%@' in database: '%@'\n\nError: %@", controller.nameValue.text, controller.name, controller.database, error]];
+    }
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if([segue.identifier isEqualToString:GPKGS_MAP_SEG_DOWNLOAD_TILES])
     {
@@ -757,19 +775,7 @@ NSString * const GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST = @"editFeatures";
         downloadTilesViewController.manager = self.manager;
         downloadTilesViewController.data = [[GPKGSCreateTilesData alloc] init];
         if(self.boundingBox != nil){
-            double minLat = 90.0;
-            double minLon = 180.0;
-            double maxLat = -90.0;
-            double maxLon = -180.0;
-            for(int i = 0; i < self.boundingBox.pointCount; i++){
-                MKMapPoint mapPoint = self.boundingBox.points[i];
-                CLLocationCoordinate2D coord = MKCoordinateForMapPoint(mapPoint);
-                minLat = MIN(minLat, coord.latitude);
-                minLon = MIN(minLon, coord.longitude);
-                maxLat = MAX(maxLat, coord.latitude);
-                maxLon = MAX(maxLon, coord.longitude);
-            }
-            GPKGBoundingBox * bbox = [[GPKGBoundingBox alloc]initWithMinLongitudeDouble:minLon andMaxLongitudeDouble:maxLon andMinLatitudeDouble:minLat andMaxLatitudeDouble:maxLat];
+            GPKGBoundingBox * bbox =  [self buildBoundingBox];
             [downloadTilesViewController.data.loadTiles.generateTiles setBoundingBox:bbox];
         }
     } else if([segue.identifier isEqualToString:GPKGS_MAP_SEG_SELECT_FEATURE_TABLE]){
@@ -778,7 +784,37 @@ NSString * const GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST = @"editFeatures";
         selectFeatureTableViewController.manager = self.manager;
         selectFeatureTableViewController.active = self.active;
         selectFeatureTableViewController.request = self.segRequest;
+    } else if([segue.identifier isEqualToString:GPKGS_MAP_SEG_CREATE_FEATURE_TILES]){
+        GPKGSCreateFeatureTilesViewController *createFeatureTilesViewController = segue.destinationViewController;
+        GPKGSTable * table = (GPKGSTable *)sender;
+        createFeatureTilesViewController.delegate = self;
+        createFeatureTilesViewController.database = table.database;
+        createFeatureTilesViewController.name = table.name;
+        createFeatureTilesViewController.manager = self.manager;
+        createFeatureTilesViewController.featureTilesDrawData = [[GPKGSFeatureTilesDrawData alloc] init];
+        createFeatureTilesViewController.generateTilesData =  [[GPKGSGenerateTilesData alloc] init];
+        if(self.boundingBox != nil){
+            GPKGBoundingBox * bbox =  [self buildBoundingBox];
+            [createFeatureTilesViewController.generateTilesData setBoundingBox:bbox];
+        }
     }
+}
+
+-(GPKGBoundingBox *) buildBoundingBox{
+    double minLat = 90.0;
+    double minLon = 180.0;
+    double maxLat = -90.0;
+    double maxLon = -180.0;
+    for(int i = 0; i < self.boundingBox.pointCount; i++){
+        MKMapPoint mapPoint = self.boundingBox.points[i];
+        CLLocationCoordinate2D coord = MKCoordinateForMapPoint(mapPoint);
+        minLat = MIN(minLat, coord.latitude);
+        minLon = MIN(minLon, coord.longitude);
+        maxLat = MAX(maxLat, coord.latitude);
+        maxLon = MAX(maxLon, coord.longitude);
+    }
+    GPKGBoundingBox * bbox = [[GPKGBoundingBox alloc]initWithMinLongitudeDouble:minLon andMaxLongitudeDouble:maxLon andMinLatitudeDouble:minLat andMaxLatitudeDouble:maxLat];
+    return bbox;
 }
 
 @end

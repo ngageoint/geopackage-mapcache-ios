@@ -902,7 +902,7 @@ const char ConstantKey;
     if(error != nil){
         [GPKGSUtils showMessageWithDelegate:self
                                    andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]
-                                 andMessage:[NSString stringWithFormat:@"Error creating feature tiles table '%@' for feature table '%@' in database: '%@'\n\nError: %@", controller.nameValue.text, controller.table.name, controller.table.database, error]];
+                                 andMessage:[NSString stringWithFormat:@"Error creating feature tiles table '%@' for feature table '%@' in database: '%@'\n\nError: %@", controller.nameValue.text, controller.name, controller.database, error]];
     }
 }
 
@@ -975,8 +975,11 @@ const char ConstantKey;
         GPKGSCreateFeatureTilesViewController *createFeatureTilesViewController = segue.destinationViewController;
         GPKGSTable * table = (GPKGSTable *)sender;
         createFeatureTilesViewController.delegate = self;
-        createFeatureTilesViewController.table = table;
+        createFeatureTilesViewController.database = table.database;
+        createFeatureTilesViewController.name = table.name;
         createFeatureTilesViewController.manager = self.manager;
+        createFeatureTilesViewController.featureTilesDrawData = [[GPKGSFeatureTilesDrawData alloc] init];
+        createFeatureTilesViewController.generateTilesData =  [[GPKGSGenerateTilesData alloc] init];
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_ADD_TILE_OVERLAY]){
         GPKGSAddTileOverlayViewController *addTileOverlayViewController = segue.destinationViewController;
         GPKGSTable * table = (GPKGSTable *)sender;

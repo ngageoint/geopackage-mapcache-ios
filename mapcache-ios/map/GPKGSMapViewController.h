@@ -10,8 +10,9 @@
 #import "GPKGSMapView.h"
 #import "GPKGSDownloadTilesViewController.h"
 #import "GPKGSSelectFeatureTableViewController.h"
+#import "GPKGSCreateFeatureTilesViewController.h"
 
-@interface GPKGSMapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate, GPKGSDownloadTilesDelegate, GPKGSSelectFeatureTableDelegate>
+@interface GPKGSMapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate, GPKGSDownloadTilesDelegate, GPKGSSelectFeatureTableDelegate, GPKGSCreateFeatureTilesDelegate>
 
 @property (weak, nonatomic) IBOutlet GPKGSMapView *mapView;
 @property (weak, nonatomic) IBOutlet UIButton *boundingBoxButton;

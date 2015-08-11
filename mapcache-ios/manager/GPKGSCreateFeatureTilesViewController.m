@@ -17,14 +17,13 @@
 #import "GPKGTileBoundingBoxUtils.h"
 #import "GPKGSLoadTilesTask.h"
 #import "GPKGSUtils.h"
+#import "GPKGProjectionFactory.h"
 
 NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_GENERATE_TILES = @"generateTiles";
 NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"featureTilesDraw";
 
 @interface GPKGSCreateFeatureTilesViewController ()
 
-@property (nonatomic, strong) GPKGSGenerateTilesData *generateTilesData;
-@property (nonatomic, strong) GPKGSFeatureTilesDrawData *featureTilesDrawData;
 @property (nonatomic) BOOL indexed;
 
 @end
@@ -34,12 +33,12 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.databaseValue setText:self.table.database];
+    [self.databaseValue setText:self.database];
     
     // Check if indexed
-    GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
+    GPKGGeoPackage * geoPackage = [self.manager open:self.database];
     @try {
-        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.table.name];
+        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.name];
         GPKGFeatureIndexer * indexer = [[GPKGFeatureIndexer alloc] initWithFeatureDao:featureDao];
         self.indexed = [indexer isIndexed];
         if(self.indexed){
@@ -54,7 +53,7 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
     }
     
     // Set a default name
-    [self.nameValue setText:[NSString stringWithFormat:@"%@%@", self.table.name, [GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_NAME_SUFFIX]]];
+    [self.nameValue setText:[NSString stringWithFormat:@"%@%@", self.name, [GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_NAME_SUFFIX]]];
     
     UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
@@ -98,8 +97,8 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
             [NSException raise:@"Longitude Range" format:@"Min longitude (%@) can not be larger than max longitude (%@)", boundingBox.minLongitude, boundingBox.maxLongitude];
         }
         
-        GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
-        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.table.name];
+        GPKGGeoPackage * geoPackage = [self.manager open:self.database];
+        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.name];
         
         // Load tiles
         GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithFeatureDao:featureDao];
@@ -153,38 +152,47 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
         generateTilesViewController.data = self.generateTilesData;
     } else if([segue.identifier isEqualToString:GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW]){
         GPKGSFeatureTilesDrawViewController *featureTilesDrawViewController = segue.destinationViewController;
-        self.featureTilesDrawData = [[GPKGSFeatureTilesDrawData alloc] init];
         featureTilesDrawViewController.data = self.featureTilesDrawData;
     }
 }
 
 -(void)setGenerateTilesFields{
     
-    self.generateTilesData = [[GPKGSGenerateTilesData alloc] init];
-    
-    GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
+    GPKGGeoPackage * geoPackage = [self.manager open:self.database];
     @try {
         GPKGContentsDao * contentsDao =  [geoPackage getContentsDao];
-        GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:self.table.name];
+        GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:self.name];
         if(contents != nil){
-            GPKGBoundingBox * boundingBox = [contents getBoundingBox];
-            GPKGProjection * projection = [contentsDao getProjection:contents];
             
-            // Try to find a good zoom starting point
+            GPKGBoundingBox * webMercatorBoundingBox = nil;
+            GPKGBoundingBox * boundingBox = nil;
+            GPKGProjection * projection = nil;
+            if(self.generateTilesData.boundingBox != nil){
+                boundingBox = self.generateTilesData.boundingBox;
+                projection = [GPKGProjectionFactory getProjectionWithInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+            }else{
+                boundingBox = [contents getBoundingBox];
+                projection = [contentsDao getProjection:contents];
+            }
+            
             GPKGProjectionTransform * webMercatorTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
             if([projection.epsg intValue] == PROJ_EPSG_WORLD_GEODETIC_SYSTEM){
                 boundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
             }
-            GPKGBoundingBox * webMercatorBoundingBox = [webMercatorTransform transformWithBoundingBox:boundingBox];
+            webMercatorBoundingBox = [webMercatorTransform transformWithBoundingBox:boundingBox];
+            
+            // Try to find a good zoom starting point
             int zoomLevel = [GPKGTileBoundingBoxUtils getZoomLevelWithWebMercatorBoundingBox:webMercatorBoundingBox];
             int maxZoomLevel = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MAX_ZOOM_DEFAULT] intValue];
             zoomLevel = MAX(0, MIN(zoomLevel, maxZoomLevel - 1));
             self.generateTilesData.minZoom = [NSNumber numberWithInt:zoomLevel];
             self.generateTilesData.maxZoom = [NSNumber numberWithInt:maxZoomLevel];
             
-            GPKGProjectionTransform * worldGeodeticTransform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
-            GPKGBoundingBox * worldGeodeticBoundingBox = [worldGeodeticTransform transformWithBoundingBox:webMercatorBoundingBox];
-            self.generateTilesData.boundingBox = worldGeodeticBoundingBox;
+            if(self.generateTilesData.boundingBox == nil){
+                GPKGProjectionTransform * worldGeodeticTransform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                GPKGBoundingBox * worldGeodeticBoundingBox = [worldGeodeticTransform transformWithBoundingBox:webMercatorBoundingBox];
+                self.generateTilesData.boundingBox = worldGeodeticBoundingBox;
+            }
         }
     }
     @catch (NSException *exception) {
