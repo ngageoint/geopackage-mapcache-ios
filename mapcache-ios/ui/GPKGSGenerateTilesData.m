@@ -15,6 +15,7 @@
     if(self){
         self.compressFormat = GPKG_CF_NONE;
         self.standardWebMercatorFormat = false;
+        self.setZooms = true;
     }
     return self;
 }

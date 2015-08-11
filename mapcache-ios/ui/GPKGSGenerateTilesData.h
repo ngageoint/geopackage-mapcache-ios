@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) NSNumber * minZoom;
 @property (nonatomic, strong) NSNumber * maxZoom;
+@property (nonatomic) BOOL setZooms;
 @property (nonatomic) enum GPKGCompressFormat compressFormat;
 @property (nonatomic, strong) NSNumber * compressQuality;
 @property (nonatomic, strong) NSNumber * compressScale;

@@ -57,12 +57,14 @@ NSString * const GPKGS_LOAD_TILES_SEG_GENERATE_TILES = @"generateTiles";
                     [self.urlTextField setText:urlValue];
                     self.data.url = self.urlTextField.text;
                     
-                    [self.generateTilesViewController.minZoomTextField setText:[defaultMinZoom stringValue]];
-                    [self.data.generateTiles setMinZoom:defaultMinZoom];
-                    [self.generateTilesViewController.maxZoomTextField setText:[defaultMaxZoom stringValue]];
-                    [self.data.generateTiles setMaxZoom:defaultMaxZoom];
-                    
                     [self.generateTilesViewController setAllowedZoomRangeWithMin:[minZoom intValue] andMax:[maxZoom intValue]];
+                    
+                    if(self.data.generateTiles.setZooms){
+                        [self.generateTilesViewController.minZoomTextField setText:[defaultMinZoom stringValue]];
+                        [self.data.generateTiles setMinZoom:defaultMinZoom];
+                        [self.generateTilesViewController.maxZoomTextField setText:[defaultMaxZoom stringValue]];
+                        [self.data.generateTiles setMaxZoom:defaultMaxZoom];
+                    }
                     
                     if(self.delegate != nil){
                         [self.delegate loadTilesViewControllerUrlName:name];
