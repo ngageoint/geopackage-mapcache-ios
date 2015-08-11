@@ -2815,6 +2815,7 @@
                         <outlet property="mapView" destination="au6-Jg-Q0b" id="LDB-4c-Jar"/>
                         <segue destination="xEp-XX-xls" kind="presentation" identifier="downloadTiles" id="Nxh-dH-mcG"/>
                         <segue destination="bCX-O7-low" kind="presentation" identifier="selectFeatureTable" id="mXK-pd-Xb7"/>
+                        <segue destination="Vw0-mg-T54" kind="presentation" identifier="createFeatureTiles" id="CVO-FT-9Hq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oVD-8B-yJy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2844,12 +2845,13 @@
         <image name="search" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="CVO-FT-9Hq"/>
+        <segue reference="fV6-n6-geX"/>
+        <segue reference="jHg-uD-xkx"/>
+        <segue reference="eWo-PS-bO7"/>
         <segue reference="S4V-Zx-x7V"/>
         <segue reference="AFX-xb-2xo"/>
-        <segue reference="E1Z-ca-WBX"/>
-        <segue reference="eWo-PS-bO7"/>
         <segue reference="6XH-Lj-DXW"/>
-        <segue reference="jHg-uD-xkx"/>
         <segue reference="Zt4-kZ-Aob"/>
     </inferredMetricsTieBreakers>
 </document>

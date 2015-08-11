@@ -487,18 +487,6 @@
 			<key>max_lon</key>
 			<string>-104.801516</string>
 		</dict>
-		<dict>
-			<key>label</key>
-			<string>Port-au-Prince</string>
-			<key>min_lat</key>
-			<string>18.498949</string>
-			<key>max_lat</key>
-			<string>18.661896</string>
-			<key>min_lon</key>
-			<string>-72.371578</string>
-			<key>max_lon</key>
-			<string>-72.198246</string>
-		</dict>
 	</array>
 </dict>
 </plist>
