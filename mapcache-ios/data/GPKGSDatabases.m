@@ -58,6 +58,15 @@ static GPKGSDatabases * instance;
     return exists;
 }
 
+-(BOOL) existsWithDatabase: (NSString *) database andTable: (NSString *) table ofType: (enum GPKGSTableType) tableType{
+    BOOL exists = false;
+    GPKGSDatabase * db = [self getDatabaseWithName:database];
+    if(database != nil) {
+        exists = [db existsWithTable:table ofType:tableType];
+    }
+    return exists;
+}
+
 -(NSArray *) featureOverlays: (NSString *) database{
     
     NSMutableArray * response = [[NSMutableArray alloc] init];
