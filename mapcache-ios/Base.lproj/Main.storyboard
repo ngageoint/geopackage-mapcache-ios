@@ -1535,10 +1535,10 @@
             </objects>
             <point key="canvasLocation" x="1634" y="1188"/>
         </scene>
-        <!--Map Create Tiles View Controller-->
+        <!--Download Tiles View Controller-->
         <scene sceneID="KYg-Vt-pK4">
             <objects>
-                <viewController title="Map Create Tiles" id="xEp-XX-xls" userLabel="Map Create Tiles View Controller" sceneMemberID="viewController">
+                <viewController title="Map Create Tiles" id="xEp-XX-xls" userLabel="Download Tiles View Controller" customClass="GPKGSDownloadTilesViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="UuK-NP-NR9"/>
                         <viewControllerLayoutGuide type="bottom" id="xWx-px-C0S"/>
@@ -1547,15 +1547,117 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mnr-TU-bG3">
-                                <rect key="frame" x="16" y="193" width="568" height="387"/>
-                                <connections>
-                                    <segue destination="7Ed-ln-jxd" kind="embed" id="S4V-Zx-x7V"/>
-                                </connections>
-                            </containerView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rLX-75-xgl">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" id="EhK-hM-1xr" userLabel="CancelButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yWJ-x8-V3E" userLabel="CancelButton">
+                                            <rect key="frame" x="16" y="7" width="48" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Cancel">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="cancelButton:" destination="xEp-XX-xls" eventType="touchUpInside" id="CdK-kt-rpb"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="AQm-Tj-hdj"/>
+                                    <barButtonItem style="plain" id="2yP-UD-jbh" userLabel="TitleButtonItem">
+                                        <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Y7c-lV-BXA" userLabel="TitleButton">
+                                            <rect key="frame" x="111" y="7" width="378" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Download Tiles">
+                                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="mOS-Lh-m3a"/>
+                                    <barButtonItem style="plain" id="aKA-v8-CDD" userLabel="DownloadButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2x6-GS-8qo" userLabel="DownloadButton">
+                                            <rect key="frame" x="514" y="7" width="70" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Download">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="downloadButton:" destination="xEp-XX-xls" eventType="touchUpInside" id="wXe-7Y-bQ9"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                </items>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </toolbar>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OmH-Iw-vHN">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SoQ-nO-9of">
+                                        <rect key="frame" x="16" y="12" width="78" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kti-mp-m7E" userLabel="DatabaseValue">
+                                        <rect key="frame" x="102" y="8" width="482" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mnr-TU-bG3">
+                                        <rect key="frame" x="16" y="84" width="568" height="452"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="625" id="Ymk-UD-Bno"/>
+                                        </constraints>
+                                        <connections>
+                                            <segue destination="7Ed-ln-jxd" kind="embed" identifier="createTiles" id="S4V-Zx-x7V"/>
+                                        </connections>
+                                    </containerView>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IXf-LZ-sYS" userLabel="Existing">
+                                        <rect key="frame" x="16" y="46" width="60" height="30"/>
+                                        <state key="normal" title="Existing">
+                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="existingButton:" destination="xEp-XX-xls" eventType="touchUpInside" id="ALi-2Y-b59"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="SoQ-nO-9of" firstAttribute="leading" secondItem="OmH-Iw-vHN" secondAttribute="leading" constant="16" id="5OM-JZ-hnN"/>
+                                    <constraint firstItem="SoQ-nO-9of" firstAttribute="top" secondItem="OmH-Iw-vHN" secondAttribute="top" constant="12" id="7z2-HH-dni"/>
+                                    <constraint firstItem="kti-mp-m7E" firstAttribute="centerY" secondItem="SoQ-nO-9of" secondAttribute="centerY" id="MNr-mC-Iiv"/>
+                                    <constraint firstItem="IXf-LZ-sYS" firstAttribute="leading" secondItem="SoQ-nO-9of" secondAttribute="leading" id="NPT-MS-MqB"/>
+                                    <constraint firstItem="IXf-LZ-sYS" firstAttribute="leading" secondItem="Mnr-TU-bG3" secondAttribute="leading" id="OE8-s7-me0"/>
+                                    <constraint firstItem="kti-mp-m7E" firstAttribute="leading" secondItem="SoQ-nO-9of" secondAttribute="trailing" constant="8" id="Qko-xd-n45"/>
+                                    <constraint firstItem="kti-mp-m7E" firstAttribute="trailing" secondItem="Mnr-TU-bG3" secondAttribute="trailing" id="UMj-Ro-QWQ"/>
+                                    <constraint firstItem="Mnr-TU-bG3" firstAttribute="centerX" secondItem="OmH-Iw-vHN" secondAttribute="centerX" id="Zgf-B6-A80"/>
+                                    <constraint firstItem="IXf-LZ-sYS" firstAttribute="top" secondItem="SoQ-nO-9of" secondAttribute="bottom" constant="13" id="iyk-bt-Min"/>
+                                    <constraint firstAttribute="bottom" secondItem="Mnr-TU-bG3" secondAttribute="bottom" id="kFX-5D-rbE"/>
+                                    <constraint firstAttribute="trailing" secondItem="kti-mp-m7E" secondAttribute="trailing" constant="16" id="vR8-rq-Yiz"/>
+                                    <constraint firstItem="Mnr-TU-bG3" firstAttribute="top" secondItem="IXf-LZ-sYS" secondAttribute="bottom" constant="8" id="yLc-Lu-FEQ"/>
+                                </constraints>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="rLX-75-xgl" secondAttribute="trailing" id="FPa-kV-65t"/>
+                            <constraint firstItem="rLX-75-xgl" firstAttribute="leading" secondItem="3bm-ul-WGG" secondAttribute="leading" id="QUJ-eX-JdG"/>
+                            <constraint firstItem="xWx-px-C0S" firstAttribute="top" secondItem="OmH-Iw-vHN" secondAttribute="bottom" id="Rny-ZZ-JXh"/>
+                            <constraint firstItem="OmH-Iw-vHN" firstAttribute="trailing" secondItem="rLX-75-xgl" secondAttribute="trailing" id="cf9-mb-8ad"/>
+                            <constraint firstItem="rLX-75-xgl" firstAttribute="top" secondItem="UuK-NP-NR9" secondAttribute="bottom" id="fLn-w3-xJ8"/>
+                            <constraint firstAttribute="centerX" secondItem="OmH-Iw-vHN" secondAttribute="centerX" id="kYR-yp-IvU"/>
+                            <constraint firstItem="OmH-Iw-vHN" firstAttribute="leading" secondItem="rLX-75-xgl" secondAttribute="leading" id="uxs-dt-ouA"/>
+                            <constraint firstItem="OmH-Iw-vHN" firstAttribute="top" secondItem="rLX-75-xgl" secondAttribute="bottom" id="wPS-W5-9gQ"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="databaseValue" destination="kti-mp-m7E" id="x8w-UJ-CLL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6PB-Kx-RNO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2593,7 +2695,7 @@
                         <outlet property="featureTilesButton" destination="LtT-kq-huU" id="Ne2-Cb-BAu"/>
                         <outlet property="featuresButton" destination="E1n-ne-vUV" id="VTt-51-cqy"/>
                         <outlet property="mapView" destination="au6-Jg-Q0b" id="LDB-4c-Jar"/>
-                        <segue destination="xEp-XX-xls" kind="presentation" id="Nxh-dH-mcG"/>
+                        <segue destination="xEp-XX-xls" kind="presentation" identifier="downloadTiles" id="Nxh-dH-mcG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oVD-8B-yJy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2626,9 +2728,9 @@
         <segue reference="S4V-Zx-x7V"/>
         <segue reference="AFX-xb-2xo"/>
         <segue reference="E1Z-ca-WBX"/>
+        <segue reference="eWo-PS-bO7"/>
         <segue reference="6XH-Lj-DXW"/>
-        <segue reference="eq5-Yc-eqB"/>
-        <segue reference="i8u-ct-hl9"/>
+        <segue reference="jHg-uD-xkx"/>
         <segue reference="Zt4-kZ-Aob"/>
     </inferredMetricsTieBreakers>
 </document>

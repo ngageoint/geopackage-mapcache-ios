@@ -126,9 +126,9 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void) onLoadTilesFailure: (NSString *) result{
+-(void) onLoadTilesFailure: (NSString *) result withCount:(int)count{
     if(self.delegate != nil){
-        [self.delegate createManagerTilesViewController:self createdTiles:0 withError:result];
+        [self.delegate createManagerTilesViewController:self createdTiles:count withError:result];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }

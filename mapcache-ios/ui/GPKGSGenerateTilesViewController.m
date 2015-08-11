@@ -76,6 +76,14 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
 -(void) setAllowedZoomRangeWithMin: (int) minZoom andMax: (int) maxZoom{
     [self.zoomValidator setMin:[[NSDecimalNumber alloc] initWithInt:minZoom]];
     [self.zoomValidator setMax:[[NSDecimalNumber alloc] initWithInt:maxZoom]];
+    if(minZoom > [self.minZoomTextField.text intValue]){
+        [self.minZoomTextField setText:[NSString stringWithFormat:@"%d", minZoom]];
+        self.data.minZoom = [NSNumber numberWithInt:minZoom];
+    }
+    if(maxZoom < [self.maxZoomTextField.text intValue]){
+        [self.maxZoomTextField setText:[NSString stringWithFormat:@"%d", maxZoom]];
+        self.data.maxZoom = [NSNumber numberWithInt:maxZoom];
+    }
 }
 
 - (IBAction)minZoomChanged:(id)sender {

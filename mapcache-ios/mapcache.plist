@@ -211,6 +211,10 @@
 			<real>1</real>
 		</dict>
 	</array>
+	<key>map_create_tiles_existing_geopackage_dialog_label</key>
+	<string>GeoPackages</string>
+	<key>map_create_tiles_dialog_label</key>
+	<string>Download Tiles</string>
 	<key>edit_feature_overlay_index_validation</key>
 	<string>√ Table is indexed</string>
 	<key>edit_feature_overlay_index_warning</key>

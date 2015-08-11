@@ -203,9 +203,9 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void) onLoadTilesFailure: (NSString *) result{
+-(void) onLoadTilesFailure: (NSString *) result withCount:(int)count{
     if(self.delegate != nil){
-        [self.delegate createFeatureTilesViewController:self createdTiles:0 withError:result];
+        [self.delegate createFeatureTilesViewController:self createdTiles:count withError:result];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }

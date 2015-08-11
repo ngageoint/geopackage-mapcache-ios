@@ -24,6 +24,10 @@
 #import "GPKGFeatureIndexer.h"
 #import "GPKGFeatureOverlay.h"
 #import "GPKGSUtils.h"
+#import "GPKGSDownloadTilesViewController.h"
+#import "GPKGSCreateTilesData.h"
+
+NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 
 @interface GPKGSMapViewController ()
 
@@ -47,6 +51,7 @@
 @property (nonatomic, strong) UIColor * boundingBoxColor;
 @property (nonatomic) double boundingBoxLineWidth;
 @property (nonatomic, strong) UIColor * boundingBoxFillColor;
+@property (nonatomic) BOOL internalSeg;
 
 @end
 
@@ -84,18 +89,22 @@
 - (void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if(self.active.modified){
-        [self.active setModified:false];
-        [self resetBoundingBox];
-        [self resetEditFeatures];
-        [self updateInBackgroundWithZoom:true];
+    if(self.internalSeg){
+        self.internalSeg = false;
+    }else{
+        if(self.active.modified){
+            [self.active setModified:false];
+            [self resetBoundingBox];
+            [self resetEditFeatures];
+            [self updateInBackgroundWithZoom:true];
+        }
     }
 }
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id)overlay {
     MKOverlayRenderer * rendered = nil;
     if ([overlay isKindOfClass:[MKPolygon class]]) {
-        if(self.drawing){
+        if(self.drawing || (self.boundingBox != nil && self.boundingBox == overlay)){
             MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
             polygonRenderer.strokeColor = self.boundingBoxColor;
             polygonRenderer.lineWidth = self.boundingBoxLineWidth;
@@ -251,7 +260,7 @@
 }
 
 - (IBAction)downloadTilesButton:(id)sender {
-    //TODO download tiles button
+    [self performSegueWithIdentifier:GPKGS_MAP_SEG_DOWNLOAD_TILES sender:self];
 }
 
 - (IBAction)featureTilesButton:(id)sender {
@@ -370,7 +379,16 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     CLLocation * userLocation = self.mapView.userLocation.location;
     if(userLocation != nil){
-        [self.mapView setCenterCoordinate:userLocation.coordinate animated:YES];
+        
+        MKCoordinateRegion region;
+        region.center = self.mapView.userLocation.coordinate;
+        region.span = MKCoordinateSpanMake(0.02, 0.02);
+        
+        region = [self.mapView regionThatFits:region];
+        [self.mapView setRegion:region animated:YES];
+        
+        //[self.mapView setCenterCoordinate:userLocation.coordinate animated:YES];
+        
         [self.locationManager stopUpdatingLocation];
     }
 }
@@ -487,6 +505,10 @@
                 break;
             }
         }
+    }
+    
+    if(self.boundingBox != nil){
+        [self.mapView addOverlay:self.boundingBox];
     }
     
     if(zoom){
@@ -691,14 +713,49 @@
     return maxFeatures;
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)downloadTilesViewController:(GPKGSDownloadTilesViewController *)controller downloadedTiles:(int)count withError: (NSString *) error{
+    if(count > 0){
+        
+        GPKGSTable * table = [[GPKGSTileTable alloc] initWithDatabase:controller.databaseValue.text andName:controller.data.name andCount:0];
+        [self.active addTable:table];
+        
+        [self updateInBackgroundWithZoom:false];
+        [self.active setModified:true];
+    }
+    if(error != nil){
+        [GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_CREATE_TILES_DIALOG_LABEL]
+                                 andMessage:[NSString stringWithFormat:@"Error downloading tiles to table '%@' in database: '%@'\n\nError: %@", controller.data.name, controller.databaseValue.text, error]];
+    }
 }
-*/
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    
+    self.internalSeg = true;
+    
+    if([segue.identifier isEqualToString:GPKGS_MAP_SEG_DOWNLOAD_TILES])
+    {
+        GPKGSDownloadTilesViewController *downloadTilesViewController = segue.destinationViewController;
+        downloadTilesViewController.delegate = self;
+        downloadTilesViewController.manager = self.manager;
+        downloadTilesViewController.data = [[GPKGSCreateTilesData alloc] init];
+        if(self.boundingBox != nil){
+            double minLat = 90.0;
+            double minLon = 180.0;
+            double maxLat = -90.0;
+            double maxLon = -180.0;
+            for(int i = 0; i < self.boundingBox.pointCount; i++){
+                MKMapPoint mapPoint = self.boundingBox.points[i];
+                CLLocationCoordinate2D coord = MKCoordinateForMapPoint(mapPoint);
+                minLat = MIN(minLat, coord.latitude);
+                minLon = MIN(minLon, coord.longitude);
+                maxLat = MAX(maxLat, coord.latitude);
+                maxLon = MAX(maxLon, coord.longitude);
+            }
+            GPKGBoundingBox * bbox = [[GPKGBoundingBox alloc]initWithMinLongitudeDouble:minLon andMaxLongitudeDouble:maxLon andMinLatitudeDouble:minLat andMaxLatitudeDouble:maxLat];
+            [downloadTilesViewController.data.loadTiles.generateTiles setBoundingBox:bbox];
+        }
+    }
+}
 
 @end

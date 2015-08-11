@@ -166,7 +166,7 @@
                 if(self.canceled){
                     [self.callback onLoadTilesCanceled:[self.error description] withCount:count];
                 }else{
-                    [self.callback onLoadTilesFailure:[self.error description]];
+                    [self.callback onLoadTilesFailure:[self.error description] withCount:count];
                 }
             }
         });

@@ -13,7 +13,7 @@
 
 -(void) onLoadTilesCanceled: (NSString *) result withCount: (int) count;
 
--(void) onLoadTilesFailure: (NSString *) result;
+-(void) onLoadTilesFailure: (NSString *) result withCount: (int) count;
 
 -(void) onLoadTilesCompleted: (int) count;
 

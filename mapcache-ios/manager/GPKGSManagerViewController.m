@@ -88,6 +88,15 @@ const char ConstantKey;
     [self update];
 }
 
+- (void) viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    if(self.active.modified){
+        [self.active setModified:false];
+        [self updateAndReloadData];
+    }
+}
+
 - (void) updateAndReloadDataNotification:(NSNotification *) notification
 {
     if ([[notification name] isEqualToString:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION]){

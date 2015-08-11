@@ -107,9 +107,9 @@ NSString * const GPKGS_MANAGER_LOAD_TILES_SEG_LOAD_TILES = @"loadTiles";
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void) onLoadTilesFailure: (NSString *) result{
+-(void) onLoadTilesFailure: (NSString *) result withCount:(int)count{
     if(self.delegate != nil){
-        [self.delegate loadManagerTilesViewController:self loadedTiles:0 withError:result];
+        [self.delegate loadManagerTilesViewController:self loadedTiles:count withError:result];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
