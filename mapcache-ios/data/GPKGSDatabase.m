@@ -126,21 +126,25 @@
 }
 
 -(BOOL) exists: (GPKGSTable *) table{
+    return [self existsWithTable:table.name ofType:[table getType]];
+}
+
+-(BOOL) existsWithTable: (NSString *) table ofType: (enum GPKGSTableType) tableType{
     
     BOOL exists = false;
     
-    switch([table getType]){
+    switch(tableType){
         case GPKGS_TT_FEATURE:
-            exists = [self.featureNamesSet indexOfObject:table.name] != NSNotFound;
+            exists = [self.featureNamesSet indexOfObject:table] != NSNotFound;
             break;
         case GPKGS_TT_TILE:
-            exists = [self.tileNamesSet indexOfObject:table.name] != NSNotFound;
+            exists = [self.tileNamesSet indexOfObject:table] != NSNotFound;
             break;
         case GPKGS_TT_FEATURE_OVERLAY:
-            exists = [self.featureOverlayNamesSet indexOfObject:table.name] != NSNotFound;
+            exists = [self.featureOverlayNamesSet indexOfObject:table] != NSNotFound;
             break;
         default:
-            [NSException raise:@"Unsupported" format:@"Unsupported table type: %u", [table getType]];
+            [NSException raise:@"Unsupported" format:@"Unsupported table type: %u", tableType];
     }
     
     return exists;

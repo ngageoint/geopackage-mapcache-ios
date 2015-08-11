@@ -44,6 +44,8 @@
 
 -(BOOL) exists: (GPKGSTable *) table;
 
+-(BOOL) existsWithTable: (NSString *) table ofType: (enum GPKGSTableType) tableType;
+
 -(void) add:(GPKGSTable *) table;
 
 -(void) remove:(GPKGSTable *) table;

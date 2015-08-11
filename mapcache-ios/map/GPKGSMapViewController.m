@@ -26,8 +26,12 @@
 #import "GPKGSUtils.h"
 #import "GPKGSDownloadTilesViewController.h"
 #import "GPKGSCreateTilesData.h"
+#import "GPKGSSelectFeatureTableViewController.h"
 
 NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
+NSString * const GPKGS_MAP_SEG_SELECT_FEATURE_TABLE = @"selectFeatureTable";
+NSString * const GPKGS_MAP_SEG_FEATURE_TILES_REQUEST = @"featureTiles";
+NSString * const GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST = @"editFeatures";
 
 @interface GPKGSMapViewController ()
 
@@ -52,6 +56,7 @@ NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 @property (nonatomic) double boundingBoxLineWidth;
 @property (nonatomic, strong) UIColor * boundingBoxFillColor;
 @property (nonatomic) BOOL internalSeg;
+@property (nonatomic, strong) NSString * segRequest;
 
 @end
 
@@ -238,7 +243,8 @@ NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 }
 
 - (IBAction)featuresButton:(id)sender {
-    //TODO features button
+    self.segRequest = GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST;
+    [self performSegueWithIdentifier:GPKGS_MAP_SEG_SELECT_FEATURE_TABLE sender:self];
 }
 
 - (IBAction)boundingBoxButton:(id)sender {
@@ -264,7 +270,8 @@ NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 }
 
 - (IBAction)featureTilesButton:(id)sender {
-    //TODO feature tiles button
+    self.segRequest = GPKGS_MAP_SEG_FEATURE_TILES_REQUEST;
+    [self performSegueWithIdentifier:GPKGS_MAP_SEG_SELECT_FEATURE_TABLE sender:self];
 }
 
 - (IBAction)boundingBoxClearButton:(id)sender {
@@ -729,6 +736,16 @@ NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
     }
 }
 
+- (void)selectFeatureTableViewController:(GPKGSSelectFeatureTableViewController *)controller database:(NSString *)database table: (NSString *) table request: (NSString *) request{
+    
+    if([request isEqualToString:GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST]){
+        // TODO
+    }else if ([request isEqualToString:GPKGS_MAP_SEG_FEATURE_TILES_REQUEST]){
+        // TODO
+    }
+    
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     self.internalSeg = true;
@@ -755,6 +772,12 @@ NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
             GPKGBoundingBox * bbox = [[GPKGBoundingBox alloc]initWithMinLongitudeDouble:minLon andMaxLongitudeDouble:maxLon andMinLatitudeDouble:minLat andMaxLatitudeDouble:maxLat];
             [downloadTilesViewController.data.loadTiles.generateTiles setBoundingBox:bbox];
         }
+    } else if([segue.identifier isEqualToString:GPKGS_MAP_SEG_SELECT_FEATURE_TABLE]){
+        GPKGSSelectFeatureTableViewController * selectFeatureTableViewController = segue.destinationViewController;
+        selectFeatureTableViewController.delegate = self;
+        selectFeatureTableViewController.manager = self.manager;
+        selectFeatureTableViewController.active = self.active;
+        selectFeatureTableViewController.request = self.segRequest;
     }
 }
 

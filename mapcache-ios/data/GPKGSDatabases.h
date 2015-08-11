@@ -23,6 +23,8 @@ extern NSString * const GPKGS_TABLE_VALUES_PREFERENCE;
 
 -(BOOL) exists: (GPKGSTable *) table;
 
+-(BOOL) existsWithDatabase: (NSString *) database andTable: (NSString *) table ofType: (enum GPKGSTableType) tableType;
+
 -(NSArray *) featureOverlays: (NSString *) database;
 
 -(GPKGSDatabase *) getDatabaseWithTable:(GPKGSTable *) table;

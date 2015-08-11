@@ -1663,6 +1663,124 @@
             </objects>
             <point key="canvasLocation" x="1634" y="1831"/>
         </scene>
+        <!--Select Feature Table View Controller-->
+        <scene sceneID="eni-pA-CXR">
+            <objects>
+                <viewController id="bCX-O7-low" customClass="GPKGSSelectFeatureTableViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1d5-uP-JPz"/>
+                        <viewControllerLayoutGuide type="bottom" id="Re5-d9-Vuy"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="tcs-bK-18z">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="frf-4a-qt4">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" id="hHh-u7-uAI" userLabel="CancelButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="I6t-X7-Ic5" userLabel="CancelButton">
+                                            <rect key="frame" x="16" y="7" width="48" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Cancel">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="cancel:" destination="bCX-O7-low" eventType="touchUpInside" id="DMP-PM-Kgs"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="O7j-ec-M1t"/>
+                                    <barButtonItem style="plain" id="ilX-SD-y1U" userLabel="TitleButtonItem">
+                                        <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ety-rC-PBm" userLabel="TitleButton">
+                                            <rect key="frame" x="95" y="7" width="410" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Select Feature Table">
+                                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Gox-iG-9A4"/>
+                                    <barButtonItem style="plain" id="g3w-4d-ZkZ" userLabel="OKButtonItem">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="AKa-AW-1NS" userLabel="OKButton">
+                                            <rect key="frame" x="558" y="7" width="26" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="OK">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="selectButton:" destination="bCX-O7-low" eventType="touchUpInside" id="eiL-3S-k3G"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                </items>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </toolbar>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ir-pM-Du2">
+                                <rect key="frame" x="0.0" y="64" width="600" height="546"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DRp-XM-uDi">
+                                        <rect key="frame" x="8" y="8" width="78" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <pickerView tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TDl-Oz-z15" userLabel="Database Picker View">
+                                        <rect key="frame" x="8" y="37" width="580" height="162"/>
+                                    </pickerView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Features:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4oA-uR-GBr">
+                                        <rect key="frame" x="8" y="207" width="72" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <pickerView tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="10z-8j-73e" userLabel="Feature Picker View">
+                                        <rect key="frame" x="8" y="236" width="580" height="162"/>
+                                    </pickerView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="10z-8j-73e" secondAttribute="bottom" constant="148" id="1BY-95-eWJ"/>
+                                    <constraint firstAttribute="trailing" secondItem="10z-8j-73e" secondAttribute="trailing" constant="12" id="26W-hp-6oL"/>
+                                    <constraint firstItem="10z-8j-73e" firstAttribute="top" secondItem="6ir-pM-Du2" secondAttribute="top" constant="236" id="2l5-k8-dPm"/>
+                                    <constraint firstItem="10z-8j-73e" firstAttribute="leading" secondItem="TDl-Oz-z15" secondAttribute="leading" id="A1r-yx-pW0"/>
+                                    <constraint firstItem="10z-8j-73e" firstAttribute="leading" secondItem="6ir-pM-Du2" secondAttribute="leadingMargin" id="KzT-3j-eM8"/>
+                                    <constraint firstItem="4oA-uR-GBr" firstAttribute="top" secondItem="6ir-pM-Du2" secondAttribute="top" constant="207" id="Odp-b7-BmO"/>
+                                    <constraint firstAttribute="centerX" secondItem="10z-8j-73e" secondAttribute="centerX" constant="2" id="ToH-kI-AIp"/>
+                                    <constraint firstAttribute="centerX" secondItem="TDl-Oz-z15" secondAttribute="centerX" constant="2" id="W6T-Zf-FsP"/>
+                                    <constraint firstItem="DRp-XM-uDi" firstAttribute="top" secondItem="6ir-pM-Du2" secondAttribute="top" constant="8" id="Ytj-hN-wxg"/>
+                                    <constraint firstItem="10z-8j-73e" firstAttribute="leading" secondItem="DRp-XM-uDi" secondAttribute="leading" id="ZoD-UD-MEg"/>
+                                    <constraint firstItem="TDl-Oz-z15" firstAttribute="top" secondItem="6ir-pM-Du2" secondAttribute="top" constant="37" id="afh-Wt-doR"/>
+                                    <constraint firstItem="10z-8j-73e" firstAttribute="top" secondItem="4oA-uR-GBr" secondAttribute="bottom" constant="8" symbolic="YES" id="gZQ-WH-y2R"/>
+                                    <constraint firstItem="10z-8j-73e" firstAttribute="leading" secondItem="4oA-uR-GBr" secondAttribute="leading" id="h88-gr-3Np"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="frf-4a-qt4" firstAttribute="leading" secondItem="tcs-bK-18z" secondAttribute="leading" id="0Mj-X4-GA2"/>
+                            <constraint firstItem="frf-4a-qt4" firstAttribute="top" secondItem="1d5-uP-JPz" secondAttribute="bottom" id="6YY-oB-yIt"/>
+                            <constraint firstItem="frf-4a-qt4" firstAttribute="leading" secondItem="6ir-pM-Du2" secondAttribute="leading" id="GaT-kt-fcm"/>
+                            <constraint firstItem="6ir-pM-Du2" firstAttribute="top" secondItem="frf-4a-qt4" secondAttribute="bottom" id="Nlr-5j-waW"/>
+                            <constraint firstItem="Re5-d9-Vuy" firstAttribute="top" secondItem="6ir-pM-Du2" secondAttribute="bottom" constant="-10" id="UOK-wc-hsR"/>
+                            <constraint firstAttribute="trailing" secondItem="frf-4a-qt4" secondAttribute="trailing" id="cvf-g2-hD8"/>
+                            <constraint firstItem="frf-4a-qt4" firstAttribute="trailing" secondItem="6ir-pM-Du2" secondAttribute="trailing" id="ehK-Hv-SCg"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="databasePicker" destination="TDl-Oz-z15" id="E8Z-vF-k18"/>
+                        <outlet property="featurePicker" destination="10z-8j-73e" id="Aj1-Rk-n4b"/>
+                        <outlet property="okButton" destination="AKa-AW-1NS" id="CD0-GO-jky"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YNc-zd-QPN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1634" y="2535"/>
+        </scene>
         <!--Create Tiles View Controller-->
         <scene sceneID="Nsy-ws-cTQ">
             <objects>
@@ -2696,6 +2814,7 @@
                         <outlet property="featuresButton" destination="E1n-ne-vUV" id="VTt-51-cqy"/>
                         <outlet property="mapView" destination="au6-Jg-Q0b" id="LDB-4c-Jar"/>
                         <segue destination="xEp-XX-xls" kind="presentation" identifier="downloadTiles" id="Nxh-dH-mcG"/>
+                        <segue destination="bCX-O7-low" kind="presentation" identifier="selectFeatureTable" id="mXK-pd-Xb7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oVD-8B-yJy" userLabel="First Responder" sceneMemberID="firstResponder"/>
