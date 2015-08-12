@@ -20,5 +20,13 @@
 @property (weak, nonatomic) IBOutlet UIButton *downloadTilesButton;
 @property (weak, nonatomic) IBOutlet UIButton *featureTilesButton;
 @property (weak, nonatomic) IBOutlet UIButton *boundingBoxClearButton;
+@property (weak, nonatomic) IBOutlet UIButton *drawPointButton;
+@property (weak, nonatomic) IBOutlet UIButton *drawLineButton;
+@property (weak, nonatomic) IBOutlet UIButton *drawPolygonButton;
+@property (weak, nonatomic) IBOutlet UIButton *editFeaturesConfirmButton;
+@property (weak, nonatomic) IBOutlet UIButton *editFeaturesClearButton;
+@property (weak, nonatomic) IBOutlet UIButton *drawPolygonHoleButton;
+@property (weak, nonatomic) IBOutlet UIButton *editPolygonHoleConfirmButton;
+@property (weak, nonatomic) IBOutlet UIButton *editPolygonHoleClearButton;
 
 @end

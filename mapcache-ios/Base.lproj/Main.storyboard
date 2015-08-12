@@ -2765,8 +2765,12 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="au6-Jg-Q0b" customClass="GPKGSMapView">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4vs-Yr-cpM" userLabel="DownloadTilesButton">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4vs-Yr-cpM" userLabel="DownloadTilesButton">
                                 <rect key="frame" x="16" y="79" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="I84-tJ-ltH"/>
+                                    <constraint firstAttribute="height" constant="30" id="clW-31-UoD"/>
+                                </constraints>
                                 <state key="normal" image="MapDownloadTiles">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -2774,8 +2778,12 @@
                                     <action selector="downloadTilesButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="B5J-ca-8l1"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LtT-kq-huU" userLabel="FeatureTilesButton">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LtT-kq-huU" userLabel="FeatureTilesButton">
                                 <rect key="frame" x="62" y="79" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="Hw7-na-G72"/>
+                                    <constraint firstAttribute="height" constant="30" id="bSO-x5-75Q"/>
+                                </constraints>
                                 <state key="normal" image="MapFeatureTiles">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -2783,8 +2791,12 @@
                                     <action selector="featureTilesButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="a2j-9w-4cb"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9hQ-14-GzX" userLabel="BoundingBoxClearButton">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9hQ-14-GzX" userLabel="BoundingBoxClearButton">
                                 <rect key="frame" x="108" y="79" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="0UZ-7Q-sPL"/>
+                                    <constraint firstAttribute="height" constant="30" id="NtG-aT-eZ4"/>
+                                </constraints>
                                 <state key="normal" image="MapClear">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -2792,16 +2804,118 @@
                                     <action selector="boundingBoxClearButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="0z1-93-4db"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aWr-AP-ok1" userLabel="DrawPolygonHoleButton">
+                                <rect key="frame" x="16" y="155" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="bBg-Ss-XsY"/>
+                                    <constraint firstAttribute="width" constant="30" id="iEt-Cz-OAj"/>
+                                </constraints>
+                                <state key="normal" image="MapPolygonHole">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hh1-Cu-SE9" userLabel="EditPolygonHoleConfirmButton">
+                                <rect key="frame" x="62" y="155" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="E67-4p-kUC"/>
+                                    <constraint firstAttribute="width" constant="30" id="HEp-uj-5eo"/>
+                                </constraints>
+                                <state key="normal" image="MapCheck">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TN6-b4-Jdo" userLabel="EditPolygonHoleClearButton">
+                                <rect key="frame" x="108" y="155" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="5cV-RX-0jE"/>
+                                    <constraint firstAttribute="height" constant="30" id="8zf-vj-fme"/>
+                                </constraints>
+                                <state key="normal" image="MapClear">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mKc-sz-UG7" userLabel="DrawPointButton">
+                                <rect key="frame" x="16" y="117" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="429-Ul-aEd"/>
+                                    <constraint firstAttribute="width" constant="30" id="Lsu-Y4-KUx"/>
+                                </constraints>
+                                <state key="normal" image="MapPoint">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JTN-D1-Nru" userLabel="DrawLineButton">
+                                <rect key="frame" x="62" y="117" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="dAc-rO-5I2"/>
+                                    <constraint firstAttribute="height" constant="30" id="up5-a3-dAR"/>
+                                </constraints>
+                                <state key="normal" image="MapPolyline">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FBP-I9-xHZ" userLabel="DrawPolygonButton">
+                                <rect key="frame" x="108" y="117" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="b8O-rD-ncp"/>
+                                    <constraint firstAttribute="width" constant="30" id="ike-iG-ldd"/>
+                                </constraints>
+                                <state key="normal" image="MapPolygon">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ccv-wG-6I8" userLabel="EditFeaturesConfirmButton">
+                                <rect key="frame" x="154" y="117" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="alp-1u-Qf3"/>
+                                    <constraint firstAttribute="width" constant="30" id="gs6-bS-raO"/>
+                                </constraints>
+                                <state key="normal" image="MapCheck">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0YZ-xr-O6r" userLabel="EditFeaturesClearButton">
+                                <rect key="frame" x="200" y="117" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="0lv-Rg-Xn1"/>
+                                    <constraint firstAttribute="height" constant="30" id="Xoc-Rb-j5m"/>
+                                </constraints>
+                                <state key="normal" image="MapClear">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="9hQ-14-GzX" firstAttribute="centerY" secondItem="LtT-kq-huU" secondAttribute="centerY" id="08a-ba-Yha"/>
+                            <constraint firstItem="9hQ-14-GzX" firstAttribute="leading" secondItem="LtT-kq-huU" secondAttribute="trailing" constant="16" id="1Kb-ly-ZE0"/>
+                            <constraint firstItem="FBP-I9-xHZ" firstAttribute="leading" secondItem="JTN-D1-Nru" secondAttribute="trailing" constant="16" id="4bi-vh-ikB"/>
                             <constraint firstItem="xA6-nd-bsP" firstAttribute="leading" secondItem="au6-Jg-Q0b" secondAttribute="leading" id="56Z-Ek-CgL"/>
+                            <constraint firstItem="FBP-I9-xHZ" firstAttribute="centerY" secondItem="mKc-sz-UG7" secondAttribute="centerY" id="74N-h7-4E5"/>
                             <constraint firstItem="xA6-nd-bsP" firstAttribute="leading" secondItem="cxh-GH-L9i" secondAttribute="leading" id="9wl-db-1SZ"/>
+                            <constraint firstItem="JTN-D1-Nru" firstAttribute="leading" secondItem="mKc-sz-UG7" secondAttribute="trailing" constant="16" id="AIr-DT-ECc"/>
                             <constraint firstAttribute="bottom" secondItem="au6-Jg-Q0b" secondAttribute="bottom" id="BKt-pH-hgt"/>
+                            <constraint firstItem="hh1-Cu-SE9" firstAttribute="centerY" secondItem="aWr-AP-ok1" secondAttribute="centerY" id="Cxd-2x-W8M"/>
+                            <constraint firstItem="FBP-I9-xHZ" firstAttribute="centerY" secondItem="0YZ-xr-O6r" secondAttribute="centerY" id="FhA-nT-89T"/>
+                            <constraint firstItem="4vs-Yr-cpM" firstAttribute="leading" secondItem="cxh-GH-L9i" secondAttribute="leadingMargin" id="J5J-Kw-xXo"/>
+                            <constraint firstItem="0YZ-xr-O6r" firstAttribute="leading" secondItem="Ccv-wG-6I8" secondAttribute="trailing" constant="16" id="NE6-ox-oG8"/>
+                            <constraint firstItem="aWr-AP-ok1" firstAttribute="top" secondItem="mKc-sz-UG7" secondAttribute="bottom" constant="8" id="NUI-zJ-CXF"/>
+                            <constraint firstItem="LtT-kq-huU" firstAttribute="leading" secondItem="4vs-Yr-cpM" secondAttribute="trailing" constant="16" id="PPS-xM-b5M"/>
+                            <constraint firstItem="Ccv-wG-6I8" firstAttribute="leading" secondItem="FBP-I9-xHZ" secondAttribute="trailing" constant="16" id="Q4W-1Y-jHU"/>
+                            <constraint firstItem="hh1-Cu-SE9" firstAttribute="centerY" secondItem="TN6-b4-Jdo" secondAttribute="centerY" id="Qep-Tq-n3u"/>
                             <constraint firstItem="au6-Jg-Q0b" firstAttribute="top" secondItem="xA6-nd-bsP" secondAttribute="bottom" id="T0u-dg-7JY"/>
+                            <constraint firstItem="mKc-sz-UG7" firstAttribute="centerX" secondItem="aWr-AP-ok1" secondAttribute="centerX" id="YL9-Bf-mux"/>
                             <constraint firstItem="au6-Jg-Q0b" firstAttribute="trailing" secondItem="xA6-nd-bsP" secondAttribute="trailing" id="ZPt-Ce-1TV"/>
                             <constraint firstAttribute="trailing" secondItem="au6-Jg-Q0b" secondAttribute="trailing" id="cxd-Hm-6Pc"/>
+                            <constraint firstItem="FBP-I9-xHZ" firstAttribute="centerY" secondItem="Ccv-wG-6I8" secondAttribute="centerY" id="fLg-PG-FYf"/>
+                            <constraint firstItem="TN6-b4-Jdo" firstAttribute="leading" secondItem="hh1-Cu-SE9" secondAttribute="trailing" constant="16" id="fyf-jt-cow"/>
+                            <constraint firstItem="FBP-I9-xHZ" firstAttribute="centerY" secondItem="JTN-D1-Nru" secondAttribute="centerY" id="gL6-gI-oR3"/>
+                            <constraint firstItem="mKc-sz-UG7" firstAttribute="leading" secondItem="cxh-GH-L9i" secondAttribute="leadingMargin" id="hPE-Qp-ZqD"/>
+                            <constraint firstItem="hh1-Cu-SE9" firstAttribute="leading" secondItem="aWr-AP-ok1" secondAttribute="trailing" constant="16" id="jDe-8p-iQR"/>
+                            <constraint firstItem="4vs-Yr-cpM" firstAttribute="top" secondItem="pva-TU-9mq" secondAttribute="bottom" constant="59" id="ng1-wC-Zss"/>
                             <constraint firstItem="xA6-nd-bsP" firstAttribute="top" secondItem="pva-TU-9mq" secondAttribute="bottom" id="qBV-w4-7Fx"/>
+                            <constraint firstItem="9hQ-14-GzX" firstAttribute="centerY" secondItem="4vs-Yr-cpM" secondAttribute="centerY" id="x1z-Bi-RAI"/>
+                            <constraint firstItem="mKc-sz-UG7" firstAttribute="top" secondItem="pva-TU-9mq" secondAttribute="bottom" constant="57" id="zEM-fq-p5b"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Map" id="0ke-Tq-5U8"/>
@@ -2810,6 +2924,14 @@
                         <outlet property="boundingBoxButton" destination="A2J-Zr-8Xo" id="APX-hB-Uqx"/>
                         <outlet property="boundingBoxClearButton" destination="9hQ-14-GzX" id="u84-G2-u2H"/>
                         <outlet property="downloadTilesButton" destination="4vs-Yr-cpM" id="6XY-f7-Wfd"/>
+                        <outlet property="drawLineButton" destination="JTN-D1-Nru" id="R3g-IP-GQ1"/>
+                        <outlet property="drawPointButton" destination="mKc-sz-UG7" id="S7U-0j-E3i"/>
+                        <outlet property="drawPolygonButton" destination="FBP-I9-xHZ" id="Yf3-m6-q8T"/>
+                        <outlet property="drawPolygonHoleButton" destination="aWr-AP-ok1" id="kJ3-ha-D0p"/>
+                        <outlet property="editFeaturesClearButton" destination="0YZ-xr-O6r" id="I9Y-u1-0ua"/>
+                        <outlet property="editFeaturesConfirmButton" destination="Ccv-wG-6I8" id="2Rx-bx-Hyo"/>
+                        <outlet property="editPolygonHoleClearButton" destination="TN6-b4-Jdo" id="cbz-kD-OEG"/>
+                        <outlet property="editPolygonHoleConfirmButton" destination="hh1-Cu-SE9" id="3tL-eu-pzj"/>
                         <outlet property="featureTilesButton" destination="LtT-kq-huU" id="Ne2-Cb-BAu"/>
                         <outlet property="featuresButton" destination="E1n-ne-vUV" id="VTt-51-cqy"/>
                         <outlet property="mapView" destination="au6-Jg-Q0b" id="LDB-4c-Jar"/>
@@ -2831,9 +2953,14 @@
         <image name="Geometry" width="108" height="108"/>
         <image name="Manager" width="32" height="32"/>
         <image name="Map" width="32" height="32"/>
+        <image name="MapCheck" width="50" height="50"/>
         <image name="MapClear" width="50" height="50"/>
         <image name="MapDownloadTiles" width="50" height="50"/>
         <image name="MapFeatureTiles" width="50" height="50"/>
+        <image name="MapPoint" width="50" height="50"/>
+        <image name="MapPolygon" width="50" height="50"/>
+        <image name="MapPolygonHole" width="50" height="50"/>
+        <image name="MapPolyline" width="50" height="50"/>
         <image name="More" width="50" height="50"/>
         <image name="MoreFilled" width="50" height="50"/>
         <image name="Up" width="50" height="50"/>

@@ -116,6 +116,7 @@
     if (pickerView.tag == 1){
         self.tables = [self.tableMapping objectForKey:[NSNumber numberWithInteger:row]];
         [self.featurePicker reloadAllComponents];
+        [self.featurePicker selectRow:0 inComponent:0 animated:YES];
     }
 }
 
