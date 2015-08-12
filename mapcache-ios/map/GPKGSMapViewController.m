@@ -85,6 +85,9 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
 #define TAG_MAP_TYPE 1
 #define TAG_MAX_FEATURES 2
 
+static NSString *mapPointImageReuseIdentifier = @"mapPointImageReuseIdentifier";
+static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.updateCountId = 0;
@@ -199,6 +202,53 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
         rendered = [[MKTileOverlayRenderer alloc] initWithTileOverlay:overlay];
     }
     return rendered;
+}
+
+- (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>) annotation
+{
+    MKAnnotationView * view = nil;
+    
+    if ([annotation isKindOfClass:[GPKGMapPoint class]]){
+
+        GPKGMapPoint * mapPoint = (GPKGMapPoint *) annotation;
+        
+        if(mapPoint.image != nil){
+            
+            MKAnnotationView *mapPointImageView = (MKAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointImageReuseIdentifier];
+            if (mapPointImageView == nil)
+            {
+                mapPointImageView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:mapPointImageReuseIdentifier];
+            }
+            mapPointImageView.image = mapPoint.image;
+            mapPointImageView.centerOffset = mapPoint.imageCenterOffset;
+            
+            // TODO delete
+            mapPointImageView.draggable = true;
+            
+            view = mapPointImageView;
+            
+        }else{
+            MKPinAnnotationView *mapPointPinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointPinReuseIdentifier];
+            if(mapPointPinView == nil){
+                mapPointPinView = [[MKPinAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:mapPointPinReuseIdentifier];
+            }
+            mapPointPinView.pinColor = mapPoint.pinColor;
+            view = mapPointPinView;
+        }
+    }
+    return view;
+}
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState {
+    if ([view.annotation isKindOfClass:[GPKGMapPoint class]]) {
+        if (newState == MKAnnotationViewDragStateEnding) {
+            view.dragState = MKAnnotationViewDragStateNone;
+        }
+    }
+}
+
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view{
+    
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -593,7 +643,7 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
             NSMutableArray * databaseFeatures = [featureTables objectForKey:databaseName];
             
             for(NSString * features in databaseFeatures){
-                count = [self displayFeaturesWithId:updateId andDatabase:databaseName andFeatures:features andCount:count andMaxFeatures:maxFeatures];
+                count = [self displayFeaturesWithId:updateId andDatabase:databaseName andFeatures:features andCount:count andMaxFeatures:maxFeatures andEditable:self.editFeaturesMode];
                 if([self updateCanceled:updateId] || count >= maxFeatures){
                     break;
                 }
@@ -752,7 +802,7 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
     });
 }
 
--(int) displayFeaturesWithId: (int) updateId andDatabase: (NSString *) database andFeatures: (NSString *) features andCount: (int) count andMaxFeatures: (int) maxFeatures{
+-(int) displayFeaturesWithId: (int) updateId andDatabase: (NSString *) database andFeatures: (NSString *) features andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable{
     
     GPKGGeoPackage * geoPackage = [self.geoPackages objectForKey:database];
     GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:features];
@@ -762,7 +812,7 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
     @try {
         while(![self updateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
             GPKGFeatureRow * row = [featureDao getFeatureRow:results];
-            count = [self processFeatureRowWithDatabase:database andFeatureDao:featureDao andFeatureRow:row andCount:count andMaxFeatures:maxFeatures];
+            count = [self processFeatureRowWithDatabase:database andFeatureDao:featureDao andFeatureRow:row andCount:count andMaxFeatures:maxFeatures andEditable:editable];
         }
     }
     @finally {
@@ -772,7 +822,7 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
     return count;
 }
 
--(int) processFeatureRowWithDatabase: (NSString *) database andFeatureDao: (GPKGFeatureDao *) featureDao andFeatureRow: (GPKGFeatureRow *) row andCount: (int) count andMaxFeatures: (int) maxFeatures{
+-(int) processFeatureRowWithDatabase: (NSString *) database andFeatureDao: (GPKGFeatureDao *) featureDao andFeatureRow: (GPKGFeatureRow *) row andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable{
     GPKGProjection * projection = featureDao.projection;
     GPKGMapShapeConverter * converter = [[GPKGMapShapeConverter alloc] initWithProjection:projection];
     
@@ -783,10 +833,17 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
         
         if(geometry != nil){
             if(count++ < maxFeatures){
+                NSNumber * featureId = [row getId];
                 GPKGMapShape * shape = [converter toShapeWithGeometry:geometry];
-                [self updateFeatureBoundingBox:shape];
+                [self updateFeaturesBoundingBox:shape];
+                [self prepareShapeOptionsWithShape:shape andEditable:editable andTopLevel:true];
                 dispatch_sync(dispatch_get_main_queue(), ^{
-                    [GPKGMapShapeConverter addMapShape:shape toMapView:self.mapView];
+                    GPKGMapShape * mapShape = [GPKGMapShapeConverter addMapShape:shape toMapView:self.mapView];
+                    if(self.editFeaturesMode){
+                        [self addEditableShapeWithFeatureId:featureId andShape:mapShape];
+                    }else{
+                        // TODO add map point shape ?
+                    }
                 });
             }
         }
@@ -795,13 +852,110 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
     return count;
 }
 
--(void) updateFeatureBoundingBox: (GPKGMapShape *) shape
+-(void) updateFeaturesBoundingBox: (GPKGMapShape *) shape
 {
     if(self.featuresBoundingBox != nil){
         [shape expandBoundingBox:self.featuresBoundingBox];
     }else{
         self.featuresBoundingBox = [shape boundingBox];
     }
+}
+
+-(void) prepareShapeOptionsWithShape: (GPKGMapShape *) shape andEditable: (BOOL) editable andTopLevel: (BOOL) topLevel{
+    
+    switch(shape.shapeType){
+        case GPKG_MST_POINT:
+            {
+                GPKGMapPoint * mapPoint = (GPKGMapPoint *) shape.shape;
+                [self setShapeOptionsWithMapPoint:mapPoint andEditable:editable andClickable:topLevel];
+            }
+            break;
+            
+        case GPKG_MST_MULTI_POINT:
+            {
+                GPKGMultiPoint * multiPoint = (GPKGMultiPoint *) shape.shape;
+                for(GPKGMapPoint * mapPoint in multiPoint.points){
+                    [self setShapeOptionsWithMapPoint:mapPoint andEditable:editable andClickable:false];
+                }
+            }
+            break;
+            
+        case GPKG_MST_COLLECTION:
+            {
+                NSArray * shapeArray = (NSArray *) shape.shape;
+                for(GPKGMapShape * shape in shapeArray){
+                    [self prepareShapeOptionsWithShape:shape andEditable:editable andTopLevel:false];
+                }
+            }
+            break;
+            
+        default:
+            
+            break;
+    }
+    
+}
+
+-(void) setShapeOptionsWithMapPoint: (GPKGMapPoint *) mapPoint andEditable: (BOOL) editable andClickable: (BOOL) clickable{
+    
+    if(editable){
+        if(clickable){
+            [mapPoint setPinColor:MKPinAnnotationColorGreen];
+        }else{
+            [mapPoint setPinColor:MKPinAnnotationColorPurple];
+        }
+    }else{
+        [mapPoint setPinColor:MKPinAnnotationColorPurple];
+    }
+    
+}
+
+-(void) addEditableShapeWithFeatureId: (NSNumber *) featureId andShape: (GPKGMapShape *) shape{
+    
+    if(shape.shapeType == GPKG_MST_POINT){
+        GPKGMapPoint * mapPoint = (GPKGMapPoint *) shape.shape;
+        // TODO
+    }else{
+        GPKGMapPoint * mapPoint = [self getMapPointWithShape:shape];
+        if(mapPoint != nil){
+            // TODO
+        }
+    }
+    
+}
+
+-(GPKGMapPoint *) getMapPointWithShape: (GPKGMapShape *) shape{
+    
+    GPKGMapPoint * mapPoint = nil;
+    
+    switch(shape.shapeType){
+            
+            // TODO
+            
+        case GPKG_MST_POLYGON:
+            {
+                MKPolygon * polygon = (MKPolygon *) shape.shape;
+                MKMapPoint mkMapPoint = polygon.points[0];
+                mapPoint = [self createEditMapPoint:mkMapPoint];
+            }
+            break;
+            
+            // TODO
+            
+        default:
+            break;
+            
+    }
+    
+    return mapPoint;
+}
+
+-(GPKGMapPoint *) createEditMapPoint: (MKMapPoint) mkMapPoint{
+    GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithMKMapPoint:mkMapPoint];
+    // TODO
+    [mapPoint setImage:[UIImage imageNamed:@"MapPoint"]];
+    [self.mapView addAnnotation:mapPoint];
+    return mapPoint;
 }
 
 -(int) getMaxFeatures{
