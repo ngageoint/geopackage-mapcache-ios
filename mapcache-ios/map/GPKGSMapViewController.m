@@ -246,8 +246,13 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
 }
 
 - (IBAction)featuresButton:(id)sender {
-    self.segRequest = GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST;
-    [self performSegueWithIdentifier:GPKGS_MAP_SEG_SELECT_FEATURE_TABLE sender:self];
+    if(!self.editFeaturesMode){
+        self.segRequest = GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST;
+        [self performSegueWithIdentifier:GPKGS_MAP_SEG_SELECT_FEATURE_TABLE sender:self];
+    }else{
+        [self resetEditFeatures];
+        [self updateInBackgroundWithZoom:false];
+    }
 }
 
 - (IBAction)boundingBoxButton:(id)sender {
@@ -259,10 +264,8 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
         }
         
         self.boundingBoxMode = true;
-        [self.downloadTilesButton setHidden:false];
-        [self.featureTilesButton setHidden:false];
-        [self.boundingBoxClearButton setHidden:false];
-        [self.boundingBoxButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_ACTIVE_IMAGE] forState:UIControlStateNormal];
+        [self setBoundingBoxButtonsHidden:false];
+        
     }else{
         [self resetBoundingBox];
     }
@@ -283,21 +286,19 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
 
 -(void) resetBoundingBox{
     self.boundingBoxMode = false;
-    [self.downloadTilesButton setHidden:true];
-    [self.featureTilesButton setHidden:true];
-    [self.boundingBoxClearButton setHidden:true];
-    [self.boundingBoxButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_IMAGE] forState:UIControlStateNormal];
+    [self setBoundingBoxButtonsHidden:true];
     [self clearBoundingBox];
 }
 
 -(void) resetEditFeatures{
     self.editFeaturesMode = false;
+    [self setEditFeaturesButtonsHidden:true];
     //TODO reset edit features
     [self clearEditFeatures];
 }
 
 -(void) clearBoundingBox{
-    [self.boundingBoxClearButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_CLEAR_IMAGE] forState:UIControlStateNormal];
+    [self resetBoundingBoxButtonImages];
     if(self.boundingBox != nil){
         [self.mapView removeOverlay:self.boundingBox];
     }
@@ -309,6 +310,15 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
 
 -(void) clearEditFeatures{
     //TODO clear edit features
+    [self resetEditFeaturesButtonImages];
+    [self setEditPolygonHoleButtonsHidden:true];
+    [self clearEditHoleFeatures];
+    // TODO
+}
+
+-(void) clearEditHoleFeatures{
+    // TODO clear edit hole features
+    [self resetEditPolygonHoleChoiceButtonImages];
 }
 
 - (IBAction)userLocation:(id)sender {
@@ -397,6 +407,7 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
         region = [self.mapView regionThatFits:region];
         [self.mapView setRegion:region animated:YES];
         
+        // This pans without zooming instead of the pan and zoom above
         //[self.mapView setCenterCoordinate:userLocation.coordinate animated:YES];
         
         [self.locationManager stopUpdatingLocation];
@@ -742,8 +753,17 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
 - (void)selectFeatureTableViewController:(GPKGSSelectFeatureTableViewController *)controller database:(NSString *)database table: (NSString *) table request: (NSString *) request{
     self.internalSeg = true;
     if([request isEqualToString:GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST]){
-        // TODO
+        
+        if(self.boundingBoxMode){
+            [self resetBoundingBox];
+        }
+        
+        self.editFeaturesMode = true;
+        [self setEditFeaturesButtonsHidden:false];
+        [self updateInBackgroundWithZoom:false];
+        
     }else if ([request isEqualToString:GPKGS_MAP_SEG_FEATURE_TILES_REQUEST]){
+        
         GPKGSTable * dbTable = [[GPKGSTable alloc] initWithDatabase:database andName:table andCount:0];
         [self performSegueWithIdentifier:GPKGS_MAP_SEG_CREATE_FEATURE_TILES sender:dbTable];
     }
@@ -815,6 +835,72 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
     }
     GPKGBoundingBox * bbox = [[GPKGBoundingBox alloc]initWithMinLongitudeDouble:minLon andMaxLongitudeDouble:maxLon andMinLatitudeDouble:minLat andMaxLatitudeDouble:maxLat];
     return bbox;
+}
+
+-(void) setBoundingBoxButtonsHidden: (BOOL) hidden{
+    [self.downloadTilesButton setHidden:hidden];
+    [self.featureTilesButton setHidden:hidden];
+    [self.boundingBoxClearButton setHidden:hidden];
+    
+    if(hidden){
+        [self.boundingBoxButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_IMAGE] forState:UIControlStateNormal];
+    } else{
+        [self.boundingBoxButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_ACTIVE_IMAGE] forState:UIControlStateNormal];
+    }
+    
+    [self resetBoundingBoxButtonImages];
+}
+
+-(void) resetBoundingBoxButtonImages{
+    [self.boundingBoxClearButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_CLEAR_IMAGE] forState:UIControlStateNormal];
+}
+
+-(void) setEditFeaturesButtonsHidden: (BOOL) hidden{
+    
+    [self.drawPointButton setHidden:hidden];
+    [self.drawLineButton setHidden:hidden];
+    [self.drawPolygonButton setHidden:hidden];
+    [self.editFeaturesConfirmButton setHidden:hidden];
+    [self.editFeaturesClearButton setHidden:hidden];
+    
+    if(hidden){
+        [self.featuresButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_FEATURES_IMAGE] forState:UIControlStateNormal];
+    } else{
+        [self.featuresButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_FEATURES_ACTIVE_IMAGE] forState:UIControlStateNormal];
+    }
+    
+    [self resetEditFeaturesButtonImages];
+    
+    if(hidden){
+        [self setEditPolygonHoleButtonsHidden:true];
+    }
+}
+
+-(void) resetEditFeaturesButtonImages{
+    [self.drawPointButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_DRAW_POINT_IMAGE] forState:UIControlStateNormal];
+    [self.drawLineButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_DRAW_LINE_IMAGE] forState:UIControlStateNormal];
+    [self.drawPolygonButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_DRAW_POLYGON_IMAGE] forState:UIControlStateNormal];
+    [self.editFeaturesConfirmButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_FEATURES_CONFIRM_IMAGE] forState:UIControlStateNormal];
+    [self.editFeaturesClearButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_FEATURES_CLEAR_IMAGE] forState:UIControlStateNormal];
+}
+
+-(void) setEditPolygonHoleButtonsHidden: (BOOL) hidden{
+    
+    [self.drawPolygonHoleButton setHidden:hidden];
+    [self.editPolygonHoleConfirmButton setHidden:hidden];
+    [self.editPolygonHoleClearButton setHidden:hidden];
+    
+    [self resetEditPolygonHoleButtonImages];
+}
+
+-(void) resetEditPolygonHoleButtonImages{
+    [self.drawPolygonHoleButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_DRAW_POLYGON_HOLE_IMAGE] forState:UIControlStateNormal];
+    [self resetEditPolygonHoleChoiceButtonImages];
+}
+
+-(void) resetEditPolygonHoleChoiceButtonImages{
+    [self.editPolygonHoleConfirmButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POLYGON_HOLE_CONFIRM_IMAGE] forState:UIControlStateNormal];
+    [self.editPolygonHoleClearButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POLYGON_HOLE_CLEAR_IMAGE] forState:UIControlStateNormal];
 }
 
 @end
