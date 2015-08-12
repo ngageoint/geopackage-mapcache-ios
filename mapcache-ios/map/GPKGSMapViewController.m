@@ -57,6 +57,24 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
 @property (nonatomic, strong) UIColor * boundingBoxColor;
 @property (nonatomic) double boundingBoxLineWidth;
 @property (nonatomic, strong) UIColor * boundingBoxFillColor;
+@property (nonatomic, strong) UIColor * defaultPolylineColor;
+@property (nonatomic) double defaultPolylineLineWidth;
+@property (nonatomic, strong) UIColor * defaultPolygonColor;
+@property (nonatomic) double defaultPolygonLineWidth;
+@property (nonatomic, strong) UIColor * defaultPolygonFillColor;
+@property (nonatomic, strong) UIColor * editPolylineColor;
+@property (nonatomic) double editPolylineLineWidth;
+@property (nonatomic, strong) UIColor * editPolygonColor;
+@property (nonatomic) double editPolygonLineWidth;
+@property (nonatomic, strong) UIColor * editPolygonFillColor;
+@property (nonatomic, strong) UIColor * drawPolylineColor;
+@property (nonatomic) double drawPolylineLineWidth;
+@property (nonatomic, strong) UIColor * drawPolygonColor;
+@property (nonatomic) double drawPolygonLineWidth;
+@property (nonatomic, strong) UIColor * drawPolygonFillColor;
+@property (nonatomic, strong) UIColor * drawPolygonHoleColor;
+@property (nonatomic) double drawPolygonHoleLineWidth;
+@property (nonatomic, strong) UIColor * drawPolygonHoleFillColor;
 @property (nonatomic) BOOL internalSeg;
 @property (nonatomic, strong) NSString * segRequest;
 
@@ -91,6 +109,40 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
     if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL]){
         self.boundingBoxFillColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
     }
+    
+    self.defaultPolylineColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_COLOR]];
+    self.defaultPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_LINE_WIDTH] doubleValue];
+
+    self.defaultPolygonColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_COLOR]];
+    self.defaultPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYGON_LINE_WIDTH] doubleValue];
+    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL]){
+        self.defaultPolygonFillColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL_COLOR]];
+    }
+    
+    self.editPolylineColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYLINE_COLOR]];
+    self.editPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYLINE_LINE_WIDTH] doubleValue];
+    
+    self.editPolygonColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_COLOR]];
+    self.editPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYGON_LINE_WIDTH] doubleValue];
+    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL]){
+        self.editPolygonFillColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL_COLOR]];
+    }
+    
+    self.drawPolylineColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYLINE_COLOR]];
+    self.drawPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYLINE_LINE_WIDTH] doubleValue];
+    
+    self.drawPolygonColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_COLOR]];
+    self.drawPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYGON_LINE_WIDTH] doubleValue];
+    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL]){
+        self.drawPolygonFillColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
+    }
+    
+    self.drawPolygonHoleColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_HOLE_COLOR]];
+    self.drawPolygonHoleLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYGON_HOLE_LINE_WIDTH] doubleValue];
+    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_HOLE_FILL]){
+        self.drawPolygonHoleFillColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_HOLE_FILL_COLOR]];
+    }
+    
     [self.active setModified:true];
 }
 
@@ -112,24 +164,36 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id)overlay {
     MKOverlayRenderer * rendered = nil;
     if ([overlay isKindOfClass:[MKPolygon class]]) {
+        MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
         if(self.drawing || (self.boundingBox != nil && self.boundingBox == overlay)){
-            MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
             polygonRenderer.strokeColor = self.boundingBoxColor;
             polygonRenderer.lineWidth = self.boundingBoxLineWidth;
             if(self.boundingBoxFillColor != nil){
                 polygonRenderer.fillColor = self.boundingBoxFillColor;
             }
-            rendered = polygonRenderer;
+        }else if(self.editFeaturesMode){
+            polygonRenderer.strokeColor = self.editPolygonColor;
+            polygonRenderer.lineWidth = self.editPolygonLineWidth;
+            if(self.editPolygonFillColor != nil){
+                polygonRenderer.fillColor = self.editPolygonFillColor;
+            }
         }else{
-            MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
-            polygonRenderer.strokeColor = [UIColor blackColor];
-            polygonRenderer.lineWidth = 1.0;
-            rendered = polygonRenderer;
+            polygonRenderer.strokeColor = self.defaultPolygonColor;
+            polygonRenderer.lineWidth = self.defaultPolygonLineWidth;
+            if(self.defaultPolygonFillColor != nil){
+                polygonRenderer.fillColor = self.defaultPolygonFillColor;
+            }
         }
+        rendered = polygonRenderer;
     }else if ([overlay isKindOfClass:[MKPolyline class]]) {
         MKPolylineRenderer * polylineRenderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
-        polylineRenderer.strokeColor = [UIColor blackColor];
-        polylineRenderer.lineWidth = 1.0;
+        if(self.editFeaturesMode){
+            polylineRenderer.strokeColor = self.editPolylineColor;
+            polylineRenderer.lineWidth = self.editPolylineLineWidth;
+        }else{
+            polylineRenderer.strokeColor = self.defaultPolylineColor;
+            polylineRenderer.lineWidth = self.defaultPolylineLineWidth;
+        }
         rendered = polylineRenderer;
     }else if ([overlay isKindOfClass:[MKTileOverlay class]]) {
         rendered = [[MKTileOverlayRenderer alloc] initWithTileOverlay:overlay];
@@ -293,6 +357,8 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
 -(void) resetEditFeatures{
     self.editFeaturesMode = false;
     [self setEditFeaturesButtonsHidden:true];
+    self.editFeaturesDatabase = nil;
+    self.editFeaturesTable = nil;
     //TODO reset edit features
     [self clearEditFeatures];
 }
@@ -449,6 +515,7 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
     
     if(self.active != nil){
         
+        // Add tile overlays first
         NSArray * activeDatabases = [[NSArray alloc] initWithArray:[self.active getDatabases]];
         for(GPKGSDatabase * database in activeDatabases){
             
@@ -457,6 +524,7 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
             if(geoPackage != nil){
                 [self.geoPackages setObject:geoPackage forKey:database.name];
                 
+                // Display the tiles
                 for(GPKGSTileTable * tiles in [database getTiles]){
                     @try {
                         [self displayTiles:tiles];
@@ -469,6 +537,7 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
                     }
                 }
              
+                // Display the feature tiles
                 for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
                     if(featureOverlay.active){
                         @try {
@@ -491,9 +560,17 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
             }
         }
         
+        // Add features
         NSMutableDictionary * featureTables = [[NSMutableDictionary alloc] init];
         if(self.editFeaturesMode){
-            // TODO edit feature mode
+            NSMutableArray * databaseFeatures = [[NSMutableArray alloc] init];
+            [databaseFeatures addObject:self.editFeaturesTable];
+            [featureTables setObject:databaseFeatures forKey:self.editFeaturesDatabase];
+            GPKGGeoPackage * geoPackage = [self.geoPackages objectForKey:self.editFeaturesDatabase];
+            if(geoPackage == nil){
+                geoPackage = [self.manager open:self.editFeaturesDatabase];
+                [self.geoPackages setObject:geoPackage forKey:self.editFeaturesDatabase];
+            }
         }else{
             for(GPKGSDatabase * database in [self.active getDatabases]){
                 NSArray * features = [database getFeatures];
@@ -680,6 +757,7 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
     GPKGGeoPackage * geoPackage = [self.geoPackages objectForKey:database];
     GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:features];
     
+    // Query for all rows
     GPKGResultSet * results = [featureDao queryForAll];
     @try {
         while(![self updateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
@@ -757,6 +835,9 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
         if(self.boundingBoxMode){
             [self resetBoundingBox];
         }
+        
+        self.editFeaturesDatabase = database;
+        self.editFeaturesTable = table;
         
         self.editFeaturesMode = true;
         [self setEditFeaturesButtonsHidden:false];
