@@ -2804,7 +2804,7 @@
                                     <action selector="boundingBoxClearButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="0z1-93-4db"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aWr-AP-ok1" userLabel="DrawPolygonHoleButton">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aWr-AP-ok1" userLabel="EditPolygonHoleButton">
                                 <rect key="frame" x="16" y="155" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="bBg-Ss-XsY"/>
@@ -2813,6 +2813,9 @@
                                 <state key="normal" image="MapPolygonHole">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="editPolygonHolesButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="n1n-UU-geV"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hh1-Cu-SE9" userLabel="EditPolygonHoleConfirmButton">
                                 <rect key="frame" x="62" y="155" width="30" height="30"/>
@@ -2823,6 +2826,9 @@
                                 <state key="normal" image="MapCheck">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="editAcceptPolygonHolesButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="FBH-nu-Spw"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TN6-b4-Jdo" userLabel="EditPolygonHoleClearButton">
                                 <rect key="frame" x="108" y="155" width="30" height="30"/>
@@ -2833,8 +2839,11 @@
                                 <state key="normal" image="MapClear">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="editClearPolygonHolesButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="HK9-a2-rNc"/>
+                                </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mKc-sz-UG7" userLabel="DrawPointButton">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mKc-sz-UG7" userLabel="EditPointButton">
                                 <rect key="frame" x="16" y="117" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="429-Ul-aEd"/>
@@ -2843,8 +2852,11 @@
                                 <state key="normal" image="MapPoint">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="editPointButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="TSp-pD-5uX"/>
+                                </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JTN-D1-Nru" userLabel="DrawLineButton">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JTN-D1-Nru" userLabel="EditLineButton">
                                 <rect key="frame" x="62" y="117" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="dAc-rO-5I2"/>
@@ -2853,8 +2865,11 @@
                                 <state key="normal" image="MapPolyline">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="editLinestringButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="caG-ZH-9tS"/>
+                                </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FBP-I9-xHZ" userLabel="DrawPolygonButton">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FBP-I9-xHZ" userLabel="EditPolygonButton">
                                 <rect key="frame" x="108" y="117" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="b8O-rD-ncp"/>
@@ -2863,6 +2878,9 @@
                                 <state key="normal" image="MapPolygon">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="editPolygonButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="3aB-BG-QgS"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ccv-wG-6I8" userLabel="EditFeaturesConfirmButton">
                                 <rect key="frame" x="154" y="117" width="30" height="30"/>
@@ -2873,6 +2891,9 @@
                                 <state key="normal" image="MapCheck">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="editAcceptButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="lcC-Sz-Ssn"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0YZ-xr-O6r" userLabel="EditFeaturesClearButton">
                                 <rect key="frame" x="200" y="117" width="30" height="30"/>
@@ -2883,6 +2904,9 @@
                                 <state key="normal" image="MapClear">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="editClearButton:" destination="8Zz-7e-1So" eventType="touchUpInside" id="Y7A-uN-rtm"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

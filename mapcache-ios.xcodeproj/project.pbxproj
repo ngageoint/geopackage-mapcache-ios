@@ -17,6 +17,7 @@
 		04082B561B4F18A000D65E6B /* GPKGSUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04082B551B4F18A000D65E6B /* GPKGSUtils.m */; };
 		043A45821B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A45811B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m */; };
 		043A45851B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A45841B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m */; };
+		043A45881B7D2322001B8FC5 /* GPKGSMapPointFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A45871B7D2322001B8FC5 /* GPKGSMapPointFeature.m */; };
 		044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 044647FB1B4AD1C00052913B /* GPKGSManagerViewController.m */; };
 		044647FF1B4AF3870052913B /* GPKGSTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 044647FE1B4AF3870052913B /* GPKGSTable.m */; };
 		044648021B4AF4250052913B /* GPKGSTableTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 044648011B4AF4250052913B /* GPKGSTableTypes.m */; };
@@ -97,6 +98,8 @@
 		043A45811B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSDownloadTilesViewController.m; sourceTree = "<group>"; };
 		043A45831B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSSelectFeatureTableViewController.h; sourceTree = "<group>"; };
 		043A45841B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSSelectFeatureTableViewController.m; sourceTree = "<group>"; };
+		043A45861B7D2322001B8FC5 /* GPKGSMapPointFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSMapPointFeature.h; sourceTree = "<group>"; };
+		043A45871B7D2322001B8FC5 /* GPKGSMapPointFeature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSMapPointFeature.m; sourceTree = "<group>"; };
 		044647FA1B4AD1C00052913B /* GPKGSManagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSManagerViewController.h; sourceTree = "<group>"; };
 		044647FB1B4AD1C00052913B /* GPKGSManagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSManagerViewController.m; sourceTree = "<group>"; };
 		044647FD1B4AF3870052913B /* GPKGSTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSTable.h; sourceTree = "<group>"; };
@@ -376,6 +379,8 @@
 				043A45811B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m */,
 				043A45831B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.h */,
 				043A45841B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m */,
+				043A45861B7D2322001B8FC5 /* GPKGSMapPointFeature.h */,
+				043A45871B7D2322001B8FC5 /* GPKGSMapPointFeature.m */,
 			);
 			path = map;
 			sourceTree = "<group>";
@@ -599,6 +604,7 @@
 				04CCC8681B6114EE0001296D /* GPKGSGenerateTilesData.m in Sources */,
 				04082B531B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.m in Sources */,
 				04E1D8D61B66D439002BD947 /* GPKGSEditTilesViewController.m in Sources */,
+				043A45881B7D2322001B8FC5 /* GPKGSMapPointFeature.m in Sources */,
 				04E1D8E21B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m in Sources */,
 				04CCC8651B61122A0001296D /* GPKGSGenerateTilesViewController.m in Sources */,
 				044648081B4AF6A70052913B /* GPKGSTileTable.m in Sources */,
