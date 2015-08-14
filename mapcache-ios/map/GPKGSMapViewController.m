@@ -28,22 +28,14 @@
 #import "GPKGSCreateTilesData.h"
 #import "GPKGSSelectFeatureTableViewController.h"
 #import "GPKGSCreateFeatureTilesViewController.h"
-#import "GPKGSMapPointFeature.h"
+#import "GPKGSMapPointData.h"
+#import "GPKGSEditTypes.h"
 
 NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 NSString * const GPKGS_MAP_SEG_SELECT_FEATURE_TABLE = @"selectFeatureTable";
 NSString * const GPKGS_MAP_SEG_FEATURE_TILES_REQUEST = @"featureTiles";
 NSString * const GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST = @"editFeatures";
 NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
-
-enum GPKGSEditType{
-    GPKGS_ET_NONE,
-    GPKGS_ET_POINT,
-    GPKGS_ET_LINESTRING,
-    GPKGS_ET_POLYGON,
-    GPKGS_ET_POLYGON_HOLE,
-    GPKGS_ET_EDIT_FEATURE
-};
 
 @interface GPKGSMapViewController ()
 
@@ -65,7 +57,6 @@ enum GPKGSEditType{
 @property (nonatomic, strong) NSString * editFeaturesDatabase;
 @property (nonatomic, strong) NSString * editFeaturesTable;
 @property (nonatomic, strong) NSMutableDictionary * editFeatureIds;
-@property (nonatomic, strong) NSMutableDictionary * mapPointIds;
 @property (nonatomic, strong) NSMutableDictionary * editFeatureObjects;
 @property (nonatomic) enum GPKGSEditType editFeatureType;
 @property (nonatomic, strong) NSMutableArray * editPoints;
@@ -101,6 +92,8 @@ enum GPKGSEditType{
 @property (nonatomic, strong) UIColor * drawPolygonHoleFillColor;
 @property (nonatomic) BOOL internalSeg;
 @property (nonatomic, strong) NSString * segRequest;
+@property (nonatomic, strong) GPKGMapPoint * selectedMapPoint;
+@property (nonatomic, strong) NSNumberFormatter *locationDecimalFormatter;
 
 @end
 
@@ -125,7 +118,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.locationManager setDelegate:self];
     [self.locationManager requestWhenInUseAuthorization];
     self.editFeatureIds = [[NSMutableDictionary alloc] init];
-    self.mapPointIds = [[NSMutableDictionary alloc] init];
     self.editFeatureObjects = [[NSMutableDictionary alloc] init];
     self.editFeatureType = GPKGS_ET_NONE;
     self.editPoints = [[NSMutableArray alloc] init];
@@ -176,6 +168,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_HOLE_FILL]){
         self.drawPolygonHoleFillColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_HOLE_FILL_COLOR]];
     }
+    
+    self.locationDecimalFormatter = [[NSNumberFormatter alloc] init];
+    self.locationDecimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    self.locationDecimalFormatter.maximumFractionDigits = 4;
     
     [self.active setModified:true];
 }
@@ -264,9 +260,61 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             view = mapPointPinView;
         }
         
+        if(mapPoint.title == nil){
+            [self setTitleWithMapPoint:mapPoint];
+        }
+        
+        UIButton *optionsButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+        [optionsButton addTarget:self action:@selector(selectedMapPointOptions:) forControlEvents:UIControlEventTouchUpInside];
+        
+        view.rightCalloutAccessoryView = optionsButton;
+        view.canShowCallout = YES;
+        
         view.draggable = mapPoint.draggable;
     }
     return view;
+}
+
+- (IBAction) selectedMapPointOptions:(id)sender {
+    
+    if(self.selectedMapPoint != nil){
+        GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:self.selectedMapPoint];
+        switch(data.type){
+            case GPKGS_MPDT_EDIT_FEATURE_POINT:
+                //TODO
+                break;
+                
+            // Handle clicks on an existing feature in edit mode
+            case GPKGS_MPDT_EDIT_FEATURE:
+                {
+                    NSNumber * featureId = [self.editFeatureIds objectForKey:[self.selectedMapPoint getIdAsNumber]];
+                    if(featureId != nil){
+                        [self editExistingFeatureClickWithMapPoint:self.selectedMapPoint andFeatureId:[featureId intValue]];
+                    }
+                }
+                break;
+            case GPKGS_MPDT_NEW_EDIT_POINT:
+                //TODO
+                break;
+            case GPKGS_MPDT_NEW_EDIT_HOLE_POINT:
+                //TODO
+                break;
+            case GPKGS_MPDT_POINT:
+                //TODO
+                break;
+            default:
+                break;
+        }
+    }
+    
+}
+
+-(void) editExistingFeatureClickWithMapPoint: (GPKGMapPoint *) mapPoint andFeatureId: (int) featureId{
+    
+    // TODO
+    self.tempEditFeatureMapPoint = mapPoint;
+    [self validateAndClearEditFeaturesForType:GPKGS_ET_EDIT_FEATURE];
+    
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState {
@@ -281,13 +329,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view{
     
     if ([view.annotation isKindOfClass:[GPKGMapPoint class]]) {
-        if(self.editFeaturesMode){
-            
-            // TODO
-            
-        } else{
-            // TODO
-        }
+        self.selectedMapPoint = (GPKGMapPoint *) view.annotation;
     }
     
 }
@@ -383,15 +425,22 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     GPKGMapPoint * mapPoint = [self addEditPoint:point];
                     [self.editFeatureShapePoints addNewPoint:mapPoint];
                     [self.editFeatureShape addPoint:mapPoint withShape:self.editFeatureShapePoints];
+                    GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
+                    data.type = GPKGS_MPDT_EDIT_FEATURE_POINT;
+                    [self setTitleWithGeometryType:self.editFeatureShape.shape.geometryType andMapPoint:mapPoint];
                     [self updateEditState:true];
                 }
             }else{
                 GPKGMapPoint * mapPoint = [self addEditPoint:point];
+                GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
                 if(self.editFeatureType == GPKGS_ET_POLYGON_HOLE){
                     [self.editHolePoints addObject:mapPoint];
+                    data.type = GPKGS_MPDT_NEW_EDIT_HOLE_POINT;
                 }else{
                     [self.editPoints addObject:mapPoint];
+                    data.type = GPKGS_MPDT_NEW_EDIT_POINT;
                 }
+                [self setTitleWithTitle:[GPKGSEditTypes pointName:self.editFeatureType] andMapPoint:mapPoint];
                 [self updateEditState:true];
             }
         }
@@ -951,7 +1000,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
     self.featureOverlayTiles = false;
-    [self.mapPointIds removeAllObjects];
     int maxFeatures = [self getMaxFeatures];
 
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
@@ -1248,7 +1296,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     if(self.editFeaturesMode){
                         [self addEditableShapeWithFeatureId:featureId andShape:mapShape];
                     }else{
-                        [self addMapPointShapeWithFeatureId:featureId andDatabase:database andTableName:featureDao.tableName andMapShape:mapShape];
+                        [self addMapPointShapeWithFeatureId:[featureId intValue] andDatabase:database andTableName:featureDao.tableName andMapShape:mapShape];
                     }
                 });
             }
@@ -1321,11 +1369,17 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     if(shape.shapeType == GPKG_MST_POINT){
         GPKGMapPoint * mapPoint = (GPKGMapPoint *) shape.shape;
         [self.editFeatureIds setObject:featureId forKey:[mapPoint getIdAsNumber]];
+        GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
+        data.type = GPKGS_MPDT_EDIT_FEATURE;
+        [self setTitleWithGeometryType:shape.geometryType andMapPoint:mapPoint];
     }else{
         GPKGMapPoint * mapPoint = [self getMapPointWithShape:shape];
         if(mapPoint != nil){
             [self.editFeatureIds setObject:featureId forKey:[mapPoint getIdAsNumber]];
             [self.editFeatureObjects setObject:shape forKey:[mapPoint getIdAsNumber]];
+            GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
+            data.type = GPKGS_MPDT_EDIT_FEATURE;
+            [self setTitleWithGeometryType:shape.geometryType andMapPoint:mapPoint];
         }
     }
     
@@ -1335,11 +1389,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 {
     if(shape.shapeType == GPKG_MST_POINT){
         GPKGMapPoint * mapPoint = (GPKGMapPoint *) shape.shape;
-        GPKGSMapPointFeature * mapPointFeature = [[GPKGSMapPointFeature alloc] init];
-        mapPointFeature.database = database;
-        mapPointFeature.tableName = tableName;
-        mapPointFeature.featureId = featureId;
-        [self.mapPointIds setObject:mapPointFeature forKey:[mapPoint getIdAsNumber]];
+        GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
+        data.type = GPKGS_MPDT_POINT;
+        data.database = database;
+        data.tableName = tableName;
+        data.featureId = featureId;
+        [self setTitleWithGeometryType:shape.geometryType andMapPoint:mapPoint];
     }
 
 }
@@ -1615,6 +1670,41 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(void) resetEditPolygonHoleChoiceButtonImages{
     [self.editPolygonHoleConfirmButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POLYGON_HOLE_CONFIRM_IMAGE] forState:UIControlStateNormal];
     [self.editPolygonHoleClearButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POLYGON_HOLE_CLEAR_IMAGE] forState:UIControlStateNormal];
+}
+
+-(GPKGSMapPointData *) getOrCreateDataWithMapPoint: (GPKGMapPoint *) mapPoint{
+    if(mapPoint.data == nil){
+        mapPoint.data = [[GPKGSMapPointData alloc] init];
+    }
+    return (GPKGSMapPointData *) mapPoint.data;
+}
+
+-(void) setTitleWithMapPoint: (GPKGMapPoint *) mapPoint{
+    [self setTitleWithTitle:nil andMapPoint:mapPoint];
+}
+
+-(void) setTitleWithGeometryType: (enum WKBGeometryType) type andMapPoint: (GPKGMapPoint *) mapPoint{
+    NSString * title = nil;
+    if(type != WKB_NONE){
+        title = [WKBGeometryTypes name:type];
+    }
+    [self setTitleWithTitle:title andMapPoint:mapPoint];
+}
+
+-(void) setTitleWithTitle: (NSString *) title andMapPoint: (GPKGMapPoint *) mapPoint{
+    CLLocationCoordinate2D coordinate = mapPoint.coordinate;
+
+    NSString *lat = [self.locationDecimalFormatter stringFromNumber:[NSNumber numberWithDouble:coordinate.latitude]];
+    NSString *lon = [self.locationDecimalFormatter stringFromNumber:[NSNumber numberWithDouble:coordinate.longitude]];
+
+    NSString * subtitle = [NSString stringWithFormat:@"(lat=%@, lon=%@)", lat, lon];
+    
+    if(title == nil){
+        [mapPoint setTitle:subtitle];
+    }else{
+        [mapPoint setTitle:title];
+        [mapPoint setSubtitle:subtitle];
+    }
 }
 
 @end

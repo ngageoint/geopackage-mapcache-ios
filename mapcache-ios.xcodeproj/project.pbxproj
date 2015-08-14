@@ -17,7 +17,8 @@
 		04082B561B4F18A000D65E6B /* GPKGSUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04082B551B4F18A000D65E6B /* GPKGSUtils.m */; };
 		043A45821B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A45811B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m */; };
 		043A45851B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A45841B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m */; };
-		043A45881B7D2322001B8FC5 /* GPKGSMapPointFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A45871B7D2322001B8FC5 /* GPKGSMapPointFeature.m */; };
+		043A458B1B7E21E3001B8FC5 /* GPKGSMapPointData.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A458A1B7E21E3001B8FC5 /* GPKGSMapPointData.m */; };
+		043A45911B7E63C1001B8FC5 /* GPKGSEditTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A45901B7E63C1001B8FC5 /* GPKGSEditTypes.m */; };
 		044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 044647FB1B4AD1C00052913B /* GPKGSManagerViewController.m */; };
 		044647FF1B4AF3870052913B /* GPKGSTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 044647FE1B4AF3870052913B /* GPKGSTable.m */; };
 		044648021B4AF4250052913B /* GPKGSTableTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 044648011B4AF4250052913B /* GPKGSTableTypes.m */; };
@@ -98,8 +99,10 @@
 		043A45811B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSDownloadTilesViewController.m; sourceTree = "<group>"; };
 		043A45831B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSSelectFeatureTableViewController.h; sourceTree = "<group>"; };
 		043A45841B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSSelectFeatureTableViewController.m; sourceTree = "<group>"; };
-		043A45861B7D2322001B8FC5 /* GPKGSMapPointFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSMapPointFeature.h; sourceTree = "<group>"; };
-		043A45871B7D2322001B8FC5 /* GPKGSMapPointFeature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSMapPointFeature.m; sourceTree = "<group>"; };
+		043A45891B7E21E3001B8FC5 /* GPKGSMapPointData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSMapPointData.h; sourceTree = "<group>"; };
+		043A458A1B7E21E3001B8FC5 /* GPKGSMapPointData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSMapPointData.m; sourceTree = "<group>"; };
+		043A458F1B7E63C1001B8FC5 /* GPKGSEditTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSEditTypes.h; sourceTree = "<group>"; };
+		043A45901B7E63C1001B8FC5 /* GPKGSEditTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSEditTypes.m; sourceTree = "<group>"; };
 		044647FA1B4AD1C00052913B /* GPKGSManagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSManagerViewController.h; sourceTree = "<group>"; };
 		044647FB1B4AD1C00052913B /* GPKGSManagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSManagerViewController.m; sourceTree = "<group>"; };
 		044647FD1B4AF3870052913B /* GPKGSTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSTable.h; sourceTree = "<group>"; };
@@ -379,8 +382,10 @@
 				043A45811B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m */,
 				043A45831B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.h */,
 				043A45841B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m */,
-				043A45861B7D2322001B8FC5 /* GPKGSMapPointFeature.h */,
-				043A45871B7D2322001B8FC5 /* GPKGSMapPointFeature.m */,
+				043A45891B7E21E3001B8FC5 /* GPKGSMapPointData.h */,
+				043A458A1B7E21E3001B8FC5 /* GPKGSMapPointData.m */,
+				043A458F1B7E63C1001B8FC5 /* GPKGSEditTypes.h */,
+				043A45901B7E63C1001B8FC5 /* GPKGSEditTypes.m */,
 			);
 			path = map;
 			sourceTree = "<group>";
@@ -591,6 +596,7 @@
 				043A45851B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m in Sources */,
 				045C94901B53EEB80005CCD0 /* GPKGSMapViewController.m in Sources */,
 				04E0EE0E1B691AD10095E53E /* GPKGSManagerEditTileOverlayViewController.m in Sources */,
+				043A458B1B7E21E3001B8FC5 /* GPKGSMapPointData.m in Sources */,
 				045C94941B56DF620005CCD0 /* GPKGSIndexerTask.m in Sources */,
 				047733C91B4C496600E523BD /* GPKGSTableOptionsButton.m in Sources */,
 				04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */,
@@ -604,7 +610,6 @@
 				04CCC8681B6114EE0001296D /* GPKGSGenerateTilesData.m in Sources */,
 				04082B531B4EBE6F00D65E6B /* GPKGSDownloadFileViewController.m in Sources */,
 				04E1D8D61B66D439002BD947 /* GPKGSEditTilesViewController.m in Sources */,
-				043A45881B7D2322001B8FC5 /* GPKGSMapPointFeature.m in Sources */,
 				04E1D8E21B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m in Sources */,
 				04CCC8651B61122A0001296D /* GPKGSGenerateTilesViewController.m in Sources */,
 				044648081B4AF6A70052913B /* GPKGSTileTable.m in Sources */,
@@ -625,6 +630,7 @@
 				044648111B4B1D960052913B /* GPKGSTableCell.m in Sources */,
 				04CCC86E1B6122040001296D /* GPKGSLoadTilesData.m in Sources */,
 				044648051B4AF6990052913B /* GPKGSFeatureTable.m in Sources */,
+				043A45911B7E63C1001B8FC5 /* GPKGSEditTypes.m in Sources */,
 				045C94831B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m in Sources */,
 				043A45821B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m in Sources */,
 				04E1D8D31B66D41E002BD947 /* GPKGSEditFeaturesViewController.m in Sources */,
