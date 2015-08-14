@@ -239,15 +239,15 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
         GPKGMapPoint * mapPoint = (GPKGMapPoint *) annotation;
         
-        if(mapPoint.image != nil){
+        if(mapPoint.options.image != nil){
             
             MKAnnotationView *mapPointImageView = (MKAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointImageReuseIdentifier];
             if (mapPointImageView == nil)
             {
                 mapPointImageView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:mapPointImageReuseIdentifier];
             }
-            mapPointImageView.image = mapPoint.image;
-            mapPointImageView.centerOffset = mapPoint.imageCenterOffset;
+            mapPointImageView.image = mapPoint.options.image;
+            mapPointImageView.centerOffset = mapPoint.options.imageCenterOffset;
             
             view = mapPointImageView;
             
@@ -256,7 +256,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             if(mapPointPinView == nil){
                 mapPointPinView = [[MKPinAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:mapPointPinReuseIdentifier];
             }
-            mapPointPinView.pinColor = mapPoint.pinColor;
+            mapPointPinView.pinColor = mapPoint.options.pinColor;
             view = mapPointPinView;
         }
         
@@ -270,7 +270,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         view.rightCalloutAccessoryView = optionsButton;
         view.canShowCallout = YES;
         
-        view.draggable = mapPoint.draggable;
+        view.draggable = mapPoint.options.draggable;
     }
     return view;
 }
@@ -449,7 +449,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(GPKGMapPoint *) addEditPoint: (CLLocationCoordinate2D) point{
     GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithLocation:point];
-    mapPoint.draggable = true;
+    mapPoint.options.draggable = true;
     // TODO line 2339 set the point, linestring, polygon, polygon hole, and edit feature point options
     [self.mapView addAnnotation:mapPoint];
     return mapPoint;
@@ -605,6 +605,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self clearEditFeaturesAndUpdateType:editTypeClicked];
     }else{
         // TODO warn that all unsaved feature edits will be lost
+        if (self.editFeatureType == GPKGS_ET_EDIT_FEATURE) {
+            self.editFeatureType = GPKGS_ET_NONE;
+        }
         [self clearEditFeaturesAndUpdateType:editTypeClicked];
     }
     
@@ -660,8 +663,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                             [featureObject removeFromMapView:self.mapView];
                         }
                         
-                        // TODO styles?
-                        [converter addMapShape:shape asPointsToMapView:self.mapView];
+                        self.editFeatureShape = [converter addMapShape:shape asPointsToMapView:self.mapView withPointOptions:[self getEditFeaturePointOptions] andPolylinePointOptions:[self getEditFeatureShapePointOptions] andPolygonPointOptions:[self getEditFeatureShapePointOptions] andPolygonPointHoleOptions:[self getEditFeatureShapeHolePointOptions]];
                         [self updateEditState:true];
                     }
                     @finally {
@@ -700,6 +702,29 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             [geoPackage close];
         }
     }
+}
+
+-(GPKGMapPointOptions *) getEditFeaturePointOptions{
+    GPKGMapPointOptions * options = [[GPKGMapPointOptions alloc] init];
+    options.draggable = true;
+    options.pinColor = MKPinAnnotationColorRed;
+    return options;
+}
+
+-(GPKGMapPointOptions *) getEditFeatureShapePointOptions{
+    GPKGMapPointOptions * options = [[GPKGMapPointOptions alloc] init];
+    options.draggable = true;
+    // TODO replace with image
+    options.pinColor = MKPinAnnotationColorGreen;
+    return options;
+}
+
+-(GPKGMapPointOptions *) getEditFeatureShapeHolePointOptions{
+    GPKGMapPointOptions * options = [[GPKGMapPointOptions alloc] init];
+    options.draggable = true;
+    // TODO replace with image
+    options.pinColor = MKPinAnnotationColorPurple;
+    return options;
 }
 
 -(void) saveEditFeatures{
@@ -1354,12 +1379,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if(editable){
         if(clickable){
-            [mapPoint setPinColor:MKPinAnnotationColorGreen];
+            [mapPoint.options setPinColor:MKPinAnnotationColorGreen];
         }else{
-            [mapPoint setPinColor:MKPinAnnotationColorPurple];
+            [mapPoint.options setPinColor:MKPinAnnotationColorPurple];
         }
     }else{
-        [mapPoint setPinColor:MKPinAnnotationColorPurple];
+        [mapPoint.options setPinColor:MKPinAnnotationColorPurple];
     }
     
 }
@@ -1488,7 +1513,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void) addEditMapPoint: (GPKGMapPoint *) editMapPoint{
     // TODO create the edit map point
-    [editMapPoint setImage:[UIImage imageNamed:@"MapPoint"]];
+    [editMapPoint.options setImage:[UIImage imageNamed:@"MapPoint"]];
     [self.mapView addAnnotation:editMapPoint];
 }
 
