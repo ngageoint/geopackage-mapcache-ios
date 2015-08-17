@@ -7,6 +7,7 @@
 //
 
 #import "GPKGSMapViewController.h"
+#import <objc/runtime.h>
 #import "GPKGGeoPackageManager.h"
 #import "GPKGSDatabases.h"
 #import "GPKGGeoPackageFactory.h"
@@ -36,6 +37,9 @@ NSString * const GPKGS_MAP_SEG_SELECT_FEATURE_TABLE = @"selectFeatureTable";
 NSString * const GPKGS_MAP_SEG_FEATURE_TILES_REQUEST = @"featureTiles";
 NSString * const GPKGS_MAP_SEG_EDIT_FEATURES_REQUEST = @"editFeatures";
 NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
+
+const char MapConstantKey1;
+const char MapConstantKey2;
 
 @interface GPKGSMapViewController ()
 
@@ -101,6 +105,8 @@ NSString * const GPKGS_MAP_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
 
 #define TAG_MAP_TYPE 1
 #define TAG_MAX_FEATURES 2
+#define TAG_EXISTING_FEATURE 3
+#define TAG_DELETE_EXISTING_FEATURE 4
 
 static NSString *mapPointImageReuseIdentifier = @"mapPointImageReuseIdentifier";
 static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
@@ -275,6 +281,24 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     return view;
 }
 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    switch(alertView.tag){
+        case TAG_MAP_TYPE:
+            [self handleMapTypeWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
+        case TAG_MAX_FEATURES:
+            [self handleMaxFeaturesWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
+        case TAG_EXISTING_FEATURE:
+            [self handleEditExistingFeatureClickWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
+        case TAG_DELETE_EXISTING_FEATURE:
+            [self handleDeleteExistingFeatureClickWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
+    }
+}
+
 - (IBAction) selectedMapPointOptions:(id)sender {
     
     if(self.selectedMapPoint != nil){
@@ -311,10 +335,116 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void) editExistingFeatureClickWithMapPoint: (GPKGMapPoint *) mapPoint andFeatureId: (int) featureId{
     
-    // TODO
-    self.tempEditFeatureMapPoint = mapPoint;
-    [self validateAndClearEditFeaturesForType:GPKGS_ET_EDIT_FEATURE];
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:[NSString stringWithFormat:@"%@\n%@", @"GeomTypeTODO", @"LocationTODO"] // TODO
+                          message:nil
+                          delegate:self
+                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_INFO_LABEL],
+                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_EDIT_LABEL],
+                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_DELETE_LABEL],
+                          nil];
     
+    alert.tag = TAG_EXISTING_FEATURE;
+    
+    objc_setAssociatedObject(alert, &MapConstantKey1, mapPoint, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(alert, &MapConstantKey2, [NSNumber numberWithInt:featureId], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [alert show];
+}
+
+- (void) handleEditExistingFeatureClickWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if(buttonIndex > 0){
+    
+        GPKGMapPoint *mapPoint = objc_getAssociatedObject(alertView, &MapConstantKey1);
+        NSNumber * featureId = objc_getAssociatedObject(alertView, &MapConstantKey2);
+        
+        switch(buttonIndex){
+            case 1:
+                // TODO info
+                break;
+            case 2:
+                self.tempEditFeatureMapPoint = mapPoint;
+                [self validateAndClearEditFeaturesForType:GPKGS_ET_EDIT_FEATURE];
+                break;
+            case 3:
+                [self deleteExistingFeatureOptionWithMapPoint:mapPoint andFeatureId:[featureId intValue]];
+                break;
+        }
+    
+    }
+}
+
+-(void) deleteExistingFeatureOptionWithMapPoint: (GPKGMapPoint *) mapPoint andFeatureId: (int) featureId{
+    
+    UIAlertView * alert = [[UIAlertView alloc]
+                           initWithTitle:@"TODO"
+                           message:@"TODO"
+                           delegate:self
+                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_DELETE_LABEL],
+                           nil];
+    objc_setAssociatedObject(alert, &MapConstantKey1, mapPoint, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(alert, &MapConstantKey2, [NSNumber numberWithInt:featureId], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    alert.tag = TAG_DELETE_EXISTING_FEATURE;
+    [alert show];
+    
+}
+
+- (void) handleDeleteExistingFeatureClickWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if(buttonIndex > 0){
+    
+        GPKGMapPoint *mapPoint = objc_getAssociatedObject(alertView, &MapConstantKey1);
+        NSNumber * featureId = objc_getAssociatedObject(alertView, &MapConstantKey2);
+        
+        GPKGGeoPackage * geoPackage = [self.manager open:self.editFeaturesDatabase];
+        @try {
+
+            GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.editFeaturesTable];
+        
+            GPKGFeatureRow * featureRow = (GPKGFeatureRow *)[featureDao queryForIdObject:featureId];
+        
+            if(featureRow != nil){
+                GPKGGeometryData * geomData = [featureRow getGeometry];
+                enum WKBGeometryType geometryType = geomData.geometry.geometryType;
+                [featureDao delete:featureRow];
+                [self.mapView removeAnnotation:mapPoint];
+                [self.editFeatureIds removeObjectForKey:[mapPoint getIdAsNumber]];
+                GPKGMapShape * featureObject = [self.editFeatureObjects objectForKey:[mapPoint getIdAsNumber]];
+                if(featureObject != nil){
+                    [self.editFeatureObjects removeObjectForKey:[mapPoint getIdAsNumber]];
+                    [featureObject removeFromMapView:self.mapView];
+                }
+                [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
+                
+                [self.active setModified:true];
+            }
+            
+        }
+        @catch (NSException *e) {
+            [GPKGSUtils showMessageWithDelegate:self
+                                       andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_DELETE_LABEL]
+                                     andMessage:[NSString stringWithFormat:@"%@", [e description]]];
+        }
+        @finally {
+            [geoPackage close];
+        }
+    }
+}
+
+-(void) updateLastChangeWithGeoPackage: (GPKGGeoPackage *) geoPackage andFeatureDao: (GPKGFeatureDao *) featureDao{
+    @try {
+        GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage getGeometryColumnsDao];
+        GPKGContents * contents = [geometryColumnsDao getContents:featureDao.geometryColumns];
+        [contents setLastChange:[NSDate date]];
+        GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
+        [contentsDao update:contents];
+    }
+    @catch (NSException *e) {
+        NSLog(@"Failed to update contents last change date. GeoPackage: %@, Table: %@, Error:%@", geoPackage.name, featureDao.tableName, [e description]);
+    }
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState {
@@ -332,18 +462,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         self.selectedMapPoint = (GPKGMapPoint *) view.annotation;
     }
     
-}
-
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
-    switch(alertView.tag){
-        case TAG_MAP_TYPE:
-            [self handleMapTypeWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
-            break;
-        case TAG_MAX_FEATURES:
-            [self handleMaxFeaturesWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
-            break;
-    }
 }
 
 -(void) longPressGesture:(UILongPressGestureRecognizer *) longPressGestureRecognizer{
@@ -450,7 +568,29 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(GPKGMapPoint *) addEditPoint: (CLLocationCoordinate2D) point{
     GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithLocation:point];
     mapPoint.options.draggable = true;
-    // TODO line 2339 set the point, linestring, polygon, polygon hole, and edit feature point options
+
+    switch(self.editFeatureType){
+        case GPKGS_ET_POINT:
+            [mapPoint.options setPinColor:MKPinAnnotationColorRed];
+            break;
+        case GPKGS_ET_LINESTRING:
+        case GPKGS_ET_POLYGON:
+            [mapPoint.options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POINT_IMAGE]];
+            [mapPoint.options setPinColor:MKPinAnnotationColorGreen];
+            break;
+        case GPKGS_ET_POLYGON_HOLE:
+            [mapPoint.options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_HOLE_POINT_IMAGE]];
+            break;
+        case GPKGS_ET_EDIT_FEATURE:
+            if([self.editFeatureShapePoints isKindOfClass:[GPKGPolygonHolePoints class]]){
+                [mapPoint.options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_HOLE_POINT_IMAGE]];
+            }else{
+                [mapPoint.options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POINT_IMAGE]];
+            }
+            break;
+        default:
+            break;
+    }
     [self.mapView addAnnotation:mapPoint];
     return mapPoint;
 }
@@ -714,16 +854,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(GPKGMapPointOptions *) getEditFeatureShapePointOptions{
     GPKGMapPointOptions * options = [[GPKGMapPointOptions alloc] init];
     options.draggable = true;
-    // TODO replace with image
-    options.pinColor = MKPinAnnotationColorGreen;
+    [options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POINT_IMAGE]];
     return options;
 }
 
 -(GPKGMapPointOptions *) getEditFeatureShapeHolePointOptions{
     GPKGMapPointOptions * options = [[GPKGMapPointOptions alloc] init];
     options.draggable = true;
-    // TODO replace with image
-    options.pinColor = MKPinAnnotationColorPurple;
+    [options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_HOLE_POINT_IMAGE]];
     return options;
 }
 
@@ -1512,8 +1650,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 -(void) addEditMapPoint: (GPKGMapPoint *) editMapPoint{
-    // TODO create the edit map point
-    [editMapPoint.options setImage:[UIImage imageNamed:@"MapPoint"]];
+    [editMapPoint.options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_EXISTING_FEATURE_IMAGE]];
     [self.mapView addAnnotation:editMapPoint];
 }
 
