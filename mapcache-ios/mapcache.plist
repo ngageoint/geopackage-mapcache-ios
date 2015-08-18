@@ -418,6 +418,10 @@
 	<string>Edit</string>
 	<key>edit_features_delete_label</key>
 	<string>Delete</string>
+	<key>edit_features_clear_validation_label</key>
+	<string>Unsaved Edits</string>
+	<key>edit_features_clear_validation_message</key>
+	<string>All unsaved feature edits will be lost</string>
 	<key>import_url_preloaded_label</key>
 	<string>Preloaded</string>
 	<key>import_url_error</key>
