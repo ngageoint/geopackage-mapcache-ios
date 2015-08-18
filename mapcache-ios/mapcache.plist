@@ -422,6 +422,12 @@
 	<string>Unsaved Edits</string>
 	<key>edit_features_clear_validation_message</key>
 	<string>All unsaved feature edits will be lost</string>
+	<key>edit_features_shape_point_delete_label</key>
+	<string>Delete</string>
+	<key>edit_features_shape_add_points_label</key>
+	<string>Add Points</string>
+	<key>edit_features_shape_add_hole_label</key>
+	<string>Add Hole</string>
 	<key>import_url_preloaded_label</key>
 	<string>Preloaded</string>
 	<key>import_url_error</key>

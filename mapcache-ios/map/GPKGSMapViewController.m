@@ -33,6 +33,9 @@
 #import "GPKGSEditTypes.h"
 #import "GPKGSDisplayTextViewController.h"
 #import "WKBGeometryPrinter.h"
+#import "GPKGShapePoints.h"
+#import "GPKGShapeWithChildrenPoints.h"
+#import "GPGKSMapPointInitializer.h"
 
 NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 NSString * const GPKGS_MAP_SEG_SELECT_FEATURE_TABLE = @"selectFeatureTable";
@@ -111,6 +114,7 @@ const char MapConstantKey;
 #define TAG_DELETE_EXISTING_FEATURE 4
 #define TAG_CLEAR_EDIT_FEATURES 5
 #define TAG_DELETE_EDIT_POINT 6
+#define TAG_EDIT_FEATURE_SHAPE 7
 
 static NSString *mapPointImageReuseIdentifier = @"mapPointImageReuseIdentifier";
 static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
@@ -306,6 +310,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         case TAG_DELETE_EDIT_POINT:
             [self handleDeleteEditPointWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
             break;
+        case TAG_EDIT_FEATURE_SHAPE:
+            [self handleEditFeatureShapeWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
     }
 }
 
@@ -315,7 +322,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:self.selectedMapPoint];
         switch(data.type){
             case GPKGS_MPDT_EDIT_FEATURE_POINT:
-                //TODO
+                [self editFeatureShapeClickWithMapPoint:self.selectedMapPoint];
                 break;
             case GPKGS_MPDT_EDIT_FEATURE:
                 // Handle clicks on an existing feature in edit mode
@@ -335,6 +342,44 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         }
     }
     
+}
+
+-(void) editFeatureShapeClickWithMapPoint: (GPKGMapPoint *) mapPoint{
+    
+    NSObject<GPKGShapePoints> * shapePoints = [self.editFeatureShape getShapePointsForPoint:mapPoint];
+    
+    if(shapePoints != nil){
+        
+        NSMutableArray * options = [[NSMutableArray alloc] init];
+        [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_SHAPE_POINT_DELETE_LABEL]];
+        [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_SHAPE_ADD_POINTS_LABEL]];
+        
+        if([[shapePoints class] conformsToProtocol:@protocol(GPKGShapeWithChildrenPoints)]){
+            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_SHAPE_ADD_HOLE_LABEL]];
+        }
+
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle:[self getTitleAndSubtitleWithMapPoint:mapPoint andDelimiter:@"\n"]
+                              message:nil
+                              delegate:self
+                              cancelButtonTitle:nil
+                              otherButtonTitles:nil];
+        
+        for (NSString *option in options) {
+            [alert addButtonWithTitle:option];
+        }
+        alert.cancelButtonIndex = [alert addButtonWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
+        
+        alert.tag = TAG_EDIT_FEATURE_SHAPE;
+        
+        objc_setAssociatedObject(alert, &MapConstantKey, mapPoint, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
+        [alert show];
+    }
+}
+
+- (void) handleEditFeatureShapeWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    // TODO
 }
 
 -(void) editExistingFeatureClickWithMapPoint: (GPKGMapPoint *) mapPoint{
@@ -911,6 +956,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGMapPointOptions * options = [[GPKGMapPointOptions alloc] init];
     options.draggable = true;
     options.pinColor = MKPinAnnotationColorRed;
+    options.initializer = [[GPGKSMapPointInitializer alloc] initWithPointType:GPKGS_MPDT_EDIT_FEATURE_POINT];
     return options;
 }
 
@@ -918,6 +964,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGMapPointOptions * options = [[GPKGMapPointOptions alloc] init];
     options.draggable = true;
     [options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POINT_IMAGE]];
+    options.initializer = [[GPGKSMapPointInitializer alloc] initWithPointType:GPKGS_MPDT_EDIT_FEATURE_POINT];
     return options;
 }
 
@@ -925,6 +972,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGMapPointOptions * options = [[GPKGMapPointOptions alloc] init];
     options.draggable = true;
     [options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_HOLE_POINT_IMAGE]];
+    options.initializer = [[GPGKSMapPointInitializer alloc] initWithPointType:GPKGS_MPDT_EDIT_FEATURE_POINT];
     return options;
 }
 
