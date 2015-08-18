@@ -110,6 +110,7 @@ const char MapConstantKey;
 #define TAG_EXISTING_FEATURE 3
 #define TAG_DELETE_EXISTING_FEATURE 4
 #define TAG_CLEAR_EDIT_FEATURES 5
+#define TAG_DELETE_EDIT_POINT 6
 
 static NSString *mapPointImageReuseIdentifier = @"mapPointImageReuseIdentifier";
 static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
@@ -302,6 +303,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         case TAG_CLEAR_EDIT_FEATURES:
             [self handleClearEditFeaturesWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
             break;
+        case TAG_DELETE_EDIT_POINT:
+            [self handleDeleteEditPointWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
     }
 }
 
@@ -318,13 +322,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 [self editExistingFeatureClickWithMapPoint:self.selectedMapPoint];
                 break;
             case GPKGS_MPDT_NEW_EDIT_POINT:
-                //TODO
-                break;
             case GPKGS_MPDT_NEW_EDIT_HOLE_POINT:
-                //TODO
+                [self editPointClickWithMapPoint:self.selectedMapPoint];
                 break;
             case GPKGS_MPDT_POINT:
-                //TODO
+            case GPKGS_MPDT_NONE:
+                // Handle clicks on normal map points or points within geometries
+                [self performSegueWithIdentifier:GPKGS_MAP_SEG_DISPLAY_TEXT sender:self.selectedMapPoint];
                 break;
             default:
                 break;
@@ -445,11 +449,57 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }
 }
 
+-(void) editPointClickWithMapPoint: (GPKGMapPoint *) mapPoint{
+    
+    UIAlertView * alert = [[UIAlertView alloc]
+                           initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_DELETE_LABEL]
+                           message:[NSString stringWithFormat:@"%@ %@ ?", [GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_DELETE_LABEL], [self getTitleAndSubtitleWithMapPoint:mapPoint andDelimiter:@" "]]
+                           delegate:self
+                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_DELETE_LABEL],
+                           nil];
+    objc_setAssociatedObject(alert, &MapConstantKey, mapPoint, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    alert.tag = TAG_DELETE_EDIT_POINT;
+    [alert show];
+}
+
+-(void) handleDeleteEditPointWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if(buttonIndex > 0){
+    
+        GPKGMapPoint *mapPoint = objc_getAssociatedObject(alertView, &MapConstantKey);
+        
+        NSMutableArray * points = nil;
+        
+        GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
+        switch(data.type){
+            case GPKGS_MPDT_NEW_EDIT_POINT:
+                points = self.editPoints;
+                break;
+            case GPKGS_MPDT_NEW_EDIT_HOLE_POINT:
+                points = self.editHolePoints;
+                break;
+            default:
+                break;
+        }
+        
+        if(points != nil){
+            
+            [points removeObject:mapPoint];
+            [self.mapView removeAnnotation:mapPoint];
+            
+            [self updateEditState:true];
+        }
+    }
+}
+
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState {
     if ([view.annotation isKindOfClass:[GPKGMapPoint class]]) {
         if (newState == MKAnnotationViewDragStateEnding) {
             view.dragState = MKAnnotationViewDragStateNone;
         }
+        GPKGMapPoint * mapPoint = (GPKGMapPoint *) view.annotation;
+        [self updateTitleWithMapPoint:mapPoint];
         [self updateEditState:false];
     }
 }
@@ -1542,21 +1592,25 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void) addEditableShapeWithFeatureId: (NSNumber *) featureId andShape: (GPKGMapShape *) shape{
     
+    GPKGMapPoint * mapPoint = nil;
+    
     if(shape.shapeType == GPKG_MST_POINT){
-        GPKGMapPoint * mapPoint = (GPKGMapPoint *) shape.shape;
+        mapPoint = (GPKGMapPoint *) shape.shape;
+    }else{
+        mapPoint = [self getMapPointWithShape:shape];
+        if(mapPoint != nil){
+            [self.editFeatureObjects setObject:shape forKey:[mapPoint getIdAsNumber]];
+        }
+    }
+    
+    if(mapPoint != nil){
         [self.editFeatureIds setObject:featureId forKey:[mapPoint getIdAsNumber]];
         GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
         data.type = GPKGS_MPDT_EDIT_FEATURE;
+        data.database = self.editFeaturesDatabase;
+        data.tableName = self.editFeaturesTable;
+        data.featureId = [featureId intValue];
         [self setTitleWithGeometryType:shape.geometryType andMapPoint:mapPoint];
-    }else{
-        GPKGMapPoint * mapPoint = [self getMapPointWithShape:shape];
-        if(mapPoint != nil){
-            [self.editFeatureIds setObject:featureId forKey:[mapPoint getIdAsNumber]];
-            [self.editFeatureObjects setObject:shape forKey:[mapPoint getIdAsNumber]];
-            GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
-            data.type = GPKGS_MPDT_EDIT_FEATURE;
-            [self setTitleWithGeometryType:shape.geometryType andMapPoint:mapPoint];
-        }
     }
     
 }
@@ -1783,15 +1837,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         case GPKGS_MPDT_EDIT_FEATURE:
             info = [self buildInfoForExistingFeatureMapPoint:mapPoint];
             break;
-        case GPKGS_MPDT_NEW_EDIT_POINT:
-            //TODO
-            break;
-        case GPKGS_MPDT_NEW_EDIT_HOLE_POINT:
-            //TODO
-            break;
         case GPKGS_MPDT_POINT:
-            //TODO
+            info = [self buildInfoForExistingFeatureMapPoint:mapPoint];
             break;
+        case GPKGS_MPDT_NEW_EDIT_POINT:
+        case GPKGS_MPDT_NEW_EDIT_HOLE_POINT:
+        case GPKGS_MPDT_NONE:
+            info = [self buildInfoForGenericMapPoint:mapPoint];
         default:
             break;
     }
@@ -1802,13 +1854,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     NSMutableString * info = [[NSMutableString alloc] init];
     
-    GPKGGeoPackage * geoPackage = [self.manager open:self.editFeaturesDatabase];
+    GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
+    
+    GPKGGeoPackage * geoPackage = [self.manager open:data.database];
     @try {
         
-        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.editFeaturesTable];
+        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:data.tableName];
         
-        NSNumber * mapPointId = [mapPoint getIdAsNumber];
-        NSNumber * featureId = [self.editFeatureIds objectForKey:mapPointId];
+        NSNumber * featureId = [NSNumber numberWithInt:data.featureId];
         if(featureId != nil){
             GPKGFeatureRow * featureRow = (GPKGFeatureRow *)[featureDao queryForIdObject:featureId];
             
@@ -1849,6 +1902,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [geoPackage close];
     }
     
+    return info;
+}
+
+-(NSString *) buildInfoForGenericMapPoint: (GPKGMapPoint *) mapPoint{
+    NSMutableString * info = [[NSMutableString alloc] init];
+    [info appendFormat:@"Latitude: %f", mapPoint.coordinate.latitude];
+    [info appendFormat:@"\nLongitude: %f", mapPoint.coordinate.longitude];
     return info;
 }
 
@@ -1955,21 +2015,39 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 -(void) setTitleWithTitle: (NSString *) title andMapPoint: (GPKGMapPoint *) mapPoint{
-    CLLocationCoordinate2D coordinate = mapPoint.coordinate;
 
-    NSString *lat = [self.locationDecimalFormatter stringFromNumber:[NSNumber numberWithDouble:coordinate.latitude]];
-    NSString *lon = [self.locationDecimalFormatter stringFromNumber:[NSNumber numberWithDouble:coordinate.longitude]];
-
-    NSString * subtitle = [NSString stringWithFormat:@"(lat=%@, lon=%@)", lat, lon];
+    NSString * locationTitle = [self buildLocationTitleWithMapPoint:mapPoint];
     
     if(title == nil){
-        [mapPoint setTitle:subtitle];
+        [mapPoint setTitle:locationTitle];
     }else{
         [mapPoint setTitle:title];
-        [mapPoint setSubtitle:subtitle];
+        [mapPoint setSubtitle:locationTitle];
     }
 }
 
+-(void) updateTitleWithMapPoint: (GPKGMapPoint *) mapPoint{
+    
+    NSString * locationTitle = [self buildLocationTitleWithMapPoint:mapPoint];
+    
+    if(mapPoint.subtitle != nil){
+        [mapPoint setSubtitle:locationTitle];
+    } else{
+        [mapPoint setTitle:locationTitle];
+    }
+}
+
+-(NSString *) buildLocationTitleWithMapPoint: (GPKGMapPoint *) mapPoint{
+    
+    CLLocationCoordinate2D coordinate = mapPoint.coordinate;
+    
+    NSString *lat = [self.locationDecimalFormatter stringFromNumber:[NSNumber numberWithDouble:coordinate.latitude]];
+    NSString *lon = [self.locationDecimalFormatter stringFromNumber:[NSNumber numberWithDouble:coordinate.longitude]];
+    
+    NSString * title = [NSString stringWithFormat:@"(lat=%@, lon=%@)", lat, lon];
+    
+    return title;
+}
 -(NSString *) getTitleAndSubtitleWithMapPoint: (GPKGMapPoint *) mapPoint andDelimiter: (NSString *) delimiter{
     NSMutableString * value = [[NSMutableString alloc] init];
     [value appendString:mapPoint.title];
