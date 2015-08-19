@@ -9,6 +9,7 @@
 #import "GPGKSMapPointInitializer.h"
 #import "GPKGSMapPointData.h"
 #import "GPKGMapPoint.h"
+#import "GPKGSMapPointDataTypes.h"
 
 @implementation GPGKSMapPointInitializer
 

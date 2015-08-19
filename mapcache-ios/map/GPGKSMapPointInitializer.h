@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "GPKGMapPointInitializer.h"
-#import "GPKGSMapPointData.h"
+#import "GPKGSMapPointDataTypes.h"
 
 @interface GPGKSMapPointInitializer : NSObject <GPKGMapPointInitializer>
 

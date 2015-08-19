@@ -7,15 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-enum GPKGSMapPointDataType{
-    GPKGS_MPDT_NONE,
-    GPKGS_MPDT_POINT,
-    GPKGS_MPDT_EDIT_FEATURE_POINT,
-    GPKGS_MPDT_EDIT_FEATURE,
-    GPKGS_MPDT_NEW_EDIT_POINT,
-    GPKGS_MPDT_NEW_EDIT_HOLE_POINT
-};
+#import "GPKGSMapPointDataTypes.h"
 
 @interface GPKGSMapPointData : NSObject
 
