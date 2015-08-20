@@ -76,7 +76,6 @@ const char MapConstantKey;
 @property (nonatomic, strong) NSObject <GPKGShapePoints> * editFeatureShapePoints;
 @property (nonatomic, strong) MKPolyline * editLinestring;
 @property (nonatomic, strong) MKPolygon * editPolygon;
-@property (nonatomic, strong) MKPolygon * editHolePolygon;
 @property (nonatomic, strong) NSMutableArray * holePolygons;
 @property (nonatomic, strong) UIColor * boundingBoxColor;
 @property (nonatomic) double boundingBoxLineWidth;
@@ -96,9 +95,6 @@ const char MapConstantKey;
 @property (nonatomic, strong) UIColor * drawPolygonColor;
 @property (nonatomic) double drawPolygonLineWidth;
 @property (nonatomic, strong) UIColor * drawPolygonFillColor;
-@property (nonatomic, strong) UIColor * drawPolygonHoleColor;
-@property (nonatomic) double drawPolygonHoleLineWidth;
-@property (nonatomic, strong) UIColor * drawPolygonHoleFillColor;
 @property (nonatomic) BOOL internalSeg;
 @property (nonatomic, strong) NSString * segRequest;
 @property (nonatomic, strong) GPKGMapPoint * selectedMapPoint;
@@ -177,12 +173,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         self.drawPolygonFillColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
     }
     
-    self.drawPolygonHoleColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_HOLE_COLOR]];
-    self.drawPolygonHoleLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYGON_HOLE_LINE_WIDTH] doubleValue];
-    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_HOLE_FILL]){
-        self.drawPolygonHoleFillColor = [GPKGSUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_HOLE_FILL_COLOR]];
-    }
-    
     self.locationDecimalFormatter = [[NSNumberFormatter alloc] init];
     self.locationDecimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     self.locationDecimalFormatter.maximumFractionDigits = 4;
@@ -223,18 +213,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     polygonRenderer.fillColor = self.editPolygonFillColor;
                 }
             }else{
-                if(self.editFeatureType == GPKGS_ET_POLYGON_HOLE){
-                    polygonRenderer.strokeColor = self.drawPolygonHoleColor;
-                    polygonRenderer.lineWidth = self.drawPolygonHoleLineWidth;
-                    if(self.drawPolygonHoleFillColor != nil){
-                        polygonRenderer.fillColor = self.drawPolygonHoleFillColor;
-                    }
-                }else{
-                    polygonRenderer.strokeColor = self.drawPolygonColor;
-                    polygonRenderer.lineWidth = self.drawPolygonLineWidth;
-                    if(self.drawPolygonFillColor != nil){
-                        polygonRenderer.fillColor = self.drawPolygonFillColor;
-                    }
+                polygonRenderer.strokeColor = self.drawPolygonColor;
+                polygonRenderer.lineWidth = self.drawPolygonLineWidth;
+                if(self.drawPolygonFillColor != nil){
+                    polygonRenderer.fillColor = self.drawPolygonFillColor;
                 }
             }
         }else{
@@ -1129,6 +1111,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(void) updateEditState: (BOOL) updateAcceptClear{
     
     BOOL accept = false;
+    MKPolygon * editHolePolygon = nil;
     
     switch(self.editFeatureType){
             
@@ -1156,29 +1139,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             }
             break;
             
-        case GPKGS_ET_POLYGON:
         case GPKGS_ET_POLYGON_HOLE:
-            if([self.editPoints count] >= 3){
-                accept = true;
-                
-                NSArray * points = [self getLocationPoints:self.editPoints];
-                CLLocationCoordinate2D * locations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:points];
-                NSMutableArray * polygonHoles = [[NSMutableArray alloc] initWithCapacity:[self.holePolygons count]];
-                for(NSArray * holePoints in self.holePolygons){
-                    CLLocationCoordinate2D * holeLocations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:holePoints];
-                    MKPolyline * polygonHole = [MKPolyline polylineWithCoordinates:holeLocations count:[holePoints count]];
-                    [polygonHoles addObject:polygonHole];
-                }
-                MKPolygon * tempPolygon  = [MKPolygon polygonWithCoordinates:locations count:[points count] interiorPolygons:polygonHoles];
-                if(self.editPolygon != nil){
-                    [self.mapView removeOverlay:self.editPolygon];
-                }
-                self.editPolygon = tempPolygon;
-                [self.mapView addOverlay:self.editPolygon];
-            } else if(self.editPolygon != nil){
-                [self.mapView removeOverlay:self.editPolygon];
-                self.editPolygon = nil;
-            }
             
             if(self.editFeatureType == GPKGS_ET_POLYGON_HOLE){
                 
@@ -1195,20 +1156,41 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     
                     NSArray * points = [self getLocationPoints:self.editHolePoints];
                     CLLocationCoordinate2D * locations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:points];
-                    MKPolygon * tempHolePolygon  = [MKPolygon polygonWithCoordinates:locations count:[points count]];
-                    if(self.editHolePolygon != nil){
-                        [self.mapView removeOverlay:self.editHolePolygon];
-                    }
-                    self.editHolePolygon = tempHolePolygon;
-                    [self.mapView addOverlay:self.editHolePolygon];
+                    editHolePolygon = [MKPolygon polygonWithCoordinates:locations count:[points count]];
                 }else{
                     [self.editPolygonHoleConfirmButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POLYGON_HOLE_CONFIRM_IMAGE] forState:UIControlStateNormal];
-                    if(self.editHolePolygon != nil){
-                        [self.mapView removeOverlay:self.editHolePolygon];
-                        self.editHolePolygon = nil;
-                    }
                 }
             }
+            
+            // Continue to polygon
+            
+        case GPKGS_ET_POLYGON:
+            
+            if([self.editPoints count] >= 3){
+                accept = true;
+                
+                NSArray * points = [self getLocationPoints:self.editPoints];
+                CLLocationCoordinate2D * locations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:points];
+                NSMutableArray * polygonHoles = [[NSMutableArray alloc] initWithCapacity:[self.holePolygons count]];
+                for(NSArray * holePoints in self.holePolygons){
+                    CLLocationCoordinate2D * holeLocations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:holePoints];
+                    MKPolyline * polygonHole = [MKPolyline polylineWithCoordinates:holeLocations count:[holePoints count]];
+                    [polygonHoles addObject:polygonHole];
+                }
+                if(editHolePolygon != nil){
+                    [polygonHoles addObject:editHolePolygon];
+                }
+                MKPolygon * tempPolygon  = [MKPolygon polygonWithCoordinates:locations count:[points count] interiorPolygons:polygonHoles];
+                if(self.editPolygon != nil){
+                    [self.mapView removeOverlay:self.editPolygon];
+                }
+                self.editPolygon = tempPolygon;
+                [self.mapView addOverlay:self.editPolygon];
+            } else if(self.editPolygon != nil){
+                [self.mapView removeOverlay:self.editPolygon];
+                self.editPolygon = nil;
+            }
+            
             break;
             
         case GPKGS_ET_EDIT_FEATURE:
@@ -1304,10 +1286,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self.mapView removeAnnotation:editMapPoint];
     }
     [self.editHolePoints removeAllObjects];
-    if(self.editHolePolygon != nil){
-        [self.mapView removeOverlay:self.editHolePolygon];
-        self.editHolePolygon = nil;
-    }
     [self resetEditPolygonHoleChoiceButtonImages];
 }
 
