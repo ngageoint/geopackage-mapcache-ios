@@ -352,28 +352,6 @@
 	</dict>
 	<key>draw_polygon_line_width</key>
 	<integer>1</integer>
-	<key>draw_polygon_hole_color</key>
-	<dict>
-		<key>red</key>
-		<real>1</real>
-		<key>green</key>
-		<real>0</real>
-		<key>blue</key>
-		<real>0</real>
-		<key>alpha</key>
-		<real>1</real>
-	</dict>
-	<key>draw_polygon_hole_fill</key>
-	<true/>
-	<key>draw_polygon_hole_fill_color</key>
-	<dict>
-		<key>white</key>
-		<string>1</string>
-		<key>alpha</key>
-		<string>.125</string>
-	</dict>
-	<key>draw_polygon_hole_line_width</key>
-	<integer>1</integer>
 	<key>geopackage_view_label</key>
 	<string>View</string>
 	<key>geopackage_delete_label</key>
