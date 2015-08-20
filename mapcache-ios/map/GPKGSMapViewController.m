@@ -216,7 +216,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 polygonRenderer.fillColor = self.boundingBoxFillColor;
             }
         }else if(self.editFeaturesMode){
-            if(self.editFeatureType == GPKGS_ET_NONE || [self.editPoints count] == 0){
+            if(self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
                 polygonRenderer.strokeColor = self.editPolygonColor;
                 polygonRenderer.lineWidth = self.editPolygonLineWidth;
                 if(self.editPolygonFillColor != nil){
@@ -248,7 +248,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }else if ([overlay isKindOfClass:[MKPolyline class]]) {
         MKPolylineRenderer * polylineRenderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
         if(self.editFeaturesMode){
-            if(self.editFeatureType == GPKGS_ET_NONE || [self.editPoints count] == 0){
+            if(self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
                 polylineRenderer.strokeColor = self.editPolylineColor;
                 polylineRenderer.lineWidth = self.editPolylineLineWidth;
             }else{
