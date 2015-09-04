@@ -888,7 +888,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         if (self.editFeatureType == GPKGS_ET_EDIT_FEATURE) {
             self.editFeatureType = GPKGS_ET_NONE;
         }
-        [self clearEditFeaturesAndUpdateType:(enum GPKGSEditType)editTypeClicked];
+        [self clearEditFeaturesAndUpdateType:(enum GPKGSEditType)[editTypeClicked intValue]];
     }
 }
 
