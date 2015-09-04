@@ -53,6 +53,12 @@ The following repositories must be built first:
 * [GeoPackage WKB iOS] (https://git.geointapps.org/geopackage/wkb-ios)
 * [GeoPackage iOS] (https://git.geointapps.org/geopackage/geopackage-ios)
 
+Build this repository using Xcode and/or CocoaPods:
+
+    pod install
+
+Open mapcache-ios.xcworkspace in Xcode
+
 ### Icons ###
 
 GeoPackage Icon is from Open Geospatial Consortium [GeoPackage](http://www.geopackage.org/).
