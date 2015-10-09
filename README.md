@@ -2,7 +2,8 @@
 
 #### MapCache iOS ####
 
-The GeoPackage Libraries were developed at the National Geospatial-Intelligence Agency (NGA) in collaboration with [BIT Systems](https://www.bit-sys.com/index.jsp). The government has "unlimited rights" and is releasing this software to increase the impact of government investments by providing developers with the opportunity to take things in new directions. The software use, modification, and distribution rights are stipulated within the [MIT license](http://choosealicense.com/licenses/mit/).
+The [GeoPackage Libraries](http://ngageoint.github.io/GeoPackage/) were developed at the [National Geospatial-Intelligence Agency (NGA)](http://www.nga.mil/) in collaboration with [BIT Systems](http://www.bit-sys.com/). The government has "unlimited rights" and is releasing this software to increase the impact of government investments by providing developers with the opportunity to take things in new directions. The software use, modification, and distribution rights are stipulated within the [MIT license](http://choosealicense.com/licenses/mit/).
+
 
 ### Pull Requests ###
 If you'd like to contribute to this project, please make a pull request. We'll review the pull request and discuss the changes. All pull request contributions to this project will be released under the MIT license.
@@ -11,7 +12,9 @@ Software source code previously released under an open source license and then m
 
 ### About ###
 
-GeoPackage MapCache is an app for iOS that utilizes and demonstrates the functionality in the [GeoPackage iOS](https://git.geointapps.org/geopackage/geopackage-ios) SDK.  The GeoPackage SDK is an iOS Objective-C library implementation of the Open Geospatial Consortium [GeoPackage](http://www.geopackage.org/) [spec](http://www.geopackage.org/spec/).
+
+[GeoPackage MapCache](http://ngageoint.github.io/geopackage-mapcache-ios/) is a [GeoPackage Library](http://ngageoint.github.io/GeoPackage/) app for iOS that utilizes and demonstrates the functionality in [GeoPackage iOS](https://github.com/ngageoint/geopackage-ios).  The GeoPackage SDK is an iOS Objective-C library implementation of the Open Geospatial Consortium [GeoPackage](http://www.geopackage.org/) [spec](http://www.geopackage.org/spec/). The app and SDK are listed as [OGC GeoPackage Implementations](http://www.geopackage.org/#implementations) by the National Geospatial-Intelligence Agency.
+
 
 The MapCache app provides read and write access to GeoPackage files, including features and tiles. Features are visualized and editable on the map. Tiles are visualized on the map and can be loaded from a tile provider or WMS url.
 
@@ -50,8 +53,8 @@ Editing [Haiti Features] (http://www.geopackage.org/data/haiti-vectors-split.gpk
 ### Build ###
 
 The following repositories must be built first:
-* [GeoPackage WKB iOS] (https://git.geointapps.org/geopackage/wkb-ios)
-* [GeoPackage iOS] (https://git.geointapps.org/geopackage/geopackage-ios)
+* [GeoPackage WKB iOS] (https://github.com/ngageoint/geopackage-wkb-ios)
+* [GeoPackage iOS] (https://github.com/ngageoint/geopackage-ios)
 
 Build this repository using Xcode and/or CocoaPods:
 
@@ -73,4 +76,4 @@ App Icons are from [Icons8](https://icons8.com/), [Material Design Icons on GitH
 
 ### Remote Dependencies ###
 
-* [GeoPackage iOS](https://git.geointapps.org/geopackage/geopackage-ios) (The MIT License (MIT)) - GeoPackage Library
+* [GeoPackage iOS](https://github.com/ngageoint/geopackage-ios) (The MIT License (MIT)) - GeoPackage Library
