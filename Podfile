@@ -7,6 +7,6 @@ inhibit_all_warnings!
 #pod 'geopackage-ios', :git => 'git@git.geointapps.org:geopackage/geopackage-ios.git', :tag => '1.0.0'
 pod 'geopackage-ios', :path => '../geopackage-ios'
 # Inherited dependency to wkb-ios must be declared until published as a pod
-#pod 'wkb-ios', :git => 'git@git.geointapps.org:geopackage/wkb-ios.git', :tag => '1.0.0'
-pod 'wkb-ios', :path => '../wkb-ios'
+#pod 'wkb-ios', :git => 'git@git.geointapps.org:geopackage/geopackage-wkb-ios.git', :tag => '1.0.0'
+pod 'wkb-ios', :path => '../geopackage-wkb-ios'
 
