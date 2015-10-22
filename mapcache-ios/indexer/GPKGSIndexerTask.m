@@ -8,19 +8,19 @@
 
 #import "GPKGSIndexerTask.h"
 #import "GPKGGeoPackage.h"
-#import "GPKGFeatureIndexer.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
 #import "GPKGSUtils.h"
+#import "GPKGFeatureIndexManager.h"
 
 @interface GPKGSIndexerTask ()
 
 @property (nonatomic, strong) NSNumber *maxIndex;
 @property (nonatomic, strong) GPKGGeoPackage *geoPackage;
 @property (nonatomic) int progress;
-@property (nonatomic, strong) GPKGFeatureIndexer *indexer;
+@property (nonatomic, strong) GPKGFeatureIndexManager *indexer;
 @property (nonatomic, strong) NSObject<GPKGSIndexerProtocol> *callback;
 @property (nonatomic) BOOL canceled;
 @property (nonatomic, strong) NSString *error;
@@ -33,13 +33,16 @@
 
 +(void) indexFeaturesWithCallback: (NSObject<GPKGSIndexerProtocol> *) callback
                                      andDatabase: (NSString *) database
-                                 andTable: (NSString *) tableName{
+                                 andTable: (NSString *) tableName
+                                    andFeatureIndexType: (enum GPKGFeatureIndexType) indexLocation{
     
     GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory getManager];
     GPKGGeoPackage * geoPackage = [manager open:database];
     
     GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
-    GPKGFeatureIndexer * indexer = [[GPKGFeatureIndexer alloc] initWithFeatureDao:featureDao];
+    
+    GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+    [indexer setIndexLocation:indexLocation];
     
     GPKGSIndexerTask * indexTask = [[GPKGSIndexerTask alloc] initWithCallback:callback andGeoPackage:geoPackage andIndexer:indexer];
     
@@ -66,7 +69,7 @@
 
 -(instancetype) initWithCallback: (NSObject<GPKGSIndexerProtocol> *) callback
                       andGeoPackage: (GPKGGeoPackage *) geoPackage
-                  andIndexer: (GPKGFeatureIndexer *) indexer{
+                  andIndexer: (GPKGFeatureIndexManager *) indexer{
     self = [super init];
     if(self != nil){
         self.callback = callback;
@@ -92,7 +95,7 @@
         int count = 0;
         
         @try {
-            count = [self.indexer index];
+            count = [self.indexer indexWithForce:true];
             if(count < [self.maxIndex intValue]){
                 NSString * countError = [NSString stringWithFormat:@"Fewer features were indexed than expected. Expected: %@, Actual: %u", self.maxIndex, count];
                 if(self.error != nil){

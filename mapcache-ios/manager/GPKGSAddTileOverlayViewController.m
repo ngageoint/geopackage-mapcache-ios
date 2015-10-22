@@ -13,6 +13,7 @@
 #import "GPKGSUtils.h"
 #import "GPKGSEditTileOverlayViewController.h"
 #import "GPKGSFeatureOverlayTable.h"
+#import "GPKGFeatureIndexManager.h"
 
 NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverlay";
 
@@ -51,6 +52,7 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
     
     [overlayTable setMinZoom:[self.editTileOverlayData.minZoom intValue]];
     [overlayTable setMaxZoom:[self.editTileOverlayData.maxZoom intValue]];
+    [overlayTable setMaxFeaturesPerTile:self.editTileOverlayData.maxFeaturesPerTile];
     [overlayTable setMinLat:[self.editTileOverlayData.boundingBox.minLatitude doubleValue]];
     [overlayTable setMaxLat:[self.editTileOverlayData.boundingBox.maxLatitude doubleValue]];
     [overlayTable setMinLon:[self.editTileOverlayData.boundingBox.minLongitude doubleValue]];
@@ -89,6 +91,35 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
         editTileOverlayViewController.manager = self.manager;
         editTileOverlayViewController.database = self.table.database;
         editTileOverlayViewController.featureTable = self.table.name;
+        
+        GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
+        @try {
+            GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.table.name];
+            
+            // Set the min zoom level
+            [self.editTileOverlayData setMinZoom:[NSNumber numberWithInt:[featureDao getZoomLevel]]];
+            
+            // Check if indexed
+            GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+            if([indexer isIndexed]){
+                
+                // Only default the max features if indexed, otherwise an unindexed feature table will
+                // not show any tiles with features
+                NSNumber * maxFeatures = nil;
+                switch([featureDao getGeometryType]){
+                    case WKB_POINT:
+                        maxFeatures = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_OVERLAY_MAX_POINTS_PER_TILE_DEFAULT];
+                        break;
+                    default:
+                        maxFeatures = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_OVERLAY_MAX_FEATURES_PER_TILE_DEFAULT];
+                        break;
+                }
+                [self.editTileOverlayData setMaxFeaturesPerTile:maxFeatures];
+            }
+        }
+        @finally {
+            [geoPackage close];
+        }
     }
 }
 

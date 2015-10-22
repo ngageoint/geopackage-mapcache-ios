@@ -22,7 +22,6 @@
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
 #import "GPKGFeatureTiles.h"
-#import "GPKGFeatureIndexer.h"
 #import "GPKGFeatureOverlay.h"
 #import "GPKGSUtils.h"
 #import "GPKGSDownloadTilesViewController.h"
@@ -36,6 +35,7 @@
 #import "GPKGShapePoints.h"
 #import "GPKGShapeWithChildrenPoints.h"
 #import "GPGKSMapPointInitializer.h"
+#import "GPKGNumberFeaturesTile.h"
 
 NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 NSString * const GPKGS_MAP_SEG_SELECT_FEATURE_TABLE = @"selectFeatureTable";
@@ -1583,8 +1583,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     // Load tiles
     GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithFeatureDao:featureDao];
     
-    GPKGFeatureIndexer * indexer = [[GPKGFeatureIndexer alloc] initWithFeatureDao:featureDao];
-    [featureTiles setIndexQuery:[indexer isIndexed]];
+    [featureTiles setMaxFeaturesPerTile:featureOverlay.maxFeaturesPerTile];
+    if(featureOverlay.maxFeaturesPerTile != nil){
+        [featureTiles setMaxFeaturesTileDraw:[[GPKGNumberFeaturesTile alloc] init]];
+    }
+    
+    GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+    [featureTiles setIndexManager:indexer];
     
     [featureTiles setPointColor:featureOverlay.pointColor];
     [featureTiles setPointRadius:featureOverlay.pointRadius];

@@ -32,6 +32,7 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverl
     
     [self.table setMinZoom:[self.editTileOverlayData.minZoom intValue]];
     [self.table setMaxZoom:[self.editTileOverlayData.maxZoom intValue]];
+    [self.table setMaxFeaturesPerTile:self.editTileOverlayData.maxFeaturesPerTile];
     [self.table setMinLat:[self.editTileOverlayData.boundingBox.minLatitude doubleValue]];
     [self.table setMaxLat:[self.editTileOverlayData.boundingBox.maxLatitude doubleValue]];
     [self.table setMinLon:[self.editTileOverlayData.boundingBox.minLongitude doubleValue]];
@@ -78,6 +79,7 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverl
     
     [self.editTileOverlayData setMinZoom:[NSNumber numberWithInt:self.table.minZoom]];
     [self.editTileOverlayData setMaxZoom:[NSNumber numberWithInt:self.table.maxZoom]];
+    [self.editTileOverlayData setMaxFeaturesPerTile:self.table.maxFeaturesPerTile];
     GPKGBoundingBox * boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:self.table.minLon andMaxLongitudeDouble:self.table.maxLon andMinLatitudeDouble:self.table.minLat andMaxLatitudeDouble:self.table.maxLat];
     [self.editTileOverlayData setBoundingBox:boundingBox];
     GPKGSFeatureTilesDrawData * featureTilesDraw = [[GPKGSFeatureTilesDrawData alloc] init];
