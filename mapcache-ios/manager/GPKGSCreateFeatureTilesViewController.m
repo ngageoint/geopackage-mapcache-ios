@@ -9,7 +9,6 @@
 #import "GPKGSCreateFeatureTilesViewController.h"
 #import "GPKGSGenerateTilesViewController.h"
 #import "GPKGSFeatureTilesDrawViewController.h"
-#import "GPKGFeatureIndexer.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
 #import "GPKGProjectionTransform.h"
@@ -18,6 +17,7 @@
 #import "GPKGSLoadTilesTask.h"
 #import "GPKGSUtils.h"
 #import "GPKGProjectionFactory.h"
+#import "GPKGNumberFeaturesTile.h"
 
 NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_GENERATE_TILES = @"generateTiles";
 NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"featureTilesDraw";
@@ -39,7 +39,7 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
     GPKGGeoPackage * geoPackage = [self.manager open:self.database];
     @try {
         GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.name];
-        GPKGFeatureIndexer * indexer = [[GPKGFeatureIndexer alloc] initWithFeatureDao:featureDao];
+        GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         self.indexed = [indexer isIndexed];
         if(self.indexed){
             [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_INDEX_VALIDATION]];
@@ -83,6 +83,8 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
         int minZoom = [generateTiles.minZoom intValue];
         int maxZoom = [generateTiles.maxZoom intValue];
         
+        NSNumber * maxFeatures = generateTiles.maxFeaturesPerTile;
+        
         if (minZoom > maxZoom) {
             [NSException raise:@"Zoom Range" format:@"Min zoom (%d) can not be larger than max zoom (%d)", minZoom, maxZoom];
         }
@@ -102,8 +104,15 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
         
         // Load tiles
         GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithFeatureDao:featureDao];
+        [featureTiles setMaxFeaturesPerTile:maxFeatures];
+        if(maxFeatures != nil){
+            [featureTiles setMaxFeaturesTileDraw:[[GPKGNumberFeaturesTile alloc] init]];
+        }
         
-        [featureTiles setIndexQuery:self.indexed];
+        GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+        if([indexer isIndexed]){
+            [featureTiles setIndexManager:indexer];
+        }
         
         double pointRadius = [self.featureTilesDrawData.pointRadius doubleValue];
         UIColor * pointColor = [self.featureTilesDrawData getPointAlphaColor];
@@ -187,6 +196,18 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
             zoomLevel = MAX(0, MIN(zoomLevel, maxZoomLevel - 1));
             self.generateTilesData.minZoom = [NSNumber numberWithInt:zoomLevel];
             self.generateTilesData.maxZoom = [NSNumber numberWithInt:maxZoomLevel];
+            
+            // Check if indexed and set max features
+            GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.name];
+            GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+            BOOL indexed = [indexer isIndexed];
+            self.generateTilesData.supportsMaxFeatures = true;
+            if(indexed){
+                NSNumber * maxFeaturesPerTile = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_LOAD_MAX_FEATURES_PER_TILE_DEFAULT];
+                if([maxFeaturesPerTile intValue] >= 0){
+                    self.generateTilesData.maxFeaturesPerTile = maxFeaturesPerTile;
+                }
+            }
             
             if(self.generateTilesData.boundingBox == nil){
                 GPKGProjectionTransform * worldGeodeticTransform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];

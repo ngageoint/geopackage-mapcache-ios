@@ -53,6 +53,14 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
         }
         [self.maxZoomTextField setText:[self.data.maxZoom stringValue]];
         
+        if(self.data.supportsMaxFeatures){
+            if(self.data.maxFeaturesPerTile != nil){
+                [self.maxFeaturesPerTileTextField setText:[self.data.maxFeaturesPerTile stringValue]];
+            }
+        }else{
+            // TODO hide or disable max features label and field
+        }
+        
         if(self.data.compressQuality == nil){
             self.data.compressQuality = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT];
         }
@@ -92,6 +100,11 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
 
 - (IBAction)maxZoomChanged:(id)sender {
     self.data.maxZoom = [self.numberFormatter numberFromString:self.maxZoomTextField.text];
+}
+
+- (IBAction)maxFeaturesPerTileChanged:(id)sender {
+    // TODO
+    self.data.maxFeaturesPerTile = [self.numberFormatter numberFromString:self.maxFeaturesPerTileTextField.text];
 }
 
 - (IBAction)compressFormatChanged:(id)sender {

@@ -9,11 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "GPKGProgress.h"
 #import "GPKGSIndexerProtocol.h"
+#import "GPKGFeatureIndexTypes.h"
 
 @interface GPKGSIndexerTask : NSObject<GPKGProgress>
 
 +(void) indexFeaturesWithCallback: (NSObject<GPKGSIndexerProtocol> *) callback
                       andDatabase: (NSString *) database
-                         andTable: (NSString *) tableName;
+                         andTable: (NSString *) tableName
+                      andFeatureIndexType: (enum GPKGFeatureIndexType) indexLocation;
 
 @end
