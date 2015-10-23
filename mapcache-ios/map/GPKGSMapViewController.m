@@ -36,6 +36,7 @@
 #import "GPKGShapeWithChildrenPoints.h"
 #import "GPGKSMapPointInitializer.h"
 #import "GPKGNumberFeaturesTile.h"
+#import "GPKGFeatureOverlayQuery.h"
 
 NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 NSString * const GPKGS_MAP_SEG_SELECT_FEATURE_TABLE = @"selectFeatureTable";
@@ -99,6 +100,7 @@ const char MapConstantKey;
 @property (nonatomic, strong) NSString * segRequest;
 @property (nonatomic, strong) GPKGMapPoint * selectedMapPoint;
 @property (nonatomic, strong) NSNumberFormatter *locationDecimalFormatter;
+@property (nonatomic, strong) NSMutableArray * featureOverlayQueries;
 
 @end
 
@@ -133,10 +135,20 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.editPoints = [[NSMutableArray alloc] init];
     self.editHolePoints = [[NSMutableArray alloc] init];
     self.holePolygons = [[NSMutableArray alloc] init];
+    self.featureOverlayQueries = [[NSMutableArray alloc] init];
     [self resetBoundingBox];
     [self resetEditFeatures];
+    UITapGestureRecognizer * singleTapGesture = [[UITapGestureRecognizer alloc]
+                                          initWithTarget:self action:@selector(singleTapGesture:)];
+    singleTapGesture.numberOfTapsRequired = 1;
+    [self.mapView addGestureRecognizer:singleTapGesture];
+    UITapGestureRecognizer * doubleTapGesture = [[UITapGestureRecognizer alloc]
+                                                 initWithTarget:self action:@selector(doubleTapGesture:)];
+    doubleTapGesture.numberOfTapsRequired = 2;
+    [self.mapView addGestureRecognizer:doubleTapGesture];
     [self.mapView addGestureRecognizer:[[UILongPressGestureRecognizer alloc]
                                         initWithTarget:self action:@selector(longPressGesture:)]];
+    [singleTapGesture requireGestureRecognizerToFail:doubleTapGesture];
     self.boundingBoxStartCorner = kCLLocationCoordinate2DInvalid;
     self.boundingBoxEndCorner = kCLLocationCoordinate2DInvalid;
     
@@ -583,6 +595,36 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     if ([view.annotation isKindOfClass:[GPKGMapPoint class]]) {
         self.selectedMapPoint = (GPKGMapPoint *) view.annotation;
     }
+    
+}
+
+-(void) singleTapGesture:(UITapGestureRecognizer *) tapGestureRecognizer{
+    
+    if(tapGestureRecognizer.state == UIGestureRecognizerStateEnded){
+        if(self.featureOverlayQueries.count > 0){
+            CGPoint cgPoint = [tapGestureRecognizer locationInView:self.mapView];
+            CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
+            
+            NSMutableString * clickMessage = [[NSMutableString alloc] init];
+            for(GPKGFeatureOverlayQuery * query in self.featureOverlayQueries){
+                NSString * message = [query buildMapClickMessageWithLocationCoordinate:point andMapView:self.mapView];
+                if(message != nil){
+                    if(clickMessage.length > 0){
+                        [clickMessage appendString:@"\n\n"];
+                    }
+                    [clickMessage appendString:message];
+                }
+            }
+            if(clickMessage.length > 0){
+                [GPKGSUtils showMessageWithDelegate:self
+                                           andTitle:nil
+                                         andMessage:clickMessage];
+            }
+        }
+    }
+}
+
+-(void) doubleTapGesture:(UITapGestureRecognizer *) tapGestureRecognizer{
     
 }
 
@@ -1398,6 +1440,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
     self.featureOverlayTiles = false;
+    [self.featureOverlayQueries removeAllObjects];
     int maxFeatures = [self getMaxFeatures];
 
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
@@ -1613,6 +1656,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGContents * contents = [[geoPackage getGeometryColumnsDao] getContents:geometryColumns];
     
     self.featureOverlayTiles = true;
+    
+    GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithFeatureOverlay:overlay];
+    [self.featureOverlayQueries addObject:featureOverlayQuery];
     
     [self displayTilesWithOverlay:overlay andGeoPackage:geoPackage andContents:contents andSpecifiedBoundingBox:boundingBox];
 }
