@@ -43,8 +43,14 @@
                andBoundingBox: (GPKGBoundingBox *) boundingBox
                      andLabel: (NSString *) label{
     
-    GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory getManager];
-    GPKGGeoPackage * geoPackage = [manager open:database];
+    GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory getManager];
+    GPKGGeoPackage * geoPackage = nil;
+    @try {
+        geoPackage = [manager open:database];
+    }
+    @finally {
+        [manager close];
+    }
     
     GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andTileUrl:tileUrl andMinZoom:minZoom andMaxZoom:maxZoom];
     [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andStandardFormat:standardWebMercatorFormat andBoundingBox:boundingBox];

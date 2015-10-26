@@ -112,6 +112,8 @@
     @catch (NSException *e) {
         NSLog(@"Download File Error for url '%@' with error: %@", self.urlTextField.text, [e description]);
         [self failureWithError:[e description]];
+    }@finally{
+        [manager close];
     }
 
 }
