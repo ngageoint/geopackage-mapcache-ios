@@ -37,7 +37,13 @@
                                     andFeatureIndexType: (enum GPKGFeatureIndexType) indexLocation{
     
     GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory getManager];
-    GPKGGeoPackage * geoPackage = [manager open:database];
+    GPKGGeoPackage * geoPackage = nil;
+    @try {
+        geoPackage = [manager open:database];
+    }
+    @finally {
+        [manager close];
+    }
     
     GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
     
