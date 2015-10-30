@@ -13,7 +13,7 @@
 	<key>icon_tiles</key>
 	<string>Tiles</string>
 	<key>icon_paint</key>
-	<string>Paint</string>
+	<string>paint</string>
 	<key>icon_up</key>
 	<string>Up</string>
 	<key>icon_down</key>
@@ -211,6 +211,12 @@
 			<real>1</real>
 		</dict>
 	</array>
+	<key>feature_tiles_overlay_max_points_per_tile_default</key>
+	<integer>1000</integer>
+	<key>feature_tiles_overlay_max_features_per_tile_default</key>
+	<integer>50</integer>
+	<key>feature_tiles_load_max_features_per_tile_default</key>
+	<integer>-1</integer>
 	<key>map_create_tiles_existing_geopackage_dialog_label</key>
 	<string>GeoPackages</string>
 	<key>map_create_tiles_dialog_label</key>
@@ -377,13 +383,25 @@
 	<key>geopackage_table_delete_label</key>
 	<string>Delete</string>
 	<key>geopackage_table_index_features_label</key>
-	<string>Index Features</string>
+	<string>Feature Index</string>
 	<key>geopackage_table_index_features_index_title</key>
 	<string>Index</string>
-	<key>geopackage_table_index_features_indexed_message</key>
-	<string>Table index is up to date</string>
-	<key>geopackage_table_index_features_index_message</key>
-	<string>Table index required. Index?</string>
+	<key>geopackage_table_index_features_index_geopackage_label</key>
+	<string>GeoPackage Index</string>
+	<key>geopackage_table_index_features_index_metadata_label</key>
+	<string>Metadata Index</string>
+	<key>geopackage_table_index_features_index_create_label</key>
+	<string>Create</string>
+	<key>geopackage_table_index_features_index_delete_label</key>
+	<string>Delete</string>
+	<key>geopackage_table_index_features_index_create_geopackage_label</key>
+	<string>into the GeoPackage?</string>
+	<key>geopackage_table_index_features_index_create_metadata_label</key>
+	<string>into App Metadata?</string>
+	<key>geopackage_table_index_features_index_delete_geopackage_label</key>
+	<string>from the GeoPackage?</string>
+	<key>geopackage_table_index_features_index_delete_metadata_label</key>
+	<string>from App Metadata?</string>
 	<key>geopackage_table_create_feature_tiles_label</key>
 	<string>Create Tiles</string>
 	<key>geopackage_table_add_feature_overlay_label</key>

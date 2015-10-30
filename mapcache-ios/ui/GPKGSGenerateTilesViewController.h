@@ -14,6 +14,7 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *minZoomTextField;
 @property (weak, nonatomic) IBOutlet UITextField *maxZoomTextField;
+@property (weak, nonatomic) IBOutlet UITextField *maxFeaturesPerTileTextField; // TODO
 @property (weak, nonatomic) IBOutlet UISegmentedControl *compressFormatSegmentedControl;
 @property (weak, nonatomic) IBOutlet UITextField *compressQualityTextField;
 @property (weak, nonatomic) IBOutlet UITextField *compressScaleTextField;
