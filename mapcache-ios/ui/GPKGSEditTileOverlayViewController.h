@@ -17,7 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *warningLabel;
 @property (weak, nonatomic) IBOutlet UITextField *minZoomTextField;
 @property (weak, nonatomic) IBOutlet UITextField *maxZoomTextField;
-@property (weak, nonatomic) IBOutlet UITextField *maxFeaturesPerTileTextField; // TODO
+@property (weak, nonatomic) IBOutlet UITextField *maxFeaturesPerTileTextField;
 @property (nonatomic, strong) GPKGSEditTileOverlayData * data;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) NSString *database;
