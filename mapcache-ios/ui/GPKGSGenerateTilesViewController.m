@@ -58,7 +58,8 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
                 [self.maxFeaturesPerTileTextField setText:[self.data.maxFeaturesPerTile stringValue]];
             }
         }else{
-            // TODO hide or disable max features label and field
+            self.maxFeaturesPerTileLabel.hidden = YES;
+            self.maxFeaturesPerTileTextField.hidden = YES;
         }
         
         if(self.data.compressQuality == nil){
@@ -77,6 +78,7 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
     
     self.minZoomTextField.inputAccessoryView = keyboardToolbar;
     self.maxZoomTextField.inputAccessoryView = keyboardToolbar;
+    self.maxFeaturesPerTileTextField.inputAccessoryView = keyboardToolbar;
     self.compressQualityTextField.inputAccessoryView = keyboardToolbar;
     self.compressScaleTextField.inputAccessoryView = keyboardToolbar;
 }
@@ -103,7 +105,6 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
 }
 
 - (IBAction)maxFeaturesPerTileChanged:(id)sender {
-    // TODO
     self.data.maxFeaturesPerTile = [self.numberFormatter numberFromString:self.maxFeaturesPerTileTextField.text];
 }
 
@@ -143,6 +144,7 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
 - (void) doneButtonPressed {
     [self.minZoomTextField resignFirstResponder];
     [self.maxZoomTextField resignFirstResponder];
+    [self.maxFeaturesPerTileTextField resignFirstResponder];
     [self.compressQualityTextField resignFirstResponder];
     [self.compressScaleTextField resignFirstResponder];
 }
