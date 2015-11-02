@@ -1154,7 +1154,7 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sne-5z-goL">
-                                        <rect key="frame" x="16" y="12" width="87" height="21"/>
+                                        <rect key="frame" x="16" y="12.5" width="87" height="20.5"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="87" id="tSC-5J-sd4"/>
                                         </constraints>
@@ -1168,9 +1168,9 @@
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9uM-CI-PDF">
-                                        <rect key="frame" x="16" y="47" width="568" height="625"/>
+                                        <rect key="frame" x="16" y="47" width="568" height="663"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="625" id="a1E-F1-ECO"/>
+                                            <constraint firstAttribute="height" constant="663" id="a1E-F1-ECO"/>
                                         </constraints>
                                         <connections>
                                             <segue destination="7Ed-ln-jxd" kind="embed" identifier="createTiles" id="X4O-rd-xnT"/>
@@ -1272,9 +1272,9 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Qn-Lx-SLH">
-                                        <rect key="frame" x="16" y="0.0" width="568" height="550"/>
+                                        <rect key="frame" x="16" y="0.0" width="568" height="588"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="550" id="tD0-1R-xSs"/>
+                                            <constraint firstAttribute="height" constant="588" id="tD0-1R-xSs"/>
                                         </constraints>
                                         <connections>
                                             <segue destination="qj0-zd-Hg5" kind="embed" identifier="loadTiles" id="AFX-xb-2xo"/>
@@ -1600,20 +1600,20 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SoQ-nO-9of">
-                                        <rect key="frame" x="16" y="12" width="78" height="21"/>
+                                        <rect key="frame" x="16" y="12" width="77.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kti-mp-m7E" userLabel="DatabaseValue">
-                                        <rect key="frame" x="102" y="8" width="482" height="30"/>
+                                        <rect key="frame" x="101.5" y="8" width="482.5" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mnr-TU-bG3">
                                         <rect key="frame" x="16" y="84" width="568" height="452"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="625" id="Ymk-UD-Bno"/>
+                                            <constraint firstAttribute="height" constant="663" id="Ymk-UD-Bno"/>
                                         </constraints>
                                         <connections>
                                             <segue destination="7Ed-ln-jxd" kind="embed" identifier="createTiles" id="S4V-Zx-x7V"/>
@@ -1793,11 +1793,11 @@
                         <viewControllerLayoutGuide type="bottom" id="uvq-rh-sph"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="30I-cc-Dea">
-                        <rect key="frame" x="0.0" y="0.0" width="510" height="625"/>
+                        <rect key="frame" x="0.0" y="0.0" width="510" height="663"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kg3-oJ-f5E" userLabel="Name:">
-                                <rect key="frame" x="0.0" y="8" width="74" height="21"/>
+                                <rect key="frame" x="0.0" y="8" width="74" height="20.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="74" id="A4S-zY-VAJ"/>
                                 </constraints>
@@ -1806,7 +1806,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cn7-go-ZQk" userLabel="NameValue">
-                                <rect key="frame" x="0.0" y="37" width="510" height="30"/>
+                                <rect key="frame" x="0.0" y="36.5" width="510" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -1814,9 +1814,9 @@
                                 </connections>
                             </textField>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dwO-zv-MWx">
-                                <rect key="frame" x="0.0" y="75" width="510" height="550"/>
+                                <rect key="frame" x="0.0" y="74.5" width="510" height="588"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="550" id="2Mo-Mv-G9M"/>
+                                    <constraint firstAttribute="height" constant="588" id="2Mo-Mv-G9M"/>
                                 </constraints>
                                 <connections>
                                     <segue destination="qj0-zd-Hg5" kind="embed" identifier="loadTiles" id="aLP-Cc-axH"/>
@@ -1836,7 +1836,7 @@
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="510" height="625"/>
+                    <size key="freeformSize" width="510" height="663"/>
                     <connections>
                         <outlet property="nameTextField" destination="cn7-go-ZQk" id="woF-Nv-RFV"/>
                     </connections>
@@ -1947,11 +1947,11 @@
                         <viewControllerLayoutGuide type="bottom" id="eLS-Pz-PG6"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="MgK-of-WNQ">
-                        <rect key="frame" x="0.0" y="0.0" width="510" height="550"/>
+                        <rect key="frame" x="0.0" y="0.0" width="510" height="588"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="URL:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s73-rT-ZES" userLabel="URL:">
-                                <rect key="frame" x="0.0" y="8" width="74" height="21"/>
+                                <rect key="frame" x="0.0" y="8" width="74" height="20.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="74" id="4bH-eB-yrd"/>
                                 </constraints>
@@ -1960,7 +1960,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gTI-kL-4gd" userLabel="URLValue">
-                                <rect key="frame" x="0.0" y="37" width="510" height="30"/>
+                                <rect key="frame" x="0.0" y="36.5" width="510" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -1978,9 +1978,9 @@
                                 </connections>
                             </button>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h3Z-la-6Hd">
-                                <rect key="frame" x="0.0" y="115" width="510" height="435"/>
+                                <rect key="frame" x="0.0" y="115" width="510" height="473"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="435" id="G66-KI-5bB"/>
+                                    <constraint firstAttribute="height" constant="473" id="G66-KI-5bB"/>
                                 </constraints>
                                 <connections>
                                     <segue destination="epq-as-8j9" kind="embed" identifier="generateTiles" id="E1Z-ca-WBX"/>
@@ -2002,7 +2002,7 @@
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="510" height="550"/>
+                    <size key="freeformSize" width="510" height="588"/>
                     <connections>
                         <outlet property="urlTextField" destination="gTI-kL-4gd" id="O5a-fm-lcL"/>
                     </connections>
@@ -2020,11 +2020,11 @@
                         <viewControllerLayoutGuide type="bottom" id="P6V-hZ-SOI"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="N3V-0a-Vtp">
-                        <rect key="frame" x="0.0" y="0.0" width="510" height="435"/>
+                        <rect key="frame" x="0.0" y="0.0" width="510" height="473"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Zoom:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="txG-A0-EXf">
-                                <rect key="frame" x="0.0" y="12" width="83" height="21"/>
+                                <rect key="frame" x="0.0" y="12" width="83" height="20.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="83" id="vfo-C4-g62"/>
                                 </constraints>
@@ -2044,7 +2044,7 @@
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Max Zoom:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VB4-Ej-iXg">
-                                <rect key="frame" x="0.0" y="50" width="88" height="21"/>
+                                <rect key="frame" x="0.0" y="49.5" width="88" height="20.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="88" id="MDt-Nj-08c"/>
                                 </constraints>
@@ -2063,8 +2063,28 @@
                                     <action selector="maxZoomChanged:" destination="epq-as-8j9" eventType="editingChanged" id="k6H-AR-jyD"/>
                                 </connections>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Max Features Per Tile:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xLa-2E-L5S">
+                                <rect key="frame" x="0.0" y="88" width="170" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="170" id="Im4-as-Kt6"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VY3-yC-tEI" userLabel="MaxFeaturesPerTile">
+                                <rect key="frame" x="181" y="84" width="97" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="97" id="OAr-Z3-R80"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <action selector="maxFeaturesPerTileChanged:" destination="epq-as-8j9" eventType="editingChanged" id="vHu-Sz-w2L"/>
+                                </connections>
+                            </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compress Format:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hhh-Vu-rbw">
-                                <rect key="frame" x="0.0" y="87" width="143" height="21"/>
+                                <rect key="frame" x="0.0" y="125" width="143" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="143" id="ohV-fY-qfQ"/>
                                 </constraints>
@@ -2073,7 +2093,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="t9U-vv-RZ0">
-                                <rect key="frame" x="151" y="84" width="359" height="29"/>
+                                <rect key="frame" x="151" y="122" width="359" height="29"/>
                                 <segments>
                                     <segment title="None"/>
                                     <segment title="JPEG"/>
@@ -2084,7 +2104,7 @@
                                 </connections>
                             </segmentedControl>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compress Quality:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e2a-tB-YdF">
-                                <rect key="frame" x="0.0" y="125" width="142" height="21"/>
+                                <rect key="frame" x="0.0" y="163" width="142" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="142" id="458-2d-o9v"/>
                                 </constraints>
@@ -2093,7 +2113,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kh2-s5-cV7" userLabel="CompressQualityValue">
-                                <rect key="frame" x="151" y="121" width="97" height="30"/>
+                                <rect key="frame" x="151" y="159" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="97" id="x6i-RG-cWG"/>
                                 </constraints>
@@ -2103,8 +2123,8 @@
                                     <action selector="compressQualityChanged:" destination="epq-as-8j9" eventType="editingChanged" id="tnV-WX-37C"/>
                                 </connections>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compress Scale:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wuc-Gc-x6u">
-                                <rect key="frame" x="0.0" y="161" width="131" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Compress Scale:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wuc-Gc-x6u">
+                                <rect key="frame" x="0.0" y="199" width="131" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="131" id="2ca-Y3-NZB"/>
                                 </constraints>
@@ -2113,7 +2133,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NUA-38-9jf" userLabel="CompressScaleValue">
-                                <rect key="frame" x="151" y="157" width="97" height="30"/>
+                                <rect key="frame" x="151" y="195" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
@@ -2121,7 +2141,7 @@
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tile Format:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zsM-wc-Qqn">
-                                <rect key="frame" x="0.0" y="199" width="91" height="21"/>
+                                <rect key="frame" x="0.0" y="237.5" width="91" height="20.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="91" id="2tL-I8-MPu"/>
                                 </constraints>
@@ -2130,7 +2150,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Afx-gq-LqQ">
-                                <rect key="frame" x="151" y="197" width="359" height="28"/>
+                                <rect key="frame" x="151" y="235" width="359" height="28"/>
                                 <segments>
                                     <segment title="GeoPackage"/>
                                     <segment title="Standard"/>
@@ -2140,7 +2160,7 @@
                                 </connections>
                             </segmentedControl>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v10-AN-6fs" userLabel="Bounding Box Container View">
-                                <rect key="frame" x="0.0" y="235" width="300" height="200"/>
+                                <rect key="frame" x="0.0" y="273" width="300" height="200"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="CuL-us-pp5"/>
                                     <constraint firstAttribute="height" constant="200" id="bub-QX-bLO"/>
@@ -2159,10 +2179,11 @@
                             <constraint firstItem="kh2-s5-cV7" firstAttribute="top" secondItem="t9U-vv-RZ0" secondAttribute="bottom" constant="9" id="9KP-yA-pSy"/>
                             <constraint firstItem="t9U-vv-RZ0" firstAttribute="leading" secondItem="kh2-s5-cV7" secondAttribute="leading" id="AJH-1s-yOe"/>
                             <constraint firstAttribute="centerX" secondItem="Afx-gq-LqQ" secondAttribute="centerX" constant="-75.5" id="Akf-Qh-KSr"/>
+                            <constraint firstItem="Hhh-Vu-rbw" firstAttribute="top" secondItem="xLa-2E-L5S" secondAttribute="bottom" constant="16" id="Arq-X9-FDd"/>
                             <constraint firstItem="VB4-Ej-iXg" firstAttribute="top" secondItem="txG-A0-EXf" secondAttribute="bottom" constant="17" id="BTe-nm-3gM"/>
                             <constraint firstItem="v10-AN-6fs" firstAttribute="top" secondItem="Afx-gq-LqQ" secondAttribute="bottom" constant="11" id="COY-8d-UgL"/>
                             <constraint firstItem="e2a-tB-YdF" firstAttribute="leading" secondItem="Wuc-Gc-x6u" secondAttribute="leading" id="E8d-GR-Ix7"/>
-                            <constraint firstItem="Hhh-Vu-rbw" firstAttribute="top" secondItem="veO-IO-BiM" secondAttribute="bottom" constant="11" id="Ewy-Vn-nk1"/>
+                            <constraint firstItem="VY3-yC-tEI" firstAttribute="centerY" secondItem="xLa-2E-L5S" secondAttribute="centerY" id="EGv-g0-FNm"/>
                             <constraint firstItem="zsM-wc-Qqn" firstAttribute="baseline" secondItem="Afx-gq-LqQ" secondAttribute="baseline" id="FYW-PV-LoW"/>
                             <constraint firstItem="t9U-vv-RZ0" firstAttribute="leading" secondItem="Hhh-Vu-rbw" secondAttribute="trailing" constant="8" symbolic="YES" id="JiL-Z5-evj"/>
                             <constraint firstItem="t9U-vv-RZ0" firstAttribute="trailing" secondItem="Afx-gq-LqQ" secondAttribute="trailing" id="KFk-Jh-m7p"/>
@@ -2176,26 +2197,30 @@
                             <constraint firstItem="txG-A0-EXf" firstAttribute="leading" secondItem="N3V-0a-Vtp" secondAttribute="leading" id="V51-Gv-dwm"/>
                             <constraint firstItem="Wuc-Gc-x6u" firstAttribute="top" secondItem="e2a-tB-YdF" secondAttribute="bottom" constant="15" id="YUX-DX-Yb2"/>
                             <constraint firstItem="txG-A0-EXf" firstAttribute="top" secondItem="WKu-ou-cUW" secondAttribute="bottom" constant="12" id="Yu5-T3-FD6"/>
+                            <constraint firstItem="VY3-yC-tEI" firstAttribute="leading" secondItem="xLa-2E-L5S" secondAttribute="trailing" constant="11" id="aCS-3v-Hgw"/>
                             <constraint firstAttribute="centerX" secondItem="t9U-vv-RZ0" secondAttribute="centerX" constant="-75.5" id="bhw-7A-QzH"/>
                             <constraint firstItem="v10-AN-6fs" firstAttribute="bottom" secondItem="P6V-hZ-SOI" secondAttribute="top" id="eTP-Qg-8R4"/>
-                            <constraint firstItem="Hhh-Vu-rbw" firstAttribute="top" secondItem="VB4-Ej-iXg" secondAttribute="bottom" constant="16" id="exa-Vv-Cht"/>
                             <constraint firstItem="Hhh-Vu-rbw" firstAttribute="leading" secondItem="VB4-Ej-iXg" secondAttribute="leading" id="iAH-jD-7QP"/>
                             <constraint firstItem="Hhh-Vu-rbw" firstAttribute="baseline" secondItem="t9U-vv-RZ0" secondAttribute="firstBaseline" id="ix2-qi-15d"/>
                             <constraint firstItem="t9U-vv-RZ0" firstAttribute="baseline" secondItem="Hhh-Vu-rbw" secondAttribute="firstBaseline" id="k6K-9e-28E"/>
+                            <constraint firstItem="xLa-2E-L5S" firstAttribute="top" secondItem="VB4-Ej-iXg" secondAttribute="bottom" constant="18" id="kVi-3o-2O2"/>
                             <constraint firstItem="kh2-s5-cV7" firstAttribute="leading" secondItem="NUA-38-9jf" secondAttribute="leading" id="kmQ-gy-wYQ"/>
                             <constraint firstItem="v10-AN-6fs" firstAttribute="top" secondItem="zsM-wc-Qqn" secondAttribute="bottom" constant="15" id="ngb-uK-r43"/>
                             <constraint firstItem="kh2-s5-cV7" firstAttribute="trailing" secondItem="NUA-38-9jf" secondAttribute="trailing" id="qvB-yd-ybD"/>
                             <constraint firstItem="vta-gL-kss" firstAttribute="top" secondItem="WKu-ou-cUW" secondAttribute="bottom" constant="8" symbolic="YES" id="ssu-bL-xzJ"/>
                             <constraint firstItem="NUA-38-9jf" firstAttribute="top" secondItem="kh2-s5-cV7" secondAttribute="bottom" constant="6" id="tFb-wB-p80"/>
                             <constraint firstItem="zsM-wc-Qqn" firstAttribute="leading" secondItem="Wuc-Gc-x6u" secondAttribute="leading" id="vh3-rU-SEt"/>
+                            <constraint firstItem="xLa-2E-L5S" firstAttribute="leading" secondItem="N3V-0a-Vtp" secondAttribute="leading" id="ws0-wE-vAu"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="510" height="435"/>
+                    <size key="freeformSize" width="510" height="473"/>
                     <connections>
                         <outlet property="compressFormatSegmentedControl" destination="t9U-vv-RZ0" id="9al-6j-gGe"/>
                         <outlet property="compressQualityTextField" destination="kh2-s5-cV7" id="1Wf-Hh-qV2"/>
                         <outlet property="compressScaleTextField" destination="NUA-38-9jf" id="iC8-5l-XmQ"/>
+                        <outlet property="maxFeaturesPerTileLabel" destination="xLa-2E-L5S" id="oeJ-Js-Z0s"/>
+                        <outlet property="maxFeaturesPerTileTextField" destination="VY3-yC-tEI" id="tXc-BX-uDY"/>
                         <outlet property="maxZoomTextField" destination="veO-IO-BiM" id="KwQ-Zs-uF9"/>
                         <outlet property="minZoomTextField" destination="vta-gL-kss" id="VYG-zv-deA"/>
                         <outlet property="tileFormatSegmentedControl" destination="Afx-gq-LqQ" id="ZDy-Me-oxO"/>
@@ -2586,28 +2611,28 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </toolbar>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ztU-Pa-cSi">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ztU-Pa-cSi">
+                                <rect key="frame" x="0.0" y="64" width="600" height="574"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oQI-yx-zNr">
-                                        <rect key="frame" x="16" y="12" width="78" height="21"/>
+                                        <rect key="frame" x="16" y="12" width="77.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SdL-DO-l1t" userLabel="DatabaseValue">
-                                        <rect key="frame" x="102" y="8" width="482" height="30"/>
+                                        <rect key="frame" x="101.5" y="7.5" width="482.5" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="warning" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="whc-xD-3Zn">
-                                        <rect key="frame" x="8" y="46" width="569" height="21"/>
+                                        <rect key="frame" x="8" y="46" width="569" height="20.5"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m8A-1F-gi8">
-                                        <rect key="frame" x="16" y="69" width="74" height="21"/>
+                                        <rect key="frame" x="16" y="68.5" width="74" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="74" id="4GV-4x-5kn"/>
                                             <constraint firstAttribute="height" constant="21" id="xPR-SY-4OI"/>
@@ -2617,21 +2642,21 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vyZ-tv-uEY" userLabel="NameValue">
-                                        <rect key="frame" x="16" y="91" width="568" height="30"/>
+                                        <rect key="frame" x="16" y="90.5" width="568" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tte-Ox-y3J" userLabel="Generate Tiles View Controller">
                                         <rect key="frame" x="16" y="129" width="568" height="185"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="435" id="9TW-Bu-Mjl"/>
+                                            <constraint firstAttribute="height" constant="473" id="9TW-Bu-Mjl"/>
                                         </constraints>
                                         <connections>
                                             <segue destination="epq-as-8j9" kind="embed" identifier="generateTiles" id="fV6-n6-geX"/>
                                         </connections>
                                     </containerView>
                                     <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q4r-bl-vm2" userLabel="Features Tile Draw Container View">
-                                        <rect key="frame" x="16" y="316" width="568" height="212"/>
+                                        <rect key="frame" x="16" y="322" width="568" height="212"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="410" id="Q3a-YE-Jsg"/>
                                         </constraints>
@@ -2654,7 +2679,7 @@
                                     <constraint firstItem="whc-xD-3Zn" firstAttribute="leading" secondItem="m8A-1F-gi8" secondAttribute="leading" constant="-8" id="c5b-tH-L6A"/>
                                     <constraint firstItem="SdL-DO-l1t" firstAttribute="leading" secondItem="oQI-yx-zNr" secondAttribute="trailing" constant="8" symbolic="YES" id="d4T-fm-ebk"/>
                                     <constraint firstItem="vyZ-tv-uEY" firstAttribute="trailing" secondItem="SdL-DO-l1t" secondAttribute="trailing" id="m91-dH-M4D"/>
-                                    <constraint firstItem="q4r-bl-vm2" firstAttribute="top" secondItem="ztU-Pa-cSi" secondAttribute="top" constant="555" id="nFP-BD-HDS"/>
+                                    <constraint firstItem="q4r-bl-vm2" firstAttribute="top" secondItem="ztU-Pa-cSi" secondAttribute="top" constant="593" id="nFP-BD-HDS"/>
                                     <constraint firstItem="q4r-bl-vm2" firstAttribute="leading" secondItem="Tte-Ox-y3J" secondAttribute="leading" id="qls-Mh-4VS"/>
                                     <constraint firstItem="oQI-yx-zNr" firstAttribute="top" secondItem="ztU-Pa-cSi" secondAttribute="top" constant="12" id="wTa-D1-N5g"/>
                                     <constraint firstItem="q4r-bl-vm2" firstAttribute="leading" secondItem="vyZ-tv-uEY" secondAttribute="leading" id="xd1-nB-uMC"/>
@@ -3022,14 +3047,14 @@
         <image name="search" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="EXh-8z-gcM"/>
         <segue reference="CVO-FT-9Hq"/>
         <segue reference="iLp-it-FrA"/>
-        <segue reference="fV6-n6-geX"/>
-        <segue reference="eWo-PS-bO7"/>
-        <segue reference="S4V-Zx-x7V"/>
+        <segue reference="jHg-uD-xkx"/>
         <segue reference="AFX-xb-2xo"/>
+        <segue reference="E1Z-ca-WBX"/>
+        <segue reference="eWo-PS-bO7"/>
+        <segue reference="X4O-rd-xnT"/>
         <segue reference="Zt4-kZ-Aob"/>
-        <segue reference="EXh-8z-gcM"/>
-        <segue reference="eq5-Yc-eqB"/>
     </inferredMetricsTieBreakers>
 </document>
