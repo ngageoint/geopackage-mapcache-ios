@@ -7,10 +7,12 @@
 //
 
 #import "GPKGSFeatureOverlayTable.h"
+#import "GPKGUtils.h"
 
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_FEATURE_TABLE = @"feature_table";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MIN_ZOOM = @"min_zoom";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MAX_ZOOM = @"max_zoom";
+NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MAX_FEATURES_PER_TILE = @"max_features_per_tile";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MIN_LAT = @"min_lat";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MAX_LAT = @"max_lat";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MIN_LON = @"min_lon";
@@ -56,6 +58,10 @@ NSString * const GPKGS_FEATURE_OVERLAY_TABLE_COLOR_SUFFIX_ALPHA = @"_alpha";
         self.minZoom = [minZoom intValue];
         NSNumber * maxZoom = [values objectForKey:GPKGS_FEATURE_OVERLAY_TABLE_MAX_ZOOM];
         self.maxZoom = [maxZoom intValue];
+        NSNumber * maxFeaturesPerTile = [values objectForKey:GPKGS_FEATURE_OVERLAY_TABLE_MAX_FEATURES_PER_TILE];
+        if(maxFeaturesPerTile != nil && [maxFeaturesPerTile intValue] >= 0){
+            self.maxFeaturesPerTile = maxFeaturesPerTile;
+        }
         NSDecimalNumber * minLat = [values objectForKey:GPKGS_FEATURE_OVERLAY_TABLE_MIN_LAT];
         self.minLat = [minLat doubleValue];
         NSDecimalNumber * maxLat = [values objectForKey:GPKGS_FEATURE_OVERLAY_TABLE_MAX_LAT];
@@ -104,6 +110,7 @@ NSString * const GPKGS_FEATURE_OVERLAY_TABLE_COLOR_SUFFIX_ALPHA = @"_alpha";
     [values setObject:self.featureTable forKey:GPKGS_FEATURE_OVERLAY_TABLE_FEATURE_TABLE];
     [values setObject:[NSNumber numberWithInt:self.minZoom] forKey:GPKGS_FEATURE_OVERLAY_TABLE_MIN_ZOOM];
     [values setObject:[NSNumber numberWithInt:self.maxZoom] forKey:GPKGS_FEATURE_OVERLAY_TABLE_MAX_ZOOM];
+    [values setObject:self.maxFeaturesPerTile != nil ? self.maxFeaturesPerTile : [NSNumber numberWithInt:-1] forKey:GPKGS_FEATURE_OVERLAY_TABLE_MAX_FEATURES_PER_TILE];
     [values setObject:[NSDecimalNumber numberWithDouble:self.minLat] forKey:GPKGS_FEATURE_OVERLAY_TABLE_MIN_LAT];
     [values setObject:[NSDecimalNumber numberWithDouble:self.maxLat] forKey:GPKGS_FEATURE_OVERLAY_TABLE_MAX_LAT];
     [values setObject:[NSDecimalNumber numberWithDouble:self.minLon] forKey:GPKGS_FEATURE_OVERLAY_TABLE_MIN_LON];

@@ -56,8 +56,14 @@ annotation {
     if (url.isFileURL) {
         NSString * fileUrl = [url path];
         
+        BOOL imported = false;
         GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory getManager];
-        BOOL imported = [manager importGeoPackageFromPath:fileUrl andOverride:true andMove:true];
+        @try {
+            imported = [manager importGeoPackageFromPath:fileUrl andOverride:true andMove:true];
+        }
+        @finally {
+            [manager close];
+        }
         
         if(imported){
             [[NSNotificationCenter defaultCenter] postNotificationName:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION object:self];
