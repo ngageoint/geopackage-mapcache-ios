@@ -21,7 +21,6 @@
 #import "GPKGSDisplayTextViewController.h"
 #import "GPKGSFeatureOverlayTable.h"
 #import "GPKGSDatabases.h"
-#import "GPKGFeatureIndexer.h"
 #import "GPKGSIndexerTask.h"
 #import "GPKGSCreateFeaturesViewController.h"
 #import "GPKGSManagerCreateTilesViewController.h"
@@ -31,6 +30,8 @@
 #import "GPKGSCreateFeatureTilesViewController.h"
 #import "GPKGSAddTileOverlayViewController.h"
 #import "GPKGSManagerEditTileOverlayViewController.h"
+#import "GPKGFeatureIndexManager.h"
+#import "GPKGSTableIndex.h"
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
 NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
@@ -68,6 +69,8 @@ const char ConstantKey;
 #define TAG_TABLE_DELETE 7
 #define TAG_CLEAR_ACTIVE 8
 #define TAG_INDEX_FEATURES 9
+#define TAG_DELETE_INDEX_FEATURES 10
+#define TAG_CREATE_INDEX_FEATURES 11
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -110,8 +113,9 @@ const char ConstantKey;
     NSDictionary * previousDatabases = self.databases;
     self.databases = [[NSMutableDictionary alloc] init];
     for(NSString * database in databaseNames){
-        GPKGGeoPackage * geoPackage = [self.manager open:database];
+        GPKGGeoPackage * geoPackage = nil;
         @try {
+            geoPackage = [self.manager open:database];
             BOOL expanded = false;
             if(previousDatabases != nil){
                 GPKGSDatabase * previousDatabase = [previousDatabases objectForKey:database];
@@ -172,7 +176,15 @@ const char ConstantKey;
             
         }
         @finally {
-            [geoPackage close];
+            if(geoPackage == nil){
+                @try {
+                    [self.manager delete:database];
+                }
+                @catch (NSException *exception) {
+                }
+            }else{
+                [geoPackage close];
+            }
         }
     }
     [self updateClearActiveButton];
@@ -341,6 +353,12 @@ const char ConstantKey;
             break;
         case TAG_INDEX_FEATURES:
             [self handleIndexFeaturesWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
+        case TAG_DELETE_INDEX_FEATURES:
+            [self handleDeleteIndexFeaturesWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
+            break;
+        case TAG_CREATE_INDEX_FEATURES:
+            [self handleCreateIndexFeaturesWithAlertView:alertView clickedButtonAtIndex:buttonIndex];
             break;
     }
 }
@@ -706,45 +724,168 @@ const char ConstantKey;
 
 -(void) indexFeaturesOption: (GPKGSTable *) table{
     
-    BOOL indexed = false;
+    BOOL geoPackageIndexed = false;
+    BOOL metadataIndexed = false;
     GPKGGeoPackage * geoPackage = [self.manager open:table.database];
     @try {
         GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:table.name];
     
-        GPKGFeatureIndexer * indexer = [[GPKGFeatureIndexer alloc] initWithFeatureDao:featureDao];
-        indexed = [indexer isIndexed];
+        GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+        geoPackageIndexed = [indexer isIndexedWithFeatureIndexType:GPKG_FIT_GEOPACKAGE];
+        metadataIndexed = [indexer isIndexedWithFeatureIndexType:GPKG_FIT_METADATA];
     }
     @finally {
         [geoPackage close];
     }
-
-    if(indexed){
-        UIAlertView * alert = [[UIAlertView alloc]
-                               initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]
-                               message:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEXED_MESSAGE]
-                               delegate:nil
-                               cancelButtonTitle:nil
-                               otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
-                               nil];
-        [alert show];
-    }else{
-        UIAlertView * alert = [[UIAlertView alloc]
-                               initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]
-                               message:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_MESSAGE]
-                               delegate:self
-                               cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
-                               otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
-                               nil];
-        alert.tag = TAG_INDEX_FEATURES;
-        objc_setAssociatedObject(alert, &ConstantKey, table, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [alert show];
-    }
+    
+    NSMutableString * geoPackageIndexLabel = [[NSMutableString alloc] initWithString:geoPackageIndexed ?
+                                              [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL] :
+                                              [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL]];
+    [geoPackageIndexLabel appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_GEOPACKAGE_LABEL]];
+    
+    NSMutableString * metadataIndexLabel = [[NSMutableString alloc] initWithString:metadataIndexed ?
+                                            [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL] :
+                                            [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL]];
+    [metadataIndexLabel appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_METADATA_LABEL]];
+    
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:[NSString stringWithFormat:@"%@ - %@ %@",table.database,table.name, [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]]
+                          message:nil
+                          delegate:self
+                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          otherButtonTitles:geoPackageIndexLabel,
+                            metadataIndexLabel,
+                            nil];
+    
+    alert.tag = TAG_INDEX_FEATURES;
+    
+    objc_setAssociatedObject(alert, &ConstantKey, table, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [alert show];
 }
 
 - (void) handleIndexFeaturesWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex > 0){
+        
         GPKGSTable *table = objc_getAssociatedObject(alertView, &ConstantKey);
-        [GPKGSIndexerTask indexFeaturesWithCallback:self andDatabase:table.database andTable:table.name];
+        
+        enum GPKGFeatureIndexType indexLocation = GPKG_FIT_NONE;
+        switch(buttonIndex){
+            case 1:
+                indexLocation = GPKG_FIT_GEOPACKAGE;
+                break;
+            case 2:
+                indexLocation = GPKG_FIT_METADATA;
+                break;
+            default:
+                break;
+        }
+        
+        GPKGSTableIndex * tableIndex = [[GPKGSTableIndex alloc] initWithTable:table andIndexLocation:indexLocation];
+        [self createOrDeleteFeatureIndexWithTableIndex:tableIndex];
+    }
+}
+
+- (void) createOrDeleteFeatureIndexWithTableIndex: (GPKGSTableIndex *) tableIndex{
+    BOOL indexed = false;
+    GPKGGeoPackage * geoPackage = [self.manager open:tableIndex.table.database];
+    @try {
+        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableIndex.table.name];
+        GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+        indexed = [indexer isIndexedWithFeatureIndexType:tableIndex.indexLocation];
+    }
+    @finally {
+        [geoPackage close];
+    }
+    if(indexed){
+        [self deleteFeatureIndexWithTableIndex:tableIndex];
+    }else{
+        [self createFeatureIndexWithTableIndex:tableIndex];
+    }
+}
+
+- (void) deleteFeatureIndexWithTableIndex: (GPKGSTableIndex *) tableIndex{
+    NSString * title = [NSString stringWithFormat:@"%@ %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL],
+                        [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
+    NSMutableString * message = [[NSMutableString alloc] initWithFormat:@"%@ %@ - %@ %@",
+                                 [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL],
+                                 tableIndex.table.database,
+                                 tableIndex.table.name,
+                                 [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
+    switch(tableIndex.indexLocation){
+        case GPKG_FIT_GEOPACKAGE:
+            [message appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_GEOPACKAGE_LABEL]];
+            break;
+        case GPKG_FIT_METADATA:
+            [message appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_METADATA_LABEL]];
+            break;
+        default:
+            break;
+    }
+    UIAlertView * alert = [[UIAlertView alloc]
+                           initWithTitle:title
+                           message:message
+                           delegate:self
+                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                           nil];
+    alert.tag = TAG_DELETE_INDEX_FEATURES;
+    objc_setAssociatedObject(alert, &ConstantKey, tableIndex, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [alert show];
+}
+
+- (void) handleDeleteIndexFeaturesWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex > 0){
+        
+        GPKGSTableIndex *tableIndex = objc_getAssociatedObject(alertView, &ConstantKey);
+        
+        GPKGGeoPackage * geoPackage = [self.manager open:tableIndex.table.database];
+        @try {
+            GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableIndex.table.name];
+            GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+            [indexer setIndexLocation:tableIndex.indexLocation];
+            [indexer deleteIndex];
+        }
+        @finally {
+            [geoPackage close];
+        }
+    }
+}
+
+- (void) createFeatureIndexWithTableIndex: (GPKGSTableIndex *) tableIndex{
+    NSString * title = [NSString stringWithFormat:@"%@ %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL],
+                        [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
+    NSMutableString * message = [[NSMutableString alloc] initWithFormat:@"%@ %@ - %@ %@",
+                                 [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL],
+                                 tableIndex.table.database,
+                                 tableIndex.table.name,
+                                 [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
+    switch(tableIndex.indexLocation){
+        case GPKG_FIT_GEOPACKAGE:
+            [message appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_GEOPACKAGE_LABEL]];
+            break;
+        case GPKG_FIT_METADATA:
+            [message appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_METADATA_LABEL]];
+            break;
+        default:
+            break;
+    }
+    UIAlertView * alert = [[UIAlertView alloc]
+                           initWithTitle:title
+                           message:message
+                           delegate:self
+                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                           nil];
+    alert.tag = TAG_CREATE_INDEX_FEATURES;
+    objc_setAssociatedObject(alert, &ConstantKey, tableIndex, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [alert show];
+}
+
+- (void) handleCreateIndexFeaturesWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex > 0){
+        GPKGSTableIndex *tableIndex = objc_getAssociatedObject(alertView, &ConstantKey);
+        [GPKGSIndexerTask indexFeaturesWithCallback:self andDatabase:tableIndex.table.database andTable:tableIndex.table.name andFeatureIndexType:tableIndex.indexLocation];
     }
 }
 

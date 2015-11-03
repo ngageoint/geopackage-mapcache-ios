@@ -61,22 +61,4 @@
     return progressView;
 }
 
-+(UIColor *) getColor: (NSDictionary *) color{
-    
-    UIColor * createdColor = nil;
-    
-    NSNumber * alpha = [color objectForKey:GPKGS_PROP_COLORS_ALPHA];
-    NSNumber * white = [color objectForKey:GPKGS_PROP_COLORS_WHITE];
-    if(white != nil){
-        createdColor = [UIColor colorWithWhite:[white doubleValue] alpha:[alpha doubleValue]];
-    }else{
-        NSNumber * red = [color objectForKey:GPKGS_PROP_COLORS_RED];
-        NSNumber * green = [color objectForKey:GPKGS_PROP_COLORS_GREEN];
-        NSNumber * blue = [color objectForKey:GPKGS_PROP_COLORS_BLUE];
-        createdColor = [UIColor colorWithRed:[red doubleValue] green:[green doubleValue] blue:[blue doubleValue] alpha:[alpha doubleValue]];
-    }
-    
-    return createdColor;
-}
-
 @end

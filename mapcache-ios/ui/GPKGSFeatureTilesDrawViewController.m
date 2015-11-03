@@ -8,6 +8,7 @@
 
 #import "GPKGSFeatureTilesDrawViewController.h"
 #import "GPKGSUtils.h"
+#import "GPKGUtils.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
 #import "GPKGSDecimalValidator.h"
@@ -203,7 +204,7 @@
 
 -(void) setColor: (NSDictionary *) color withTag: (NSInteger) tag{
     
-    UIColor * createdColor = [GPKGSUtils getColor:color];
+    UIColor * createdColor = [GPKGUtils getColor:color];
     
     NSString * name = [color objectForKey:GPKGS_PROP_COLORS_NAME];
     

@@ -53,6 +53,15 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
         }
         [self.maxZoomTextField setText:[self.data.maxZoom stringValue]];
         
+        if(self.data.supportsMaxFeatures){
+            if(self.data.maxFeaturesPerTile != nil){
+                [self.maxFeaturesPerTileTextField setText:[self.data.maxFeaturesPerTile stringValue]];
+            }
+        }else{
+            self.maxFeaturesPerTileLabel.hidden = YES;
+            self.maxFeaturesPerTileTextField.hidden = YES;
+        }
+        
         if(self.data.compressQuality == nil){
             self.data.compressQuality = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT];
         }
@@ -69,6 +78,7 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
     
     self.minZoomTextField.inputAccessoryView = keyboardToolbar;
     self.maxZoomTextField.inputAccessoryView = keyboardToolbar;
+    self.maxFeaturesPerTileTextField.inputAccessoryView = keyboardToolbar;
     self.compressQualityTextField.inputAccessoryView = keyboardToolbar;
     self.compressScaleTextField.inputAccessoryView = keyboardToolbar;
 }
@@ -92,6 +102,10 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
 
 - (IBAction)maxZoomChanged:(id)sender {
     self.data.maxZoom = [self.numberFormatter numberFromString:self.maxZoomTextField.text];
+}
+
+- (IBAction)maxFeaturesPerTileChanged:(id)sender {
+    self.data.maxFeaturesPerTile = [self.numberFormatter numberFromString:self.maxFeaturesPerTileTextField.text];
 }
 
 - (IBAction)compressFormatChanged:(id)sender {
@@ -130,6 +144,7 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
 - (void) doneButtonPressed {
     [self.minZoomTextField resignFirstResponder];
     [self.maxZoomTextField resignFirstResponder];
+    [self.maxFeaturesPerTileTextField resignFirstResponder];
     [self.compressQualityTextField resignFirstResponder];
     [self.compressScaleTextField resignFirstResponder];
 }

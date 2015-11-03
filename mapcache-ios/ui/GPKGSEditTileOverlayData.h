@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) NSNumber * minZoom;
 @property (nonatomic, strong) NSNumber * maxZoom;
+@property (nonatomic, strong) NSNumber * maxFeaturesPerTile;
 @property (nonatomic, strong) GPKGBoundingBox * boundingBox;
 @property (nonatomic, strong) GPKGSFeatureTilesDrawData * featureTilesDraw;
 @property (nonatomic) BOOL indexed;

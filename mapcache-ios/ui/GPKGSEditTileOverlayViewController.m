@@ -12,12 +12,12 @@
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
 #import "GPKGSDecimalValidator.h"
-#import "GPKGFeatureIndexer.h"
 #import "GPKGGeoPackage.h"
 #import "GPKGSFeatureTilesDrawViewController.h"
 #import "GPKGProjectionTransform.h"
 #import "GPKGProjectionConstants.h"
 #import "GPKGTileBoundingBoxUtils.h"
+#import "GPKGFeatureIndexManager.h"
 
 NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_BOUNDING_BOX = @"boundingBox";
 NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTilesDraw";
@@ -41,7 +41,7 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
     GPKGGeoPackage * geoPackage = [self.manager open:self.database];
     @try {
         GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.featureTable];
-        GPKGFeatureIndexer * indexer = [[GPKGFeatureIndexer alloc] initWithFeatureDao:featureDao];
+        GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         self.data.indexed = [indexer isIndexed];
         if(self.data.indexed){
             [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURE_OVERLAY_INDEX_VALIDATION]];
@@ -63,27 +63,35 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
     
     if(self.data != nil){
         
-        if(self.data.minZoom == nil){
+        if(self.data.minZoom == nil || [minZoomValidation intValue] > [self.data.minZoom intValue]){
             self.data.minZoom = minZoomValidation;
         }
-        [self.minZoomTextField setText:[self.data.minZoom stringValue]];
-        
-        if(self.data.maxZoom == nil){
+        if(self.data.maxZoom == nil || [maxZoomValidation intValue] < [self.data.maxZoom intValue]){
             self.data.maxZoom = maxZoomValidation;
         }
+        if([self.data.minZoom intValue] > [self.data.maxZoom intValue]){
+            self.data.minZoom = self.data.maxZoom;
+        }
+        
+        [self.minZoomTextField setText:[self.data.minZoom stringValue]];
         [self.maxZoomTextField setText:[self.data.maxZoom stringValue]];
         
+        if(self.data.maxFeaturesPerTile != nil){
+            [self.maxFeaturesPerTileTextField setText:[self.data.maxFeaturesPerTile stringValue]];
+        }
     }
     
     UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.minZoomTextField.inputAccessoryView = keyboardToolbar;
     self.maxZoomTextField.inputAccessoryView = keyboardToolbar;
+    self.maxFeaturesPerTileTextField.inputAccessoryView = keyboardToolbar;
 }
 
 - (void) doneButtonPressed {
     [self.minZoomTextField resignFirstResponder];
     [self.maxZoomTextField resignFirstResponder];
+    [self.maxFeaturesPerTileTextField resignFirstResponder];
 }
 
 - (IBAction)minZoomChanged:(id)sender {
@@ -92,6 +100,9 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
 
 - (IBAction)maxZoomChanged:(id)sender {
     self.data.maxZoom = [self.numberFormatter numberFromString:self.maxZoomTextField.text];
+}
+- (IBAction)maxFeaturesPerTileChanged:(id)sender {
+    self.data.maxFeaturesPerTile = [self.numberFormatter numberFromString:self.maxFeaturesPerTileTextField.text];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
