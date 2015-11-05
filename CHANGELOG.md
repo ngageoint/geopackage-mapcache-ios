@@ -4,6 +4,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## 1.2 (TBD)
+
+* TBD
+
 ## [1.1] (https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.1) (11-05-2015)
 
 * Add NGA Table Index Extension support and combine with existing metadata indexing, index to either or both
