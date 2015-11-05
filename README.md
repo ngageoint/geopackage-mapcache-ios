@@ -52,10 +52,6 @@ Editing [Haiti Features] (http://www.geopackage.org/data/haiti-vectors-split.gpk
 
 ### Build ###
 
-The following repositories must be built first:
-* [GeoPackage WKB iOS] (https://github.com/ngageoint/geopackage-wkb-ios)
-* [GeoPackage iOS] (https://github.com/ngageoint/geopackage-ios)
-
 Build this repository using Xcode and/or CocoaPods:
 
     pod install
