@@ -6,6 +6,8 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ## 1.2 (TBD)
 
+* Display data column information when it exists - [Issue #5](https://github.com/ngageoint/geopackage-mapcache-ios/issues/5)
+* Change the mapcache-ios scheme to be a shareable project for command line builds
 * TBD
 
 ## [1.1] (https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.1) (11-05-2015)
