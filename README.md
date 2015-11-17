@@ -56,7 +56,13 @@ Build this repository using Xcode and/or CocoaPods:
 
     pod install
 
-Open mapcache-ios.xcworkspace in Xcode
+Open mapcache-ios.xcworkspace in Xcode or build from command line:
+
+    xcodebuild -workspace 'mapcache-ios.xcworkspace' -scheme mapcache-ios build
+
+Run tests from Xcode or from command line:
+
+    xcodebuild test -workspace 'mapcache-ios.xcworkspace' -scheme mapcache-ios -destination 'platform=iOS Simulator,name=iPhone 6s'
 
 ### Icons ###
 
