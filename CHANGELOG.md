@@ -4,6 +4,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## 1.3 (TBD)
+
+* TBD
+
 ## [1.2] (https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.2) (11-20-2015)
 
 * Display data column information when it exists - [Issue #5](https://github.com/ngageoint/geopackage-mapcache-ios/issues/5)
