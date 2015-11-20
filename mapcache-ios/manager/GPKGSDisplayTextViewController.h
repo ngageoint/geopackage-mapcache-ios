@@ -7,12 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GPKGSTable.h"
+#import "GPKGSDatabase.h"
+#import <GPKGMapPoint.h>
 
 @interface GPKGSDisplayTextViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UIButton *titleButton;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
-@property (nonatomic, strong)  NSString *titleValue;
-@property (nonatomic, strong)  NSString *textValue;
+@property (nonatomic, strong) GPKGMapPoint *mapPoint;
+@property (nonatomic, strong) GPKGSDatabase * database;
+@property (nonatomic, strong) GPKGSTable * table;
 
 @end
