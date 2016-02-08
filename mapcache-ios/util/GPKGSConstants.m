@@ -12,6 +12,7 @@ NSString * const GPKGS_MAPCACHE_RESOURCES_PROPERTIES = @"mapcache";
 NSString * const GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION = @"ImportGeoPackageNotification";
 NSString * const GPKGS_CELL_DATABASE = @"GeoPackageDatabaseCell";
 NSString * const GPKGS_CELL_TABLE = @"GeoPackageTableCell";
+NSString * const GPKGS_CELL_LINKED_TABLE = @"LinkedTableCell";
 NSString * const GPKGS_MAP_BUTTON_BOUNDING_BOX_IMAGE = @"boundingbox";
 NSString * const GPKGS_MAP_BUTTON_BOUNDING_BOX_ACTIVE_IMAGE = @"boundingboxactive";
 NSString * const GPKGS_MAP_BUTTON_BOUNDING_BOX_CLEAR_IMAGE = @"MapClear";
@@ -127,6 +128,7 @@ NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_METADAT
 NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL = @"geopackage_table_create_feature_tiles_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL = @"geopackage_table_add_feature_overlay_label";
 NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL = @"geopackage_table_tiles_load_label";
+NSString * const GPKGS_PROP_GEOPACKAGE_TABLE_LINKED_TABLES_LABEL = @"geopackage_table_linked_tables_label";
 NSString * const GPKGS_PROP_EDIT_FEATURES_INFO_LABEL = @"edit_features_info_label";
 NSString * const GPKGS_PROP_EDIT_FEATURES_EDIT_LABEL = @"edit_features_edit_label";
 NSString * const GPKGS_PROP_EDIT_FEATURES_DELETE_LABEL = @"edit_features_delete_label";
