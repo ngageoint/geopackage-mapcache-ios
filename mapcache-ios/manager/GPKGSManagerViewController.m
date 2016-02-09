@@ -32,6 +32,7 @@
 #import "GPKGSManagerEditTileOverlayViewController.h"
 #import "GPKGFeatureIndexManager.h"
 #import "GPKGSTableIndex.h"
+#import "GPKGSLinkedTablesViewController.h"
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
 NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT = @"displayText";
@@ -44,6 +45,7 @@ NSString * const GPKGS_MANAGER_SEG_EDIT_TILES = @"editTiles";
 NSString * const GPKGS_MANAGER_SEG_CREATE_FEATURE_TILES = @"createFeatureTiles";
 NSString * const GPKGS_MANAGER_SEG_ADD_TILE_OVERLAY = @"addTileOverlay";
 NSString * const GPKGS_MANAGER_SEG_EDIT_TILE_OVERLAY = @"editTileOverlay";
+NSString * const GPKGS_MANAGER_SEG_LINKED_TABLES = @"linkedTables";
 
 const char ConstantKey;
 
@@ -55,6 +57,7 @@ const char ConstantKey;
 @property (nonatomic, strong) NSMutableArray *tableCells;
 @property (nonatomic, strong) GPKGSDatabases *active;
 @property (nonatomic, strong) NSUserDefaults * settings;
+@property (nonatomic) BOOL retainModifiedForMap;
 
 @end
 
@@ -88,6 +91,7 @@ const char ConstantKey;
     for(NSString * expandedDatabase in expandedDatabases){
         [self.databases setObject:[[GPKGSDatabase alloc] initWithName:expandedDatabase andExpanded:true] forKey:expandedDatabase];
     }
+    self.retainModifiedForMap = false;
     [self update];
 }
 
@@ -95,7 +99,11 @@ const char ConstantKey;
     [super viewWillAppear:animated];
     
     if(self.active.modified){
-        [self.active setModified:false];
+        if(self.retainModifiedForMap){
+            self.retainModifiedForMap = false;
+        }else{
+            [self.active setModified:false];
+        }
         [self updateAndReloadData];
     }
 }
@@ -429,9 +437,11 @@ const char ConstantKey;
             [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_LABEL]];
             [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]];
             [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL]];
+            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_LINKED_TABLES_LABEL]];
             break;
         case GPKGS_TT_TILE:
             [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
+            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_LINKED_TABLES_LABEL]];
             break;
         case GPKGS_TT_FEATURE_OVERLAY:
             break;
@@ -511,6 +521,9 @@ const char ConstantKey;
                     case GPKGS_TT_FEATURE:
                         [self createFeatureTilesTableOption:table];
                         break;
+                    case GPKGS_TT_TILE:
+                        [self linkedTablesOption:table];
+                        break;
                     default:
                         break;
                 }
@@ -519,6 +532,15 @@ const char ConstantKey;
                 switch([table getType]){
                     case GPKGS_TT_FEATURE:
                         [self addFeatureOverlayTableOption:table];
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case 6:
+                switch([table getType]){
+                    case GPKGS_TT_FEATURE:
+                        [self linkedTablesOption:table];
                         break;
                     default:
                         break;
@@ -889,6 +911,10 @@ const char ConstantKey;
     }
 }
 
+-(void) linkedTablesOption: (GPKGSTable *) table{
+    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_LINKED_TABLES sender:table];
+}
+
 -(void) loadTilesTableOption: (GPKGSTable *) table{
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_LOAD_TILES sender:table];
 }
@@ -1008,6 +1034,7 @@ const char ConstantKey;
 - (void)createManagerTilesViewController:(GPKGSManagerCreateTilesViewController *)controller createdTiles:(int)count withError: (NSString *) error{
     [self updateAndReloadData];
     if(count > 0){
+        self.retainModifiedForMap = true;
         [self.active setModified:true];
     }
     if(error != nil){
@@ -1020,6 +1047,7 @@ const char ConstantKey;
 - (void)loadManagerTilesViewController:(GPKGSManagerLoadTilesViewController *)controller loadedTiles:(int)count withError: (NSString *) error{
     [self updateAndReloadData];
     if(count > 0){
+        self.retainModifiedForMap = true;
         [self.active setModified:true];
     }
     if(error != nil){
@@ -1038,6 +1066,7 @@ const char ConstantKey;
 - (void)createFeatureTilesViewController:(GPKGSCreateFeatureTilesViewController *)controller createdTiles:(int)count withError: (NSString *) error{
     [self updateAndReloadData];
     if(count > 0){
+        self.retainModifiedForMap = true;
         [self.active setModified:true];
     }
     if(error != nil){
@@ -1053,15 +1082,29 @@ const char ConstantKey;
                                    andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL]
                                  andMessage:[NSString stringWithFormat:@"Feature overlay '%@' already exists in database '%@'. Could not create for feature table '%@'", controller.nameValue.text, controller.table.database, controller.table.name]];
     }else{
+        self.retainModifiedForMap = true;
         [self.active addTable:featureOverlayTable];
         [self updateAndReloadData];
     }
 }
 
 - (void)editTileOverlayViewController:(GPKGSManagerEditTileOverlayViewController *)controller featureOverlayTable:(GPKGSFeatureOverlayTable *)featureOverlayTable{
+    self.retainModifiedForMap = true;
     [self.active removeTable:featureOverlayTable];
     [self.active addTable:featureOverlayTable];
     [self updateAndReloadData];
+}
+
+- (void)linkedTablesViewController:(GPKGSLinkedTablesViewController *)controller linksEdited:(BOOL)edited withError: (NSString *) error{
+    if(edited){
+        self.retainModifiedForMap = true;
+        [self.active setModified:true];
+    }
+    if(error != nil){
+        [GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_LINKED_TABLES_LABEL]
+                                 andMessage:[NSString stringWithFormat:@"Error editing linked tables for table '%@' in database: '%@'\n\nError: %@", controller.table.name, controller.table.database, error]];
+    }
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
@@ -1131,6 +1174,12 @@ const char ConstantKey;
         editTileOverlayViewController.delegate = self;
         editTileOverlayViewController.table = table;
         editTileOverlayViewController.manager = self.manager;
+    }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_LINKED_TABLES]){
+        GPKGSLinkedTablesViewController *linkedTablesViewController = segue.destinationViewController;
+        GPKGSTable * table = (GPKGSTable *)sender;
+        linkedTablesViewController.delegate = self;
+        linkedTablesViewController.table = table;
+        linkedTablesViewController.manager = self.manager;
     }
     
 }
