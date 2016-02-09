@@ -408,6 +408,8 @@
 	<string>Add Tile Overlay</string>
 	<key>geopackage_table_tiles_load_label</key>
 	<string>Load Tiles</string>
+	<key>geopackage_table_linked_tables_label</key>
+	<string>Linked Tables</string>
 	<key>edit_features_info_label</key>
 	<string>Info</string>
 	<key>edit_features_edit_label</key>

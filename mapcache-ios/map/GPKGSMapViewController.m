@@ -38,6 +38,7 @@
 #import "GPGKSMapPointInitializer.h"
 #import "GPKGNumberFeaturesTile.h"
 #import "GPKGFeatureOverlayQuery.h"
+#import "GPKGFeatureTileTableLinker.h"
 
 NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 NSString * const GPKGS_MAP_SEG_SELECT_FEATURE_TABLE = @"selectFeatureTable";
@@ -1611,11 +1612,38 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName:tiles.name];
     
-    MKTileOverlay * overlay = [GPKGOverlayFactory getTileOverlayWithTileDao:tileDao];
+    GPKGBoundedOverlay * overlay = [GPKGOverlayFactory getBoundedOverlay:tileDao];
     overlay.canReplaceMapContent = false;
     
     GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
     GPKGContents * contents = [[geoPackage getTileMatrixSetDao] getContents:tileMatrixSet];
+    
+    GPKGFeatureTileTableLinker * linker = [[GPKGFeatureTileTableLinker alloc] initWithGeoPackage:geoPackage];
+    GPKGResultSet * linkedFeatureTableResults = [linker queryForTileTable:tileDao.tableName];
+    while([linkedFeatureTableResults moveToNext]){
+        
+        GPKGFeatureTileLink * link = [linker getLinkFromResultSet:linkedFeatureTableResults];
+        
+        // Get a feature DAO and create the feature tiles
+        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:link.featureTableName];
+        GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithFeatureDao:featureDao];
+        
+        // Create an index manager
+        GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+        [featureTiles setIndexManager:indexer];
+        
+        // Set the location and zoom bounds
+        [overlay setBoundingBox:[tileDao getBoundingBox] withProjection:tileDao.projection];
+        [overlay setMinZoom:[NSNumber numberWithInt:tileDao.minZoom]];
+        [overlay setMaxZoom:[NSNumber numberWithInt:tileDao.maxZoom]];
+
+        self.featureOverlayTiles = true;
+        
+        // Add the feature overlay query
+        GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithFeatureOverlay:overlay andFeatureTiles:featureTiles];
+        [self.featureOverlayQueries addObject:featureOverlayQuery];
+    }
+    [linkedFeatureTableResults close];
     
     [self displayTilesWithOverlay:overlay andGeoPackage:geoPackage andContents:contents andSpecifiedBoundingBox:nil];
 }
