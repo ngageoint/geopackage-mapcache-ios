@@ -4,21 +4,21 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 1.4 (TBD)
+## [1.4](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.4) (02-09-2016)
 
 * Table linking between feature and tile tables
 * geopackage-ios version updated to 1.1.5
 
-## [1.3] (https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.3) (12-14-2015)
+## [1.3](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.3) (12-14-2015)
 
 * geopackage-ios version updated to 1.1.3
 
-## [1.2] (https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.2) (11-20-2015)
+## [1.2](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.2) (11-20-2015)
 
 * Display data column information when it exists - [Issue #5](https://github.com/ngageoint/geopackage-mapcache-ios/issues/5)
 * Change the mapcache-ios scheme to be a shareable project for command line builds
 
-## [1.1] (https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.1) (11-05-2015)
+## [1.1](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.1) (11-05-2015)
 
 * Add NGA Table Index Extension support and combine with existing metadata indexing, index to either or both
 * Max features per tile support for feature overlays and feature tile generation
