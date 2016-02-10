@@ -6,7 +6,9 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ## 1.5 (TBD)
 
-* TBD
+* Table linking improvements when displaying a tile table linked to a feature table
+* Ignore drawing Feature Overlay tiles that exist in linked tile tables
+* geopackage-ios version updated to 1.1.6
 
 ## [1.4](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.4) (02-09-2016)
 
