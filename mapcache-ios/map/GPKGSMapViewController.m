@@ -1619,31 +1619,22 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGContents * contents = [[geoPackage getTileMatrixSetDao] getContents:tileMatrixSet];
     
     GPKGFeatureTileTableLinker * linker = [[GPKGFeatureTileTableLinker alloc] initWithGeoPackage:geoPackage];
-    GPKGResultSet * linkedFeatureTableResults = [linker queryForTileTable:tileDao.tableName];
-    while([linkedFeatureTableResults moveToNext]){
+    NSArray<GPKGFeatureDao *> * featureDaos = [linker getFeatureDaosForTileTable:tileDao.tableName];
+    for(GPKGFeatureDao * featureDao in featureDaos){
         
-        GPKGFeatureTileLink * link = [linker getLinkFromResultSet:linkedFeatureTableResults];
-        
-        // Get a feature DAO and create the feature tiles
-        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:link.featureTableName];
+        // Create the feature tiles
         GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithFeatureDao:featureDao];
         
         // Create an index manager
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         [featureTiles setIndexManager:indexer];
         
-        // Set the location and zoom bounds
-        [overlay setBoundingBox:[tileDao getBoundingBox] withProjection:tileDao.projection];
-        [overlay setMinZoom:[NSNumber numberWithInt:tileDao.minZoom]];
-        [overlay setMaxZoom:[NSNumber numberWithInt:tileDao.maxZoom]];
-
         self.featureOverlayTiles = true;
         
         // Add the feature overlay query
-        GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithFeatureOverlay:overlay andFeatureTiles:featureTiles];
+        GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithBoundedOverlay:overlay andFeatureTiles:featureTiles];
         [self.featureOverlayQueries addObject:featureOverlayQuery];
     }
-    [linkedFeatureTableResults close];
     
     [self displayTilesWithOverlay:overlay andGeoPackage:geoPackage andContents:contents andSpecifiedBoundingBox:nil];
 }
@@ -1684,6 +1675,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [overlay setBoundingBox:boundingBox withProjection:[GPKGProjectionFactory getProjectionWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
     [overlay setMinZoom:[NSNumber numberWithInt:featureOverlay.minZoom]];
     [overlay setMaxZoom:[NSNumber numberWithInt:featureOverlay.maxZoom]];
+    
+    GPKGFeatureTileTableLinker * linker = [[GPKGFeatureTileTableLinker alloc] initWithGeoPackage:geoPackage];
+    NSArray<GPKGTileDao *> * tileDaos = [linker getTileDaosForFeatureTable:featureDao.tableName];
+    [overlay ignoreTileDaos:tileDaos];
     
     GPKGGeometryColumns * geometryColumns = featureDao.geometryColumns;
     GPKGContents * contents = [[geoPackage getGeometryColumnsDao] getContents:geometryColumns];
