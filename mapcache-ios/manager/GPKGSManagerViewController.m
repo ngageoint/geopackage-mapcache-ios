@@ -58,6 +58,7 @@ const char ConstantKey;
 @property (nonatomic, strong) GPKGSDatabases *active;
 @property (nonatomic, strong) NSUserDefaults * settings;
 @property (nonatomic) BOOL retainModifiedForMap;
+@property (nonatomic, strong) UIDocumentInteractionController *shareDocumentController;
 
 @end
 
@@ -661,9 +662,10 @@ const char ConstantKey;
     NSString * path = [self.manager documentsPathForDatabase:database];
     if(path != nil){
         NSURL * databaseUrl = [NSURL fileURLWithPath:path];
-        NSArray * items = [[NSArray alloc] initWithObjects:databaseUrl, nil];
-        UIActivityViewController * activityViewController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
-        [self presentViewController:activityViewController animated:true completion:nil];
+
+        self.shareDocumentController = [UIDocumentInteractionController interactionControllerWithURL:databaseUrl];
+        [self.shareDocumentController setUTI:@"public.database"];
+        [self.shareDocumentController presentOpenInMenuFromRect:self.view.bounds inView:self.view animated:YES];
     }else{
         [GPKGSUtils showMessageWithDelegate:self
                                    andTitle:[NSString stringWithFormat:@"Share Database %@", database]
