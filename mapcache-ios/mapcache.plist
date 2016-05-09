@@ -480,6 +480,14 @@
 	<array>
 		<dict>
 			<key>label</key>
+			<string>Natural Earth Rivers</string>
+			<key>url</key>
+			<string>http://ngageoint.github.io/GeoPackage/examples/rivers.gpkg</string>
+			<key>name</key>
+			<string>rivers</string>
+		</dict>
+		<dict>
+			<key>label</key>
 			<string>GDAL Sample</string>
 			<key>url</key>
 			<string>http://www.geopackage.org/data/gdal_sample.gpkg</string>
