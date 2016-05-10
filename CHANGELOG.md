@@ -4,7 +4,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 1.9 (TBD)
+## [1.9](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.9) (05-10-2016)
 
 * geopackage-ios version updated to 1.1.11
 * Natural Earth Rivers GeoPackage URL
