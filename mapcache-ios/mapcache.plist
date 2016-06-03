@@ -533,7 +533,7 @@
 			<key>label</key>
 			<string>GEOINT OpenStreetMap</string>
 			<key>url</key>
-			<string>http://osm.geointapps.org/osm/{z}/{x}/{y}.png</string>
+			<string>http://osm.geointservices.io/osm_tiles/{z}/{x}/{y}.png</string>
 			<key>name</key>
 			<string>geoint_openstreetmap</string>
 			<key>min_zoom</key>
