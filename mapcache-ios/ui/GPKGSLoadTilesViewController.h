@@ -19,6 +19,7 @@
 
 @property (nonatomic, weak) id <GPKGSLoadTilesDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UITextField *urlTextField;
+@property (weak, nonatomic) IBOutlet UITextField *epsgTextField;
 @property (nonatomic, strong) GPKGSLoadTilesData * data;
 
 @end

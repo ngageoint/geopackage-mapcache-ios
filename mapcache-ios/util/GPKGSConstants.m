@@ -166,6 +166,7 @@ NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_MIN_ZOOM = @"min_zoom";
 NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_MAX_ZOOM = @"max_zoom";
 NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_DEFAULT_MIN_ZOOM = @"default_min_zoom";
 NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_DEFAULT_MAX_ZOOM = @"default_max_zoom";
+NSString * const GPKGS_PROP_PRELOADED_TILE_URLS_EPSG = @"epsg";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES = @"preloaded_bounding_boxes";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_LABEL = @"label";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LAT = @"min_lat";
