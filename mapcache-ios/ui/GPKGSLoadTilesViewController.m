@@ -11,6 +11,7 @@
 #import "GPKGSUtils.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
+#import "GPKGSDecimalValidator.h"
 
 NSString * const GPKGS_LOAD_TILES_SEG_GENERATE_TILES = @"generateTiles";
 
@@ -18,6 +19,7 @@ NSString * const GPKGS_LOAD_TILES_SEG_GENERATE_TILES = @"generateTiles";
 
 @property (nonatomic, strong) NSArray * urls;
 @property (nonatomic, strong) GPKGSGenerateTilesViewController *generateTilesViewController;
+@property (nonatomic, strong) GPKGSDecimalValidator * epsgValidator;
 
 @end
 
@@ -30,13 +32,18 @@ NSString * const GPKGS_LOAD_TILES_SEG_GENERATE_TILES = @"generateTiles";
 
     self.urls = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_TILE_URLS];
     
+    self.epsgValidator = [[GPKGSDecimalValidator alloc] initWithMinimumInt:-1 andMaximumInt:99999];
+    [self.epsgTextField setDelegate:self.epsgValidator];
+    
     UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.urlTextField.inputAccessoryView = keyboardToolbar;
+    self.epsgTextField.inputAccessoryView = keyboardToolbar;
 }
 
 - (void) doneButtonPressed {
     [self.urlTextField resignFirstResponder];
+    [self.epsgTextField resignFirstResponder];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
