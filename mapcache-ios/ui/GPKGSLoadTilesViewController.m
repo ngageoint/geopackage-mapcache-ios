@@ -53,9 +53,13 @@ NSString * const GPKGS_LOAD_TILES_SEG_GENERATE_TILES = @"generateTiles";
                     NSNumber * maxZoom =[url objectForKey:GPKGS_PROP_PRELOADED_TILE_URLS_MAX_ZOOM];
                     NSNumber * defaultMinZoom =[url objectForKey:GPKGS_PROP_PRELOADED_TILE_URLS_DEFAULT_MIN_ZOOM];
                     NSNumber * defaultMaxZoom =[url objectForKey:GPKGS_PROP_PRELOADED_TILE_URLS_DEFAULT_MAX_ZOOM];
+                    NSNumber * epsg = [url objectForKey:GPKGS_PROP_PRELOADED_TILE_URLS_EPSG];
                     
                     [self.urlTextField setText:urlValue];
                     self.data.url = self.urlTextField.text;
+                    
+                    [self.epsgTextField setText:[epsg stringValue]];
+                    self.data.epsg = [epsg intValue];
                     
                     [self.generateTilesViewController setAllowedZoomRangeWithMin:[minZoom intValue] andMax:[maxZoom intValue]];
                     
@@ -102,6 +106,10 @@ NSString * const GPKGS_LOAD_TILES_SEG_GENERATE_TILES = @"generateTiles";
 
 - (IBAction)urlChanged:(id)sender {
     self.data.url = self.urlTextField.text;
+}
+
+- (IBAction)epsgChanged:(id)sender {
+    self.data.epsg = [self.epsgTextField.text intValue];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{

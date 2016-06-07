@@ -7,12 +7,14 @@
 //
 
 #import "GPKGSLoadTilesData.h"
+#import "GPKGProjectionConstants.h"
 
 @implementation GPKGSLoadTilesData
 
 -(instancetype) init{
     self = [super init];
     if(self){
+        self.epsg = PROJ_EPSG_WEB_MERCATOR;
         self.generateTiles = [[GPKGSGenerateTilesData alloc] init];
     }
     return self;
