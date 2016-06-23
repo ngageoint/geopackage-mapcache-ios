@@ -14,6 +14,10 @@
 #import "GPKGSUtils.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
+#import "GPKGProjectionFactory.h"
+#import "GPKGProjectionTransform.h"
+#import "GPKGProjectionConstants.h"
+#import "GPKGTileBoundingBoxUtils.h"
 
 @interface GPKGSLoadTilesTask ()
 
@@ -41,6 +45,7 @@
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
                andBoundingBox: (GPKGBoundingBox *) boundingBox
+                      andEpsg: (int) epsg
                      andLabel: (NSString *) label{
     
     GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory getManager];
@@ -52,7 +57,10 @@
         [manager close];
     }
     
-    GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andTileUrl:tileUrl andMinZoom:minZoom andMaxZoom:maxZoom];
+    GPKGProjection * projection = [GPKGProjectionFactory getProjectionWithInt:epsg];
+    GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
+    
+    GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andTileUrl:tileUrl andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
     [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andStandardFormat:standardWebMercatorFormat andBoundingBox:boundingBox];
     
     [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
@@ -69,12 +77,29 @@
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
                andBoundingBox: (GPKGBoundingBox *) boundingBox
+                      andEpsg: (int) epsg
                      andLabel: (NSString *) label{
     
-    GPKGTileGenerator * tileGenerator = [[GPKGFeatureTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andFeatureTiles:featureTiles andMinZoom:minZoom andMaxZoom:maxZoom];
+    GPKGProjection * projection = [GPKGProjectionFactory getProjectionWithInt:epsg];
+    GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
+    
+    GPKGTileGenerator * tileGenerator = [[GPKGFeatureTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andFeatureTiles:featureTiles andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
     [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andStandardFormat:standardWebMercatorFormat andBoundingBox:boundingBox];
     
     [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
+}
+
++(GPKGBoundingBox *) transformBoundingBox: (GPKGBoundingBox *) boundingBox withProjection: (GPKGProjection *) projection{
+    
+    GPKGBoundingBox * transformedBox = boundingBox;
+    
+    if([projection.epsg intValue] != PROJ_EPSG_WORLD_GEODETIC_SYSTEM){
+        GPKGBoundingBox * bounded = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
+        GPKGProjectionTransform * transform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM andToProjection:projection];
+        transformedBox = [transform transformWithBoundingBox:bounded];
+    }
+    
+    return transformedBox;
 }
 
 +(void) setTileGenerator: (GPKGTileGenerator *) tileGenerator
@@ -93,7 +118,6 @@
     [tileGenerator setCompressFormat:compressFormat];
     [tileGenerator setCompressQualityAsIntPercentage:compressQuality];
     [tileGenerator setCompressScaleAsIntPercentage:compressScale];
-    [tileGenerator setTileBoundingBox:boundingBox];
     [tileGenerator setStandardWebMercatorFormat:standardWebMercatorFormat];
 }
 

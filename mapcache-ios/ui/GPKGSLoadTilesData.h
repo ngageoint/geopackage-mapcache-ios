@@ -12,6 +12,7 @@
 @interface GPKGSLoadTilesData : NSObject
 
 @property (nonatomic, strong) NSString * url;
+@property (nonatomic) int epsg;
 @property (nonatomic, strong) GPKGSGenerateTilesData * generateTiles;
 
 -(instancetype) init;
