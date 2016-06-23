@@ -533,9 +533,9 @@
 			<key>label</key>
 			<string>GEOINT OpenStreetMap</string>
 			<key>url</key>
-			<string>http://osm.geointapps.org/osm/{z}/{x}/{y}.png</string>
+			<string>http://osm.geointservices.io/osm_tiles/{z}/{x}/{y}.png</string>
 			<key>name</key>
-			<string>geoint_openstreetmap</string>
+			<string>geoint_osm</string>
 			<key>min_zoom</key>
 			<integer>0</integer>
 			<key>max_zoom</key>
@@ -544,6 +544,26 @@
 			<integer>1</integer>
 			<key>default_max_zoom</key>
 			<integer>5</integer>
+			<key>epsg</key>
+			<integer>3857</integer>
+		</dict>
+		<dict>
+			<key>label</key>
+			<string>GEOINT OSM WGS84</string>
+			<key>url</key>
+			<string>http://osm.geointservices.io/osm_tiles_pc/{z}/{x}/{y}.png</string>
+			<key>name</key>
+			<string>geoint_osm_wgs84</string>
+			<key>min_zoom</key>
+			<integer>0</integer>
+			<key>max_zoom</key>
+			<integer>17</integer>
+			<key>default_min_zoom</key>
+			<integer>1</integer>
+			<key>default_max_zoom</key>
+			<integer>5</integer>
+			<key>epsg</key>
+			<integer>4326</integer>
 		</dict>
 		<dict>
 			<key>label</key>
@@ -560,6 +580,8 @@
 			<integer>1</integer>
 			<key>default_max_zoom</key>
 			<integer>5</integer>
+			<key>epsg</key>
+			<integer>3857</integer>
 		</dict>
 		<dict>
 			<key>label</key>
@@ -576,6 +598,8 @@
 			<integer>0</integer>
 			<key>default_max_zoom</key>
 			<integer>5</integer>
+			<key>epsg</key>
+			<integer>3857</integer>
 		</dict>
 		<dict>
 			<key>label</key>
@@ -592,12 +616,14 @@
 			<integer>0</integer>
 			<key>default_max_zoom</key>
 			<integer>5</integer>
+			<key>epsg</key>
+			<integer>3857</integer>
 		</dict>
 		<dict>
 			<key>label</key>
 			<string>nowCOAST</string>
 			<key>url</key>
-			<string>http://nowcoast.noaa.gov/wms/com.esri.wms.Esrimap/obs?service=wms%26version=1.1.1%26request=GetMap%26format=jpeg%26BBOX={minLon},{minLat},{maxLon},{maxLat}%26SRS=EPSG:4326%26width=256%26height=256%26Layers=world_countries,RAS_GOES,RAS_RIDGE_NEXRAD</string>
+			<string>http://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_imagery_goes_time/MapServer/export?transparent=true%26format=png%26layers%3Dshow%3A11%26bbox={minLon},{minLat},{maxLon},{maxLat}%26bboxSR=3857%26imageSR=3857%26size=256,256%26f=image</string>
 			<key>name</key>
 			<string>nowCOAST</string>
 			<key>min_zoom</key>
@@ -608,6 +634,8 @@
 			<integer>0</integer>
 			<key>default_max_zoom</key>
 			<integer>5</integer>
+			<key>epsg</key>
+			<integer>3857</integer>
 		</dict>
 	</array>
 	<key>preloaded_bounding_boxes</key>

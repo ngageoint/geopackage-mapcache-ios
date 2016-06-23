@@ -15,6 +15,7 @@
 #import "GPKGSLoadTilesTask.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
+#import "GPKGProjectionFactory.h"
 
 NSString * const GPKGS_MANAGER_LOAD_TILES_SEG_LOAD_TILES = @"loadTiles";
 
@@ -58,15 +59,15 @@ NSString * const GPKGS_MANAGER_LOAD_TILES_SEG_LOAD_TILES = @"loadTiles";
         // If not importing tiles, just create the table
         if(url == nil || [url length] == 0){
             
-            GPKGBoundingBox * webMercatorBoundingBox = [GPKGTileBoundingBoxUtils toWebMercatorWithBoundingBox:boundingBox];
-            
             GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
             @try {
-                // Create the web mercator srs if needed
+                // Create the srs if needed
                 GPKGSpatialReferenceSystemDao * srsDao = [geoPackage getSpatialReferenceSystemDao];
-                [srsDao getOrCreateWithSrsId:[NSNumber numberWithInt:PROJ_EPSG_WEB_MERCATOR]];
+                GPKGSpatialReferenceSystem * srs = [srsDao getOrCreateWithEpsg:[NSNumber numberWithInt:loadTiles.epsg]];
                 // Create the tile table
-                [geoPackage createTileTableWithTableName:name andContentsBoundingBox:boundingBox andContentsSrsId:[NSNumber numberWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM] andTileMatrixSetBoundingBox:webMercatorBoundingBox andTileMatrixSetSrsId:[NSNumber numberWithInt:PROJ_EPSG_WEB_MERCATOR]];
+                GPKGProjection * projection = [GPKGProjectionFactory getProjectionWithInt:loadTiles.epsg];
+                GPKGBoundingBox * bbox = [GPKGSLoadTilesTask transformBoundingBox:boundingBox withProjection:projection];
+                [geoPackage createTileTableWithTableName:name andContentsBoundingBox:bbox andContentsSrsId:srs.srsId andTileMatrixSetBoundingBox:bbox andTileMatrixSetSrsId:srs.srsId];
             }
             @finally {
                 [geoPackage close];
@@ -79,7 +80,7 @@ NSString * const GPKGS_MANAGER_LOAD_TILES_SEG_LOAD_TILES = @"loadTiles";
             
         }else{
             // Load tiles
-            [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:self.table.database andTable:name andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
+            [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:self.table.database andTable:name andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andEpsg:loadTiles.epsg andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
         }
         
     }

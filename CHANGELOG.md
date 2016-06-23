@@ -6,7 +6,9 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ## 1.10 (TBD)
 
-* TBD
+* geopackage-ios version updated to 1.2.0
+* EPSG field and default settings for loading tiles from a URL
+* Preloaded tile URL updates
 
 ## [1.9](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.9) (05-10-2016)
 
