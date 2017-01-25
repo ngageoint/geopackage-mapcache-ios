@@ -69,7 +69,7 @@
 		04E1D8DC1B682CF4002BD947 /* GPKGSFeatureTilesDrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8DB1B682CF4002BD947 /* GPKGSFeatureTilesDrawViewController.m */; };
 		04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8DE1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m */; };
 		04E1D8E21B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8E11B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m */; };
-		79B230F4F60AF2BE7816B2CB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02FF687C0F94F922C6DBA093 /* libPods.a */; };
+		CF52A7895D9F544D637D87A3 /* libPods-mapcache-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C949BBDA5ECEE9FFAC05F51 /* libPods-mapcache-ios.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -207,8 +207,11 @@
 		04E1D8DE1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSFeatureTilesDrawData.m; sourceTree = "<group>"; };
 		04E1D8E01B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSCreateFeatureTilesViewController.h; sourceTree = "<group>"; };
 		04E1D8E11B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSCreateFeatureTilesViewController.m; sourceTree = "<group>"; };
+		317A64B2FA9FC9C408272041 /* Pods-mapcache-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.release.xcconfig"; sourceTree = "<group>"; };
+		3C949BBDA5ECEE9FFAC05F51 /* libPods-mapcache-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mapcache-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,7 +220,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				048C212B1AFBCC9400EBC38B /* libsqlite3.dylib in Frameworks */,
-				79B230F4F60AF2BE7816B2CB /* libPods.a in Frameworks */,
+				CF52A7895D9F544D637D87A3 /* libPods-mapcache-ios.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,6 +465,8 @@
 			children = (
 				5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */,
 				C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */,
+				C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */,
+				317A64B2FA9FC9C408272041 /* Pods-mapcache-ios.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -471,6 +476,7 @@
 			children = (
 				048C212A1AFBCC9400EBC38B /* libsqlite3.dylib */,
 				02FF687C0F94F922C6DBA093 /* libPods.a */,
+				3C949BBDA5ECEE9FFAC05F51 /* libPods-mapcache-ios.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -482,12 +488,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 040136951AF94FB200C92AFC /* Build configuration list for PBXNativeTarget "mapcache-ios" */;
 			buildPhases = (
-				C8B98BBB41597A0D3F25DE44 /* Check Pods Manifest.lock */,
+				C8B98BBB41597A0D3F25DE44 /* [CP] Check Pods Manifest.lock */,
 				0401366B1AF94FB200C92AFC /* Sources */,
 				0401366C1AF94FB200C92AFC /* Frameworks */,
 				0401366D1AF94FB200C92AFC /* Resources */,
-				D51B2B27AB5CBB199555A59F /* Copy Pods Resources */,
-				77B9225F6CCDAD7855AE57C5 /* Embed Pods Frameworks */,
+				D51B2B27AB5CBB199555A59F /* [CP] Copy Pods Resources */,
+				77B9225F6CCDAD7855AE57C5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -576,49 +582,49 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		77B9225F6CCDAD7855AE57C5 /* Embed Pods Frameworks */ = {
+		77B9225F6CCDAD7855AE57C5 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C8B98BBB41597A0D3F25DE44 /* Check Pods Manifest.lock */ = {
+		C8B98BBB41597A0D3F25DE44 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		D51B2B27AB5CBB199555A59F /* Copy Pods Resources */ = {
+		D51B2B27AB5CBB199555A59F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -811,7 +817,7 @@
 		};
 		040136961AF94FB200C92AFC /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */;
+			baseConfigurationReference = C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -825,7 +831,7 @@
 		};
 		040136971AF94FB200C92AFC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */;
+			baseConfigurationReference = 317A64B2FA9FC9C408272041 /* Pods-mapcache-ios.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
