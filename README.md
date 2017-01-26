@@ -50,6 +50,10 @@ Editing [Haiti Features] (http://www.geopackage.org/data/haiti-vectors-split.gpk
 
 ![Screenshot 6](screenshots/screenshot6.jpg)
 
+### Video ###
+
+[MapCache functionality demonstration video](https://dropbox.geointapps.org/public.php?service=files&t=7844c745fe9af16acde2b4446190fe0a&download)
+
 ### Build ###
 
 Build this repository using Xcode and/or CocoaPods:
