@@ -83,3 +83,4 @@ App Icons are from [Icons8](https://icons8.com/), [Material Design Icons on GitH
 ### Remote Dependencies ###
 
 * [GeoPackage iOS](https://github.com/ngageoint/geopackage-ios) (The MIT License (MIT)) - GeoPackage Library
+* [Fingertips](https://github.com/mapbox/Fingertips) (Mapbox) - Presentation mode for iOS
