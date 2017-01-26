@@ -52,7 +52,11 @@ Editing [Haiti Features] (http://www.geopackage.org/data/haiti-vectors-split.gpk
 
 ### Video ###
 
-[MapCache functionality demonstration video](https://owncloud.devops.geointservices.io/index.php/s/Q9Z8wdP7d40empT/download)
+MapCache functionality demonstration video
+
+[Watch](https://owncloud.devops.geointservices.io/index.php/s/Q9Z8wdP7d40empT)
+
+[Download](https://owncloud.devops.geointservices.io/index.php/s/Q9Z8wdP7d40empT/download)
 
 ### Build ###
 
