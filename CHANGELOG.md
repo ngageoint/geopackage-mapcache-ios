@@ -11,6 +11,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 * GeoPackage sample data and tile server updates
 * Feature Tile Overlay fix for WGS84 bounding boxes above or below the Web Mercator limits
 * Edit Feature Tile Overlay fix preventing saved edit of max features per tile
+* Replace use of deprecated pinColor with pinTintColor
 
 ## [1.11](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.11) (02-02-2017)
 
