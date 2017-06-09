@@ -2541,7 +2541,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
-                                    <action selector="maxZoomChanged:" destination="qMN-m9-UXt" eventType="editingChanged" id="eXr-0Y-Cqw"/>
+                                    <action selector="maxFeaturesPerTileChanged:" destination="qMN-m9-UXt" eventType="editingChanged" id="dzR-NC-JZk"/>
                                 </connections>
                             </textField>
                         </subviews>
@@ -3316,11 +3316,11 @@
         <segue reference="S4V-Zx-x7V"/>
         <segue reference="Tbj-Dw-cQe"/>
         <segue reference="5H4-Qu-fu7"/>
-        <segue reference="Zt4-kZ-Aob"/>
         <segue reference="AFX-xb-2xo"/>
         <segue reference="E1Z-ca-WBX"/>
-        <segue reference="eWo-PS-bO7"/>
         <segue reference="6XH-Lj-DXW"/>
         <segue reference="eq5-Yc-eqB"/>
+        <segue reference="i8u-ct-hl9"/>
+        <segue reference="Zt4-kZ-Aob"/>
     </inferredMetricsTieBreakers>
 </document>
