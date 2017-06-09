@@ -1670,6 +1670,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [featureTiles calculateDrawOverlap];
     
     GPKGFeatureOverlay * overlay = [[GPKGFeatureOverlay alloc] initWithFeatureTiles:featureTiles];
+    boundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
     [overlay setBoundingBox:boundingBox withProjection:[GPKGProjectionFactory getProjectionWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
     [overlay setMinZoom:[NSNumber numberWithInt:featureOverlay.minZoom]];
     [overlay setMaxZoom:[NSNumber numberWithInt:featureOverlay.maxZoom]];
