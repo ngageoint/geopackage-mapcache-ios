@@ -7,6 +7,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 ## 1.12 (TBD)
 
 * geopackage-ios version updated to 1.2.2
+* Added AFNetworking 3.1 dependency which was removed from geopackage-ios
 
 ## [1.11](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.11) (02-02-2017)
 
