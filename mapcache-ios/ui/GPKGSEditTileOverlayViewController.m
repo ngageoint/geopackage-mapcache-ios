@@ -101,6 +101,7 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
 - (IBAction)maxZoomChanged:(id)sender {
     self.data.maxZoom = [self.numberFormatter numberFromString:self.maxZoomTextField.text];
 }
+
 - (IBAction)maxFeaturesPerTileChanged:(id)sender {
     self.data.maxFeaturesPerTile = [self.numberFormatter numberFromString:self.maxFeaturesPerTileTextField.text];
 }
