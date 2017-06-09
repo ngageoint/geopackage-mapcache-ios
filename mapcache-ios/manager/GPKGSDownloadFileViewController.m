@@ -49,6 +49,26 @@
     }
 }
 
+- (IBAction)link1:(UIButton *)sender {
+    
+    NSURL *url = [NSURL URLWithString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_PRELOADED_OGC_EXAMPLES]];
+    if( [[UIApplication sharedApplication] canOpenURL:url]){
+        [[UIApplication sharedApplication] openURL:url];
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+    
+}
+
+- (IBAction)link2:(UIButton *)sender {
+    
+    NSURL *url = [NSURL URLWithString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_PRELOADED_NGA_EXAMPLES]];
+    if( [[UIApplication sharedApplication] canOpenURL:url]){
+        [[UIApplication sharedApplication] openURL:url];
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+    
+}
+
 - (IBAction)preloaded:(id)sender {
     NSMutableArray * options = [[NSMutableArray alloc] init];
     NSArray * urls = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS];

@@ -478,55 +478,27 @@
 		<string>CURVE</string>
 		<string>SURFACE</string>
 	</array>
+    <key>preloaded_ogc_examples</key>
+    <string>http://github.com/opengeospatial/geopackage/tree/gh-pages/data</string>
+    <key>preloaded_nga_examples</key>
+    <string>http://github.com/ngageoint/GeoPackage/tree/master/docs/examples</string>
 	<key>preloaded_geopackage_urls</key>
 	<array>
 		<dict>
 			<key>label</key>
-			<string>Natural Earth Rivers</string>
+			<string>Blue Marble</string>
 			<key>url</key>
-			<string>http://ngageoint.github.io/GeoPackage/examples/rivers.gpkg</string>
+			<string>http://portal.opengeospatial.org/files/73648</string>
 			<key>name</key>
-			<string>rivers</string>
+			<string>blue_marble</string>
 		</dict>
 		<dict>
 			<key>label</key>
-			<string>GDAL Sample</string>
+			<string>Whitehorse</string>
 			<key>url</key>
-			<string>http://www.geopackage.org/data/gdal_sample.gpkg</string>
+			<string>http://portal.opengeospatial.org/files/63156</string>
 			<key>name</key>
-			<string>gdal_sample</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>Simple Sewers</string>
-			<key>url</key>
-			<string>http://www.geopackage.org/data/simple_sewer_features.gpkg</string>
-			<key>name</key>
-			<string>simple_sewer_features</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>Haiti</string>
-			<key>url</key>
-			<string>http://www.geopackage.org/data/haiti-vectors-split.gpkg</string>
-			<key>name</key>
-			<string>haiti-vectors-split</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>Belgium Geonames</string>
-			<key>url</key>
-			<string>http://www.geopackage.org/data/geonames_belgium.gpkg</string>
-			<key>name</key>
-			<string>geonames_belgium</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>ERDC Whitehorse</string>
-			<key>url</key>
-			<string>https://portal.opengeospatial.org/files/63156</string>
-			<key>name</key>
-			<string>erdc_whitehorse</string>
+			<string>whitehorse</string>
 		</dict>
 	</array>
 	<key>preloaded_tile_urls</key>
