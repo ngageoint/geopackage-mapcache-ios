@@ -2019,7 +2019,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qKz-CR-UjC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2385" y="-513.5"/>
+            <point key="canvasLocation" x="2619" y="-515"/>
         </scene>
         <!--Bounding Box View Controller-->
         <scene sceneID="pkt-mU-i2e">
@@ -2121,7 +2121,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bxY-c6-zoh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3588" y="-1387"/>
+            <point key="canvasLocation" x="4958" y="-1356"/>
         </scene>
         <!--Load Tiles View Controller-->
         <scene sceneID="YXp-sY-p0Y">
@@ -2242,7 +2242,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SgA-1m-pBJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3023" y="-1239"/>
+            <point key="canvasLocation" x="3530" y="-1237"/>
         </scene>
         <!--Generate Tiles View Controller-->
         <scene sceneID="02H-sg-9iW">
@@ -2461,7 +2461,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r8A-JV-0y9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3059" y="-82.5"/>
+            <point key="canvasLocation" x="3582" y="-93"/>
         </scene>
         <!--Edit Tile Overlay View Controller-->
         <scene sceneID="b6s-i2-tfl">
@@ -2566,7 +2566,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fm5-2L-76O" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3104" y="875.5"/>
+            <point key="canvasLocation" x="3690" y="846"/>
         </scene>
         <!--Feature Tiles Draw View Controller-->
         <scene sceneID="uv5-ZM-23t">
@@ -2817,7 +2817,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5sZ-W3-ULA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3952" y="413"/>
+            <point key="canvasLocation" x="4867" y="452"/>
         </scene>
         <!--Feature Tiles View Controller-->
         <scene sceneID="Spa-Yu-cTP">
@@ -3314,10 +3314,10 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="S4V-Zx-x7V"/>
+        <segue reference="aLP-Cc-axH"/>
+        <segue reference="E1Z-ca-WBX"/>
         <segue reference="Tbj-Dw-cQe"/>
         <segue reference="5H4-Qu-fu7"/>
-        <segue reference="AFX-xb-2xo"/>
-        <segue reference="E1Z-ca-WBX"/>
         <segue reference="6XH-Lj-DXW"/>
         <segue reference="eq5-Yc-eqB"/>
         <segue reference="i8u-ct-hl9"/>
