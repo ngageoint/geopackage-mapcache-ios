@@ -59,6 +59,7 @@ MapCache functionality demonstration video
 
 Build this repository using Xcode and/or CocoaPods:
 
+    pod repo update
     pod install
 
 Open mapcache-ios.xcworkspace in Xcode or build from command line:
