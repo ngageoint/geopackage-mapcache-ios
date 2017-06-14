@@ -20,33 +20,30 @@ The MapCache app provides read and write access to GeoPackage files, including f
 
 ### Screen Shots ###
 
-Manager View with GeoPackages linked at Open Geospatial Consortium [GeoPackage] (http://www.geopackage.org/#sampledata)
+Manager View with GeoPackages linked at Open Geospatial Consortium [GeoPackage](http://www.geopackage.org/#sampledata)
  
-* [Technology Test Data Set] (http://www.geopackage.org/data/gdal_sample.gpkg)
-* [Geonames data for Belgium] (http://www.geopackage.org/data/geonames_belgium.gpkg)
-* [Haiti OpenStreetMap tiles and point features] (http://www.geopackage.org/data/haiti-vectors-split.gpkg)
-* [Simple Sewers test data set] (http://www.geopackage.org/data/simple_sewer_features.gpkg)
-* [ERDC Whitehorse Tiles] (https://portal.opengeospatial.org/files/63156)
+* [Technology Test Data Set](http://www.geopackage.org/data/gdal_sample.gpkg)
+* [ERDC Whitehorse Tiles](https://portal.opengeospatial.org/files/63156)
 
 ![Screenshot 1](screenshots/screenshot1.jpg)
 
-[Haiti Polygon Features] (http://www.geopackage.org/data/haiti-vectors-split.gpkg)
+Haiti Polygon Features
 
 ![Screenshot 2](screenshots/screenshot2.jpg)
 
-[Belgium Point Features] (http://www.geopackage.org/data/geonames_belgium.gpkg)
+Belgium Point Features
 
 ![Screenshot 3](screenshots/screenshot3.jpg)
 
-Editing [Haiti Features] (http://www.geopackage.org/data/haiti-vectors-split.gpkg) with [OpenStreetMap] (http://www.openstreetmap.org) tiles
+Editing Haiti Features with [OpenStreetMap](http://www.openstreetmap.org) tiles
 
 ![Screenshot 4](screenshots/screenshot4.jpg)
 
-[nowCOAST] (http://nowcoast.noaa.gov) tiles
+[nowCOAST](http://nowcoast.noaa.gov) tiles
 
 ![Screenshot 5](screenshots/screenshot5.jpg)
 
-[Whitehorse] (https://portal.opengeospatial.org/files/63156) tiles
+[Whitehorse](https://portal.opengeospatial.org/files/63156) tiles
 
 ![Screenshot 6](screenshots/screenshot6.jpg)
 
