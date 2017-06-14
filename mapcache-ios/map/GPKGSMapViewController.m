@@ -287,7 +287,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             if(mapPointPinView == nil){
                 mapPointPinView = [[MKPinAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:mapPointPinReuseIdentifier];
             }
-            mapPointPinView.pinColor = mapPoint.options.pinColor;
+            mapPointPinView.pinTintColor = mapPoint.options.pinTintColor;
             view = mapPointPinView;
         }
         
@@ -741,12 +741,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
     switch(self.editFeatureType){
         case GPKGS_ET_POINT:
-            [mapPoint.options setPinColor:MKPinAnnotationColorRed];
+            [mapPoint.options setPinTintColor:[UIColor redColor]];
             break;
         case GPKGS_ET_LINESTRING:
         case GPKGS_ET_POLYGON:
             [mapPoint.options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POINT_IMAGE]];
-            [mapPoint.options setPinColor:MKPinAnnotationColorGreen];
+            [mapPoint.options setPinTintColor:[UIColor greenColor]];
             break;
         case GPKGS_ET_POLYGON_HOLE:
             [mapPoint.options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_HOLE_POINT_IMAGE]];
@@ -755,7 +755,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             if([self.editFeatureShapePoints isKindOfClass:[GPKGPolygonHolePoints class]]){
                 [mapPoint.options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_HOLE_POINT_IMAGE]];
             }else if([self.editFeatureShapePoints isKindOfClass:[GPKGMultiPoint class]]){
-                [mapPoint.options setPinColor:MKPinAnnotationColorRed];
+                [mapPoint.options setPinTintColor:[UIColor redColor]];
             }else{
                 [mapPoint.options setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POINT_IMAGE]];
             }
@@ -1034,7 +1034,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(GPKGMapPointOptions *) getEditFeaturePointOptions{
     GPKGMapPointOptions * options = [[GPKGMapPointOptions alloc] init];
     options.draggable = true;
-    options.pinColor = MKPinAnnotationColorRed;
+    options.pinTintColor = [UIColor redColor];
     options.initializer = [[GPGKSMapPointInitializer alloc] initWithPointType:GPKGS_MPDT_EDIT_FEATURE_POINT];
     return options;
 }
@@ -1595,10 +1595,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         MKCoordinateRegion expandedRegion = MKCoordinateRegionMakeWithDistance(center, expandedHeight, expandedWidth);
         
         double latitudeRange = expandedRegion.span.latitudeDelta / 2.0;
-        double longitudeRange = expandedRegion.span.longitudeDelta / 2.0;
         
-        if(expandedRegion.center.latitude + latitudeRange > 90.0 || expandedRegion.center.latitude - latitudeRange < -90.0
-           || expandedRegion.center.longitude + longitudeRange > 180.0 || expandedRegion.center.longitude - longitudeRange < -180.0){
+        if(expandedRegion.center.latitude + latitudeRange > 90.0 || expandedRegion.center.latitude - latitudeRange < -90.0){
             expandedRegion = MKCoordinateRegionMake(self.mapView.centerCoordinate, MKCoordinateSpanMake(180, 360));
         }
         
@@ -1672,6 +1670,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [featureTiles calculateDrawOverlap];
     
     GPKGFeatureOverlay * overlay = [[GPKGFeatureOverlay alloc] initWithFeatureTiles:featureTiles];
+    boundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
     [overlay setBoundingBox:boundingBox withProjection:[GPKGProjectionFactory getProjectionWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
     [overlay setMinZoom:[NSNumber numberWithInt:featureOverlay.minZoom]];
     [overlay setMaxZoom:[NSNumber numberWithInt:featureOverlay.maxZoom]];
@@ -1831,12 +1830,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if(editable){
         if(clickable){
-            [mapPoint.options setPinColor:MKPinAnnotationColorGreen];
+            [mapPoint.options setPinTintColor:[UIColor greenColor]];
         }else{
-            [mapPoint.options setPinColor:MKPinAnnotationColorPurple];
+            [mapPoint.options setPinTintColor:[UIColor purpleColor]];
         }
     }else{
-        [mapPoint.options setPinColor:MKPinAnnotationColorPurple];
+        [mapPoint.options setPinTintColor:[UIColor purpleColor]];
     }
     
 }

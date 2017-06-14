@@ -478,55 +478,27 @@
 		<string>CURVE</string>
 		<string>SURFACE</string>
 	</array>
+    <key>preloaded_ogc_examples</key>
+    <string>http://github.com/opengeospatial/geopackage/tree/gh-pages/data</string>
+    <key>preloaded_nga_examples</key>
+    <string>http://github.com/ngageoint/GeoPackage/tree/master/docs/examples</string>
 	<key>preloaded_geopackage_urls</key>
 	<array>
 		<dict>
 			<key>label</key>
-			<string>Natural Earth Rivers</string>
+			<string>Blue Marble</string>
 			<key>url</key>
-			<string>http://ngageoint.github.io/GeoPackage/examples/rivers.gpkg</string>
+			<string>http://portal.opengeospatial.org/files/73648</string>
 			<key>name</key>
-			<string>rivers</string>
+			<string>blue_marble</string>
 		</dict>
 		<dict>
 			<key>label</key>
-			<string>GDAL Sample</string>
+			<string>Whitehorse</string>
 			<key>url</key>
-			<string>http://www.geopackage.org/data/gdal_sample.gpkg</string>
+			<string>http://portal.opengeospatial.org/files/63156</string>
 			<key>name</key>
-			<string>gdal_sample</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>Simple Sewers</string>
-			<key>url</key>
-			<string>http://www.geopackage.org/data/simple_sewer_features.gpkg</string>
-			<key>name</key>
-			<string>simple_sewer_features</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>Haiti</string>
-			<key>url</key>
-			<string>http://www.geopackage.org/data/haiti-vectors-split.gpkg</string>
-			<key>name</key>
-			<string>haiti-vectors-split</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>Belgium Geonames</string>
-			<key>url</key>
-			<string>http://www.geopackage.org/data/geonames_belgium.gpkg</string>
-			<key>name</key>
-			<string>geonames_belgium</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>ERDC Whitehorse</string>
-			<key>url</key>
-			<string>https://portal.opengeospatial.org/files/63156</string>
-			<key>name</key>
-			<string>erdc_whitehorse</string>
+			<string>whitehorse</string>
 		</dict>
 	</array>
 	<key>preloaded_tile_urls</key>
@@ -587,45 +559,9 @@
 		</dict>
 		<dict>
 			<key>label</key>
-			<string>MapQuest-OSM</string>
-			<key>url</key>
-			<string>http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png</string>
-			<key>name</key>
-			<string>mapquest_osm</string>
-			<key>min_zoom</key>
-			<integer>0</integer>
-			<key>max_zoom</key>
-			<integer>21</integer>
-			<key>default_min_zoom</key>
-			<integer>0</integer>
-			<key>default_max_zoom</key>
-			<integer>5</integer>
-			<key>epsg</key>
-			<integer>3857</integer>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>MapQuest Open Aerial</string>
-			<key>url</key>
-			<string>http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png</string>
-			<key>name</key>
-			<string>mapquest_open_aerial</string>
-			<key>min_zoom</key>
-			<integer>0</integer>
-			<key>max_zoom</key>
-			<integer>21</integer>
-			<key>default_min_zoom</key>
-			<integer>0</integer>
-			<key>default_max_zoom</key>
-			<integer>5</integer>
-			<key>epsg</key>
-			<integer>3857</integer>
-		</dict>
-		<dict>
-			<key>label</key>
 			<string>nowCOAST</string>
 			<key>url</key>
-			<string>http://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_imagery_goes_time/MapServer/export?transparent=true%26format=png%26layers%3Dshow%3A11%26bbox={minLon},{minLat},{maxLon},{maxLat}%26bboxSR=3857%26imageSR=3857%26size=256,256%26f=image</string>
+			<string>http://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_imagery_time/MapServer/export?transparent=true&amp;format=png&amp;bbox={minLon},{minLat},{maxLon},{maxLat}&amp;bboxSR=3857&amp;imageSR=3857&amp;size=256,256&amp;f=image</string>
 			<key>name</key>
 			<string>nowCOAST</string>
 			<key>min_zoom</key>
