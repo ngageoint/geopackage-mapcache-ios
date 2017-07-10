@@ -1693,15 +1693,21 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(void) displayTilesWithOverlay: (MKTileOverlay *) overlay andGeoPackage: (GPKGGeoPackage *) geoPackage andContents: (GPKGContents *) contents andSpecifiedBoundingBox: (GPKGBoundingBox *) specifiedBoundingBox{
     
     GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
-    GPKGProjection * projection = [contentsDao getProjection:contents];
-    
-    GPKGProjectionTransform * transformToWebMercator = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
     
     GPKGBoundingBox * contentsBoundingBox = [contents getBoundingBox];
-    if([projection.epsg intValue] == PROJ_EPSG_WORLD_GEODETIC_SYSTEM){
-        contentsBoundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:contentsBoundingBox];
+    GPKGProjection * projection = nil;
+    if(contentsBoundingBox != nil){
+        projection = [contentsDao getProjection:contents];
+        if([projection.epsg intValue] == PROJ_EPSG_WORLD_GEODETIC_SYSTEM){
+            contentsBoundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:contentsBoundingBox];
+        }
+    }else{
+        contentsBoundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-PROJ_WGS84_HALF_WORLD_LON_WIDTH andMaxLongitudeDouble:PROJ_WGS84_HALF_WORLD_LON_WIDTH andMinLatitudeDouble:PROJ_WEB_MERCATOR_MIN_LAT_RANGE andMaxLatitudeDouble:PROJ_WEB_MERCATOR_MAX_LAT_RANGE];
+        projection = [GPKGProjectionFactory getProjectionWithInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
     }
 
+    GPKGProjectionTransform * transformToWebMercator = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+    
     GPKGBoundingBox * webMercatorBoundingBox = [transformToWebMercator transformWithBoundingBox:contentsBoundingBox];
     GPKGProjectionTransform * transform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
     GPKGBoundingBox * boundingBox = [transform transformWithBoundingBox:webMercatorBoundingBox];
