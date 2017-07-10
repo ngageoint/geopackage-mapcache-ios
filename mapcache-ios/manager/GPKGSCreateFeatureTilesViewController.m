@@ -181,7 +181,12 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
                 projection = [GPKGProjectionFactory getProjectionWithInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
             }else{
                 boundingBox = [contents getBoundingBox];
-                projection = [contentsDao getProjection:contents];
+                if(boundingBox == nil){
+                    boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-PROJ_WGS84_HALF_WORLD_LON_WIDTH andMaxLongitudeDouble:PROJ_WGS84_HALF_WORLD_LON_WIDTH andMinLatitudeDouble:PROJ_WEB_MERCATOR_MIN_LAT_RANGE andMaxLatitudeDouble:PROJ_WEB_MERCATOR_MAX_LAT_RANGE];
+                    projection = [GPKGProjectionFactory getProjectionWithInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                }else{
+                    projection = [contentsDao getProjection:contents];
+                }
             }
             
             GPKGProjectionTransform * webMercatorTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
