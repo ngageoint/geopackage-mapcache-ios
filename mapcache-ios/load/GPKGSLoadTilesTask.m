@@ -45,7 +45,8 @@
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
                andBoundingBox: (GPKGBoundingBox *) boundingBox
-                      andEpsg: (int) epsg
+                 andAuthority: (NSString *) authority
+                      andCode: (NSString *) code
                      andLabel: (NSString *) label{
     
     GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory getManager];
@@ -57,7 +58,7 @@
         [manager close];
     }
     
-    GPKGProjection * projection = [GPKGProjectionFactory getProjectionWithInt:epsg];
+    GPKGProjection * projection = [GPKGProjectionFactory projectionWithAuthority:authority andCode:code];
     GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
     
     GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andTileUrl:tileUrl andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
@@ -77,10 +78,11 @@
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
                andBoundingBox: (GPKGBoundingBox *) boundingBox
-                      andEpsg: (int) epsg
+                 andAuthority: (NSString *) authority
+                      andCode: (NSString *) code
                      andLabel: (NSString *) label{
     
-    GPKGProjection * projection = [GPKGProjectionFactory getProjectionWithInt:epsg];
+    GPKGProjection * projection = [GPKGProjectionFactory projectionWithAuthority:authority andCode:code];
     GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
     
     GPKGTileGenerator * tileGenerator = [[GPKGFeatureTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andFeatureTiles:featureTiles andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
@@ -93,7 +95,7 @@
     
     GPKGBoundingBox * transformedBox = boundingBox;
     
-    if([projection.epsg intValue] != PROJ_EPSG_WORLD_GEODETIC_SYSTEM){
+    if(![projection isEqualToAuthority:PROJ_AUTHORITY_EPSG andNumberCode:[NSNumber numberWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]]){
         GPKGBoundingBox * bounded = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
         GPKGProjectionTransform * transform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM andToProjection:projection];
         transformedBox = [transform transformWithBoundingBox:bounded];
