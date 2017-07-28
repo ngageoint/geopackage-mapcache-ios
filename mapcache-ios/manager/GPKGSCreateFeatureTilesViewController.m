@@ -141,7 +141,7 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
          */
         
         [featureTiles calculateDrawOverlap];
-        [GPKGSLoadTilesTask loadTilesWithCallback:self andGeoPackage:geoPackage andTable:tableName andFeatureTiles:featureTiles andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andEpsg:PROJ_EPSG_WEB_MERCATOR andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]];
+        [GPKGSLoadTilesTask loadTilesWithCallback:self andGeoPackage:geoPackage andTable:tableName andFeatureTiles:featureTiles andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",PROJ_EPSG_WEB_MERCATOR] andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]];
         
     }
     @catch (NSException *e) {
@@ -178,20 +178,20 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
             GPKGProjection * projection = nil;
             if(self.generateTilesData.boundingBox != nil){
                 boundingBox = self.generateTilesData.boundingBox;
-                projection = [GPKGProjectionFactory getProjectionWithInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                projection = [GPKGProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
             }else{
                 boundingBox = [contents getBoundingBox];
                 if(boundingBox == nil){
                     boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-PROJ_WGS84_HALF_WORLD_LON_WIDTH andMaxLongitudeDouble:PROJ_WGS84_HALF_WORLD_LON_WIDTH andMinLatitudeDouble:PROJ_WEB_MERCATOR_MIN_LAT_RANGE andMaxLatitudeDouble:PROJ_WEB_MERCATOR_MAX_LAT_RANGE];
-                    projection = [GPKGProjectionFactory getProjectionWithInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                    projection = [GPKGProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
                 }else{
                     projection = [contentsDao getProjection:contents];
                 }
             }
             
             GPKGProjectionTransform * webMercatorTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
-            if([projection.epsg intValue] == PROJ_EPSG_WORLD_GEODETIC_SYSTEM){
-                boundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
+            if([projection getUnit] == GPKG_UNIT_DEGREES){
+                boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
             }
             webMercatorBoundingBox = [webMercatorTransform transformWithBoundingBox:boundingBox];
             

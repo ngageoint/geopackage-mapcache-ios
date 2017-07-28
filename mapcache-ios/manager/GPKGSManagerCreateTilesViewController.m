@@ -84,7 +84,7 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
                 GPKGSpatialReferenceSystemDao * srsDao = [geoPackage getSpatialReferenceSystemDao];
                 GPKGSpatialReferenceSystem * srs = [srsDao getOrCreateWithEpsg:[NSNumber numberWithInt:loadTiles.epsg]];
                 // Create the tile table
-                GPKGProjection * projection = [GPKGProjectionFactory getProjectionWithInt:loadTiles.epsg];
+                GPKGProjection * projection = [GPKGProjectionFactory projectionWithEpsgInt:loadTiles.epsg];
                 GPKGBoundingBox * bbox = [GPKGSLoadTilesTask transformBoundingBox:boundingBox withProjection:projection];
                 [geoPackage createTileTableWithTableName:name andContentsBoundingBox:bbox andContentsSrsId:srs.srsId andTileMatrixSetBoundingBox:bbox andTileMatrixSetSrsId:srs.srsId];
             }
@@ -99,7 +99,7 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
             
         }else{
             // Load tiles
-            [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:self.database.name andTable:name andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andEpsg:loadTiles.epsg andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
+            [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:self.database.name andTable:name andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",loadTiles.epsg] andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
         }
     
     }
