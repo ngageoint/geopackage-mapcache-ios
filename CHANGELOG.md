@@ -4,9 +4,12 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 1.14 (TBD)
+## [1.14](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.14) (07-31-2017)
 
-* TBD
+* geopackage-ios version updated to 1.3.0
+* Improved handling of unknown Contents bounding boxes
+* Prevent app crash from invalid or unsupported geometries
+* Bounding of degree projected boxes before Web Mercator transformations
 
 ## [1.13](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.13) (07-10-2017)
 

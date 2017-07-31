@@ -1671,7 +1671,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     GPKGFeatureOverlay * overlay = [[GPKGFeatureOverlay alloc] initWithFeatureTiles:featureTiles];
     boundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
-    [overlay setBoundingBox:boundingBox withProjection:[GPKGProjectionFactory getProjectionWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
+    [overlay setBoundingBox:boundingBox withProjection:[GPKGProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
     [overlay setMinZoom:[NSNumber numberWithInt:featureOverlay.minZoom]];
     [overlay setMaxZoom:[NSNumber numberWithInt:featureOverlay.maxZoom]];
     
@@ -1694,23 +1694,19 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
     
-    GPKGBoundingBox * contentsBoundingBox = [contents getBoundingBox];
-    GPKGProjection * projection = nil;
-    if(contentsBoundingBox != nil){
-        projection = [contentsDao getProjection:contents];
-        if([projection.epsg intValue] == PROJ_EPSG_WORLD_GEODETIC_SYSTEM){
-            contentsBoundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:contentsBoundingBox];
+    GPKGBoundingBox * boundingBox = [contents getBoundingBox];
+    if(boundingBox != nil){
+        GPKGProjection * projection = [contentsDao getProjection:contents];
+        if([projection getUnit] == GPKG_UNIT_DEGREES){
+            boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
         }
+        GPKGProjectionTransform * transformToWebMercator = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+        GPKGBoundingBox * webMercatorBoundingBox = [transformToWebMercator transformWithBoundingBox:boundingBox];
+        GPKGProjectionTransform * transform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+        boundingBox = [transform transformWithBoundingBox:webMercatorBoundingBox];
     }else{
-        contentsBoundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-PROJ_WGS84_HALF_WORLD_LON_WIDTH andMaxLongitudeDouble:PROJ_WGS84_HALF_WORLD_LON_WIDTH andMinLatitudeDouble:PROJ_WEB_MERCATOR_MIN_LAT_RANGE andMaxLatitudeDouble:PROJ_WEB_MERCATOR_MAX_LAT_RANGE];
-        projection = [GPKGProjectionFactory getProjectionWithInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+        boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-PROJ_WGS84_HALF_WORLD_LON_WIDTH andMaxLongitudeDouble:PROJ_WGS84_HALF_WORLD_LON_WIDTH andMinLatitudeDouble:PROJ_WEB_MERCATOR_MIN_LAT_RANGE andMaxLatitudeDouble:PROJ_WEB_MERCATOR_MAX_LAT_RANGE];
     }
-
-    GPKGProjectionTransform * transformToWebMercator = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
-    
-    GPKGBoundingBox * webMercatorBoundingBox = [transformToWebMercator transformWithBoundingBox:contentsBoundingBox];
-    GPKGProjectionTransform * transform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
-    GPKGBoundingBox * boundingBox = [transform transformWithBoundingBox:webMercatorBoundingBox];
     
     if(specifiedBoundingBox != nil){
         boundingBox = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:boundingBox andBoundingBox:specifiedBoundingBox];
@@ -1747,8 +1743,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGResultSet * results = [featureDao queryForAll];
     @try {
         while(![self updateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
-            GPKGFeatureRow * row = [featureDao getFeatureRow:results];
-            count = [self processFeatureRowWithDatabase:database andFeatureDao:featureDao andFeatureRow:row andCount:count andMaxFeatures:maxFeatures andEditable:editable];
+            @try {
+                GPKGFeatureRow * row = [featureDao getFeatureRow:results];
+                count = [self processFeatureRowWithDatabase:database andFeatureDao:featureDao andFeatureRow:row andCount:count andMaxFeatures:maxFeatures andEditable:editable];
+            } @catch (NSException *exception) {
+                NSLog(@"Failed to display feature. database: %@, feature table: %@, error: %@", database, features, [exception description]);
+            }
         }
     }
     @finally {
