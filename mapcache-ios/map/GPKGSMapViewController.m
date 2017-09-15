@@ -63,6 +63,7 @@ const char MapConstantKey;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (nonatomic, strong) NSUserDefaults * settings;
 @property (atomic) int updateCountId;
+@property (atomic) int featureUpdateCountId;
 @property (nonatomic) BOOL boundingBoxMode;
 @property (nonatomic) BOOL editFeaturesMode;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
@@ -127,6 +128,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.updateCountId = 0;
+    self.featureUpdateCountId = 0;
     self.settings = [NSUserDefaults standardUserDefaults];
     self.mapView.delegate = self;
     self.mapView.showsUserLocation = YES;
@@ -329,7 +331,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self.featureShapes removeShapesNotWithinMapView:mapView];
     }
     
-    int updateId = ++self.updateCountId;
+    int updateId = ++self.featureUpdateCountId;
     int maxFeatures = [self getMaxFeatures];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
@@ -1460,6 +1462,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(int) updateInBackgroundWithZoom: (BOOL) zoom{
     
     int updateId = ++self.updateCountId;
+    int featureUpdateId = ++self.featureUpdateCountId;
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
     for(GPKGGeoPackage * geoPackage in [self.geoPackages allValues]){
@@ -1480,7 +1483,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
-        [self updateWithId: updateId andZoom:zoom andMaxFeatures:maxFeatures];
+        [self updateWithId: updateId andFeatureUpdateId:featureUpdateId andZoom:zoom andMaxFeatures:maxFeatures];
     });
 }
 
@@ -1489,7 +1492,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     return canceled;
 }
 
--(int) updateWithId: (int) updateId andZoom: (BOOL) zoom andMaxFeatures: (int) maxFeatures{
+-(BOOL) featureUpdateCanceled: (int) updateId{
+    BOOL canceled = updateId < self.featureUpdateCountId;
+    return canceled;
+}
+
+-(int) updateWithId: (int) updateId andFeatureUpdateId: (int) featureUpdateId andZoom: (BOOL) zoom andMaxFeatures: (int) maxFeatures{
     
     int count = 0;
     
@@ -1560,8 +1568,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         }
     
         // Add features
-        if(![self updateCanceled:updateId]){
-            count = [self addFeaturesWithId:updateId andMaxFeatures:maxFeatures];
+        if(![self featureUpdateCanceled:featureUpdateId]){
+            count = [self addFeaturesWithId:featureUpdateId andMaxFeatures:maxFeatures];
         }
     }
     
@@ -1618,12 +1626,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         
         for(NSString * features in databaseFeatures){
             count = [self displayFeaturesWithId:updateId andDatabase:databaseName andFeatures:features andCount:count andMaxFeatures:maxFeatures andEditable:self.editFeaturesMode];
-            if([self updateCanceled:updateId] || count >= maxFeatures){
+            if([self featureUpdateCanceled:updateId] || count >= maxFeatures){
                 break;
             }
         }
         
-        if([self updateCanceled:updateId]){
+        if([self featureUpdateCanceled:updateId]){
             break;
         }
     }
@@ -1808,7 +1816,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     count += [self.featureShapes featureIdsCountInDatabase:database withTable:tableName];
     
-    if(![self updateCanceled:updateId] && count < maxFeatures){
+    if(![self featureUpdateCanceled:updateId] && count < maxFeatures){
     
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         if([indexer isIndexed]){
@@ -1819,7 +1827,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             @try {
                 for(GPKGFeatureRow *row in indexResults){
                 
-                    if([self updateCanceled:updateId] || count >= maxFeatures){
+                    if([self featureUpdateCanceled:updateId] || count >= maxFeatures){
                         break;
                     }
                     
@@ -1836,7 +1844,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             // Query for all rows
             GPKGResultSet * results = [featureDao queryForAll];
             @try {
-                while(![self updateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
+                while(![self featureUpdateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
                     @try {
                         GPKGFeatureRow * row = [featureDao getFeatureRow:results];
                         if(![self.featureShapes existsWithFeatureId:[row getId] inDatabase:database withTable:tableName]){
