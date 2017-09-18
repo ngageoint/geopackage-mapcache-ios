@@ -1508,30 +1508,66 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if(self.active != nil){
         
-        // Add tile overlays first
         NSArray * activeDatabases = [[NSArray alloc] initWithArray:[self.active getDatabases]];
+        
+        // Open active GeoPackages and create feature DAOS, display tiles and feature tiles
         for(GPKGSDatabase * database in activeDatabases){
+            
+            if([self updateCanceled:updateId]){
+                break;
+            }
             
             GPKGGeoPackage * geoPackage = [self.manager open:database.name];
             
             if(geoPackage != nil){
                 [self.geoPackages setObject:geoPackage forKey:database.name];
+            
+                NSMutableSet * featureTableDaos = [[NSMutableSet alloc] init];
+                NSArray * features = [database getFeatures];
+                if([features count] > 0){
+                    for(GPKGSTable * features in [database getFeatures]){
+                        [featureTableDaos addObject:features.name];
+                    }
+                }
+                
+                for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
+                    if(featureOverlay.active){
+                        [featureTableDaos addObject:featureOverlay.featureTable];
+                    }
+                }
+                
+                if(featureTableDaos.count > 0){
+                    NSMutableDictionary * databaseFeatureDaos = [[NSMutableDictionary alloc] init];
+                    [self.featureDaos setObject:databaseFeatureDaos forKey:database.name];
+                    for(NSString *featureTable in featureTableDaos){
+                        
+                        if([self updateCanceled:updateId]){
+                            break;
+                        }
+                        
+                        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:featureTable];
+                        [databaseFeatureDaos setObject:featureDao forKey:featureTable];
+                    }
+                }
                 
                 // Display the tiles
                 for(GPKGSTileTable * tiles in [database getTiles]){
+                    if([self updateCanceled:updateId]){
+                        break;
+                    }
                     @try {
                         [self displayTiles:tiles];
                     }
                     @catch (NSException *e) {
                         NSLog(@"%@", [e description]);
                     }
+                }
+                
+                // Display the feature tiles
+                for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
                     if([self updateCanceled:updateId]){
                         break;
                     }
-                }
-             
-                // Display the feature tiles
-                for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
                     if(featureOverlay.active){
                         @try {
                             [self displayFeatureTiles:featureOverlay];
@@ -1540,35 +1576,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                             NSLog(@"%@", [e description]);
                         }
                     }
-                    if([self updateCanceled:updateId]){
-                        break;
-                    }
                 }
+                
             } else{
                 [self.active removeDatabase:database.name andPreserveOverlays:false];
-            }
-            
-            if([self updateCanceled:updateId]){
-                break;
-            }
-        }
-        
-        // Create and store the feature DAOs
-        for(GPKGSDatabase * database in [self.active getDatabases]){
-            NSArray * features = [database getFeatures];
-            if([features count] > 0){
-                NSMutableDictionary * databaseFeatureDaos = [[NSMutableDictionary alloc] init];
-                [self.featureDaos setObject:databaseFeatureDaos forKey:database.name];
-                for(GPKGSTable * features in [database getFeatures]){
-                    
-                    if([self updateCanceled:updateId]){
-                        break;
-                    }
-                    
-                    GPKGGeoPackage * geoPackage = [self.geoPackages objectForKey:database.name];
-                    GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:features.name];
-                    [databaseFeatureDaos setObject:featureDao forKey:features.name];
-                }
             }
         }
     
