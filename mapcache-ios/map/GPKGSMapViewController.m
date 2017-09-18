@@ -41,6 +41,7 @@
 #import "GPKGFeatureTileTableLinker.h"
 #import "GPKGFeatureShapes.h"
 #import "GPKGMapUtils.h"
+#import "WKBGeometryEnvelopeBuilder.h"
 
 NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 NSString * const GPKGS_MAP_SEG_SELECT_FEATURE_TABLE = @"selectFeatureTable";
@@ -1836,12 +1837,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if(![self featureUpdateCanceled:updateId] && count < maxFeatures){
     
+        GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:self.mapView];
+        GPKGProjection *mapViewProjection = [GPKGProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+        
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         if([indexer isIndexed]){
             
-            GPKGBoundingBox *boundingBox = [GPKGMapUtils boundingBoxOfMapView:self.mapView];
-            
-            GPKGFeatureIndexResults *indexResults = [indexer queryWithBoundingBox:boundingBox andProjection:[GPKGProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
+            GPKGFeatureIndexResults *indexResults = [indexer queryWithBoundingBox:mapViewBoundingBox andProjection:mapViewProjection];
             @try {
                 for(GPKGFeatureRow *row in indexResults){
                 
@@ -1850,7 +1852,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     }
                     
                     if(![self.featureShapes existsWithFeatureId:[row getId] inDatabase:database withTable:tableName]){
-                        count = [self processFeatureRowWithDatabase:database andTableName:tableName andConverter:converter andFeatureRow:row andCount:count andMaxFeatures:maxFeatures andEditable:editable];
+                        count = [self processFeatureRowWithDatabase:database andTableName:tableName andConverter:converter andFeatureRow:row andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:nil];
                     }
                 }
             }
@@ -1859,6 +1861,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             }
         }else{
         
+            GPKGProjectionTransform * projectionTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:mapViewProjection andToProjection:featureDao.projection];
+            GPKGBoundingBox * filterBoundingBox = [projectionTransform transformWithBoundingBox:mapViewBoundingBox];
+            
             // Query for all rows
             GPKGResultSet * results = [featureDao queryForAll];
             @try {
@@ -1866,7 +1871,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     @try {
                         GPKGFeatureRow * row = [featureDao getFeatureRow:results];
                         if(![self.featureShapes existsWithFeatureId:[row getId] inDatabase:database withTable:tableName]){
-                            count = [self processFeatureRowWithDatabase:database andTableName:tableName andConverter:converter andFeatureRow:row andCount:count andMaxFeatures:maxFeatures andEditable:editable];
+                            count = [self processFeatureRowWithDatabase:database andTableName:tableName andConverter:converter andFeatureRow:row andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:filterBoundingBox];
                         }
                     } @catch (NSException *exception) {
                         NSLog(@"Failed to display feature. database: %@, feature table: %@, error: %@", database, features, [exception description]);
@@ -1883,7 +1888,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     return count;
 }
 
--(int) processFeatureRowWithDatabase: (NSString *) database andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter andFeatureRow: (GPKGFeatureRow *) row andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable{
+-(int) processFeatureRowWithDatabase: (NSString *) database andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter andFeatureRow: (GPKGFeatureRow *) row andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andFilterBoundingBox: (GPKGBoundingBox *) boundingBox{
     
     GPKGGeometryData * geometryData = [row getGeometry];
     if(geometryData != nil && !geometryData.empty){
@@ -1891,7 +1896,21 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         WKBGeometry * geometry = geometryData.geometry;
         
         if(geometry != nil){
-            if(count++ < maxFeatures){
+            
+            BOOL passesFilter = YES;
+            
+            if(boundingBox != nil){
+                WKBGeometryEnvelope * envelope = geometryData.envelope;
+                if(envelope == nil){
+                    envelope = [WKBGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
+                }
+                if(envelope != nil){
+                    GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithGeometryEnvelope:envelope];
+                    passesFilter = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:boundingBox andBoundingBox:geometryBoundingBox];
+                }
+            }
+            
+            if(passesFilter && count++ < maxFeatures){
                 NSNumber * featureId = [row getId];
                 GPKGMapShape * shape = [converter toShapeWithGeometry:geometry];
                 [self updateFeaturesBoundingBox:shape];
