@@ -322,21 +322,26 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
     
-    int previousZoom = self.currentZoom;
-    int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
-    self.currentZoom = zoom;
-    if(zoom != previousZoom){
-        [self.featureShapes removeShapesFromMapView:mapView];
-    }else{
-        [self.featureShapes removeShapesNotWithinMapView:mapView];
-    }
     
-    int updateId = ++self.featureUpdateCountId;
-    int maxFeatures = [self getMaxFeatures];
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-    dispatch_async(queue, ^{
-        [self addFeaturesWithId:updateId andMaxFeatures:maxFeatures];
-    });
+    if(!self.editFeaturesMode || self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
+        
+        int updateId = ++self.featureUpdateCountId;
+        
+        int previousZoom = self.currentZoom;
+        int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
+        self.currentZoom = zoom;
+        if(zoom != previousZoom){
+            [self.featureShapes removeShapesFromMapView:mapView];
+        }else{
+            [self.featureShapes removeShapesNotWithinMapView:mapView];
+        }
+        
+        int maxFeatures = [self getMaxFeatures];
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            [self addFeaturesWithId:updateId andMaxFeatures:maxFeatures];
+        });
+    }
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
