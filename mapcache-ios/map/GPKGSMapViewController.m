@@ -322,7 +322,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
     
-    
+    // If not editing a shape, update the feature shapes for the current map view region
     if(!self.editFeaturesMode || self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
         
         int updateId = ++self.featureUpdateCountId;
@@ -331,8 +331,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
         self.currentZoom = zoom;
         if(zoom != previousZoom){
+            // Zoom level changed, remove all feature shapes
             [self.featureShapes removeShapesFromMapView:mapView];
         }else{
+            // Remove shapes no longer visible on the map view
             [self.featureShapes removeShapesNotWithinMapView:mapView];
         }
         
