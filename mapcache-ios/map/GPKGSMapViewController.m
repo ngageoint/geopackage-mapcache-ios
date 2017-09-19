@@ -1844,21 +1844,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         if([indexer isIndexed]){
             
             GPKGFeatureIndexResults *indexResults = [indexer queryWithBoundingBox:mapViewBoundingBox andProjection:mapViewProjection];
-            @try {
-                for(GPKGFeatureRow *row in indexResults){
-                
-                    if([self featureUpdateCanceled:updateId] || count >= maxFeatures){
-                        break;
-                    }
-                    
-                    if(![self.featureShapes existsWithFeatureId:[row getId] inDatabase:database withTable:tableName]){
-                        count = [self processFeatureRowWithDatabase:database andTableName:tableName andConverter:converter andFeatureRow:row andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:nil];
-                    }
-                }
+            count = [self processFeatureIndexResults:indexResults withUpdateId:updateId andDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter];
+            
+            GPKGBoundingBox *complementary = [mapViewBoundingBox complementaryWgs84];
+            if(complementary != nil){
+                indexResults = [indexer queryWithBoundingBox:complementary andProjection:mapViewProjection];
+                count = [self processFeatureIndexResults:indexResults withUpdateId:updateId andDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter];
             }
-            @finally {
-                [indexResults close];
-            }
+            
         }else{
         
             GPKGProjectionTransform * projectionTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:mapViewProjection andToProjection:featureDao.projection];
@@ -1870,9 +1863,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 while(![self featureUpdateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
                     @try {
                         GPKGFeatureRow * row = [featureDao getFeatureRow:results];
-                        if(![self.featureShapes existsWithFeatureId:[row getId] inDatabase:database withTable:tableName]){
-                            count = [self processFeatureRowWithDatabase:database andTableName:tableName andConverter:converter andFeatureRow:row andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:filterBoundingBox];
-                        }
+                        
+                        count = [self processFeatureRow:row withDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter andFilterBoundingBox:filterBoundingBox];
                     } @catch (NSException *exception) {
                         NSLog(@"Failed to display feature. database: %@, feature table: %@, error: %@", database, features, [exception description]);
                     }
@@ -1883,6 +1875,34 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             }
         }
         
+    }
+    
+    return count;
+}
+
+-(int) processFeatureIndexResults: (GPKGFeatureIndexResults *) indexResults withUpdateId: (int) updateId andDatabase: (NSString *) database andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter{
+    
+    @try {
+        for(GPKGFeatureRow *row in indexResults){
+            
+            if([self featureUpdateCanceled:updateId] || count >= maxFeatures){
+                break;
+            }
+            
+            count = [self processFeatureRow:row withDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter andFilterBoundingBox:nil];
+        }
+    }
+    @finally {
+        [indexResults close];
+    }
+    
+    return count;
+}
+
+-(int) processFeatureRow: (GPKGFeatureRow *) row withDatabase: (NSString *) database andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter andFilterBoundingBox: (GPKGBoundingBox *) filterBoundingBox {
+    
+    if(![self.featureShapes existsWithFeatureId:[row getId] inDatabase:database withTable:tableName]){
+        count = [self processFeatureRowWithDatabase:database andTableName:tableName andConverter:converter andFeatureRow:row andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:filterBoundingBox];
     }
     
     return count;
@@ -1906,7 +1926,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 }
                 if(envelope != nil){
                     GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithGeometryEnvelope:envelope];
-                    passesFilter = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:boundingBox andBoundingBox:geometryBoundingBox];
+                    passesFilter = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:boundingBox andBoundingBox:geometryBoundingBox] != nil;
                 }
             }
             
