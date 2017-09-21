@@ -214,7 +214,7 @@
 		</dict>
 	</array>
 	<key>feature_tiles_overlay_max_points_per_tile_default</key>
-	<integer>1000</integer>
+	<integer>5000</integer>
 	<key>feature_tiles_overlay_max_features_per_tile_default</key>
 	<integer>50</integer>
 	<key>feature_tiles_load_max_features_per_tile_default</key>
@@ -441,7 +441,7 @@
 	<key>map_max_features_message</key>
 	<string>Set the max number of features to draw on the map</string>
 	<key>map_max_features_default</key>
-	<integer>1000</integer>
+	<integer>5000</integer>
 	<key>map_type</key>
 	<string>Map Type</string>
 	<key>map_type_standard</key>
@@ -478,12 +478,28 @@
 		<string>CURVE</string>
 		<string>SURFACE</string>
 	</array>
-    <key>preloaded_ogc_examples</key>
-    <string>http://github.com/opengeospatial/geopackage/tree/gh-pages/data</string>
-    <key>preloaded_nga_examples</key>
-    <string>http://github.com/ngageoint/GeoPackage/tree/master/docs/examples</string>
+	<key>preloaded_ogc_examples</key>
+	<string>http://github.com/opengeospatial/geopackage/tree/gh-pages/data</string>
+	<key>preloaded_nga_examples</key>
+	<string>http://github.com/ngageoint/GeoPackage/tree/master/docs/examples</string>
 	<key>preloaded_geopackage_urls</key>
 	<array>
+		<dict>
+			<key>label</key>
+			<string>Washington DC</string>
+			<key>url</key>
+			<string>http://portal.opengeospatial.org/files/74983</string>
+			<key>name</key>
+			<string>washington_dc</string>
+		</dict>
+		<dict>
+			<key>label</key>
+			<string>Washington DC Vector</string>
+			<key>url</key>
+			<string>http://portal.opengeospatial.org/files/74984</string>
+			<key>name</key>
+			<string>washington_dc_vector</string>
+		</dict>
 		<dict>
 			<key>label</key>
 			<string>Blue Marble</string>
