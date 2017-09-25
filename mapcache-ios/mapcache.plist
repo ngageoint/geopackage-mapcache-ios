@@ -216,7 +216,7 @@
 	<key>feature_tiles_overlay_max_points_per_tile_default</key>
 	<integer>5000</integer>
 	<key>feature_tiles_overlay_max_features_per_tile_default</key>
-	<integer>50</integer>
+	<integer>2000</integer>
 	<key>feature_tiles_load_max_features_per_tile_default</key>
 	<integer>-1</integer>
 	<key>map_create_tiles_existing_geopackage_dialog_label</key>
