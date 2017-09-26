@@ -1647,12 +1647,19 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             break;
         }
         
-        NSMutableArray * databaseFeatures = [featureTables objectForKey:databaseName];
+        if([self.geoPackages objectForKey:databaseName] != nil){
         
-        for(NSString * features in databaseFeatures){
-            count = [self displayFeaturesWithId:updateId andDatabase:databaseName andFeatures:features andCount:count andMaxFeatures:maxFeatures andEditable:self.editFeaturesMode andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
-            if([self featureUpdateCanceled:updateId] || count >= maxFeatures){
-                break;
+            NSMutableArray * databaseFeatures = [featureTables objectForKey:databaseName];
+            
+            for(NSString * features in databaseFeatures){
+                
+                if([[self.featureDaos objectForKey:databaseName] objectForKey:features] != nil){
+                
+                    count = [self displayFeaturesWithId:updateId andDatabase:databaseName andFeatures:features andCount:count andMaxFeatures:maxFeatures andEditable:self.editFeaturesMode andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
+                    if([self featureUpdateCanceled:updateId] || count >= maxFeatures){
+                        break;
+                    }
+                }
             }
         }
         
