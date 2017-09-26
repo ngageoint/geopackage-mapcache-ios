@@ -1625,8 +1625,16 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         if(geoPackage == nil){
             geoPackage = [self.manager open:self.editFeaturesDatabase];
             [self.geoPackages setObject:geoPackage forKey:self.editFeaturesDatabase];
-            GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.editFeaturesTable];
-            [[self.featureDaos objectForKey:self.editFeaturesDatabase] setObject:featureDao forKey:self.editFeaturesTable];
+        }
+        NSMutableDictionary * databaseFeatureDaos = [self.featureDaos objectForKey:self.editFeaturesDatabase];
+        if(databaseFeatureDaos == nil){
+            databaseFeatureDaos = [[NSMutableDictionary alloc] init];
+            [self.featureDaos setObject:databaseFeatureDaos forKey:self.editFeaturesDatabase];
+        }
+        GPKGFeatureDao * featureDao = [databaseFeatureDaos objectForKey:self.editFeaturesTable];
+        if(featureDao == nil){
+            featureDao = [geoPackage getFeatureDaoWithTableName:self.editFeaturesTable];
+            [databaseFeatureDaos setObject:featureDao forKey:self.editFeaturesTable];
         }
     }else{
         for(GPKGSDatabase * database in [self.active getDatabases]){
