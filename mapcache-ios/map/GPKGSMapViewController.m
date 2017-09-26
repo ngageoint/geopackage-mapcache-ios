@@ -1604,7 +1604,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if(zoom){
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [self zoomToActive];
+            [self zoomToActiveIfNothingVisible:YES];
         });
     }
     
@@ -1672,6 +1672,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 -(void) zoomToActive{
+    [self zoomToActiveIfNothingVisible:NO];
+}
+
+-(void) zoomToActiveIfNothingVisible: (BOOL) nothingVisible{
     
     GPKGBoundingBox * bbox = self.featuresBoundingBox;
     
@@ -1689,20 +1693,28 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if(bbox != nil){
 
-        struct GPKGBoundingBoxSize size = [bbox sizeInMeters];
-        double expandedHeight = size.height + (2 * (size.height * paddingPercentage));
-        double expandedWidth = size.width + (2 * (size.width * paddingPercentage));
-        
-        CLLocationCoordinate2D center = [bbox getCenter];
-        MKCoordinateRegion expandedRegion = MKCoordinateRegionMakeWithDistance(center, expandedHeight, expandedWidth);
-        
-        double latitudeRange = expandedRegion.span.latitudeDelta / 2.0;
-        
-        if(expandedRegion.center.latitude + latitudeRange > 90.0 || expandedRegion.center.latitude - latitudeRange < -90.0){
-            expandedRegion = MKCoordinateRegionMake(self.mapView.centerCoordinate, MKCoordinateSpanMake(180, 360));
+        BOOL zoomToActive = YES;
+        if(nothingVisible){
+            GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:self.mapView];
+            zoomToActive = ![GPKGTileBoundingBoxUtils overlapWithBoundingBox:bbox andBoundingBox:mapViewBoundingBox withMaxLongitude:PROJ_WGS84_HALF_WORLD_LON_WIDTH];
         }
         
-        [self.mapView setRegion:expandedRegion animated:true];
+        if(zoomToActive){
+            struct GPKGBoundingBoxSize size = [bbox sizeInMeters];
+            double expandedHeight = size.height + (2 * (size.height * paddingPercentage));
+            double expandedWidth = size.width + (2 * (size.width * paddingPercentage));
+            
+            CLLocationCoordinate2D center = [bbox getCenter];
+            MKCoordinateRegion expandedRegion = MKCoordinateRegionMakeWithDistance(center, expandedHeight, expandedWidth);
+            
+            double latitudeRange = expandedRegion.span.latitudeDelta / 2.0;
+            
+            if(expandedRegion.center.latitude + latitudeRange > 90.0 || expandedRegion.center.latitude - latitudeRange < -90.0){
+                expandedRegion = MKCoordinateRegionMake(self.mapView.centerCoordinate, MKCoordinateSpanMake(180, 360));
+            }
+            
+            [self.mapView setRegion:expandedRegion animated:true];
+        }
     }
 }
 
