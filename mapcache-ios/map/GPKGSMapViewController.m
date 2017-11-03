@@ -42,6 +42,8 @@
 #import "GPKGFeatureShapes.h"
 #import "GPKGMapUtils.h"
 #import "WKBGeometryEnvelopeBuilder.h"
+#import "GPKGMultipleFeatureIndexResults.h"
+#import "GPKGFeatureIndexListResults.h"
 
 NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 NSString * const GPKGS_MAP_SEG_SELECT_FEATURE_TABLE = @"selectFeatureTable";
@@ -110,6 +112,7 @@ const char MapConstantKey;
 @property (nonatomic, strong) NSMutableArray * featureOverlayQueries;
 @property (nonatomic, strong) GPKGFeatureShapes * featureShapes;
 @property (nonatomic) int currentZoom;
+@property (nonatomic) BOOL needsInitialZoom;
 
 @end
 
@@ -149,6 +152,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.featureOverlayQueries = [[NSMutableArray alloc] init];
     self.featureShapes = [[GPKGFeatureShapes alloc] init];
     self.currentZoom = -1;
+    self.needsInitialZoom = true;
     [self resetBoundingBox];
     [self resetEditFeatures];
     UITapGestureRecognizer * singleTapGesture = [[UITapGestureRecognizer alloc]
@@ -647,11 +651,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(void) singleTapGesture:(UITapGestureRecognizer *) tapGestureRecognizer{
     
     if(tapGestureRecognizer.state == UIGestureRecognizerStateEnded){
+        
+        NSMutableString * clickMessage = [[NSMutableString alloc] init];
+        
         if(self.featureOverlayQueries.count > 0){
             CGPoint cgPoint = [tapGestureRecognizer locationInView:self.mapView];
             CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
             
-            NSMutableString * clickMessage = [[NSMutableString alloc] init];
             for(GPKGFeatureOverlayQuery * query in self.featureOverlayQueries){
                 NSString * message = [query buildMapClickMessageWithLocationCoordinate:point andMapView:self.mapView];
                 if(message != nil){
@@ -661,11 +667,124 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     [clickMessage appendString:message];
                 }
             }
-            if(clickMessage.length > 0){
-                [GPKGSUtils showMessageWithDelegate:self
-                                           andTitle:nil
-                                         andMessage:clickMessage];
+            
+        }
+        
+        for (GPKGSDatabase *database in [self.active getDatabases]) {
+            if([database getFeatures].count > 0){
+                CGPoint cgPoint = [tapGestureRecognizer locationInView:self.mapView];
+                CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
+                
+                float screenClickPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURE_CLICK_SCREEN_PERCENTAGE] floatValue];
+                
+                GPKGBoundingBox *clickBoundingBox = [GPKGMapUtils buildClickBoundingBoxWithLocationCoordinate:point andMapView:self.mapView andScreenPercentage:screenClickPercentage];
+                clickBoundingBox = [clickBoundingBox expandWgs84Coordinates];
+                GPKGProjection *clickProjection = [GPKGProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                
+                double tolerance = [GPKGMapUtils toleranceDistanceWithLocationCoordinate:point andMapView:self.mapView andScreenPercentage:screenClickPercentage];
+                
+                for(GPKGSTable *features in [database getFeatures]){
+                    
+                    GPKGGeoPackage *geoPackage = [self.geoPackages objectForKey:database.name];
+                    NSDictionary *databaseFeatureDaos = [self.featureDaos objectForKey:database.name];
+                    
+                    if(geoPackage != nil && databaseFeatureDaos != nil){
+                        
+                        GPKGFeatureDao *featureDao = [databaseFeatureDaos objectForKey:features.name];
+                        
+                        if (featureDao != nil) {
+                            
+                            GPKGFeatureIndexResults *indexResults = nil;
+                            
+                            GPKGFeatureIndexManager *indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+                            if ([indexer isIndexed]) {
+                                
+                                indexResults = [indexer queryWithBoundingBox:clickBoundingBox andProjection:clickProjection];
+                                GPKGBoundingBox *complementary = [clickBoundingBox complementaryWgs84];
+                                if (complementary != nil) {
+                                    GPKGFeatureIndexResults *indexResults2 = [indexer queryWithBoundingBox:complementary andProjection:clickProjection];
+                                    indexResults = [[GPKGMultipleFeatureIndexResults alloc] initWithFeatureIndexResults1:indexResults andFeatureIndexResults2:indexResults2];
+                                }
+                                
+                            } else {
+                                
+                                GPKGProjection *featureProjection = featureDao.projection;
+                                GPKGProjectionTransform *projectionTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:clickProjection andToProjection:featureProjection];
+                                GPKGBoundingBox *boundedClickBoundingBox = [clickBoundingBox boundWgs84Coordinates];
+                                GPKGBoundingBox *transformedBoundingBox = [projectionTransform transformWithBoundingBox:boundedClickBoundingBox];
+                                enum GPKGUnit unit = [featureProjection getUnit];
+                                double filterMaxLongitude = 0;
+                                if(unit == GPKG_UNIT_DEGREES){
+                                    filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
+                                }else if(unit == GPKG_UNIT_METERS){
+                                    filterMaxLongitude = PROJ_WEB_MERCATOR_HALF_WORLD_WIDTH;
+                                }
+                                
+                                GPKGFeatureIndexListResults *listResults = [[GPKGFeatureIndexListResults alloc] init];
+                                
+                                // Query for all rows
+                                GPKGResultSet * results = [featureDao queryForAll];
+                                @try {
+                                    while([results moveToNext]){
+                                        @try {
+                                            GPKGFeatureRow * row = [featureDao getFeatureRow:results];
+                                            
+                                            GPKGGeometryData *geometryData = [row getGeometry];
+                                            if(geometryData != nil && !geometryData.empty){
+                                                
+                                                WKBGeometry *geometry = geometryData.geometry;
+                                                
+                                                if (geometry != nil) {
+                                                    
+                                                    WKBGeometryEnvelope *envelope = geometryData.envelope;
+                                                    if (envelope == nil) {
+                                                        envelope = [WKBGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
+                                                    }
+                                                    if (envelope != nil) {
+                                                        GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithGeometryEnvelope:envelope];
+                                                        
+                                                        if([GPKGTileBoundingBoxUtils overlapWithBoundingBox:transformedBoundingBox andBoundingBox:geometryBoundingBox withMaxLongitude:filterMaxLongitude] != nil){
+                                                            [listResults addRow:row];
+                                                        }
+                                                        
+                                                    }
+                                                }
+                                            }
+                                            
+                                        } @catch (NSException *e) {
+                                            NSLog(@"Failed to query feature. database: %@, feature table: %@, Error: %@",
+                                                  database.name, features.name, [e description]);
+                                        }
+                                    }
+                                    
+                                } @finally {
+                                    [results close];
+                                }
+                                
+                                indexResults = listResults;
+                            }
+                            
+                            if ([indexResults count] > 0) {
+                                GPKGFeatureInfoBuilder *featureInfoBuilder = [[GPKGFeatureInfoBuilder alloc] initWithFeatureDao:featureDao];
+                                NSString *message = [featureInfoBuilder buildResultsInfoMessageAndCloseWithFeatureIndexResults:indexResults andMapView:self.mapView andTolerance:tolerance andLocationCoordinate:point];
+                                if(message != nil){
+                                    if(clickMessage.length > 0){
+                                        [clickMessage appendString:@"\n\n"];
+                                    }
+                                    [clickMessage appendString:message];
+                                }
+                            }
+                        }
+                        
+                    }
+                }
             }
+        }
+        
+        if(clickMessage.length > 0){
+            [GPKGSUtils showMessageWithDelegate:self
+                                       andTitle:nil
+                                     andMessage:clickMessage];
         }
     }
 }
@@ -835,7 +954,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self performSegueWithIdentifier:GPKGS_MAP_SEG_SELECT_FEATURE_TABLE sender:self];
     }else{
         [self resetEditFeatures];
-        [self updateInBackgroundWithZoom:false];
+        [self updateInBackgroundWithZoom:false andFilter:true];
     }
 }
 
@@ -844,7 +963,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         
         if(self.editFeaturesMode){
             [self resetEditFeatures];
-            [self updateInBackgroundWithZoom:false];
+            [self updateInBackgroundWithZoom:false andFilter:true];
         }
         
         self.boundingBoxMode = true;
@@ -1104,6 +1223,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     @try {
         GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.editFeaturesTable];
         NSNumber * srsId = featureDao.geometryColumns.srsId;
+        GPKGFeatureIndexManager *indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+        NSArray<NSString *> *indexedTypes = [indexer indexedTypes];
         
         GPKGMapShapeConverter * converter = [[GPKGMapShapeConverter alloc] initWithProjection:featureDao.projection];
         
@@ -1118,6 +1239,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                         [pointGeomData setGeometry:point];
                         [newPoint setGeometry:pointGeomData];
                         [featureDao insert:newPoint];
+                        [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
+                        if(indexedTypes.count > 0){
+                            [indexer indexWithFeatureRow:newPoint andFeatureIndexTypes:indexedTypes];
+                        }
                     }
                     changesMade = true;
                 }
@@ -1131,6 +1256,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     [lineStringGeomData setGeometry:lineString];
                     [newLineString setGeometry:lineStringGeomData];
                     [featureDao insert:newLineString];
+                    [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
+                    if(indexedTypes.count > 0){
+                        [indexer indexWithFeatureRow:newLineString andFeatureIndexTypes:indexedTypes];
+                    }
                     changesMade = true;
                 }
                 break;
@@ -1144,6 +1273,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     [polygonGeomData setGeometry:polygon];
                     [newPolygon setGeometry:polygonGeomData];
                     [featureDao insert:newPolygon];
+                    [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
+                    if(indexedTypes.count > 0){
+                        [indexer indexWithFeatureRow:newPolygon andFeatureIndexTypes:indexedTypes];
+                    }
                     changesMade = true;
                 }
                 break;
@@ -1160,9 +1293,17 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                         [geomData setGeometry:geometry];
                         [featureRow setGeometry:geomData];
                         [featureDao update:featureRow];
+                        [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
+                        if(indexedTypes.count > 0){
+                            [indexer indexWithFeatureRow:featureRow andFeatureIndexTypes:indexedTypes];
+                        }
                     }else{
                         [featureDao deleteById:featureId];
                         self.editFeatureMapPoint = nil;
+                        [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
+                        if(indexedTypes.count > 0){
+                            [indexer deleteIndexWithGeomId:[featureId intValue] andFeatureIndexTypes:indexedTypes];
+                        }
                     }
                     [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
                     [self.active setModified:true];
@@ -1173,13 +1314,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 break;
         }
         
-        if(changesMade){
-            [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
-        }
     }
     @catch (NSException *e) {
         [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[NSString stringWithFormat:@"Save %@", [GPKGSEditTypes name:tempEditFeatureType]]
+                                   andTitle:[NSString stringWithFormat:@"Save %@", self.editFeaturesTable]
                                  andMessage:[NSString stringWithFormat:@"%@", [e description]]];
     }
     @finally {
@@ -1192,7 +1330,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if(changesMade){
         [self.active setModified:true];
-        [self updateInBackgroundWithZoom:false];
+        [self updateInBackgroundWithZoom:false andFilter:true];
     }
 }
 
@@ -1409,7 +1547,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 NSNumber *maxFeaturesNumber = [formatter numberFromString:maxFeatures];
                 [self.settings setInteger:[maxFeaturesNumber integerValue] forKey:GPKGS_PROP_MAP_MAX_FEATURES];
                 [self.settings synchronize];
-                [self updateInBackgroundWithZoom:false];
+                [self updateInBackgroundWithZoom:false andFilter:true];
             }
             @catch (NSException *e) {
                 NSLog(@"Invalid max features value: %@, Error: %@", maxFeatures, [e description]);
@@ -1471,6 +1609,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 -(int) updateInBackgroundWithZoom: (BOOL) zoom{
+    return [self updateInBackgroundWithZoom:zoom andFilter:false];
+}
+
+-(int) updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter{
     
     int updateId = ++self.updateCountId;
     int featureUpdateId = ++self.featureUpdateCountId;
@@ -1485,6 +1627,11 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }
     [self.geoPackages removeAllObjects];
     [self.featureDaos removeAllObjects];
+    
+    if(zoom){
+        [self zoomToActiveBounds];
+    }
+    
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
     self.featureOverlayTiles = false;
@@ -1497,8 +1644,103 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
-        [self updateWithId: updateId andFeatureUpdateId:featureUpdateId andZoom:zoom andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance];
+        [self updateWithId: updateId andFeatureUpdateId:featureUpdateId andZoom:zoom andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
     });
+}
+
+-(void) zoomToActiveBounds{
+    
+    self.featuresBoundingBox = nil;
+    self.tilesBoundingBox = nil;
+    
+    // Pre zoom
+    NSMutableArray *activeDatabase = [[NSMutableArray alloc] init];
+    [activeDatabase addObjectsFromArray:[self.active getDatabases]];
+    for(GPKGSDatabase *database in activeDatabase){
+        GPKGGeoPackage *geoPackage = [self.manager open:database.name];
+        if (geoPackage != nil) {
+            
+            NSMutableSet<NSString *> *featureTableDaos = [[NSMutableSet alloc] init];
+            NSArray *features = [database getFeatures];
+            if(features.count > 0){
+                for(GPKGSTable *featureTable in features){
+                    [featureTableDaos addObject:featureTable.name];
+                }
+            }
+            
+            for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
+                if(featureOverlay.active){
+                    [featureTableDaos addObject:featureOverlay.featureTable];
+                }
+            }
+            
+            if(featureTableDaos.count > 0){
+                
+                GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
+                
+                for (NSString *featureTable in featureTableDaos) {
+                    
+                    @try {
+                        GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:featureTable];
+                        GPKGBoundingBox *contentsBoundingBox = [contents getBoundingBox];
+                        
+                        if (contentsBoundingBox != nil) {
+                            
+                            contentsBoundingBox = [self transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao getSrs:contents]];
+                            
+                            if (self.featuresBoundingBox != nil) {
+                                self.featuresBoundingBox = [GPKGTileBoundingBoxUtils unionWithBoundingBox:self.featuresBoundingBox andBoundingBox:contentsBoundingBox];
+                            } else {
+                                self.featuresBoundingBox = contentsBoundingBox;
+                            }
+                        }
+                    } @catch (NSException *e) {
+                        NSLog(@"%@", [e description]);
+                    }
+                }
+            }
+            
+            NSArray *tileTables = [database getTiles];
+            if(tileTables.count > 0){
+                
+                GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
+                
+                for(GPKGSTileTable *tileTable in tileTables){
+                    
+                    @try {
+                        GPKGTileMatrixSet *tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:tileTable.name];
+                        GPKGBoundingBox *tileMatrixSetBoundingBox = [tileMatrixSet getBoundingBox];
+                        
+                        tileMatrixSetBoundingBox = [self transformBoundingBoxToWgs84:tileMatrixSetBoundingBox withSrs:[tileMatrixSetDao getSrs:tileMatrixSet]];
+                        
+                        if (self.tilesBoundingBox != nil) {
+                            self.tilesBoundingBox = [GPKGTileBoundingBoxUtils unionWithBoundingBox:self.tilesBoundingBox andBoundingBox:tileMatrixSetBoundingBox];
+                        } else {
+                            self.tilesBoundingBox = tileMatrixSetBoundingBox;
+                        }
+                    } @catch (NSException *e) {
+                        NSLog(@"%@", [e description]);
+                    }
+                }
+            }
+            
+            [geoPackage close];
+        }
+    }
+    [self zoomToActive];
+}
+
+-(GPKGBoundingBox *) transformBoundingBoxToWgs84: (GPKGBoundingBox *) boundingBox withSrs: (GPKGSpatialReferenceSystem *) srs{
+    
+    GPKGProjection *projection = [GPKGProjectionFactory projectionWithSrs:srs];
+    if([projection getUnit] == GPKG_UNIT_DEGREES){
+        boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
+    }
+    GPKGProjectionTransform *transformToWebMercator = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+    GPKGBoundingBox *webMercatorBoundingBox = [transformToWebMercator transformWithBoundingBox:boundingBox];
+    GPKGProjectionTransform *transform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+    boundingBox = [transform transformWithBoundingBox:webMercatorBoundingBox];
+    return boundingBox;
 }
 
 -(BOOL) updateCanceled: (int) updateId{
@@ -1511,7 +1753,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     return canceled;
 }
 
--(int) updateWithId: (int) updateId andFeatureUpdateId: (int) featureUpdateId andZoom: (BOOL) zoom andMaxFeatures: (int) maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance: (double) toleranceDistance{
+-(int) updateWithId: (int) updateId andFeatureUpdateId: (int) featureUpdateId andZoom: (BOOL) zoom andMaxFeatures: (int) maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance: (double) toleranceDistance andFilter: (BOOL) filter{
     
     int count = 0;
     
@@ -1594,7 +1836,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
         // Add features
         if(![self featureUpdateCanceled:featureUpdateId]){
-            count = [self addFeaturesWithId:featureUpdateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:NO];
+            count = [self addFeaturesWithId:featureUpdateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
         }
     }
     
@@ -1602,9 +1844,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self.mapView addOverlay:self.boundingBox];
     }
     
-    if(zoom){
+    if(self.needsInitialZoom || zoom){
         dispatch_sync(dispatch_get_main_queue(), ^{
             [self zoomToActiveIfNothingVisible:YES];
+            self.needsInitialZoom = false;
         });
     }
     
@@ -1686,10 +1929,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(void) zoomToActiveIfNothingVisible: (BOOL) nothingVisible{
     
     GPKGBoundingBox * bbox = self.featuresBoundingBox;
+    BOOL tileBox = false;
     
     float paddingPercentage;
     if(bbox == nil){
         bbox = self.tilesBoundingBox;
+        tileBox = true;
         if(self.featureOverlayTiles){
             paddingPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURE_TILES_ZOOM_PADDING_PERCENTAGE] intValue] * .01;
         }else{
@@ -1704,7 +1949,33 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         BOOL zoomToActive = YES;
         if(nothingVisible){
             GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:self.mapView];
-            zoomToActive = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:bbox andBoundingBox:mapViewBoundingBox withMaxLongitude:PROJ_WGS84_HALF_WORLD_LON_WIDTH] == nil;
+            if([GPKGTileBoundingBoxUtils overlapWithBoundingBox:bbox andBoundingBox:mapViewBoundingBox withMaxLongitude:PROJ_WGS84_HALF_WORLD_LON_WIDTH] != nil){
+                
+                struct GPKGBoundingBoxSize bboxSize = [bbox sizeInMeters];
+                struct GPKGBoundingBoxSize mapViewSize = [mapViewBoundingBox sizeInMeters];
+                
+                double longitudeDistance = bboxSize.width;
+                double latitudeDistance = bboxSize.height;
+                double mapViewLongitudeDistance = mapViewSize.width;
+                double mapViewLatitudeDistance = mapViewSize.height;
+                
+                if (mapViewLongitudeDistance > longitudeDistance && mapViewLatitudeDistance > latitudeDistance) {
+                    
+                    double longitudeRatio = longitudeDistance / mapViewLongitudeDistance;
+                    double latitudeRatio = latitudeDistance / mapViewLatitudeDistance;
+                    
+                    double zoomAlreadyVisiblePercentage;
+                    if (tileBox) {
+                        zoomAlreadyVisiblePercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
+                    }else{
+                        zoomAlreadyVisiblePercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
+                    }
+                    
+                    if(longitudeRatio >= zoomAlreadyVisiblePercentage && latitudeRatio >= zoomAlreadyVisiblePercentage){
+                        zoomToActive = false;
+                    }
+                }
+            }
         }
         
         if(zoomToActive){
@@ -1736,7 +2007,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     overlay.canReplaceMapContent = false;
     
     GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
-    GPKGContents * contents = [[geoPackage getTileMatrixSetDao] getContents:tileMatrixSet];
     
     GPKGFeatureTileTableLinker * linker = [[GPKGFeatureTileTableLinker alloc] initWithGeoPackage:geoPackage];
     NSArray<GPKGFeatureDao *> * featureDaos = [linker getFeatureDaosForTileTable:tileDao.tableName];
@@ -1756,7 +2026,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self.featureOverlayQueries addObject:featureOverlayQuery];
     }
     
-    [self displayTilesWithOverlay:overlay andGeoPackage:geoPackage andContents:contents andSpecifiedBoundingBox:nil];
+    GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
+    [self displayTilesWithOverlay:overlay andBoundingBox:[tileMatrixSet getBoundingBox] andSrs:[tileMatrixSetDao getSrs:tileMatrixSet] andSpecifiedBoundingBox:nil];
 }
 
 -(void) displayFeatureTiles: (GPKGSFeatureOverlayTable *) featureOverlay{
@@ -1809,23 +2080,15 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithFeatureOverlay:overlay];
     [self.featureOverlayQueries addObject:featureOverlayQuery];
     
-    [self displayTilesWithOverlay:overlay andGeoPackage:geoPackage andContents:contents andSpecifiedBoundingBox:boundingBox];
+    GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
+    [self displayTilesWithOverlay:overlay andBoundingBox:[contents getBoundingBox] andSrs:[contentsDao getSrs:contents] andSpecifiedBoundingBox:boundingBox];
 }
 
--(void) displayTilesWithOverlay: (MKTileOverlay *) overlay andGeoPackage: (GPKGGeoPackage *) geoPackage andContents: (GPKGContents *) contents andSpecifiedBoundingBox: (GPKGBoundingBox *) specifiedBoundingBox{
+-(void) displayTilesWithOverlay: (MKTileOverlay *) overlay andBoundingBox: (GPKGBoundingBox *) dataBoundingBox andSrs: (GPKGSpatialReferenceSystem *) srs andSpecifiedBoundingBox: (GPKGBoundingBox *) specifiedBoundingBox{
     
-    GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
-    
-    GPKGBoundingBox * boundingBox = [contents getBoundingBox];
+    GPKGBoundingBox * boundingBox = dataBoundingBox;
     if(boundingBox != nil){
-        GPKGProjection * projection = [contentsDao getProjection:contents];
-        if([projection getUnit] == GPKG_UNIT_DEGREES){
-            boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
-        }
-        GPKGProjectionTransform * transformToWebMercator = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
-        GPKGBoundingBox * webMercatorBoundingBox = [transformToWebMercator transformWithBoundingBox:boundingBox];
-        GPKGProjectionTransform * transform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
-        boundingBox = [transform transformWithBoundingBox:webMercatorBoundingBox];
+        boundingBox = [self transformBoundingBoxToWgs84:boundingBox withSrs:srs];
     }else{
         boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-PROJ_WGS84_HALF_WORLD_LON_WIDTH andMaxLongitudeDouble:PROJ_WGS84_HALF_WORLD_LON_WIDTH andMinLatitudeDouble:PROJ_WEB_MERCATOR_MIN_LAT_RANGE andMaxLatitudeDouble:PROJ_WEB_MERCATOR_MAX_LAT_RANGE];
     }
@@ -1837,18 +2100,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     if(self.tilesBoundingBox == nil){
         self.tilesBoundingBox = boundingBox;
     }else{
-        if([boundingBox.minLongitude compare:self.tilesBoundingBox.minLongitude] == NSOrderedAscending){
-            [self.tilesBoundingBox setMinLongitude:boundingBox.minLongitude];
-        }
-        if([boundingBox.maxLongitude compare:self.tilesBoundingBox.maxLongitude] == NSOrderedDescending){
-            [self.tilesBoundingBox setMaxLongitude:boundingBox.maxLongitude];
-        }
-        if([boundingBox.minLatitude compare:self.tilesBoundingBox.minLatitude] == NSOrderedAscending){
-            [self.tilesBoundingBox setMinLatitude:boundingBox.minLatitude];
-        }
-        if([boundingBox.maxLatitude compare:self.tilesBoundingBox.maxLatitude] == NSOrderedDescending){
-            [self.tilesBoundingBox setMaxLatitude:boundingBox.maxLatitude];
-        }
+        self.tilesBoundingBox = [GPKGTileBoundingBoxUtils unionWithBoundingBox:self.tilesBoundingBox andBoundingBox:boundingBox];
     }
     
     dispatch_sync(dispatch_get_main_queue(), ^{
@@ -1875,25 +2127,30 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         if(filter && [indexer isIndexed]){
             
             GPKGFeatureIndexResults *indexResults = [indexer queryWithBoundingBox:mapViewBoundingBox andProjection:mapViewProjection];
-            count = [self processFeatureIndexResults:indexResults withUpdateId:updateId andDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter andFilter:filter];
-            
             GPKGBoundingBox *complementary = [mapViewBoundingBox complementaryWgs84];
             if(complementary != nil){
-                indexResults = [indexer queryWithBoundingBox:complementary andProjection:mapViewProjection];
-                count = [self processFeatureIndexResults:indexResults withUpdateId:updateId andDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter andFilter:filter];
+                GPKGFeatureIndexResults *indexResults2 = [indexer queryWithBoundingBox:complementary andProjection:mapViewProjection];
+                indexResults = [[GPKGMultipleFeatureIndexResults alloc] initWithFeatureIndexResults1:indexResults andFeatureIndexResults2:indexResults2];
             }
+            count = [self processFeatureIndexResults:indexResults withUpdateId:updateId andDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter andFilter:filter];
             
         }else{
         
-            GPKGProjection *featureProjection = featureDao.projection;
-            GPKGProjectionTransform * projectionTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:mapViewProjection andToProjection:featureProjection];
-            GPKGBoundingBox * filterBoundingBox = [projectionTransform transformWithBoundingBox:mapViewBoundingBox];
+            GPKGBoundingBox *filterBoundingBox = nil;
             double filterMaxLongitude = 0;
-            enum GPKGUnit unit = [featureProjection getUnit];
-            if(unit == GPKG_UNIT_DEGREES){
-                filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
-            }else if(unit == GPKG_UNIT_METERS){
-                filterMaxLongitude = PROJ_WEB_MERCATOR_HALF_WORLD_WIDTH;
+            
+            if(filter){
+                GPKGProjection *featureProjection = featureDao.projection;
+                GPKGProjectionTransform * projectionTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:mapViewProjection andToProjection:featureProjection];
+                GPKGBoundingBox *boundedMapViewBoundingBox = [mapViewBoundingBox boundWgs84Coordinates];
+                GPKGBoundingBox *transformedBoundingBox = [projectionTransform transformWithBoundingBox:boundedMapViewBoundingBox];
+                enum GPKGUnit unit = [featureProjection getUnit];
+                if(unit == GPKG_UNIT_DEGREES){
+                    filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
+                }else if(unit == GPKG_UNIT_METERS){
+                    filterMaxLongitude = PROJ_WEB_MERCATOR_HALF_WORLD_WIDTH;
+                }
+                filterBoundingBox = [transformedBoundingBox expandCoordinatesWithMaxLongitude:filterMaxLongitude];
             }
             
             // Query for all rows
@@ -2226,7 +2483,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         
         self.editFeaturesMode = true;
         [self setEditFeaturesButtonsHidden:false];
-        [self updateInBackgroundWithZoom:false];
+        [self updateInBackgroundWithZoom:false andFilter:true];
         
     }else if ([request isEqualToString:GPKGS_MAP_SEG_FEATURE_TILES_REQUEST]){
         
