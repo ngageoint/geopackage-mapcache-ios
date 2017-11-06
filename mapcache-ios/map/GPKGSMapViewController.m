@@ -681,7 +681,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 clickBoundingBox = [clickBoundingBox expandWgs84Coordinates];
                 GPKGProjection *clickProjection = [GPKGProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
                 
-                double tolerance = [GPKGMapUtils toleranceDistanceWithLocationCoordinate:point andMapView:self.mapView andScreenPercentage:screenClickPercentage];
+                GPKGMapTolerance *tolerance = [GPKGMapUtils toleranceWithLocationCoordinate:point andMapView:self.mapView andScreenPercentage:screenClickPercentage];
                 
                 for(GPKGSTable *features in [database getFeatures]){
                     
@@ -766,7 +766,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                             
                             if ([indexResults count] > 0) {
                                 GPKGFeatureInfoBuilder *featureInfoBuilder = [[GPKGFeatureInfoBuilder alloc] initWithFeatureDao:featureDao];
-                                NSString *message = [featureInfoBuilder buildResultsInfoMessageAndCloseWithFeatureIndexResults:indexResults andMapView:self.mapView andTolerance:tolerance andLocationCoordinate:point];
+                                NSString *message = [featureInfoBuilder buildResultsInfoMessageAndCloseWithFeatureIndexResults:indexResults andTolerance:tolerance andLocationCoordinate:point];
                                 if(message != nil){
                                     if(clickMessage.length > 0){
                                         [clickMessage appendString:@"\n\n"];
@@ -1317,7 +1317,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }
     @catch (NSException *e) {
         [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[NSString stringWithFormat:@"Save %@", self.editFeaturesTable]
+                                   andTitle:[NSString stringWithFormat:@"Save %@", [GPKGSEditTypes name:tempEditFeatureType]]
                                  andMessage:[NSString stringWithFormat:@"%@", [e description]]];
     }
     @finally {
