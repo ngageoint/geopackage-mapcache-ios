@@ -452,12 +452,18 @@
 	<string>Hybrid</string>
 	<key>map_features_zoom_padding_percentage</key>
 	<integer>10</integer>
+	<key>map_features_zoom_already_visible_percentage</key>
+	<integer>1</integer>
 	<key>map_tiles_zoom_padding_percentage</key>
 	<integer>0</integer>
+	<key>map_tiles_zoom_already_visible_percentage</key>
+	<integer>65</integer>
 	<key>map_tiles_long_click_screen_percentage</key>
 	<integer>8</integer>
 	<key>map_feature_tiles_zoom_padding_percentage</key>
 	<integer>10</integer>
+	<key>map_feature_click_screen_percentage</key>
+	<string>.02</string>
 	<key>edit_features_geometry_type_label</key>
 	<string>Geometry Type</string>
 	<key>edit_features_geometry_types</key>
