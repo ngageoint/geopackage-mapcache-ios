@@ -766,6 +766,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                             
                             if ([indexResults count] > 0) {
                                 GPKGFeatureInfoBuilder *featureInfoBuilder = [[GPKGFeatureInfoBuilder alloc] initWithFeatureDao:featureDao];
+                                [featureInfoBuilder ignoreGeometryType:WKB_POINT];
                                 NSString *message = [featureInfoBuilder buildResultsInfoMessageAndCloseWithFeatureIndexResults:indexResults andTolerance:tolerance andLocationCoordinate:point];
                                 if(message != nil){
                                     if(clickMessage.length > 0){
