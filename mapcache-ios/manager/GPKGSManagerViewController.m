@@ -59,6 +59,7 @@ const char ConstantKey;
 @property (nonatomic, strong) NSUserDefaults * settings;
 @property (nonatomic) BOOL retainModifiedForMap;
 @property (nonatomic, strong) UIDocumentInteractionController *shareDocumentController;
+@property (strong, nonatomic) NSMutableArray *childCoordinators;
 
 @end
 
@@ -94,6 +95,7 @@ const char ConstantKey;
     }
     self.retainModifiedForMap = false;
     [self update];
+    _childCoordinators = [[NSMutableArray alloc] init];
 }
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -929,8 +931,27 @@ const char ConstantKey;
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_ADD_TILE_OVERLAY sender:table];
 }
 
+
+/* DownlaodCoordinator completion delegate method */
+-(void)downloadCoordinatorCompletitonHandler:(bool)didDownload {
+    [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
+    [_childCoordinators removeLastObject]; // TODO: make this choose the right one
+    [self updateAndReloadData];
+}
+
+
+
 - (IBAction)downloadFile:(id)sender {
-    [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DOWNLOAD_FILE sender:self];
+    NSLog(@"Download button tapped");
+    
+    //[self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DOWNLOAD_FILE sender:self];
+    
+    UINavigationController *navController = [[UINavigationController alloc] init];
+    
+    [self.parentViewController presentViewController:navController animated:NO completion:nil];
+    GPKGSDownloadCoordinator *downloadCoordinator = [[GPKGSDownloadCoordinator alloc] initWithNavigationController:navController andDelegate:self];
+    [downloadCoordinator start];
+    [_childCoordinators addObject:downloadCoordinator];
 }
 
 - (IBAction)create:(id)sender {
@@ -1115,6 +1136,7 @@ const char ConstantKey;
     {
         GPKGSDownloadFileViewController *downloadFileViewController = segue.destinationViewController;
         downloadFileViewController.delegate = self;
+        
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DISPLAY_TEXT]){
         GPKGSDisplayTextViewController *displayTextViewController = segue.destinationViewController;
         if([sender isKindOfClass:[GPKGSDatabase class]]){
