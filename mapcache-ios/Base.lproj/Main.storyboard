@@ -3292,7 +3292,6 @@
         <!--Navigation Controller-->
         <scene sceneID="3GJ-6T-Ize">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gVc-qy-3Co" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="1Oa-Ng-tL6" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="Manager" id="ZWT-Iv-7Qm"/>
                     <toolbarItems/>
@@ -3304,6 +3303,7 @@
                         <segue destination="0EV-Hx-RDM" kind="relationship" relationship="rootViewController" id="h5B-A1-444"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gVc-qy-3Co" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="23" y="592"/>
         </scene>
