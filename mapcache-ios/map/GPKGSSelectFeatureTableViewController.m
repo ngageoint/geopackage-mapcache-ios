@@ -72,6 +72,7 @@
         self.tables = [self.tableMapping objectForKey:[NSNumber numberWithInt:self.defaultDatabase]];
     }
     if(self.defaultDatabase > 0 || self.defaultTable > 0){
+        [self.featurePicker reloadAllComponents];
         [self.featurePicker selectRow:self.defaultTable inComponent:0 animated:YES];
         [self.featurePicker reloadComponent:0];
     }
