@@ -1306,7 +1306,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                             [indexer deleteIndexWithGeomId:[featureId intValue] andFeatureIndexTypes:indexedTypes];
                         }
                     }
-                    [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
                     [self.active setModified:true];
                 }
                 break;
