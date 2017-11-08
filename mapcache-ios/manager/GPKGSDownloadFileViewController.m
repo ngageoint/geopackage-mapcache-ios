@@ -34,6 +34,11 @@
     
     self.nameTextField.inputAccessoryView = keyboardToolbar;
     self.urlTextField.inputAccessoryView = keyboardToolbar;
+    
+    [self.cancelButton setHidden:YES];
+    [self.downloadedLabel setHidden:YES];
+    [self.progressView setHidden:YES];
+    [self.importButton setTitle:@"Import" forState:UIControlStateNormal];
 }
 
 - (void) doneButtonPressed {
@@ -113,6 +118,10 @@
 }
 
 - (IBAction)import:(id)sender {
+    [self.importButton setTitle:@"Importing" forState:UIControlStateNormal];
+    [self.cancelButton setHidden:NO];
+    [self.downloadedLabel setHidden:NO];
+    [self.progressView setHidden:NO];
     
     [GPKGSUtils disableButton:self.preloadedButton];
     [GPKGSUtils disableButton:self.importButton];
@@ -157,7 +166,12 @@
 -(void) updateProgress{
     if(self.maxProgress != nil){
         float progress = [self.progress floatValue] / [self.maxProgress floatValue];
-        [self.downloadedLabel setText:[NSString stringWithFormat:@"( %@ of %@ )", [GPKGIOUtils formatBytes:[self.progress intValue]], [GPKGIOUtils formatBytes:[self.maxProgress intValue]]]];
+        
+        if (progress == 1.0) {
+            [self.downloadedLabel setText:@"Adding to database..."];
+        } else {
+            [self.downloadedLabel setText:[NSString stringWithFormat:@" %@ of %@", [GPKGIOUtils formatBytes:[self.progress intValue]], [GPKGIOUtils formatBytes:[self.maxProgress intValue]]]];
+        }
         [self.progressView setProgress:progress];
     }
 }
@@ -184,7 +198,6 @@
     if(self.delegate != nil){
         [self.delegate downloadFileViewController:self downloadedFile:true withError:nil];
     }
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void) failureWithError: (NSString *) error{
