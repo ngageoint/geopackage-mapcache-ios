@@ -650,7 +650,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void) singleTapGesture:(UITapGestureRecognizer *) tapGestureRecognizer{
     
-    if(tapGestureRecognizer.state == UIGestureRecognizerStateEnded){
+    if(!self.editFeaturesMode && tapGestureRecognizer.state == UIGestureRecognizerStateEnded){
         
         NSMutableString * clickMessage = [[NSMutableString alloc] init];
         
@@ -1292,6 +1292,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                         GPKGFeatureRow * featureRow = (GPKGFeatureRow *)[featureDao queryForIdObject:featureId];
                         GPKGGeometryData * geomData = [featureRow getGeometry];
                         [geomData setGeometry:geometry];
+                        if(geomData.envelope != nil){
+                            geomData.envelope = [WKBGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
+                        }
                         [featureRow setGeometry:geomData];
                         [featureDao update:featureRow];
                         [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
@@ -1727,7 +1730,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             [geoPackage close];
         }
     }
-    [self zoomToActive];
+    [self zoomToActiveAndSuppressDelegate:YES];
 }
 
 -(GPKGBoundingBox *) transformBoundingBoxToWgs84: (GPKGBoundingBox *) boundingBox withSrs: (GPKGSpatialReferenceSystem *) srs{
@@ -1926,7 +1929,15 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self zoomToActiveIfNothingVisible:NO];
 }
 
+-(void) zoomToActiveAndSuppressDelegate: (BOOL) suppressDelegate{
+    [self zoomToActiveIfNothingVisible:NO andSuppressDelegate:suppressDelegate];
+}
+
 -(void) zoomToActiveIfNothingVisible: (BOOL) nothingVisible{
+    [self zoomToActiveIfNothingVisible:nothingVisible andSuppressDelegate:NO];
+}
+    
+-(void) zoomToActiveIfNothingVisible: (BOOL) nothingVisible andSuppressDelegate: (BOOL) suppressDelegate{
     
     GPKGBoundingBox * bbox = self.featuresBoundingBox;
     BOOL tileBox = false;
@@ -1992,7 +2003,11 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 expandedRegion = MKCoordinateRegionMake(self.mapView.centerCoordinate, MKCoordinateSpanMake(180, 360));
             }
             
+            if(suppressDelegate){
+                self.mapView.delegate = nil;
+            }
             [self.mapView setRegion:expandedRegion animated:true];
+            self.mapView.delegate = self;
         }
     }
 }
