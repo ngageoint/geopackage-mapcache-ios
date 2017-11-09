@@ -113,6 +113,7 @@ const char MapConstantKey;
 @property (nonatomic, strong) GPKGFeatureShapes * featureShapes;
 @property (nonatomic) int currentZoom;
 @property (nonatomic) BOOL needsInitialZoom;
+@property (nonatomic) BOOL ignoreRegionChange;
 
 @end
 
@@ -153,6 +154,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.featureShapes = [[GPKGFeatureShapes alloc] init];
     self.currentZoom = -1;
     self.needsInitialZoom = true;
+    self.ignoreRegionChange = false;
     [self resetBoundingBox];
     [self resetEditFeatures];
     UITapGestureRecognizer * singleTapGesture = [[UITapGestureRecognizer alloc]
@@ -327,30 +329,35 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
     
-    // If not editing a shape, update the feature shapes for the current map view region
-    if(!self.editFeaturesMode || self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
-        
-        int updateId = ++self.featureUpdateCountId;
-        
-        int previousZoom = self.currentZoom;
-        int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
-        self.currentZoom = zoom;
-        if(zoom != previousZoom){
-            // Zoom level changed, remove all feature shapes
-            [self.featureShapes removeShapesFromMapView:mapView];
-        }else{
-            // Remove shapes no longer visible on the map view
-            [self.featureShapes removeShapesNotWithinMapView:mapView];
+    if(self.ignoreRegionChange){
+        self.ignoreRegionChange = false;
+    }else{
+    
+        // If not editing a shape, update the feature shapes for the current map view region
+        if(!self.editFeaturesMode || self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
+            
+            int updateId = ++self.featureUpdateCountId;
+            
+            int previousZoom = self.currentZoom;
+            int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
+            self.currentZoom = zoom;
+            if(zoom != previousZoom){
+                // Zoom level changed, remove all feature shapes
+                [self.featureShapes removeShapesFromMapView:mapView];
+            }else{
+                // Remove shapes no longer visible on the map view
+                [self.featureShapes removeShapesNotWithinMapView:mapView];
+            }
+            
+            GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:self.mapView];
+            double toleranceDistance = [GPKGMapUtils toleranceDistanceInMapView:self.mapView];
+            
+            int maxFeatures = [self getMaxFeatures];
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+            dispatch_async(queue, ^{
+                [self addFeaturesWithId:updateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:YES];
+            });
         }
-        
-        GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:self.mapView];
-        double toleranceDistance = [GPKGMapUtils toleranceDistanceInMapView:self.mapView];
-        
-        int maxFeatures = [self getMaxFeatures];
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-        dispatch_async(queue, ^{
-            [self addFeaturesWithId:updateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:YES];
-        });
     }
 }
 
@@ -1730,7 +1737,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             [geoPackage close];
         }
     }
-    [self zoomToActiveAndSuppressDelegate:YES];
+    [self zoomToActiveAndIgnoreRegionChange:YES];
 }
 
 -(GPKGBoundingBox *) transformBoundingBoxToWgs84: (GPKGBoundingBox *) boundingBox withSrs: (GPKGSpatialReferenceSystem *) srs{
@@ -1929,15 +1936,15 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self zoomToActiveIfNothingVisible:NO];
 }
 
--(void) zoomToActiveAndSuppressDelegate: (BOOL) suppressDelegate{
-    [self zoomToActiveIfNothingVisible:NO andSuppressDelegate:suppressDelegate];
+-(void) zoomToActiveAndIgnoreRegionChange: (BOOL) ignoreChange{
+    [self zoomToActiveIfNothingVisible:NO andIgnoreRegionChange:ignoreChange];
 }
 
 -(void) zoomToActiveIfNothingVisible: (BOOL) nothingVisible{
-    [self zoomToActiveIfNothingVisible:nothingVisible andSuppressDelegate:NO];
+    [self zoomToActiveIfNothingVisible:nothingVisible andIgnoreRegionChange:NO];
 }
     
--(void) zoomToActiveIfNothingVisible: (BOOL) nothingVisible andSuppressDelegate: (BOOL) suppressDelegate{
+-(void) zoomToActiveIfNothingVisible: (BOOL) nothingVisible andIgnoreRegionChange: (BOOL) ignoreChange{
     
     GPKGBoundingBox * bbox = self.featuresBoundingBox;
     BOOL tileBox = false;
@@ -2003,11 +2010,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 expandedRegion = MKCoordinateRegionMake(self.mapView.centerCoordinate, MKCoordinateSpanMake(180, 360));
             }
             
-            if(suppressDelegate){
-                self.mapView.delegate = nil;
+            if(ignoreChange){
+                self.ignoreRegionChange = true;
             }
             [self.mapView setRegion:expandedRegion animated:true];
-            self.mapView.delegate = self;
         }
     }
 }
