@@ -10,8 +10,9 @@ Adheres to [Semantic Versioning](http://semver.org/).
 * Updated button image sizes
 * Geometry simplifications for displayed map features based upon zoom level
 * Only display and maintain features in the current map views
-* // TODO ? Maintain active feature indices when editing map features
-* // TODO ? Queryable map features (previously only available for feature tiles)
+* Maintain active feature indices when editing map features
+* Queryable map features (previously only available for feature tiles)
+* Update geometry envelopes when editing features
 * Increase default max map features & max points per tile to 5000, max features per tile to 2000
 * Updated preloaded GeoPackage url example files
 
