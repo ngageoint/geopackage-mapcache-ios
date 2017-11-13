@@ -39,7 +39,7 @@
         [self.maxLatValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LATITUDE]];
         [self.minLonValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MIN_LONGITUDE]];
         [self.maxLonValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LONGITUDE]];
-        self.boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-180.0 andMaxLongitudeDouble:180.0 andMinLatitudeDouble:-90.0 andMaxLatitudeDouble:90.0];
+        self.boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-180.0 andMinLatitudeDouble:-90.0 andMaxLongitudeDouble:180.0 andMaxLatitudeDouble:90.0];
         [self updateBoundingBox];
     } else{
         [self.minLatValue setText:[self.boundingBox.minLatitude stringValue]];
