@@ -2057,7 +2057,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     GPKGFeatureDao * featureDao = [[self.featureDaos objectForKey:featureOverlay.database] objectForKey:featureOverlay.featureTable];
     
-    GPKGBoundingBox * boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:featureOverlay.minLon andMaxLongitudeDouble:featureOverlay.maxLon andMinLatitudeDouble:featureOverlay.minLat andMaxLatitudeDouble:featureOverlay.maxLat];
+    GPKGBoundingBox * boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:featureOverlay.minLon andMinLatitudeDouble:featureOverlay.minLat andMaxLongitudeDouble:featureOverlay.maxLon andMaxLatitudeDouble:featureOverlay.maxLat];
     
     // Load tiles
     GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithFeatureDao:featureDao];
@@ -2111,7 +2111,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     if(boundingBox != nil){
         boundingBox = [self transformBoundingBoxToWgs84:boundingBox withSrs:srs];
     }else{
-        boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-PROJ_WGS84_HALF_WORLD_LON_WIDTH andMaxLongitudeDouble:PROJ_WGS84_HALF_WORLD_LON_WIDTH andMinLatitudeDouble:PROJ_WEB_MERCATOR_MIN_LAT_RANGE andMaxLatitudeDouble:PROJ_WEB_MERCATOR_MAX_LAT_RANGE];
+        boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-PROJ_WGS84_HALF_WORLD_LON_WIDTH andMinLatitudeDouble:PROJ_WEB_MERCATOR_MIN_LAT_RANGE andMaxLongitudeDouble:PROJ_WGS84_HALF_WORLD_LON_WIDTH andMaxLatitudeDouble:PROJ_WEB_MERCATOR_MAX_LAT_RANGE];
     }
     
     if(specifiedBoundingBox != nil){
@@ -2584,7 +2584,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         maxLat = MAX(maxLat, coord.latitude);
         maxLon = MAX(maxLon, coord.longitude);
     }
-    GPKGBoundingBox * bbox = [[GPKGBoundingBox alloc]initWithMinLongitudeDouble:minLon andMaxLongitudeDouble:maxLon andMinLatitudeDouble:minLat andMaxLatitudeDouble:maxLat];
+    GPKGBoundingBox * bbox = [[GPKGBoundingBox alloc]initWithMinLongitudeDouble:minLon andMinLatitudeDouble:minLat andMaxLongitudeDouble:maxLon andMaxLatitudeDouble:maxLat];
     return bbox;
 }
 
