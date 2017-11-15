@@ -178,7 +178,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="FDS-84-bmk"/>
                                     <barButtonItem style="plain" id="bbY-Hz-aDT" userLabel="DownloadItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0zc-eG-nZ0" userLabel="DownloadButton">
-                                            <rect key="frame" x="169" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="159" y="7" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="Download">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -189,11 +189,11 @@
                                         </button>
                                     </barButtonItem>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="1ia-2M-KEg"/>
-                                    <barButtonItem style="plain" id="wgg-MR-5gp" userLabel="CreateItem">
+                                    <barButtonItem title="Item" style="plain" id="wgg-MR-5gp" userLabel="CreateItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="CpK-5P-0Ub" userLabel="CreateButton">
-                                            <rect key="frame" x="209" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="199" y="2" width="40" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" image="Create">
+                                            <state key="normal" image="new">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </state>
                                             <connections>
@@ -646,8 +646,8 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QCu-Wp-Lhe">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TAX-qn-QVq" userLabel="Link1">
-                                        <rect key="frame" x="16" y="8" width="124" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TAX-qn-QVq" userLabel="Link1">
+                                        <rect key="frame" x="15" y="8" width="124" height="30"/>
                                         <state key="normal" title="OGC Sample Data"/>
                                         <connections>
                                             <action selector="link1:" destination="BbS-qo-Mou" eventType="touchUpInside" id="3kC-Jc-k1r"/>
@@ -3262,7 +3262,7 @@
                             <constraint firstItem="mKc-sz-UG7" firstAttribute="top" secondItem="pva-TU-9mq" secondAttribute="bottom" constant="57" id="zEM-fq-p5b"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="Map" id="0ke-Tq-5U8"/>
+                    <tabBarItem key="tabBarItem" title="Map" image="Map" id="0ke-Tq-5U8"/>
                     <navigationItem key="navigationItem" title="Map" id="KJg-QM-9MI"/>
                     <connections>
                         <outlet property="boundingBoxButton" destination="A2J-Zr-8Xo" id="APX-hB-Uqx"/>
@@ -3287,13 +3287,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oVD-8B-yJy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="416" y="1980"/>
+            <point key="canvasLocation" x="414" y="2208"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--GeoPackages-->
         <scene sceneID="3GJ-6T-Ize">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="1Oa-Ng-tL6" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="Manager" id="ZWT-Iv-7Qm"/>
+                    <tabBarItem key="tabBarItem" title="GeoPackages" image="Manager" id="ZWT-Iv-7Qm"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Lj6-tX-9ig">
                         <autoresizingMask key="autoresizingMask"/>
@@ -3310,12 +3310,11 @@
     </scenes>
     <resources>
         <image name="Clear" width="30" height="30"/>
-        <image name="Create" width="30" height="30"/>
         <image name="Down" width="30" height="30"/>
         <image name="Download" width="30" height="30"/>
         <image name="Geometry" width="108" height="108"/>
-        <image name="Manager" width="32" height="32"/>
-        <image name="Map" width="32" height="32"/>
+        <image name="Manager" width="50" height="50"/>
+        <image name="Map" width="40" height="40"/>
         <image name="MapCheck" width="50" height="50"/>
         <image name="MapClear" width="50" height="50"/>
         <image name="MapDownloadTiles" width="50" height="50"/>
@@ -3332,6 +3331,7 @@
         <image name="layers" width="30" height="30"/>
         <image name="location" width="30" height="30"/>
         <image name="max" width="30" height="30"/>
+        <image name="new" width="40" height="40"/>
         <image name="search" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>

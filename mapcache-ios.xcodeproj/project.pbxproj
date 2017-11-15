@@ -75,6 +75,7 @@
 		E3A492051FA952F200FFE613 /* GPKGSCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A492041FA952F200FFE613 /* GPKGSCoordinator.m */; };
 		E3A4920B1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A4920A1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m */; };
 		E3A4920D1FA9885B00FFE613 /* DownloadGeopackage.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A4920C1FA9885B00FFE613 /* DownloadGeopackage.xib */; };
+		E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -226,6 +227,7 @@
 		E3A492091FA9538800FFE613 /* GPKGSGeopackageSingleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSGeopackageSingleViewController.h; sourceTree = "<group>"; };
 		E3A4920A1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSGeopackageSingleViewController.m; sourceTree = "<group>"; };
 		E3A4920C1FA9885B00FFE613 /* DownloadGeopackage.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DownloadGeopackage.xib; sourceTree = "<group>"; };
+		E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSHeaderCellDisplay.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -505,9 +507,26 @@
 		E3A492061FA9531E00FFE613 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				E3B975381FB3DE8800E33E0A /* DisplayCells */,
+				E3B975391FB3DE8900E33E0A /* EditCells */,
 				E3A4920C1FA9885B00FFE613 /* DownloadGeopackage.xib */,
 			);
 			path = views;
+			sourceTree = "<group>";
+		};
+		E3B975381FB3DE8800E33E0A /* DisplayCells */ = {
+			isa = PBXGroup;
+			children = (
+				E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */,
+			);
+			path = DisplayCells;
+			sourceTree = "<group>";
+		};
+		E3B975391FB3DE8900E33E0A /* EditCells */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = EditCells;
 			sourceTree = "<group>";
 		};
 		F92DE52400ADCEC8CC3BBB88 /* Frameworks */ = {
@@ -572,6 +591,7 @@
 				TargetAttributes = {
 					0401366E1AF94FB200C92AFC = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = KBKX8X5SZ7;
 					};
 					0401368A1AF94FB200C92AFC = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -603,6 +623,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */,
 				047733C61B4C3E3400E523BD /* mapcache.plist in Resources */,
 				040136811AF94FB200C92AFC /* Main.storyboard in Resources */,
 				040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */,
@@ -873,7 +894,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = KBKX8X5SZ7;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -889,7 +910,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = KBKX8X5SZ7;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

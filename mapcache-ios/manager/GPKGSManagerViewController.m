@@ -101,6 +101,8 @@ const char ConstantKey;
 - (void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
+    [[self navigationController] setNavigationBarHidden:YES animated:NO];
+    
     if(self.active.modified){
         if(self.retainModifiedForMap){
             self.retainModifiedForMap = false;

@@ -13,7 +13,6 @@
 
 @protocol GPKGSDownloadFileDelegate <NSObject>
 - (void)downloadFileViewController:(GPKGSDownloadFileViewController *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error;
-- (void)updateStatus:(NSString *) status;
 @end
 
 @interface GPKGSDownloadFileViewController : UIViewController <GPKGProgress>
