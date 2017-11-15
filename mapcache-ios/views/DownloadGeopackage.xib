@@ -32,19 +32,19 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GeoPackage Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QZB-QV-48k">
-                    <rect key="frame" x="16" y="108.5" width="123" height="17"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <rect key="frame" x="16" y="108.5" width="130.5" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="URL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="53x-2Z-rHG">
-                    <rect key="frame" x="16" y="179.5" width="343" height="17"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <rect key="frame" x="16" y="180.5" width="343" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ebQ-hJ-fK4">
-                    <rect key="frame" x="16" y="133.5" width="343" height="30"/>
+                    <rect key="frame" x="16" y="134.5" width="343" height="30"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
@@ -53,7 +53,7 @@
                     </connections>
                 </textField>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="o1o-mI-eXD">
-                    <rect key="frame" x="16" y="204.5" width="343" height="30"/>
+                    <rect key="frame" x="16" y="206.5" width="343" height="30"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
@@ -62,7 +62,7 @@
                     </connections>
                 </textField>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="oy5-Ds-QpE">
-                    <rect key="frame" x="16" y="296.5" width="343" height="130.5"/>
+                    <rect key="frame" x="16" y="298.5" width="343" height="130.5"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eOB-1j-chc">
                             <rect key="frame" x="0.0" y="0.0" width="343" height="30"/>
@@ -114,12 +114,36 @@
                     </constraints>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dNP-nl-O1p">
-                    <rect key="frame" x="16" y="250" width="156" height="30"/>
+                    <rect key="frame" x="16" y="252" width="156" height="30"/>
                     <state key="normal" title="Example GeoPackages">
                         <color key="titleColor" red="0.50196078431372548" green="0.76078431372549016" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                     <connections>
                         <action selector="preloaded:" destination="-1" eventType="touchUpInside" id="Tin-0Z-2GR"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="More exmaples are available on Github from:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWg-bE-Lk9">
+                    <rect key="frame" x="16" y="445" width="304.5" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6mJ-nd-yio">
+                    <rect key="frame" x="16" y="471" width="32" height="30"/>
+                    <state key="normal" title="NGA">
+                        <color key="titleColor" red="0.50196078430000002" green="0.76078431369999999" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="link2:" destination="-1" eventType="touchUpInside" id="5Q4-LZ-KaH"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qfS-Lk-ird">
+                    <rect key="frame" x="16" y="509" width="33" height="30"/>
+                    <state key="normal" title="OGC">
+                        <color key="titleColor" red="0.50196078430000002" green="0.76078431369999999" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="link1:" destination="-1" eventType="touchUpInside" id="qNM-Nr-GZX"/>
                     </connections>
                 </button>
             </subviews>
@@ -139,9 +163,15 @@
                 <constraint firstItem="QZB-QV-48k" firstAttribute="top" secondItem="b95-gl-eU7" secondAttribute="bottom" constant="8" id="SYZ-5x-kQ8"/>
                 <constraint firstAttribute="trailing" secondItem="o1o-mI-eXD" secondAttribute="trailing" constant="16" id="T6D-2y-WwK"/>
                 <constraint firstAttribute="trailing" secondItem="dNP-nl-O1p" secondAttribute="trailing" constant="203" id="UXU-Wl-TDz"/>
+                <constraint firstItem="6mJ-nd-yio" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="Utl-2n-x81"/>
                 <constraint firstItem="oy5-Ds-QpE" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="Z7I-c8-dOc"/>
+                <constraint firstItem="dWg-bE-Lk9" firstAttribute="top" secondItem="oy5-Ds-QpE" secondAttribute="bottom" constant="16" id="ZaP-Ju-Twi"/>
+                <constraint firstItem="dWg-bE-Lk9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="dMM-vo-vxH"/>
+                <constraint firstItem="6mJ-nd-yio" firstAttribute="top" secondItem="dWg-bE-Lk9" secondAttribute="bottom" constant="8" id="e6U-Ht-P0X"/>
                 <constraint firstItem="ebQ-hJ-fK4" firstAttribute="top" secondItem="QZB-QV-48k" secondAttribute="bottom" constant="8" id="gkb-W9-4Pe"/>
+                <constraint firstItem="qfS-Lk-ird" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="jfC-VT-dny"/>
                 <constraint firstItem="QZB-QV-48k" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="nKX-se-qId"/>
+                <constraint firstItem="qfS-Lk-ird" firstAttribute="top" secondItem="6mJ-nd-yio" secondAttribute="bottom" constant="8" id="qLt-cm-tZf"/>
                 <constraint firstItem="53x-2Z-rHG" firstAttribute="top" secondItem="ebQ-hJ-fK4" secondAttribute="bottom" constant="16" id="r4K-88-wSo"/>
                 <constraint firstAttribute="trailing" secondItem="oy5-Ds-QpE" secondAttribute="trailing" constant="16" id="si5-xR-6QO"/>
                 <constraint firstItem="53x-2Z-rHG" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="t7y-oi-uak"/>
