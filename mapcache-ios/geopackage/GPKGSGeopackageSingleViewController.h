@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GPKGSDatabase.h"
 
-@interface GPKGSGeopackageSingleViewController : UIViewController
-
+@interface GPKGSGeopackageSingleViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@property (strong, nonatomic) GPKGSDatabase *geoPackage;
 @end

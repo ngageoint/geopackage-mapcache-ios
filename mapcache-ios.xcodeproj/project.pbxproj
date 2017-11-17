@@ -70,6 +70,7 @@
 		04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8DE1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m */; };
 		04E1D8E21B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8E11B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m */; };
 		CF52A7895D9F544D637D87A3 /* libPods-mapcache-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C949BBDA5ECEE9FFAC05F51 /* libPods-mapcache-ios.a */; };
+		E308FBC11FBE400500348577 /* SingleGeoPackageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E308FBC01FBE400500348577 /* SingleGeoPackageView.xib */; };
 		E312A3381FAA416500C088FB /* GPKGSDownloadCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E312A3371FAA416500C088FB /* GPKGSDownloadCoordinator.m */; };
 		E3A491FF1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A491FE1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m */; };
 		E3A492051FA952F200FFE613 /* GPKGSCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A492041FA952F200FFE613 /* GPKGSCoordinator.m */; };
@@ -218,6 +219,7 @@
 		5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.debug.xcconfig"; sourceTree = "<group>"; };
+		E308FBC01FBE400500348577 /* SingleGeoPackageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SingleGeoPackageView.xib; sourceTree = "<group>"; };
 		E312A3361FAA416500C088FB /* GPKGSDownloadCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSDownloadCoordinator.h; sourceTree = "<group>"; };
 		E312A3371FAA416500C088FB /* GPKGSDownloadCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSDownloadCoordinator.m; sourceTree = "<group>"; };
 		E3A491FD1FA78A4C00FFE613 /* GPKGSManagerCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSManagerCoordinator.h; sourceTree = "<group>"; };
@@ -510,6 +512,7 @@
 				E3B975381FB3DE8800E33E0A /* DisplayCells */,
 				E3B975391FB3DE8900E33E0A /* EditCells */,
 				E3A4920C1FA9885B00FFE613 /* DownloadGeopackage.xib */,
+				E308FBC01FBE400500348577 /* SingleGeoPackageView.xib */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -626,6 +629,7 @@
 				E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */,
 				047733C61B4C3E3400E523BD /* mapcache.plist in Resources */,
 				040136811AF94FB200C92AFC /* Main.storyboard in Resources */,
+				E308FBC11FBE400500348577 /* SingleGeoPackageView.xib in Resources */,
 				040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */,
 				E3A4920D1FA9885B00FFE613 /* DownloadGeopackage.xib in Resources */,
 				040136831AF94FB200C92AFC /* Images.xcassets in Resources */,

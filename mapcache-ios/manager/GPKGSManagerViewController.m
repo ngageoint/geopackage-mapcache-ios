@@ -292,6 +292,10 @@ const char ConstantKey;
     if([cellObject isKindOfClass:[GPKGSDatabase class]]){
         GPKGSDatabase * database = (GPKGSDatabase *) cellObject;
         [self expandOrCollapseDatabase:database atIndexPath:indexPath];
+        
+        // TODO switch this to use a coordinator
+        GPKGSCoordinator *coordinator = [[GPKGSCoordinator alloc] initWithNavigationController:self.navigationController andGeoPackage:database];
+        [coordinator start];
     }
 }
 
@@ -946,11 +950,9 @@ const char ConstantKey;
 - (IBAction)downloadFile:(id)sender {
     NSLog(@"Download button tapped");
     
-    //[self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DOWNLOAD_FILE sender:self];
-    
     UINavigationController *navController = [[UINavigationController alloc] init];
-    
     [self.parentViewController presentViewController:navController animated:NO completion:nil];
+    
     GPKGSDownloadCoordinator *downloadCoordinator = [[GPKGSDownloadCoordinator alloc] initWithNavigationController:navController andDelegate:self];
     [downloadCoordinator start];
     [_childCoordinators addObject:downloadCoordinator];
