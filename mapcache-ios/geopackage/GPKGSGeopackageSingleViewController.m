@@ -9,6 +9,7 @@
 #import "GPKGSGeopackageSingleViewController.h"
 
 @interface GPKGSGeopackageSingleViewController ()
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 
@@ -33,5 +34,20 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+
+/* Delegate methods */
+- (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    UITableViewCell *cell = [[UITableViewCell alloc] init];
+    
+    cell.textLabel.text = _geoPackage.name;
+    
+    return cell;
+}
+
+
+- (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 1;
+}
 
 @end

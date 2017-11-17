@@ -46,6 +46,7 @@
     [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
+
 /* Delegate methods */
 - (void)downloadFileViewController:(GPKGSDownloadFileViewController *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error{
     if(downloaded){

@@ -18,6 +18,7 @@
 #import "GPKGSManagerEditTileOverlayViewController.h"
 #import "GPKGSLinkedTablesViewController.h"
 #import "GPKGSDownloadCoordinator.h"
+#import "GPKGSCoordinator.h"
 
 extern NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE;
 extern NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT;
