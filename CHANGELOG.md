@@ -4,9 +4,17 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 1.15 (TBD)
+## [1.15](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.15) (11-21-2017)
 
-* TBD
+* geopackage-ios version updated to 1.4.0
+* Updated button image sizes
+* Geometry simplifications for displayed map features based upon zoom level
+* Only display and maintain features in the current map views
+* Maintain active feature indices when editing map features
+* Queryable map features (previously only available for feature tiles)
+* Update geometry envelopes when editing features
+* Increase default max map features & max points per tile to 5000, max features per tile to 2000
+* Updated preloaded GeoPackage url example files
 
 ## [1.14](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.14) (07-31-2017)
 
