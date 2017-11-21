@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "GPKGSDatabase.h"
+#import "GPKGSHeaderCellTableViewCell.h"
+#import "GPKGSSectionTitleCell.h"
 
 @interface GPKGSGeopackageSingleViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) GPKGSDatabase *geoPackage;
