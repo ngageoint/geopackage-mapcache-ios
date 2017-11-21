@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FVL-0R-8qQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FVL-0R-8qQ">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -51,16 +50,18 @@
                                         <rect key="frame" x="0.0" y="22" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YTV-a6-Q7P" id="xJ3-GB-v3X">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Down" translatesAutoresizingMaskIntoConstraints="NO" id="Sqo-wc-Gcd" userLabel="Expand">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="Down" translatesAutoresizingMaskIntoConstraints="NO" id="Sqo-wc-Gcd" userLabel="Expand">
                                                     <rect key="frame" x="24" y="11" width="16" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="70j-Js-00Q"/>
+                                                        <constraint firstAttribute="width" constant="16" id="Itf-M8-Dvt"/>
+                                                    </constraints>
                                                 </imageView>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" fixedFrame="YES" text="GeoPackage" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="asP-M1-EOw">
-                                                    <rect key="frame" x="69" y="-2" width="472" height="43"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="GeoPackage" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="asP-M1-EOw">
+                                                    <rect key="frame" x="69" y="-2" width="256" height="43"/>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                     <nil key="highlightedColor"/>
@@ -82,6 +83,9 @@
                                             <constraints>
                                                 <constraint firstItem="AW4-6G-xP2" firstAttribute="trailing" secondItem="xJ3-GB-v3X" secondAttribute="trailingMargin" id="6sJ-3H-GDI"/>
                                                 <constraint firstAttribute="centerY" secondItem="AW4-6G-xP2" secondAttribute="centerY" id="TrD-J0-8tf"/>
+                                                <constraint firstItem="asP-M1-EOw" firstAttribute="leading" secondItem="Sqo-wc-Gcd" secondAttribute="trailing" constant="29" id="Vp4-SY-tbU"/>
+                                                <constraint firstItem="Sqo-wc-Gcd" firstAttribute="leading" secondItem="xJ3-GB-v3X" secondAttribute="leading" constant="24" id="Zpj-VH-hQy"/>
+                                                <constraint firstItem="AW4-6G-xP2" firstAttribute="leading" secondItem="asP-M1-EOw" secondAttribute="trailing" constant="8" id="kwm-bK-7KB"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.80000001192092896" green="0.80000001192092896" blue="0.80000001192092896" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -95,7 +99,7 @@
                                         <rect key="frame" x="0.0" y="66" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ryS-kE-6fk" id="GPZ-KS-nY6">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YE8-aA-r1h" customClass="GPKGSActiveTableSwitch">
@@ -174,7 +178,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="FDS-84-bmk"/>
                                     <barButtonItem style="plain" id="bbY-Hz-aDT" userLabel="DownloadItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0zc-eG-nZ0" userLabel="DownloadButton">
-                                            <rect key="frame" x="137" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="69" y="0.0" width="50" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="Download">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -187,7 +191,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="1ia-2M-KEg"/>
                                     <barButtonItem style="plain" id="wgg-MR-5gp" userLabel="CreateItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="CpK-5P-0Ub" userLabel="CreateButton">
-                                            <rect key="frame" x="187" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="129" y="0.0" width="50" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="Create">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -200,7 +204,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="adh-xf-mGz"/>
                                     <barButtonItem style="plain" id="FB4-Xk-qEK" userLabel="ExpandItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="rYx-5n-nHB" userLabel="ExpandButton">
-                                            <rect key="frame" x="237" y="9" width="26" height="26"/>
+                                            <rect key="frame" x="189" y="0.0" width="50" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="Down">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -213,7 +217,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="rXB-KK-EIW"/>
                                     <barButtonItem style="plain" id="7z5-lR-E6A" userLabel="CollapseItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xRH-kd-jDh" userLabel="CollapseButton">
-                                            <rect key="frame" x="283" y="9" width="26" height="26"/>
+                                            <rect key="frame" x="249" y="0.0" width="50" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="Up">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -226,7 +230,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="HDR-Wm-Ywa"/>
                                     <barButtonItem style="plain" id="MGn-9j-MqE" userLabel="ClearItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="3vl-DY-Cbp" userLabel="ClearButton">
-                                            <rect key="frame" x="329" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="309" y="0.0" width="50" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="Clear">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -274,7 +278,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ter-A5-hWz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="416" y="593"/>
+            <point key="canvasLocation" x="415.19999999999999" y="592.35382308845578"/>
         </scene>
         <!--Edit Tiles View Controller-->
         <scene sceneID="QY4-Z8-tOv">
@@ -306,7 +310,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="zyN-p4-dvj"/>
                                     <barButtonItem style="plain" id="pxQ-Fj-yzE" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="o2j-JT-Im6" userLabel="TitleButton">
-                                            <rect key="frame" x="-17" y="7" width="410" height="30"/>
+                                            <rect key="frame" x="64" y="7" width="250" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Edit Tiles">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -317,7 +321,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="4dx-pm-u8d"/>
                                     <barButtonItem style="plain" id="MqK-4Q-Ug0" userLabel="EditButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="mpS-G4-TVW" userLabel="EditButton">
-                                            <rect key="frame" x="313" y="7" width="46" height="30"/>
+                                            <rect key="frame" x="329" y="7" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Edit">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -435,7 +439,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uCD-VF-NXI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1633" y="-4047"/>
+            <point key="canvasLocation" x="1632.8" y="-4047.5262368815597"/>
         </scene>
         <!--Edit Features View Controller-->
         <scene sceneID="CEr-Hj-t2M">
@@ -467,7 +471,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="UCQ-og-dIO"/>
                                     <barButtonItem style="plain" id="Smb-wS-ZyF" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="MsH-ja-VAa" userLabel="TitleButton">
-                                            <rect key="frame" x="-17" y="7" width="410" height="30"/>
+                                            <rect key="frame" x="64" y="7" width="250" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Edit Features">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -478,7 +482,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="eBv-mI-oad"/>
                                     <barButtonItem style="plain" id="tyt-LS-dju" userLabel="EditButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6oX-v2-hYP" userLabel="EditButton">
-                                            <rect key="frame" x="313" y="7" width="46" height="30"/>
+                                            <rect key="frame" x="329" y="7" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Edit">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -611,7 +615,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="NvO-Re-NRl"/>
                                     <barButtonItem style="plain" id="FmL-uH-6nc" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="LJB-o3-piI" userLabel="TitleButton">
-                                            <rect key="frame" x="118" y="7" width="138" height="30"/>
+                                            <rect key="frame" x="118.5" y="7" width="138" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Download File">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -791,7 +795,7 @@
                                 <items>
                                     <barButtonItem style="plain" id="yLQ-dc-9Rb" userLabel="BackButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="b56-yp-Jiq" userLabel="BackButton">
-                                            <rect key="frame" x="16" y="7" width="46" height="30"/>
+                                            <rect key="frame" x="16" y="7" width="34" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Back">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -804,7 +808,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="tRQ-6j-1iv"/>
                                     <barButtonItem style="plain" id="ODV-KK-nL6" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="13T-A6-oOL" userLabel="TitleButton">
-                                            <rect key="frame" x="2" y="7" width="428" height="30"/>
+                                            <rect key="frame" x="62.5" y="7" width="250" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Title">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -845,7 +849,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uCQ-67-bpm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1633" y="-2748"/>
+            <point key="canvasLocation" x="1632.8" y="-2748.5757121439283"/>
         </scene>
         <!--Edit Contents View Controller-->
         <scene sceneID="kPe-Ty-fd6">
@@ -1011,7 +1015,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Q0Q-yn-vIk"/>
                                     <barButtonItem style="plain" id="aTB-0q-tBq" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="iwg-Vp-G71" userLabel="TitleButton">
-                                            <rect key="frame" x="-17" y="7" width="410" height="30"/>
+                                            <rect key="frame" x="87.5" y="7" width="200" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Create Features">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1140,7 +1144,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qmv-bh-7h3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1633" y="-2103"/>
+            <point key="canvasLocation" x="1632.8" y="-2103.5982008995502"/>
         </scene>
         <!--Manager Create Tiles View Controller-->
         <scene sceneID="owo-pe-IHx">
@@ -1172,7 +1176,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="h16-PC-Fcj"/>
                                     <barButtonItem style="plain" id="fr0-dR-SEe" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="gOD-ud-d5X" userLabel="TitleButton">
-                                            <rect key="frame" x="-17" y="7" width="410" height="30"/>
+                                            <rect key="frame" x="87.5" y="7" width="200" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Create Tiles">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1258,7 +1262,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fmT-rW-g6C" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1633" y="-805"/>
+            <point key="canvasLocation" x="1632.8" y="-805.54722638680664"/>
         </scene>
         <!--Manager Load Tiles View Controller-->
         <scene sceneID="BvJ-eG-sBX">
@@ -1290,7 +1294,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="hjw-Dv-e6v"/>
                                     <barButtonItem style="plain" id="1Ex-AE-gia" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="py3-2J-SAk" userLabel="TitleButton">
-                                            <rect key="frame" x="-17" y="7" width="410" height="30"/>
+                                            <rect key="frame" x="87.5" y="7" width="200" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Load Tiles">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1301,7 +1305,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="TjY-qp-Fxc"/>
                                     <barButtonItem style="plain" id="xR2-vt-N0O" userLabel="LoadButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="JNG-gc-1cw" userLabel="LoadButton">
-                                            <rect key="frame" x="313" y="7" width="46" height="30"/>
+                                            <rect key="frame" x="325" y="7" width="34" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Load">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1386,7 +1390,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Lj1-In-b9v"/>
                                     <barButtonItem style="plain" id="O7P-Vq-JC1" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="TrP-xx-H5J" userLabel="TitleButton">
-                                            <rect key="frame" x="-17" y="7" width="410" height="30"/>
+                                            <rect key="frame" x="131.5" y="7" width="112" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Add Tile Overlay">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1397,7 +1401,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="nBi-3Q-TFN"/>
                                     <barButtonItem style="plain" id="p9K-jg-aqr" userLabel="AddButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yga-ON-nq7" userLabel="AddButton">
-                                            <rect key="frame" x="313" y="7" width="46" height="30"/>
+                                            <rect key="frame" x="329" y="7" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Add">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1490,7 +1494,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GZt-TS-oli" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1633" y="546"/>
+            <point key="canvasLocation" x="1632.8" y="545.57721139430294"/>
         </scene>
         <!--Manager Edit Tile Overlay View Controller-->
         <scene sceneID="khm-Uw-mRN">
@@ -1522,7 +1526,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="qml-z5-WQq"/>
                                     <barButtonItem style="plain" id="UkH-lG-As5" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="TY3-Xg-GLG" userLabel="TitleButton">
-                                            <rect key="frame" x="-17" y="7" width="410" height="30"/>
+                                            <rect key="frame" x="87.5" y="7" width="200" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Edit Tile Overlay">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1533,7 +1537,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="r9g-1V-kge"/>
                                     <barButtonItem style="plain" id="1VL-Kg-fo1" userLabel="EditButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="LwK-Vu-VrU" userLabel="EditButton">
-                                            <rect key="frame" x="313" y="7" width="46" height="30"/>
+                                            <rect key="frame" x="329" y="7" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Edit">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1619,7 +1623,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="dl9-jp-d9y"/>
                                     <barButtonItem style="plain" id="6De-8f-Qln" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="D7P-Hu-Gru" userLabel="TitleButton">
-                                            <rect key="frame" x="-17" y="7" width="410" height="30"/>
+                                            <rect key="frame" x="87.5" y="7" width="200" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Linked Tables">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1630,7 +1634,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="ebi-f4-ymM"/>
                                     <barButtonItem style="plain" id="46k-MG-EJr" userLabel="EditButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fh4-bh-6RA" userLabel="EditButton">
-                                            <rect key="frame" x="313" y="7" width="46" height="30"/>
+                                            <rect key="frame" x="329" y="7" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Edit">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1656,7 +1660,7 @@
                                         <rect key="frame" x="0.0" y="22" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QIn-Vm-jnD" id="q12-2I-inm">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Z9k-oQ-gxG" customClass="GPKGSActiveTableSwitch">
@@ -1780,7 +1784,7 @@
                                 <items>
                                     <barButtonItem style="plain" id="EhK-hM-1xr" userLabel="CancelButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yWJ-x8-V3E" userLabel="CancelButton">
-                                            <rect key="frame" x="16" y="7" width="48" height="30"/>
+                                            <rect key="frame" x="16" y="7" width="69" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Cancel">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1792,8 +1796,8 @@
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="AQm-Tj-hdj"/>
                                     <barButtonItem style="plain" id="2yP-UD-jbh" userLabel="TitleButtonItem">
-                                        <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Y7c-lV-BXA" userLabel="TitleButton">
-                                            <rect key="frame" x="-13" y="7" width="378" height="30"/>
+                                        <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Y7c-lV-BXA" userLabel="TitleButton">
+                                            <rect key="frame" x="85" y="7" width="205" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Download Tiles">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1804,7 +1808,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="mOS-Lh-m3a"/>
                                     <barButtonItem style="plain" id="aKA-v8-CDD" userLabel="DownloadButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2x6-GS-8qo" userLabel="DownloadButton">
-                                            <rect key="frame" x="289" y="7" width="70" height="30"/>
+                                            <rect key="frame" x="290" y="7" width="69" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Download">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1840,7 +1844,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6PB-Kx-RNO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1634" y="2495"/>
+            <point key="canvasLocation" x="1632.8" y="2494.9025487256372"/>
         </scene>
         <!--Select Feature Table View Controller-->
         <scene sceneID="eni-pA-CXR">
@@ -1872,7 +1876,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="O7j-ec-M1t"/>
                                     <barButtonItem style="plain" id="ilX-SD-y1U" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ety-rC-PBm" userLabel="TitleButton">
-                                            <rect key="frame" x="-7" y="7" width="410" height="30"/>
+                                            <rect key="frame" x="85" y="7" width="205" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Select Feature Table">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1883,7 +1887,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Gox-iG-9A4"/>
                                     <barButtonItem style="plain" id="g3w-4d-ZkZ" userLabel="OKButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="AKa-AW-1NS" userLabel="OKButton">
-                                            <rect key="frame" x="333" y="7" width="26" height="30"/>
+                                            <rect key="frame" x="329" y="7" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="OK">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1958,7 +1962,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YNc-zd-QPN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1634" y="3199"/>
+            <point key="canvasLocation" x="1632.8" y="3198.3508245877065"/>
         </scene>
         <!--Create Tiles View Controller-->
         <scene sceneID="Nsy-ws-cTQ">
@@ -1973,7 +1977,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kg3-oJ-f5E" userLabel="Name:">
-                                <rect key="frame" x="0.0" y="8" width="74" height="21"/>
+                                <rect key="frame" x="0.0" y="28" width="74" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="74" id="A4S-zY-VAJ"/>
                                 </constraints>
@@ -1982,7 +1986,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cn7-go-ZQk" userLabel="NameValue">
-                                <rect key="frame" x="0.0" y="37" width="510" height="30"/>
+                                <rect key="frame" x="0.0" y="57" width="510" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -2136,7 +2140,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="URL:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s73-rT-ZES" userLabel="URL:">
-                                <rect key="frame" x="0.0" y="8" width="74" height="21"/>
+                                <rect key="frame" x="0.0" y="28" width="74" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="74" id="4bH-eB-yrd"/>
                                 </constraints>
@@ -2145,7 +2149,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gTI-kL-4gd" userLabel="URLValue">
-                                <rect key="frame" x="0.0" y="37" width="510" height="30"/>
+                                <rect key="frame" x="0.0" y="57" width="510" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="TAb-3S-2kC"/>
                                 </constraints>
@@ -2156,7 +2160,7 @@
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EPSG:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O7e-3E-RxS" userLabel="EPSG:">
-                                <rect key="frame" x="0.0" y="75" width="48" height="21"/>
+                                <rect key="frame" x="0.0" y="95" width="48" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="74" id="4dR-Ep-JdW"/>
                                 </constraints>
@@ -2190,7 +2194,7 @@
                                 </connections>
                             </containerView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="3857" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2UU-YG-eAo" userLabel="EPSGValue">
-                                <rect key="frame" x="56" y="71" width="72" height="30"/>
+                                <rect key="frame" x="56" y="91" width="72" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="72" id="o0T-Vc-ndM"/>
                                 </constraints>
@@ -2514,7 +2518,7 @@
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Max Features Per Tile:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KYK-Uo-L0Q">
-                                <rect key="frame" x="0.0" y="116" width="170" height="21"/>
+                                <rect key="frame" x="0.0" y="136" width="170" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -2534,7 +2538,7 @@
                                 </connections>
                             </containerView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FCw-ZO-Bgd" userLabel="MaxFeaturesPerTile">
-                                <rect key="frame" x="178" y="112" width="97" height="30"/>
+                                <rect key="frame" x="178" y="132" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="97" id="Vbo-uG-O4O"/>
                                 </constraints>
@@ -2849,7 +2853,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="lho-Gc-xXM"/>
                                     <barButtonItem style="plain" id="Jfg-sQ-ooN" userLabel="TitleButtonItem">
                                         <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="CqP-g1-X6J" userLabel="TitleButton">
-                                            <rect key="frame" x="-17" y="7" width="410" height="30"/>
+                                            <rect key="frame" x="87.5" y="7" width="200" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Create Feature Tiles">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2996,7 +3000,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="U4c-PP-wUf"/>
                                     <barButtonItem style="plain" id="QNz-Hf-a9u" userLabel="ZoomActiveItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="A9k-RT-gky" userLabel="ZoomActiveButton">
-                                            <rect key="frame" x="79" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="16" y="3" width="50" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="search">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3009,7 +3013,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="kj1-Aw-hs7"/>
                                     <barButtonItem style="plain" id="vwi-FI-f4Q" userLabel="FeaturesButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="E1n-ne-vUV" userLabel="FeaturesButton">
-                                            <rect key="frame" x="129" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="76" y="3" width="50" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="features">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3022,7 +3026,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="zr3-WR-TeH"/>
                                     <barButtonItem style="plain" id="Nh0-p6-UmK" userLabel="BoundingBoxButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="A2J-Zr-8Xo" userLabel="BoundingBoxButton">
-                                            <rect key="frame" x="179" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="136" y="3" width="50" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="boundingbox">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3035,7 +3039,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="fyM-sW-ouc"/>
                                     <barButtonItem style="plain" id="t6c-8Q-dPm" userLabel="LocationButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="gMK-qe-FoI" userLabel="LocationButton">
-                                            <rect key="frame" x="229" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="196" y="3" width="50" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="location">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3048,7 +3052,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="VDi-Hd-DkT"/>
                                     <barButtonItem style="plain" id="3td-k2-jQT" userLabel="MaxButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hH3-BN-PUR" userLabel="MaxButton">
-                                            <rect key="frame" x="279" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="256" y="3" width="50" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="max">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3061,7 +3065,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="6RH-Re-4hG"/>
                                     <barButtonItem style="plain" id="tip-G1-oQ2" userLabel="LayersButtonItem">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="E3P-6n-NNf" userLabel="LayersButton">
-                                            <rect key="frame" x="329" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="309" y="3" width="50" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="layers">
                                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3287,10 +3291,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Clear" width="50" height="50"/>
-        <image name="Create" width="50" height="50"/>
-        <image name="Down" width="50" height="50"/>
-        <image name="Download" width="50" height="50"/>
+        <image name="Clear" width="30" height="30"/>
+        <image name="Create" width="30" height="30"/>
+        <image name="Down" width="30" height="30"/>
+        <image name="Download" width="30" height="30"/>
         <image name="Geometry" width="108" height="108"/>
         <image name="Manager" width="32" height="32"/>
         <image name="Map" width="32" height="32"/>
@@ -3304,23 +3308,23 @@
         <image name="MapPolyline" width="50" height="50"/>
         <image name="More" width="50" height="50"/>
         <image name="MoreFilled" width="50" height="50"/>
-        <image name="Up" width="50" height="50"/>
-        <image name="boundingbox" width="50" height="50"/>
-        <image name="features" width="50" height="50"/>
-        <image name="layers" width="50" height="50"/>
-        <image name="location" width="50" height="50"/>
-        <image name="max" width="50" height="50"/>
-        <image name="search" width="50" height="50"/>
+        <image name="Up" width="30" height="30"/>
+        <image name="boundingbox" width="30" height="30"/>
+        <image name="features" width="30" height="30"/>
+        <image name="layers" width="30" height="30"/>
+        <image name="location" width="30" height="30"/>
+        <image name="max" width="30" height="30"/>
+        <image name="search" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="S4V-Zx-x7V"/>
-        <segue reference="aLP-Cc-axH"/>
-        <segue reference="E1Z-ca-WBX"/>
         <segue reference="Tbj-Dw-cQe"/>
-        <segue reference="5H4-Qu-fu7"/>
+        <segue reference="jHg-uD-xkx"/>
         <segue reference="6XH-Lj-DXW"/>
-        <segue reference="eq5-Yc-eqB"/>
-        <segue reference="i8u-ct-hl9"/>
-        <segue reference="Zt4-kZ-Aob"/>
+        <segue reference="fV6-n6-geX"/>
+        <segue reference="aLP-Cc-axH"/>
+        <segue reference="eWo-PS-bO7"/>
+        <segue reference="S4V-Zx-x7V"/>
+        <segue reference="wE4-9I-IMh"/>
+        <segue reference="5H4-Qu-fu7"/>
     </inferredMetricsTieBreakers>
 </document>
