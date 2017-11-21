@@ -71,7 +71,10 @@
 		04E1D8E21B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8E11B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m */; };
 		CF52A7895D9F544D637D87A3 /* libPods-mapcache-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C949BBDA5ECEE9FFAC05F51 /* libPods-mapcache-ios.a */; };
 		E308FBC11FBE400500348577 /* SingleGeoPackageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E308FBC01FBE400500348577 /* SingleGeoPackageView.xib */; };
+		E308FBC61FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E308FBC51FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.m */; };
 		E312A3381FAA416500C088FB /* GPKGSDownloadCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E312A3371FAA416500C088FB /* GPKGSDownloadCoordinator.m */; };
+		E33F55721FC4A1C000F252FD /* GPKGSSectionTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F55711FC4A1C000F252FD /* GPKGSSectionTitleCell.xib */; };
+		E33F55751FC4A25500F252FD /* GPKGSSectionTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F55741FC4A25500F252FD /* GPKGSSectionTitleCell.m */; };
 		E3A491FF1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A491FE1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m */; };
 		E3A492051FA952F200FFE613 /* GPKGSCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A492041FA952F200FFE613 /* GPKGSCoordinator.m */; };
 		E3A4920B1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A4920A1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m */; };
@@ -220,8 +223,13 @@
 		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.debug.xcconfig"; sourceTree = "<group>"; };
 		E308FBC01FBE400500348577 /* SingleGeoPackageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SingleGeoPackageView.xib; sourceTree = "<group>"; };
+		E308FBC41FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSHeaderCellTableViewCell.h; sourceTree = "<group>"; };
+		E308FBC51FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSHeaderCellTableViewCell.m; sourceTree = "<group>"; };
 		E312A3361FAA416500C088FB /* GPKGSDownloadCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSDownloadCoordinator.h; sourceTree = "<group>"; };
 		E312A3371FAA416500C088FB /* GPKGSDownloadCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSDownloadCoordinator.m; sourceTree = "<group>"; };
+		E33F55711FC4A1C000F252FD /* GPKGSSectionTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSSectionTitleCell.xib; sourceTree = "<group>"; };
+		E33F55731FC4A25500F252FD /* GPKGSSectionTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSSectionTitleCell.h; sourceTree = "<group>"; };
+		E33F55741FC4A25500F252FD /* GPKGSSectionTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSSectionTitleCell.m; sourceTree = "<group>"; };
 		E3A491FD1FA78A4C00FFE613 /* GPKGSManagerCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSManagerCoordinator.h; sourceTree = "<group>"; };
 		E3A491FE1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSManagerCoordinator.m; sourceTree = "<group>"; };
 		E3A492031FA952F200FFE613 /* GPKGSCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSCoordinator.h; sourceTree = "<group>"; };
@@ -493,9 +501,21 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		E308FBC31FBFA77F00348577 /* cells */ = {
+			isa = PBXGroup;
+			children = (
+				E308FBC41FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.h */,
+				E308FBC51FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.m */,
+				E33F55731FC4A25500F252FD /* GPKGSSectionTitleCell.h */,
+				E33F55741FC4A25500F252FD /* GPKGSSectionTitleCell.m */,
+			);
+			path = cells;
+			sourceTree = "<group>";
+		};
 		E3A492021FA952C100FFE613 /* geopackage */ = {
 			isa = PBXGroup;
 			children = (
+				E308FBC31FBFA77F00348577 /* cells */,
 				E3A492031FA952F200FFE613 /* GPKGSCoordinator.h */,
 				E3A492041FA952F200FFE613 /* GPKGSCoordinator.m */,
 				E3A492091FA9538800FFE613 /* GPKGSGeopackageSingleViewController.h */,
@@ -521,6 +541,7 @@
 			isa = PBXGroup;
 			children = (
 				E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */,
+				E33F55711FC4A1C000F252FD /* GPKGSSectionTitleCell.xib */,
 			);
 			path = DisplayCells;
 			sourceTree = "<group>";
@@ -631,6 +652,7 @@
 				040136811AF94FB200C92AFC /* Main.storyboard in Resources */,
 				E308FBC11FBE400500348577 /* SingleGeoPackageView.xib in Resources */,
 				040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */,
+				E33F55721FC4A1C000F252FD /* GPKGSSectionTitleCell.xib in Resources */,
 				E3A4920D1FA9885B00FFE613 /* DownloadGeopackage.xib in Resources */,
 				040136831AF94FB200C92AFC /* Images.xcassets in Resources */,
 			);
@@ -710,12 +732,14 @@
 				043A45851B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m in Sources */,
 				045C94901B53EEB80005CCD0 /* GPKGSMapViewController.m in Sources */,
 				04E0EE0E1B691AD10095E53E /* GPKGSManagerEditTileOverlayViewController.m in Sources */,
+				E308FBC61FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.m in Sources */,
 				043A458B1B7E21E3001B8FC5 /* GPKGSMapPointData.m in Sources */,
 				045C94941B56DF620005CCD0 /* GPKGSIndexerTask.m in Sources */,
 				047733C91B4C496600E523BD /* GPKGSTableOptionsButton.m in Sources */,
 				04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */,
 				043A459E1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.m in Sources */,
 				E3A4920B1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m in Sources */,
+				E33F55751FC4A25500F252FD /* GPKGSSectionTitleCell.m in Sources */,
 				044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */,
 				045C94A91B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m in Sources */,
 				043A45981B83B4AB001B8FC5 /* GPGKSMapPointInitializer.m in Sources */,
