@@ -75,6 +75,10 @@
 		E312A3381FAA416500C088FB /* GPKGSDownloadCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E312A3371FAA416500C088FB /* GPKGSDownloadCoordinator.m */; };
 		E33F55721FC4A1C000F252FD /* GPKGSSectionTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F55711FC4A1C000F252FD /* GPKGSSectionTitleCell.xib */; };
 		E33F55751FC4A25500F252FD /* GPKGSSectionTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F55741FC4A25500F252FD /* GPKGSSectionTitleCell.m */; };
+		E33F55771FC4FEBD00F252FD /* GPKGSLayerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F55761FC4FEBD00F252FD /* GPKGSLayerCell.xib */; };
+		E33F557A1FC4FF1E00F252FD /* GPKGSLayerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F55791FC4FF1E00F252FD /* GPKGSLayerCell.m */; };
+		E33F557C1FCC954B00F252FD /* GPKGSButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F557B1FCC954B00F252FD /* GPKGSButtonCell.xib */; };
+		E33F557F1FCC956A00F252FD /* GPKGSButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */; };
 		E3A491FF1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A491FE1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m */; };
 		E3A492051FA952F200FFE613 /* GPKGSCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A492041FA952F200FFE613 /* GPKGSCoordinator.m */; };
 		E3A4920B1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A4920A1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m */; };
@@ -230,6 +234,12 @@
 		E33F55711FC4A1C000F252FD /* GPKGSSectionTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSSectionTitleCell.xib; sourceTree = "<group>"; };
 		E33F55731FC4A25500F252FD /* GPKGSSectionTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSSectionTitleCell.h; sourceTree = "<group>"; };
 		E33F55741FC4A25500F252FD /* GPKGSSectionTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSSectionTitleCell.m; sourceTree = "<group>"; };
+		E33F55761FC4FEBD00F252FD /* GPKGSLayerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSLayerCell.xib; sourceTree = "<group>"; };
+		E33F55781FC4FF1E00F252FD /* GPKGSLayerCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSLayerCell.h; sourceTree = "<group>"; };
+		E33F55791FC4FF1E00F252FD /* GPKGSLayerCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSLayerCell.m; sourceTree = "<group>"; };
+		E33F557B1FCC954B00F252FD /* GPKGSButtonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSButtonCell.xib; sourceTree = "<group>"; };
+		E33F557D1FCC956A00F252FD /* GPKGSButtonCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSButtonCell.h; sourceTree = "<group>"; };
+		E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSButtonCell.m; sourceTree = "<group>"; };
 		E3A491FD1FA78A4C00FFE613 /* GPKGSManagerCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSManagerCoordinator.h; sourceTree = "<group>"; };
 		E3A491FE1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSManagerCoordinator.m; sourceTree = "<group>"; };
 		E3A492031FA952F200FFE613 /* GPKGSCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSCoordinator.h; sourceTree = "<group>"; };
@@ -508,6 +518,10 @@
 				E308FBC51FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.m */,
 				E33F55731FC4A25500F252FD /* GPKGSSectionTitleCell.h */,
 				E33F55741FC4A25500F252FD /* GPKGSSectionTitleCell.m */,
+				E33F55781FC4FF1E00F252FD /* GPKGSLayerCell.h */,
+				E33F55791FC4FF1E00F252FD /* GPKGSLayerCell.m */,
+				E33F557D1FCC956A00F252FD /* GPKGSButtonCell.h */,
+				E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */,
 			);
 			path = cells;
 			sourceTree = "<group>";
@@ -542,6 +556,8 @@
 			children = (
 				E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */,
 				E33F55711FC4A1C000F252FD /* GPKGSSectionTitleCell.xib */,
+				E33F55761FC4FEBD00F252FD /* GPKGSLayerCell.xib */,
+				E33F557B1FCC954B00F252FD /* GPKGSButtonCell.xib */,
 			);
 			path = DisplayCells;
 			sourceTree = "<group>";
@@ -648,6 +664,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */,
+				E33F55771FC4FEBD00F252FD /* GPKGSLayerCell.xib in Resources */,
+				E33F557C1FCC954B00F252FD /* GPKGSButtonCell.xib in Resources */,
 				047733C61B4C3E3400E523BD /* mapcache.plist in Resources */,
 				040136811AF94FB200C92AFC /* Main.storyboard in Resources */,
 				E308FBC11FBE400500348577 /* SingleGeoPackageView.xib in Resources */,
@@ -756,6 +774,7 @@
 				04CCC8651B61122A0001296D /* GPKGSGenerateTilesViewController.m in Sources */,
 				044648081B4AF6A70052913B /* GPKGSTileTable.m in Sources */,
 				047733C41B4C3D1200E523BD /* GPKGSProperties.m in Sources */,
+				E33F557A1FC4FF1E00F252FD /* GPKGSLayerCell.m in Sources */,
 				E3A492051FA952F200FFE613 /* GPKGSCoordinator.m in Sources */,
 				0446481E1B4C26DF0052913B /* GPKGSConstants.m in Sources */,
 				04CCC8711B6122480001296D /* GPKGSCreateTilesViewController.m in Sources */,
@@ -763,6 +782,7 @@
 				04CCC85C1B5FF1830001296D /* GPKGSManagerCreateTilesViewController.m in Sources */,
 				047733BE1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m in Sources */,
 				044647FF1B4AF3870052913B /* GPKGSTable.m in Sources */,
+				E33F557F1FCC956A00F252FD /* GPKGSButtonCell.m in Sources */,
 				04CCC85F1B60225C0001296D /* GPKGSKeyboardConstraint.m in Sources */,
 				040136781AF94FB200C92AFC /* AppDelegate.m in Sources */,
 				04E1D8D01B66D366002BD947 /* GPKGSEditContentsViewController.m in Sources */,

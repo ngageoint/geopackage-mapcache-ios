@@ -7,10 +7,28 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GPKGSTable.h"
+#import "GPKGSFeatureTable.h"
+#import "GPKGSTileTable.h"
 #import "GPKGSDatabase.h"
 #import "GPKGSHeaderCellTableViewCell.h"
 #import "GPKGSSectionTitleCell.h"
+#import "GPKGSLayerCell.h"
+#import "GPKGSButtonCell.h"
+#import "GPKGSConstants.h"
+#import "GPKGSProperties.h"
+#import <GPKGGeoPackageManager.h>
+#import <GPKGGeoPackageFactory.h>
+#import "GPKGSUtils.h"
 
-@interface GPKGSGeopackageSingleViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
-@property (strong, nonatomic) GPKGSDatabase *geoPackage;
+
+@protocol GPKGSOperationsDelegate <NSObject>
+- (void) newLayer;
+- (void) deleteGeoPackage;
+@end
+
+
+@interface GPKGSGeopackageSingleViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSButtonCellDelegate, GPKGSHeaderCellButtonPressedDelegate>
+@property (strong, nonatomic) GPKGSDatabase *database;
+@property (weak, nonatomic) id<GPKGSOperationsDelegate> delegate;
 @end

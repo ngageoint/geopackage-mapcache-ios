@@ -10,7 +10,7 @@
 #import "GPKGSGeopackageSingleViewController.h"
 #import "GPKGSDatabase.h"
 
-@interface GPKGSCoordinator : NSObject
-- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andGeoPackage:(GPKGSDatabase *) geoPackage;
+@interface GPKGSCoordinator: NSObject <GPKGSOperationsDelegate>
+- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDatabase:(GPKGSDatabase *) database;
 - (void) start;
 @end
