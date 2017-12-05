@@ -294,7 +294,8 @@ const char ConstantKey;
         [self expandOrCollapseDatabase:database atIndexPath:indexPath];
         
         // TODO switch this to use a coordinator
-        GPKGSCoordinator *coordinator = [[GPKGSCoordinator alloc] initWithNavigationController:self.navigationController andGeoPackage:database];
+        GPKGSCoordinator *coordinator = [[GPKGSCoordinator alloc] initWithNavigationController:self.navigationController andDatabase:database];
+        [_childCoordinators addObject:coordinator];
         [coordinator start];
     }
 }

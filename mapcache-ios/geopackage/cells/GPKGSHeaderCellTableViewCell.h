@@ -8,10 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol GPKGSHeaderCellButtonPressedDelegate <NSObject>
+- (void) deleteGeoPackage;
+- (void) shareGeoPackage;
+@end
+
 @interface GPKGSHeaderCellTableViewCell : UITableViewCell
+@property (weak, nonatomic) id<GPKGSHeaderCellButtonPressedDelegate> delegate;
+
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *tileLayerCount;
-@property (weak, nonatomic) IBOutlet UILabel *featureLayerCount;
-
+@property (weak, nonatomic) IBOutlet UILabel *tileCountLabel;
+@property (weak, nonatomic) IBOutlet UILabel *featureCountLabel;
 @end

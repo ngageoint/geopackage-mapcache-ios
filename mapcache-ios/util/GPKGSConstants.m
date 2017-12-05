@@ -180,6 +180,10 @@ NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LAT = @"max_lat";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LON = @"min_lon";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LON = @"max_lon";
 
+NSString * const GPKGS_ACTION_DELETE = @"action_delete";
+NSString * const GPKGS_ACTION_SHARE = @"action_share";
+NSString * const GPKGS_ACTION_NEW_LAYER = @"action_new_layer";
+
 @implementation GPKGSConstants
 
 @end

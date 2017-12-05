@@ -12,10 +12,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GPKGSDownloadFileViewController">
             <connections>
                 <outlet property="cancelButton" destination="8y7-H6-DOH" id="TVl-M9-1mN"/>
-                <outlet property="downloadedLabel" destination="c9d-aC-hov" id="oTU-QB-awp"/>
+                <outlet property="downloadedLabel" destination="c9d-aC-hov" id="4Kf-Y3-cUt"/>
                 <outlet property="importButton" destination="eOB-1j-chc" id="MRh-da-FfA"/>
                 <outlet property="nameTextField" destination="ebQ-hJ-fK4" id="C2j-bj-sSY"/>
-                <outlet property="progressView" destination="mRl-q2-cYL" id="OkP-BY-jdq"/>
+                <outlet property="progressView" destination="mRl-q2-cYL" id="73R-nV-BgO"/>
                 <outlet property="urlTextField" destination="o1o-mI-eXD" id="fNg-qt-LOI"/>
                 <outlet property="view" destination="iN0-l3-epB" id="fRU-Px-Bn8"/>
             </connections>

@@ -180,6 +180,10 @@ extern NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LAT;
 extern NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LON;
 extern NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LON;
 
+extern NSString * const GPKGS_ACTION_DELETE;
+extern NSString * const GPKGS_ACTION_SHARE;
+extern NSString * const GPKGS_ACTION_NEW_LAYER;
+
 @interface GPKGSConstants : NSObject
 
 @end
