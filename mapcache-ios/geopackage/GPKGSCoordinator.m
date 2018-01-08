@@ -43,6 +43,10 @@
 
 - (void) newLayer {
     NSLog(@"Coordinator handling new layer");
+    
+    GPKGSNewLayerViewController *newLayerViewController = [[GPKGSNewLayerViewController alloc] init];
+    [_navigationController pushViewController:newLayerViewController animated:YES];
+    
 }
 
 

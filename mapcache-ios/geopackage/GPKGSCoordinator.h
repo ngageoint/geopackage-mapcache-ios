@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "GPKGSGeopackageSingleViewController.h"
 #import "GPKGSDatabase.h"
+#import "GPKGSNewLayerViewController.h"
 
 @interface GPKGSCoordinator: NSObject <GPKGSOperationsDelegate>
 - (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDatabase:(GPKGSDatabase *) database;

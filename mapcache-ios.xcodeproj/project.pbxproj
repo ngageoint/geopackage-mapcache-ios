@@ -83,6 +83,9 @@
 		E3A492051FA952F200FFE613 /* GPKGSCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A492041FA952F200FFE613 /* GPKGSCoordinator.m */; };
 		E3A4920B1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A4920A1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m */; };
 		E3A4920D1FA9885B00FFE613 /* DownloadGeopackage.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A4920C1FA9885B00FFE613 /* DownloadGeopackage.xib */; };
+		E3A651A82003DDC800B8AB27 /* GPKGSCreateLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651A72003DDC800B8AB27 /* GPKGSCreateLayerViewController.m */; };
+		E3A651AB2003E1B700B8AB27 /* CreateLayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A651AA2003E1B700B8AB27 /* CreateLayerView.xib */; };
+		E3A674D31FFEE52500089211 /* GPKGSNewLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A674D21FFEE52500089211 /* GPKGSNewLayerViewController.m */; };
 		E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */; };
 /* End PBXBuildFile section */
 
@@ -247,6 +250,11 @@
 		E3A492091FA9538800FFE613 /* GPKGSGeopackageSingleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSGeopackageSingleViewController.h; sourceTree = "<group>"; };
 		E3A4920A1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSGeopackageSingleViewController.m; sourceTree = "<group>"; };
 		E3A4920C1FA9885B00FFE613 /* DownloadGeopackage.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DownloadGeopackage.xib; sourceTree = "<group>"; };
+		E3A651A62003DDC800B8AB27 /* GPKGSCreateLayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSCreateLayerViewController.h; sourceTree = "<group>"; };
+		E3A651A72003DDC800B8AB27 /* GPKGSCreateLayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSCreateLayerViewController.m; sourceTree = "<group>"; };
+		E3A651AA2003E1B700B8AB27 /* CreateLayerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreateLayerView.xib; sourceTree = "<group>"; };
+		E3A674D11FFEE52500089211 /* GPKGSNewLayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSNewLayerViewController.h; sourceTree = "<group>"; };
+		E3A674D21FFEE52500089211 /* GPKGSNewLayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSNewLayerViewController.m; sourceTree = "<group>"; };
 		E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSHeaderCellDisplay.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -530,12 +538,15 @@
 			isa = PBXGroup;
 			children = (
 				E308FBC31FBFA77F00348577 /* cells */,
+				E3A6519F2003DA2D00B8AB27 /* NewLayerWizard */,
 				E3A492031FA952F200FFE613 /* GPKGSCoordinator.h */,
 				E3A492041FA952F200FFE613 /* GPKGSCoordinator.m */,
 				E3A492091FA9538800FFE613 /* GPKGSGeopackageSingleViewController.h */,
 				E3A4920A1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m */,
 				E312A3361FAA416500C088FB /* GPKGSDownloadCoordinator.h */,
 				E312A3371FAA416500C088FB /* GPKGSDownloadCoordinator.m */,
+				E3A674D11FFEE52500089211 /* GPKGSNewLayerViewController.h */,
+				E3A674D21FFEE52500089211 /* GPKGSNewLayerViewController.m */,
 			);
 			path = geopackage;
 			sourceTree = "<group>";
@@ -545,11 +556,30 @@
 			children = (
 				E3B975381FB3DE8800E33E0A /* DisplayCells */,
 				E3B975391FB3DE8900E33E0A /* EditCells */,
+				E3A651A92003DDE800B8AB27 /* NewLayerWizard */,
 				E3A4920C1FA9885B00FFE613 /* DownloadGeopackage.xib */,
 				E308FBC01FBE400500348577 /* SingleGeoPackageView.xib */,
 			);
 			path = views;
 			sourceTree = "<group>";
+		};
+		E3A6519F2003DA2D00B8AB27 /* NewLayerWizard */ = {
+			isa = PBXGroup;
+			children = (
+				E3A651A62003DDC800B8AB27 /* GPKGSCreateLayerViewController.h */,
+				E3A651A72003DDC800B8AB27 /* GPKGSCreateLayerViewController.m */,
+			);
+			path = NewLayerWizard;
+			sourceTree = "<group>";
+		};
+		E3A651A92003DDE800B8AB27 /* NewLayerWizard */ = {
+			isa = PBXGroup;
+			children = (
+				E3A651AA2003E1B700B8AB27 /* CreateLayerView.xib */,
+			);
+			name = NewLayerWizard;
+			path = "mapcache-ios/views/NewLayerWizard";
+			sourceTree = SOURCE_ROOT;
 		};
 		E3B975381FB3DE8800E33E0A /* DisplayCells */ = {
 			isa = PBXGroup;
@@ -668,6 +698,7 @@
 				E33F557C1FCC954B00F252FD /* GPKGSButtonCell.xib in Resources */,
 				047733C61B4C3E3400E523BD /* mapcache.plist in Resources */,
 				040136811AF94FB200C92AFC /* Main.storyboard in Resources */,
+				E3A651AB2003E1B700B8AB27 /* CreateLayerView.xib in Resources */,
 				E308FBC11FBE400500348577 /* SingleGeoPackageView.xib in Resources */,
 				040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */,
 				E33F55721FC4A1C000F252FD /* GPKGSSectionTitleCell.xib in Resources */,
@@ -757,6 +788,7 @@
 				04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */,
 				043A459E1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.m in Sources */,
 				E3A4920B1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m in Sources */,
+				E3A674D31FFEE52500089211 /* GPKGSNewLayerViewController.m in Sources */,
 				E33F55751FC4A25500F252FD /* GPKGSSectionTitleCell.m in Sources */,
 				044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */,
 				045C94A91B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m in Sources */,
@@ -777,6 +809,7 @@
 				E33F557A1FC4FF1E00F252FD /* GPKGSLayerCell.m in Sources */,
 				E3A492051FA952F200FFE613 /* GPKGSCoordinator.m in Sources */,
 				0446481E1B4C26DF0052913B /* GPKGSConstants.m in Sources */,
+				E3A651A82003DDC800B8AB27 /* GPKGSCreateLayerViewController.m in Sources */,
 				04CCC8711B6122480001296D /* GPKGSCreateTilesViewController.m in Sources */,
 				046877F81C68FE9400967470 /* GPKGSLinkedTablesViewController.m in Sources */,
 				04CCC85C1B5FF1830001296D /* GPKGSManagerCreateTilesViewController.m in Sources */,
