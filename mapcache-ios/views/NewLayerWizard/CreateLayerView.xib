@@ -20,19 +20,6 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tbE-yW-Us5">
-                    <rect key="frame" x="16" y="36" width="343" height="284.5"/>
-                    <string key="text">A GeoPackage contains feature layers and tile layers.  
-
-Feature layers contain geometric data which represent geolocated real world objects such as roads and rivers, points of interest, and conceptual data such as area boundaries.
-
-Tile layers store images in a pyramid structure representing a spatial extent and a zoom level in rows and columns.
-
-Which kind of layer would you like to create?</string>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mts-Os-Q2e">
                     <rect key="frame" x="16" y="336.5" width="163.5" height="40"/>
                     <color key="backgroundColor" red="0.2274509804" green="0.65098039220000004" blue="0.67450980390000004" alpha="1" colorSpace="calibratedRGB"/>
@@ -59,6 +46,19 @@ Which kind of layer would you like to create?</string>
                         <action selector="tileLayerButtonTapped:" destination="-1" eventType="touchUpInside" id="0KM-3Z-Agf"/>
                     </connections>
                 </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tbE-yW-Us5">
+                    <rect key="frame" x="16" y="36" width="343" height="284.5"/>
+                    <string key="text">A GeoPackage contains feature layers and tile layers.  
+
+Feature layers contain geometric data which represent geolocated real world objects such as roads and rivers, points of interest, and conceptual data such as area boundaries.
+
+Tile layers store images in a pyramid structure representing a spatial extent and a zoom level in rows and columns.
+
+Which kind of layer would you like to create?</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="0.8980392157" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
