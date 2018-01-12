@@ -10,6 +10,7 @@
 #import "GPKGSSectionTitleCell.h"
 #import "GPKGSFieldWithTitleCell.h"
 #import "GPKGSDesctiptionCell.h"
+#import "GPKGSSectionTitleCell.h"
 #import "GPKGSButtonCell.h"
 
 @interface GPKGSTileLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>

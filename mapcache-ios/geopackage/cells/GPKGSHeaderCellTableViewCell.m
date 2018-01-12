@@ -33,4 +33,9 @@
 - (IBAction)shareButtonTapped:(id)sender {
     [_delegate shareGeoPackage];
 }
+
+
+- (IBAction)renameButtonTapped:(id)sender {
+    [_delegate renameGeoPackage];
+}
 @end

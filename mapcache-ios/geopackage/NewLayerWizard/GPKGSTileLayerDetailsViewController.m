@@ -9,7 +9,6 @@
 #import "GPKGSTileLayerDetailsViewController.h"
 
 @interface GPKGSTileLayerDetailsViewController ()
-//@property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *cellArray;
 @end
 
@@ -23,12 +22,9 @@
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
-    UIEdgeInsets insets = UIEdgeInsetsMake(60, 0, 0, 0);
-    self.tableView.contentInset = insets;
     self.tableView.estimatedRowHeight = 100;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UIAccessibilityTraitNone;
-    
     [self.tableView setBackgroundColor:[UIColor colorWithRed:(229/255.0) green:(230/255.0) blue:(230/255.0) alpha:1]];
 }
 
@@ -42,6 +38,10 @@
 - (void) initCellArray {
     _cellArray = [[NSMutableArray alloc] init];
     
+    GPKGSSectionTitleCell *titleCell = [self.tableView dequeueReusableCellWithIdentifier:@"title"];
+    titleCell.sectionTitleLabel.text = @"New Tile Layer";
+    [_cellArray addObject:titleCell];
+    
     GPKGSFieldWithTitleCell *layerNameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     layerNameCell.title.text = @"Name your new layer";
     [_cellArray addObject:layerNameCell];
@@ -53,7 +53,7 @@
     
     GPKGSFieldWithTitleCell *urlCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     urlCell.title.text = @"What is the URL to your tiles?";
-    urlCell.field.text = @"http://openstreetmap.org/{x}/{y}/{z}";
+    urlCell.field.placeholder = @"http://openstreetmap.org/{x}/{y}/{z}";
     [_cellArray addObject:urlCell];
 }
 
@@ -61,6 +61,7 @@
 - (void) registerCellTypes {
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
 }
 
 

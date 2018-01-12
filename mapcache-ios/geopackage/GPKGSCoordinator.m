@@ -11,17 +11,20 @@
 
 @interface GPKGSCoordinator()
 @property (strong, nonatomic) GPKGSGeopackageSingleViewController *geoPackageViewController;
+@property (strong, nonatomic) id<GPKGSCoordinatorDelegate> delegate;
 @property (strong, nonatomic) UINavigationController *navigationController;
+@property (strong, nonatomic) UIBarButtonItem *backButton;
 @property (strong, nonatomic) GPKGSDatabase *database;
 @end
 
 
 @implementation GPKGSCoordinator
 
-- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDatabase:(GPKGSDatabase *) database {
+- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<GPKGSCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database {
     self = [super init];
     
     _navigationController = navigationController;
+    _delegate = delegate;
     _database = database;
     
     return self;
@@ -52,6 +55,12 @@
 
 - (void) deleteGeoPackage {
     NSLog(@"Coordinator handling delete");
+}
+
+
+- (void) callCompletionHandler {
+    NSLog(@"Back pressed");
+    [_delegate geoPackageCoordinatorCompletionHandler];
 }
 
 @end

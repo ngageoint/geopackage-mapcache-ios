@@ -9,7 +9,6 @@
 #import "GPKGSNewLayerViewController.h"
 
 @interface GPKGSNewLayerViewController()
-@property (strong, nonatomic) UIPageViewController *pageViewController;
 @property (strong, nonatomic) NSMutableArray *pages;
 @property (strong, nonatomic) GPKGSCreateLayerViewController *createLayerViewController;
 @end
@@ -17,19 +16,15 @@
 @implementation GPKGSNewLayerViewController
 
 - (void) viewDidLoad {
-    _pageViewController = [[UIPageViewController alloc] init];
-    _pageViewController.dataSource = self;
-    _pageViewController.delegate = self;
+    self.dataSource = self;
+    self.delegate = self;
     
     _pages = [[NSMutableArray alloc] init];
     _createLayerViewController = [[GPKGSCreateLayerViewController alloc] initWithNibName:@"CreateLayerView" bundle:nil];
     _createLayerViewController.delegate = self;
     [_pages addObject:_createLayerViewController];
     
-    [_pageViewController setViewControllers:_pages direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    [self addChildViewController:_pageViewController];
-    [[self view] addSubview:[_pageViewController view]];
-    [_pageViewController didMoveToParentViewController:self];
+    [self setViewControllers:_pages direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 
 
@@ -37,7 +32,7 @@
 - (nullable UIViewController *)pageViewController:(nonnull UIPageViewController *)pageViewController viewControllerAfterViewController:(nonnull UIViewController *)viewController {
     NSUInteger index = [_pages indexOfObject: viewController];
     
-    if (index == _pages.count) {
+    if (index == _pages.count -1) {
         return nil;
     }
     
@@ -66,6 +61,11 @@
 #pragma mark - CreateLayerViewController delegate methods
 - (void) newFeatureLayer {
     NSLog(@"Adding new feature layer");
+    
+    GPKGSFeatureLayerDetailsViewController *featureDetailsController = [[GPKGSFeatureLayerDetailsViewController alloc] init];
+    [_pages addObject:featureDetailsController];
+    
+    [self setViewControllers:@[featureDetailsController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 
 
@@ -74,8 +74,7 @@
     GPKGSTileLayerDetailsViewController *tileDetailsController = [[GPKGSTileLayerDetailsViewController alloc] init];
     [_pages addObject: tileDetailsController];
     
-    NSArray *page = @[_pages[[_pages indexOfObject:tileDetailsController]]];
-    [_pageViewController setViewControllers:page direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    [self setViewControllers:@[tileDetailsController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 
 

@@ -11,6 +11,7 @@
 @protocol GPKGSHeaderCellButtonPressedDelegate <NSObject>
 - (void) deleteGeoPackage;
 - (void) shareGeoPackage;
+- (void) renameGeoPackage;
 @end
 
 @interface GPKGSHeaderCellTableViewCell : UITableViewCell

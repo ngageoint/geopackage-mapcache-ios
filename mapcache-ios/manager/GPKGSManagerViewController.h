@@ -28,7 +28,7 @@ extern NSString * const GPKGS_EXPANDED_PREFERENCE;
 
 extern const char ConstantKey;
 
-@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadCoordinatorDelegate, GPKGSIndexerProtocol, GPKGSCreateFeaturesDelegate, GPKGSManagerCreateTilesDelegate, GPKGSManagerLoadTilesDelegate, GPKGSEditFeaturesDelegate, GPKGSCreateFeatureTilesDelegate, GPKGSAddTileOverlayDelegate, GPKGSEditTileOverlayDelegate, GPKGSLinkedTablesDelegate>
+@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadCoordinatorDelegate, GPKGSCoordinatorDelegate, GPKGSIndexerProtocol, GPKGSCreateFeaturesDelegate, GPKGSManagerCreateTilesDelegate, GPKGSManagerLoadTilesDelegate, GPKGSEditFeaturesDelegate, GPKGSCreateFeatureTilesDelegate, GPKGSAddTileOverlayDelegate, GPKGSEditTileOverlayDelegate, GPKGSLinkedTablesDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *clearActiveButton;
 

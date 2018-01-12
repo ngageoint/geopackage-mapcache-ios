@@ -34,6 +34,10 @@
 
 
 - (void) initCellArray {
+    if ([_cellArray count] > 0) {
+        [_cellArray removeAllObjects];
+    }
+    
     GPKGSHeaderCellTableViewCell *headerCell = [_tableView dequeueReusableCellWithIdentifier:@"header"];
     headerCell.nameLabel.text = _database.name;
     
@@ -91,6 +95,15 @@
 }
 
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    if (self.isMovingFromParentViewController) {
+        [_delegate callCompletionHandler];
+    }
+}
+
+
 #pragma mark - TableView delegate methods
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     return [_cellArray objectAtIndex:indexPath.row];
@@ -123,6 +136,50 @@
                                    andTitle:[NSString stringWithFormat:@"Share Database %@", _database]
                                  andMessage:[NSString stringWithFormat:@"No path was found for database %@", _database]];
     }
+}
+
+
+- (void) renameGeoPackage {
+    NSLog(@"Renaming GeoPackage");
+    
+    UIAlertController *renameAlert = [UIAlertController alertControllerWithTitle:@"Rename" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    [renameAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.text = _database.name;
+    }];
+    
+    UIAlertAction *confirmRename = [UIAlertAction actionWithTitle:@"Rename" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"New name is: %@", renameAlert.textFields[0].text);
+        
+        NSString * newName = renameAlert.textFields[0].text;
+        
+        if(newName != nil && [newName length] > 0 && ![newName isEqualToString:_database.name]){
+            @try {
+                if([_manager rename:_database.name to:newName]){
+                    _database.name = newName;
+                    [self initCellArray];
+                    [_tableView reloadData];
+                }else{
+                    [GPKGSUtils showMessageWithDelegate:self
+                                               andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
+                                             andMessage:[NSString stringWithFormat:@"Rename from %@ to %@ was not successful", _database.name, newName]];
+                }
+            }
+            @catch (NSException *exception) {
+                [GPKGSUtils showMessageWithDelegate:self
+                                           andTitle:[NSString stringWithFormat:@"Rename %@ to %@", _database.name, newName]
+                                         andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
+            }
+        }
+    }];
+    
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [renameAlert dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
+    [renameAlert addAction:confirmRename];
+    [renameAlert addAction:cancel];
+    
+    [self presentViewController:renameAlert animated:YES completion:nil];
 }
 
 

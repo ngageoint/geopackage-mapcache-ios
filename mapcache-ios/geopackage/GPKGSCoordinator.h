@@ -11,7 +11,12 @@
 #import "GPKGSDatabase.h"
 #import "GPKGSNewLayerViewController.h"
 
+
+@protocol GPKGSCoordinatorDelegate <NSObject>
+- (void) geoPackageCoordinatorCompletionHandler;
+@end
+
 @interface GPKGSCoordinator: NSObject <GPKGSOperationsDelegate>
-- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDatabase:(GPKGSDatabase *) database;
+- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<GPKGSCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database;
 - (void) start;
 @end
