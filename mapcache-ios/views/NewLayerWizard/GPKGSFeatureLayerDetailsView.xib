@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GPKGSFeatureLayerDetailsViewController">
+            <connections>
+                <outlet property="mapView" destination="UDQ-ch-tOn" id="DHD-wK-mdm"/>
+                <outlet property="tableView" destination="GGL-A9-IIM" id="hjd-pj-Par"/>
+                <outlet property="view" destination="iN0-l3-epB" id="RUL-Mo-bYL"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="UDQ-ch-tOn">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="367"/>
+                </mapView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GGL-A9-IIM">
+                    <rect key="frame" x="0.0" y="367" width="375" height="300"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="UDQ-ch-tOn" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="2l6-wR-NMR"/>
+                <constraint firstItem="GGL-A9-IIM" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="4fv-LD-6eD"/>
+                <constraint firstItem="UDQ-ch-tOn" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="0.55" id="9wx-cZ-L5a"/>
+                <constraint firstItem="UDQ-ch-tOn" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="Hb2-hx-MUd"/>
+                <constraint firstItem="GGL-A9-IIM" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="0.45" id="Vso-Z4-Jmg"/>
+                <constraint firstItem="GGL-A9-IIM" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="cE6-fB-qWF"/>
+                <constraint firstItem="UDQ-ch-tOn" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="kOy-bS-1y8"/>
+                <constraint firstItem="GGL-A9-IIM" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="lbN-kt-F6t"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="24.5" y="51.5"/>
+        </view>
+    </objects>
+</document>

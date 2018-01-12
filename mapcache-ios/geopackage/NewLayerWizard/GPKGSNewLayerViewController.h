@@ -13,6 +13,7 @@
 #import "GPKGSDatabase.h"
 #import "GPKGSCreateLayerViewController.h"
 #import "GPKGSTileLayerDetailsViewController.h"
+#import "GPKGSFeatureLayerDetailsViewController.h"
 
 @interface GPKGSNewLayerViewController : UIPageViewController <UIPageViewControllerDelegate, UIPageViewControllerDataSource, GPKGSCreateLayerDelegate>
 

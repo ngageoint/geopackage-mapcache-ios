@@ -293,12 +293,16 @@ const char ConstantKey;
         GPKGSDatabase * database = (GPKGSDatabase *) cellObject;
         [self expandOrCollapseDatabase:database atIndexPath:indexPath];
         
-        // TODO switch this to use a coordinator
-        GPKGSCoordinator *coordinator = [[GPKGSCoordinator alloc] initWithNavigationController:self.navigationController andDatabase:database];
+        GPKGSCoordinator *coordinator = [[GPKGSCoordinator alloc] initWithNavigationController:self.navigationController andDelegate:self andDatabase:database];
         [_childCoordinators addObject:coordinator];
         [coordinator start];
     }
 }
+
+- (void) geoPackageCoordinatorCompletionHandler {
+    [self updateAndReloadData];
+}
+
 
 -(void) expandOrCollapseDatabase: (GPKGSDatabase *) database atIndexPath:(NSIndexPath *)indexPath{
     

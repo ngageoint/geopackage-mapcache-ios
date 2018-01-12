@@ -66,7 +66,4 @@
     [_delegate downloadCoordinatorCompletitonHandler:_didDownload];
 }
 
-// todo download the file
-// todo upate the download status
-
 @end
