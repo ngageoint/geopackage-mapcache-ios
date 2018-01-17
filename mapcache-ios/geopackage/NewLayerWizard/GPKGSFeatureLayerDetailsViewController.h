@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "GPKGSConstants.h"
+#import "GPKGSProperties.h"
+#import "GPKGSButtonCell.h"
 #import "GPKGSDesctiptionCell.h"
 #import "GPKGSSectionTitleCell.h"
 #import "GPKGSFieldWithTitleCell.h"
 
-
-@interface GPKGSFeatureLayerDetailsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource>
+@interface GPKGSFeatureLayerDetailsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;

@@ -12,6 +12,8 @@
 - (void) deleteGeoPackage;
 - (void) shareGeoPackage;
 - (void) renameGeoPackage;
+- (void) copyGeoPackage;
+- (void) getInfo;
 @end
 
 @interface GPKGSHeaderCellTableViewCell : UITableViewCell
