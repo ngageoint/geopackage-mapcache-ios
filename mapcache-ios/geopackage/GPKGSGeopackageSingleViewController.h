@@ -25,6 +25,7 @@
 @protocol GPKGSOperationsDelegate <NSObject>
 - (void) newLayer;
 - (void) deleteGeoPackage;
+- (void) copyGeoPackage;
 - (void) callCompletionHandler;
 @end
 

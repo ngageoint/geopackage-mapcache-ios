@@ -7,13 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <GPKGGeoPackageManager.h>
 #import "GPKGSGeopackageSingleViewController.h"
 #import "GPKGSDatabase.h"
 #import "GPKGSNewLayerViewController.h"
 
 
 @protocol GPKGSCoordinatorDelegate <NSObject>
-- (void) geoPackageCoordinatorCompletionHandler;
+- (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete;
 @end
 
 @interface GPKGSCoordinator: NSObject <GPKGSOperationsDelegate>

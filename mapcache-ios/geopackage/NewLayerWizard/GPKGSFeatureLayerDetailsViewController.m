@@ -11,12 +11,26 @@
 @interface GPKGSFeatureLayerDetailsViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
 @property (strong, nonatomic) UIPickerView *pickerView;
+@property (strong, nonatomic) NSArray *geometryTypes;
+
+@property (strong, nonatomic) GPKGSSectionTitleCell *titleCell;
+@property (strong, nonatomic) GPKGSFieldWithTitleCell *layerNameCell;
+@property (strong, nonatomic) GPKGSFieldWithTitleCell *geometryCell;
+@property (strong, nonatomic) GPKGSButtonCell *buttonCell;
 @end
 
 @implementation GPKGSFeatureLayerDetailsViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _geometryTypes = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
+    
+    _pickerView = [[UIPickerView alloc] init];
+    _pickerView.delegate = self;
+    _pickerView.dataSource = self;
+    _pickerView.showsSelectionIndicator = YES;
+    
     [self registerCellTypes];
     [self initCellArray];
     
@@ -27,10 +41,6 @@
     _tableView.rowHeight = UITableViewAutomaticDimension;
     _tableView.separatorStyle = UIAccessibilityTraitNone;
     [_tableView setBackgroundColor:[UIColor colorWithRed:(229/255.0) green:(230/255.0) blue:(230/255.0) alpha:1]];
-    
-    _pickerView = [[UIPickerView alloc] init];
-    _pickerView.delegate = self;
-    _pickerView.dataSource = self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -43,20 +53,33 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
 }
 
 
 - (void) initCellArray {
     _cellArray = [[NSMutableArray alloc] init];
     
-    GPKGSSectionTitleCell *titleCell = [_tableView dequeueReusableCellWithIdentifier:@"title"];
-    titleCell.sectionTitleLabel.text = @"New Feature Layer";
-    [_cellArray addObject:titleCell];
+    _titleCell = [_tableView dequeueReusableCellWithIdentifier:@"title"];
+    _titleCell.sectionTitleLabel.text = @"New Feature Layer";
+    [_cellArray addObject:_titleCell];
     
-    GPKGSFieldWithTitleCell *layerNameCell = [_tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    layerNameCell.title.text = @"Layer name";
-    [_cellArray addObject:layerNameCell];
+    _layerNameCell = [_tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _layerNameCell.title.text = @"Layer name";
+    [_layerNameCell.field setReturnKeyType:UIReturnKeyDone];
+    _layerNameCell.field.delegate = self;
+    [_cellArray addObject:_layerNameCell];
     
+    _geometryCell = [_tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _geometryCell.title.text = @"Geometry Type";
+    _geometryCell.field.placeholder = @"Select a geometry type";
+    _geometryCell.field.inputView = _pickerView;
+    [_cellArray addObject:_geometryCell];
+    
+    _buttonCell = [_tableView dequeueReusableCellWithIdentifier:@"button"];
+    _buttonCell.button.titleLabel.text = @"Create Layer";
+    
+    [_cellArray addObject:_buttonCell];
 }
 
 
@@ -77,21 +100,30 @@
 
 
 - (NSInteger)pickerView:(nonnull UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return 1;
+    return [_geometryTypes count];
 }
 
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return @"ohai";
+    return [_geometryTypes objectAtIndex:row];
 }
 
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    // TODO handle this
+    _geometryCell.field.text = [_geometryTypes objectAtIndex:row];
+    [_geometryCell.field resignFirstResponder];
 }
 
 
+#pragma mark - UITextFieldDelegate
+- (void) textFieldDidEndEditing:(UITextField *)textField {
+    [textField resignFirstResponder];
+}
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
 
 @end
 

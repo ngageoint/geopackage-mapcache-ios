@@ -38,4 +38,15 @@
 - (IBAction)renameButtonTapped:(id)sender {
     [_delegate renameGeoPackage];
 }
+
+
+- (IBAction)copyButtonTapped:(id)sender {
+    [_delegate copyGeoPackage];
+}
+
+
+- (IBAction)infoButtonTapped:(id)sender {
+    [_delegate getInfo];
+}
+
 @end

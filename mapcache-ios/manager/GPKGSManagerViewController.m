@@ -299,7 +299,13 @@ const char ConstantKey;
     }
 }
 
-- (void) geoPackageCoordinatorCompletionHandler {
+- (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *)database withDelete:(BOOL)didDelete {
+    
+    if (didDelete) {
+        [self.manager delete:database];
+        [self.active removeDatabase:database andPreserveOverlays:false];
+    }
+    
     [self updateAndReloadData];
 }
 

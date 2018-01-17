@@ -64,11 +64,25 @@
                         <action selector="shareButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="yIO-RI-eAA"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oIF-L3-tdi">
-                    <rect key="frame" x="160" y="114" width="24" height="24"/>
-                    <state key="normal" image="Create"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oIF-L3-tdi">
+                    <rect key="frame" x="158" y="110" width="30" height="30"/>
+                    <state key="normal" image="Edit"/>
                     <connections>
                         <action selector="renameButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="i0P-bc-2CQ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MIg-Zc-RZh">
+                    <rect key="frame" x="204" y="110" width="30" height="30"/>
+                    <state key="normal" image="Copy"/>
+                    <connections>
+                        <action selector="copyButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="AbX-XG-2Bl"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i9a-Of-Agf">
+                    <rect key="frame" x="250" y="110" width="30" height="30"/>
+                    <state key="normal" image="Info"/>
+                    <connections>
+                        <action selector="infoButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="vEA-8Q-nmx"/>
                     </connections>
                 </button>
             </subviews>
@@ -76,21 +90,26 @@
             <constraints>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="HSI-fR-W33" secondAttribute="bottom" constant="8" id="06q-e1-NFZ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="pZp-3b-V3A" secondAttribute="trailing" constant="16" id="1rP-UE-Dmj"/>
-                <constraint firstItem="oIF-L3-tdi" firstAttribute="top" secondItem="mj1-1v-y74" secondAttribute="bottom" constant="12" id="BYP-RY-ghD"/>
+                <constraint firstItem="oIF-L3-tdi" firstAttribute="top" secondItem="mj1-1v-y74" secondAttribute="bottom" constant="8" id="BYP-RY-ghD"/>
                 <constraint firstItem="3oz-hK-qCR" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="HXQ-GJ-iqn"/>
                 <constraint firstItem="3oz-hK-qCR" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="IvT-Xn-JDE"/>
+                <constraint firstItem="MIg-Zc-RZh" firstAttribute="top" secondItem="mj1-1v-y74" secondAttribute="bottom" constant="8" id="JV2-f7-YjS"/>
                 <constraint firstItem="HSI-fR-W33" firstAttribute="top" secondItem="mj1-1v-y74" secondAttribute="bottom" constant="8" id="Jhn-bn-wf3"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="oIF-L3-tdi" secondAttribute="bottom" constant="10" id="K26-qn-TGt"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="oIF-L3-tdi" secondAttribute="bottom" constant="8" id="K26-qn-TGt"/>
                 <constraint firstItem="elG-o6-BX1" firstAttribute="top" secondItem="C3l-rU-ufI" secondAttribute="bottom" constant="4" id="LPn-E4-neI"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="MIg-Zc-RZh" secondAttribute="bottom" constant="8" id="LUI-8Q-9Md"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="ylh-zW-T32" secondAttribute="bottom" constant="8" id="MvY-Hz-Syn"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="HSI-fR-W33" secondAttribute="trailing" constant="16" id="Utl-ds-mYt"/>
                 <constraint firstItem="C3l-rU-ufI" firstAttribute="top" secondItem="pZp-3b-V3A" secondAttribute="bottom" constant="4" id="YHg-SD-xjp"/>
                 <constraint firstItem="mj1-1v-y74" firstAttribute="top" secondItem="elG-o6-BX1" secondAttribute="bottom" constant="4" id="dPp-W7-esH"/>
+                <constraint firstItem="i9a-Of-Agf" firstAttribute="leading" secondItem="MIg-Zc-RZh" secondAttribute="trailing" constant="16" id="erO-dE-Cc4"/>
                 <constraint firstItem="ylh-zW-T32" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="112" id="feQ-GD-gDh"/>
                 <constraint firstItem="mj1-1v-y74" firstAttribute="leading" secondItem="3oz-hK-qCR" secondAttribute="trailing" constant="16" id="hgI-PS-GYY"/>
                 <constraint firstItem="pZp-3b-V3A" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="tX5-oe-vyK"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="i9a-Of-Agf" secondAttribute="bottom" constant="8" id="uPa-qx-hsO"/>
+                <constraint firstItem="MIg-Zc-RZh" firstAttribute="leading" secondItem="oIF-L3-tdi" secondAttribute="trailing" constant="16" id="uue-XZ-RKs"/>
                 <constraint firstItem="pZp-3b-V3A" firstAttribute="leading" secondItem="3oz-hK-qCR" secondAttribute="trailing" constant="16" id="xIg-VW-J9W"/>
-                <constraint firstItem="oIF-L3-tdi" firstAttribute="leading" secondItem="ylh-zW-T32" secondAttribute="trailing" constant="18" id="yEW-Au-nZW"/>
+                <constraint firstItem="oIF-L3-tdi" firstAttribute="leading" secondItem="ylh-zW-T32" secondAttribute="trailing" constant="16" id="yEW-Au-nZW"/>
                 <constraint firstItem="elG-o6-BX1" firstAttribute="leading" secondItem="3oz-hK-qCR" secondAttribute="trailing" constant="16" id="zUY-iS-Ffe"/>
                 <constraint firstItem="C3l-rU-ufI" firstAttribute="leading" secondItem="3oz-hK-qCR" secondAttribute="trailing" constant="16" id="zff-OB-Eb8"/>
             </constraints>
@@ -106,8 +125,10 @@
         </view>
     </objects>
     <resources>
-        <image name="Create" width="30" height="30"/>
+        <image name="Copy" width="30" height="30"/>
         <image name="Delete" width="30" height="30"/>
+        <image name="Edit" width="30" height="30"/>
+        <image name="Info" width="30" height="30"/>
         <image name="Share" width="30" height="30"/>
     </resources>
 </document>

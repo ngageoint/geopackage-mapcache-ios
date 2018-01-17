@@ -11,8 +11,8 @@
 @interface GPKGSGeopackageSingleViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *cellArray;
-@property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) UIDocumentInteractionController *shareDocumentController;
+@property (strong, nonatomic) GPKGGeoPackageManager *manager;
+@property (strong, nonatomic) UIDocumentInteractionController *shareDocumentController;
 @end
 
 @implementation GPKGSGeopackageSingleViewController
@@ -42,7 +42,7 @@
     headerCell.nameLabel.text = _database.name;
     
     NSLog(@"GeoPackage Size %@", [self.manager readableSize:_database.name]);
-    headerCell.sizeLabel.text = [self.manager readableSize:_database.name];
+    headerCell.sizeLabel.text = [self.manager readableSize:_database.name]; // TODO look into threading this 
     
     NSInteger tileCount = [_database getTileCount];
     NSString *tileText = tileCount == 1 ? @"tile" : @"tiles";
@@ -118,7 +118,21 @@
 #pragma mark - Cell delegate methods
 -(void) deleteGeoPackage {
     NSLog(@"Deleting GeoPackage...");
-    [_delegate deleteGeoPackage];
+    
+    UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this GeoPackage? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [_delegate deleteGeoPackage];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [deleteAlert dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
+    [deleteAlert addAction:confirmDelete];
+    [deleteAlert addAction:cancel];
+    
+    [self presentViewController:deleteAlert animated:YES completion:nil];
 }
 
 
@@ -180,6 +194,55 @@
     [renameAlert addAction:cancel];
     
     [self presentViewController:renameAlert animated:YES completion:nil];
+}
+
+
+- (void) copyGeoPackage {
+    UIAlertController *copyAlert = [UIAlertController alertControllerWithTitle:@"Copy" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    [copyAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.text = [NSString stringWithFormat:@"%@_copy", _database.name];
+    }];
+    
+    UIAlertAction *confirmCopy = [UIAlertAction actionWithTitle:@"Copy" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString * newName = [copyAlert.textFields[0] text];
+        NSString *database = _database.name;
+        if(newName != nil && [newName length] > 0 && ![newName isEqualToString:database]){
+            @try {
+                if([self.manager copy:database to:newName]){
+                    NSLog(@"Copy Successful");
+                    UIAlertController *confirmation = [UIAlertController alertControllerWithTitle:@"Success" message:@"Copy created." preferredStyle:UIAlertControllerStyleAlert];
+                    [self presentViewController:confirmation animated:YES completion:nil];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [confirmation dismissViewControllerAnimated:YES completion:nil];
+                        [_delegate copyGeoPackage];
+                    });
+                }else{
+                    [GPKGSUtils showMessageWithDelegate:self
+                                               andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL]
+                                             andMessage:[NSString stringWithFormat:@"Copy from %@ to %@ was not successful", database, newName]];
+                }
+            }
+            @catch (NSException *exception) {
+                [GPKGSUtils showMessageWithDelegate:self
+                                           andTitle:[NSString stringWithFormat:@"Copy %@ to %@", database, newName]
+                                         andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
+            }
+        }
+    }];
+    
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [copyAlert dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
+    [copyAlert addAction:confirmCopy];
+    [copyAlert addAction:cancel];
+    
+    [self presentViewController:copyAlert animated:YES completion:nil];
+}
+
+
+- (void) getInfo {
+    // TODO add code to show info sheet
 }
 
 
