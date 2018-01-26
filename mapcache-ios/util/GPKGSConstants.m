@@ -158,6 +158,7 @@ NSString * const GPKGS_PROP_MAP_FEATURE_TILES_ZOOM_PADDING_PERCENTAGE = @"map_fe
 NSString * const GPKGS_PROP_MAP_FEATURE_CLICK_SCREEN_PERCENTAGE = @"map_feature_click_screen_percentage";
 NSString * const GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPE_LABEL = @"edit_features_geometry_type_label";
 NSString * const GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES = @"edit_features_geometry_types";
+NSString * const GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES_DICTIONARY = @"edit_features_geometry_types_dictionary";
 NSString * const GPKGS_PROP_PRELOADED_OGC_EXAMPLES = @"preloaded_ogc_examples";
 NSString * const GPKGS_PROP_PRELOADED_NGA_EXAMPLES = @"preloaded_nga_examples";
 NSString * const GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS = @"preloaded_geopackage_urls";
@@ -183,6 +184,7 @@ NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LON = @"max_lon";
 NSString * const GPKGS_ACTION_DELETE = @"action_delete";
 NSString * const GPKGS_ACTION_SHARE = @"action_share";
 NSString * const GPKGS_ACTION_NEW_LAYER = @"action_new_layer";
+NSString * const GPKGS_ACTION_NEW_FEATURE_LAYER = @"action_new_feature_layer";
 
 @implementation GPKGSConstants
 

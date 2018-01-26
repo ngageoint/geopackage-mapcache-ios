@@ -38,6 +38,8 @@
         [_cellArray removeAllObjects];
     }
     
+    GPKGGeoPackage * geoPackage = [_manager open:_database.name];
+    
     GPKGSHeaderCellTableViewCell *headerCell = [_tableView dequeueReusableCellWithIdentifier:@"header"];
     headerCell.nameLabel.text = _database.name;
     

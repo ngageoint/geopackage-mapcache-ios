@@ -466,6 +466,37 @@
 	<string>.02</string>
 	<key>edit_features_geometry_type_label</key>
 	<string>Geometry Type</string>
+	<key>edit_features_geometry_types_dictionary</key>
+	<dict>
+		<key>Geometry</key>
+		<string>GEOMETRY</string>
+		<key>Point</key>
+		<string>POINT</string>
+		<key>Line String</key>
+		<string>LINESTRING</string>
+		<key>Polygon</key>
+		<string>POLYGON</string>
+		<key>Multi-point</key>
+		<string>MULTIPOINT</string>
+		<key>Multi-line String</key>
+		<string>MULTILINESTRING</string>
+		<key>Multi-polygon</key>
+		<string>MULTIPOLYGON</string>
+		<key>Geometry Collection</key>
+		<string>GEOMETRYCOLLECTION</string>
+		<key>Circular String</key>
+		<string>CIRCULARSTRING</string>
+		<key>Compound Curve</key>
+		<string>COMPOUNDCURVE</string>
+		<key>Multi-curve</key>
+		<string>MULTICURVE</string>
+		<key>Multi-surface</key>
+		<string>MULTISURFACE</string>
+		<key>Curve</key>
+		<string>CURVE</string>
+		<key>Surface</key>
+		<string>SURFACE</string>
+	</dict>
 	<key>edit_features_geometry_types</key>
 	<array>
 		<string>GEOMETRY</string>

@@ -81,8 +81,9 @@
 		E33F557F1FCC956A00F252FD /* GPKGSButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */; };
 		E354EEDB2006B9B000B062BE /* GPKGSDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354EEDA2006B9B000B062BE /* GPKGSDescriptionCell.xib */; };
 		E354EEDE2006BB9500B062BE /* GPKGSDesctiptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEDD2006BB9500B062BE /* GPKGSDesctiptionCell.m */; };
-		E354EEE0200812C000B062BE /* GPKGSFeatureLayerDetailsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354EEDF200812C000B062BE /* GPKGSFeatureLayerDetailsView.xib */; };
 		E354EEE320091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEE220091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.m */; };
+		E36D2DCE2017BFBE0097A8DE /* GPKGSPickerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E36D2DCD2017BFBE0097A8DE /* GPKGSPickerViewCell.xib */; };
+		E36D2DD12017C0A70097A8DE /* GPKGSPickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E36D2DD02017C0A70097A8DE /* GPKGSPickerViewCell.m */; };
 		E3A491FF1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A491FE1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m */; };
 		E3A492051FA952F200FFE613 /* GPKGSCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A492041FA952F200FFE613 /* GPKGSCoordinator.m */; };
 		E3A4920B1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A4920A1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m */; };
@@ -92,7 +93,7 @@
 		E3A651AD2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A651AC2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib */; };
 		E3A651B0200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651AF200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.m */; };
 		E3A651B32005652400B8AB27 /* GPKGSFieldWithTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651B22005652400B8AB27 /* GPKGSFieldWithTitleCell.m */; };
-		E3A674D31FFEE52500089211 /* GPKGSNewLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A674D21FFEE52500089211 /* GPKGSNewLayerViewController.m */; };
+		E3A674D31FFEE52500089211 /* GPKGSNewLayerWizard.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A674D21FFEE52500089211 /* GPKGSNewLayerWizard.m */; };
 		E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */; };
 /* End PBXBuildFile section */
 
@@ -253,9 +254,11 @@
 		E354EEDA2006B9B000B062BE /* GPKGSDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSDescriptionCell.xib; sourceTree = "<group>"; };
 		E354EEDC2006BB9500B062BE /* GPKGSDesctiptionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSDesctiptionCell.h; sourceTree = "<group>"; };
 		E354EEDD2006BB9500B062BE /* GPKGSDesctiptionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSDesctiptionCell.m; sourceTree = "<group>"; };
-		E354EEDF200812C000B062BE /* GPKGSFeatureLayerDetailsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSFeatureLayerDetailsView.xib; sourceTree = "<group>"; };
 		E354EEE120091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSFeatureLayerDetailsViewController.h; sourceTree = "<group>"; };
 		E354EEE220091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSFeatureLayerDetailsViewController.m; sourceTree = "<group>"; };
+		E36D2DCD2017BFBE0097A8DE /* GPKGSPickerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSPickerViewCell.xib; sourceTree = "<group>"; };
+		E36D2DCF2017C0A70097A8DE /* GPKGSPickerViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSPickerViewCell.h; sourceTree = "<group>"; };
+		E36D2DD02017C0A70097A8DE /* GPKGSPickerViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSPickerViewCell.m; sourceTree = "<group>"; };
 		E3A491FD1FA78A4C00FFE613 /* GPKGSManagerCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSManagerCoordinator.h; sourceTree = "<group>"; };
 		E3A491FE1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSManagerCoordinator.m; sourceTree = "<group>"; };
 		E3A492031FA952F200FFE613 /* GPKGSCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSCoordinator.h; sourceTree = "<group>"; };
@@ -271,8 +274,8 @@
 		E3A651AF200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSTileLayerDetailsViewController.m; sourceTree = "<group>"; };
 		E3A651B12005652400B8AB27 /* GPKGSFieldWithTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSFieldWithTitleCell.h; sourceTree = "<group>"; };
 		E3A651B22005652400B8AB27 /* GPKGSFieldWithTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSFieldWithTitleCell.m; sourceTree = "<group>"; };
-		E3A674D11FFEE52500089211 /* GPKGSNewLayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSNewLayerViewController.h; sourceTree = "<group>"; };
-		E3A674D21FFEE52500089211 /* GPKGSNewLayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSNewLayerViewController.m; sourceTree = "<group>"; };
+		E3A674D11FFEE52500089211 /* GPKGSNewLayerWizard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSNewLayerWizard.h; sourceTree = "<group>"; };
+		E3A674D21FFEE52500089211 /* GPKGSNewLayerWizard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSNewLayerWizard.m; sourceTree = "<group>"; };
 		E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSHeaderCellDisplay.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -552,6 +555,8 @@
 				E3A651B22005652400B8AB27 /* GPKGSFieldWithTitleCell.m */,
 				E354EEDC2006BB9500B062BE /* GPKGSDesctiptionCell.h */,
 				E354EEDD2006BB9500B062BE /* GPKGSDesctiptionCell.m */,
+				E36D2DCF2017C0A70097A8DE /* GPKGSPickerViewCell.h */,
+				E36D2DD02017C0A70097A8DE /* GPKGSPickerViewCell.m */,
 			);
 			path = cells;
 			sourceTree = "<group>";
@@ -590,8 +595,8 @@
 				E3A651A72003DDC800B8AB27 /* GPKGSCreateLayerViewController.m */,
 				E3A651AE200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.h */,
 				E3A651AF200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.m */,
-				E3A674D11FFEE52500089211 /* GPKGSNewLayerViewController.h */,
-				E3A674D21FFEE52500089211 /* GPKGSNewLayerViewController.m */,
+				E3A674D11FFEE52500089211 /* GPKGSNewLayerWizard.h */,
+				E3A674D21FFEE52500089211 /* GPKGSNewLayerWizard.m */,
 				E354EEE120091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.h */,
 				E354EEE220091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.m */,
 			);
@@ -602,7 +607,6 @@
 			isa = PBXGroup;
 			children = (
 				E3A651AA2003E1B700B8AB27 /* CreateLayerView.xib */,
-				E354EEDF200812C000B062BE /* GPKGSFeatureLayerDetailsView.xib */,
 			);
 			name = NewLayerWizard;
 			path = "mapcache-ios/views/NewLayerWizard";
@@ -624,6 +628,7 @@
 			isa = PBXGroup;
 			children = (
 				E3A651AC2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib */,
+				E36D2DCD2017BFBE0097A8DE /* GPKGSPickerViewCell.xib */,
 			);
 			path = EditCells;
 			sourceTree = "<group>";
@@ -724,7 +729,7 @@
 			files = (
 				E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */,
 				E354EEDB2006B9B000B062BE /* GPKGSDescriptionCell.xib in Resources */,
-				E354EEE0200812C000B062BE /* GPKGSFeatureLayerDetailsView.xib in Resources */,
+				E36D2DCE2017BFBE0097A8DE /* GPKGSPickerViewCell.xib in Resources */,
 				E33F55771FC4FEBD00F252FD /* GPKGSLayerCell.xib in Resources */,
 				E3A651AD2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib in Resources */,
 				E33F557C1FCC954B00F252FD /* GPKGSButtonCell.xib in Resources */,
@@ -814,6 +819,7 @@
 				043A45851B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m in Sources */,
 				045C94901B53EEB80005CCD0 /* GPKGSMapViewController.m in Sources */,
 				04E0EE0E1B691AD10095E53E /* GPKGSManagerEditTileOverlayViewController.m in Sources */,
+				E36D2DD12017C0A70097A8DE /* GPKGSPickerViewCell.m in Sources */,
 				E308FBC61FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.m in Sources */,
 				043A458B1B7E21E3001B8FC5 /* GPKGSMapPointData.m in Sources */,
 				045C94941B56DF620005CCD0 /* GPKGSIndexerTask.m in Sources */,
@@ -821,7 +827,7 @@
 				04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */,
 				043A459E1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.m in Sources */,
 				E3A4920B1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m in Sources */,
-				E3A674D31FFEE52500089211 /* GPKGSNewLayerViewController.m in Sources */,
+				E3A674D31FFEE52500089211 /* GPKGSNewLayerWizard.m in Sources */,
 				E33F55751FC4A25500F252FD /* GPKGSSectionTitleCell.m in Sources */,
 				044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */,
 				045C94A91B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m in Sources */,
