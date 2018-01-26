@@ -10,7 +10,7 @@
 #import <GPKGGeoPackageManager.h>
 #import "GPKGSGeopackageSingleViewController.h"
 #import "GPKGSDatabase.h"
-#import "GPKGSNewLayerViewController.h"
+#import "GPKGSNewLayerWizard.h"
 
 
 @protocol GPKGSCoordinatorDelegate <NSObject>

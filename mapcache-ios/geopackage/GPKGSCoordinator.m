@@ -48,9 +48,9 @@
 - (void) newLayer {
     NSLog(@"Coordinator handling new layer");
     
-    GPKGSNewLayerViewController *newLayerViewController = [[GPKGSNewLayerViewController alloc] init];
-    [_navigationController pushViewController:newLayerViewController animated:YES];
-    
+    GPKGSNewLayerWizard *newLayerWizard = [[GPKGSNewLayerWizard alloc] init];
+    newLayerWizard.database = _database;
+    [_navigationController pushViewController:newLayerWizard animated:YES];
 }
 
 
@@ -71,5 +71,10 @@
     NSLog(@"Back pressed");
     [_delegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
 }
+
+
+// TODO make a new method that creates a feature layer
+
+
 
 @end
