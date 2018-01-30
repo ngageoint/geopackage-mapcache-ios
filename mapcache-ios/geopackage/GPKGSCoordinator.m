@@ -14,6 +14,7 @@
 @property (strong, nonatomic) id<GPKGSCoordinatorDelegate> delegate;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
 @property (strong, nonatomic) UINavigationController *navigationController;
+@property (strong, nonatomic) GPKGSNewLayerWizard *layerWizard;
 @property (strong, nonatomic) UIBarButtonItem *backButton;
 @property (strong, nonatomic) GPKGSDatabase *database;
 @end
@@ -24,6 +25,7 @@
 - (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<GPKGSCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database {
     self = [super init];
     
+    _manager = [GPKGGeoPackageFactory getManager];
     _navigationController = navigationController;
     _delegate = delegate;
     _database = database;
@@ -48,9 +50,10 @@
 - (void) newLayer {
     NSLog(@"Coordinator handling new layer");
     
-    GPKGSNewLayerWizard *newLayerWizard = [[GPKGSNewLayerWizard alloc] init];
-    newLayerWizard.database = _database;
-    [_navigationController pushViewController:newLayerWizard animated:YES];
+    _layerWizard = [[GPKGSNewLayerWizard alloc] init];
+    _layerWizard.database = _database;
+    _layerWizard.featureLayerDelegate = self;
+    [_navigationController pushViewController:_layerWizard animated:YES];
 }
 
 
@@ -73,8 +76,26 @@
 }
 
 
-// TODO make a new method that creates a feature layer
-
+#pragma mark - GPKGSFeatureLayerCreationDelegate
+- (void) createFeatueLayerIn:(NSString *)database with:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId {
+    
+    GPKGGeoPackage * geoPackage;
+    @try {
+        geoPackage = [_manager open:database];
+        [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:boundingBox andSrsId:srsId];
+        [_layerWizard.navigationController popViewControllerAnimated:YES];
+    }
+    @catch (NSException *e) {
+        // TODO handle this
+        NSLog(@"There was a problem creating the layer, %@", e.reason);
+    }
+    @finally {
+        [geoPackage close];
+        [_geoPackageViewController update];
+    }
+    
+    // TODO handle dismissing the view controllers or displaying an error message
+}
 
 
 @end

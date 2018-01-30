@@ -33,4 +33,5 @@
 @interface GPKGSGeopackageSingleViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSButtonCellDelegate, GPKGSHeaderCellButtonPressedDelegate>
 @property (strong, nonatomic) GPKGSDatabase *database;
 @property (weak, nonatomic) id<GPKGSOperationsDelegate> delegate;
+- (void) update;
 @end

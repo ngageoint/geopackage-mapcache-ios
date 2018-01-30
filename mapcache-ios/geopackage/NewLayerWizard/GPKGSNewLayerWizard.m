@@ -64,7 +64,7 @@
     
     GPKGSFeatureLayerDetailsViewController *featureDetailsController = [[GPKGSFeatureLayerDetailsViewController alloc] init];
     featureDetailsController.database = _database;
-    featureDetailsController.delegate = self;
+    featureDetailsController.delegate = _featureLayerDelegate;
     [_pages addObject:featureDetailsController];
     
     [self setViewControllers:@[featureDetailsController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];

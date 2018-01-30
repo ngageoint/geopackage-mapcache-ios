@@ -15,6 +15,7 @@
 #import "GPKGSTileLayerDetailsViewController.h"
 #import "GPKGSFeatureLayerDetailsViewController.h"
 
-@interface GPKGSNewLayerWizard : UIPageViewController <UIPageViewControllerDelegate, UIPageViewControllerDataSource, GPKGSCreateLayerDelegate, GPKGSFeatureLayerCreationCompletionHandler>
+@interface GPKGSNewLayerWizard : UIPageViewController <UIPageViewControllerDelegate, UIPageViewControllerDataSource, GPKGSCreateLayerDelegate>
 @property (strong, nonatomic) GPKGSDatabase *database;
+@property (weak, nonatomic) id<GPKGSFeatureLayerCreationDelegate> featureLayerDelegate;
 @end
