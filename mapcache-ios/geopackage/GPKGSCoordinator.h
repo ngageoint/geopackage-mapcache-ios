@@ -17,7 +17,7 @@
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete;
 @end
 
-@interface GPKGSCoordinator: NSObject <GPKGSOperationsDelegate>
+@interface GPKGSCoordinator: NSObject <GPKGSOperationsDelegate, GPKGSFeatureLayerCreationDelegate>
 - (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<GPKGSCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database;
 - (void) start;
 @end

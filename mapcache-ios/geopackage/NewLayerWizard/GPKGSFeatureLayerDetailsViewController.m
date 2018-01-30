@@ -141,7 +141,7 @@
                 [NSException raise:@"Table Name" format:@"Table name is required"];
             }
             
-            GPKGBoundingBox * boundingBox;
+            GPKGBoundingBox * boundingBox = [[GPKGBoundingBox alloc] init];
             boundingBox.minLatitude = [[NSDecimalNumber alloc] initWithFloat: -90.0f];
             boundingBox.maxLatitude = [[NSDecimalNumber alloc] initWithFloat: 90.0f];
             boundingBox.minLongitude = [[NSDecimalNumber alloc] initWithFloat: -180.0f];
@@ -164,21 +164,14 @@
             [geometryColumns setZ:[NSNumber numberWithInt:0]];
             [geometryColumns setM:[NSNumber numberWithInt:0]];
             
-            GPKGGeoPackage * geoPackage = [_manager open:_database.name];
-            @try {
-                [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:boundingBox andSrsId:[NSNumber numberWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
-            }
-            @finally {
-                [geoPackage close];
-                
-                if (_delegate != nil) {
-                    [_delegate featureLayerCreationComplete:YES withError:nil];
-                }
-            }
+            [_delegate createFeatueLayerIn:_database.name with:geometryColumns andBoundingBox:boundingBox andSrsId:[NSNumber numberWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
         }
         @catch (NSException *e) {
             if(self.delegate != nil){
-                [_delegate featureLayerCreationComplete:NO withError:e.description];
+                NSLog(@"There was a problem in FeatureDetailsViewController when making a new layer: %@", e.reason);
+                // TODO check and see what in the above can throw an exception now that the creation code has been moved to the coordinator.
+                // Looks like it might just be the check for the name, should be able to handle that here since to doesnt make sense to hand off incomplete data.
+//                [_delegate featureLayerCreationComplete:NO withError:e.description];
             }
         }
     }
