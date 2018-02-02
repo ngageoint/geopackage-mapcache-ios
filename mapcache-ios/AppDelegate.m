@@ -88,6 +88,8 @@ annotation {
 
 
 - (void) setupApplicationAppearance {
+    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleLightContent;
+    
     [[UINavigationBar appearance] setBarTintColor:[GPKGSColorUtil getPrimary]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];

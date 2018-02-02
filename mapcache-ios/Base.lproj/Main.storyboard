@@ -187,6 +187,7 @@
                                                 <action selector="downloadFile:" destination="0EV-Hx-RDM" eventType="touchUpInside" id="vPb-5O-4ZO"/>
                                             </connections>
                                         </button>
+                                        <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </barButtonItem>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="1ia-2M-KEg"/>
                                     <barButtonItem title="Item" style="plain" id="wgg-MR-5gp" userLabel="CreateItem">
@@ -3335,7 +3336,7 @@
         <image name="search" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="CVO-FT-9Hq"/>
+        <segue reference="Tbj-Dw-cQe"/>
         <segue reference="jHg-uD-xkx"/>
         <segue reference="6XH-Lj-DXW"/>
         <segue reference="fV6-n6-geX"/>
@@ -3343,6 +3344,6 @@
         <segue reference="eWo-PS-bO7"/>
         <segue reference="S4V-Zx-x7V"/>
         <segue reference="wE4-9I-IMh"/>
-        <segue reference="iLp-it-FrA"/>
+        <segue reference="5H4-Qu-fu7"/>
     </inferredMetricsTieBreakers>
 </document>
