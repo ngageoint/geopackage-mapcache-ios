@@ -12,7 +12,10 @@
 #import "GPKGSDesctiptionCell.h"
 #import "GPKGSSectionTitleCell.h"
 #import "GPKGSButtonCell.h"
+#import "GPKGSSegmentedControlCell.h"
+#import "GPKGSButtonCell.h"
 
-@interface GPKGSTileLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
+
+@interface GPKGSTileLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, GPKGSSegmentedControlCellDelegate, GPKGSButtonCellDelegate>
 
 @end

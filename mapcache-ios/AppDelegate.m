@@ -30,6 +30,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [self setupApplicationAppearance];
     return YES;
 }
 
@@ -84,5 +85,20 @@ annotation {
 
     return YES;
 }
+
+
+- (void) setupApplicationAppearance {
+    [[UINavigationBar appearance] setBarTintColor:[GPKGSColorUtil getPrimary]];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+    [[UINavigationBar appearance] setTranslucent:NO];
+    
+    [[UITabBar appearance] setBarTintColor:[GPKGSColorUtil getPrimary]];
+    [[UITabBar appearance] setTintColor:[UIColor whiteColor]];
+    
+    [[UIToolbar appearance] setBarTintColor:[GPKGSColorUtil getPrimary]];
+    [[UIToolbar appearance] setTintColor:[UIColor whiteColor]];
+}
+
 
 @end

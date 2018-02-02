@@ -40,7 +40,7 @@
     self.tableView.estimatedRowHeight = 100;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UIAccessibilityTraitNone;
-    [self.tableView setBackgroundColor:[UIColor colorWithRed:(229/255.0) green:(230/255.0) blue:(230/255.0) alpha:1]];
+    [self.tableView setBackgroundColor:[UIColor whiteColor]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -85,6 +85,14 @@
     _buttonCell.action = GPKGS_ACTION_NEW_FEATURE_LAYER;
     [_buttonCell.button setTitle:@"Create Layer" forState:UIControlStateNormal];
     
+    if ([_layerNameCell.field.text isEqualToString:@""]) {
+        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccentLight];
+        _buttonCell.button.userInteractionEnabled = NO;
+    } else {
+        _buttonCell.button.userInteractionEnabled = YES;
+        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccent];
+    }
+
     [_cellArray addObject:_buttonCell];
 }
 
@@ -122,6 +130,14 @@
 
 #pragma mark - UITextFieldDelegate
 - (void) textFieldDidEndEditing:(UITextField *)textField {
+    if ([_layerNameCell.field.text isEqualToString:@""]) {
+        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccentLight];
+        _buttonCell.button.userInteractionEnabled = NO;
+    } else {
+        _buttonCell.button.userInteractionEnabled = YES;
+        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccent];
+    }
+    
     [textField resignFirstResponder];
 }
 
@@ -169,9 +185,6 @@
         @catch (NSException *e) {
             if(self.delegate != nil){
                 NSLog(@"There was a problem in FeatureDetailsViewController when making a new layer: %@", e.reason);
-                // TODO check and see what in the above can throw an exception now that the creation code has been moved to the coordinator.
-                // Looks like it might just be the check for the name, should be able to handle that here since to doesnt make sense to hand off incomplete data.
-//                [_delegate featureLayerCreationComplete:NO withError:e.description];
             }
         }
     }

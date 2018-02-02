@@ -21,6 +21,7 @@
 #import "GPKGSSectionTitleCell.h"
 #import "GPKGSFieldWithTitleCell.h"
 #import "GPKGSPickerViewCell.h"
+#import "GPKGSColorUtil.h"
 
 @protocol GPKGSFeatureLayerCreationDelegate <NSObject>
 //- (void) featureLayerCreationComplete:(BOOL)layerCreated withError:(NSString *)error;

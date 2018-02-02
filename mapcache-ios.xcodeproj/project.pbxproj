@@ -79,6 +79,9 @@
 		E33F557A1FC4FF1E00F252FD /* GPKGSLayerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F55791FC4FF1E00F252FD /* GPKGSLayerCell.m */; };
 		E33F557C1FCC954B00F252FD /* GPKGSButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F557B1FCC954B00F252FD /* GPKGSButtonCell.xib */; };
 		E33F557F1FCC956A00F252FD /* GPKGSButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */; };
+		E3470CC72020E67E0098D783 /* GPKGSColorUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CC62020E67D0098D783 /* GPKGSColorUtil.m */; };
+		E3470CC9202126140098D783 /* GPKGSSegmentedControlCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */; };
+		E3470CCC2021962D0098D783 /* GPKGSSegmentedControlCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CCB2021962D0098D783 /* GPKGSSegmentedControlCell.m */; };
 		E354EEDB2006B9B000B062BE /* GPKGSDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354EEDA2006B9B000B062BE /* GPKGSDescriptionCell.xib */; };
 		E354EEDE2006BB9500B062BE /* GPKGSDesctiptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEDD2006BB9500B062BE /* GPKGSDesctiptionCell.m */; };
 		E354EEE320091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEE220091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.m */; };
@@ -251,6 +254,11 @@
 		E33F557B1FCC954B00F252FD /* GPKGSButtonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSButtonCell.xib; sourceTree = "<group>"; };
 		E33F557D1FCC956A00F252FD /* GPKGSButtonCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSButtonCell.h; sourceTree = "<group>"; };
 		E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSButtonCell.m; sourceTree = "<group>"; };
+		E3470CC52020E67D0098D783 /* GPKGSColorUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSColorUtil.h; sourceTree = "<group>"; };
+		E3470CC62020E67D0098D783 /* GPKGSColorUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSColorUtil.m; sourceTree = "<group>"; };
+		E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSSegmentedControlCell.xib; sourceTree = "<group>"; };
+		E3470CCA2021962D0098D783 /* GPKGSSegmentedControlCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSSegmentedControlCell.h; sourceTree = "<group>"; };
+		E3470CCB2021962D0098D783 /* GPKGSSegmentedControlCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSSegmentedControlCell.m; sourceTree = "<group>"; };
 		E354EEDA2006B9B000B062BE /* GPKGSDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSDescriptionCell.xib; sourceTree = "<group>"; };
 		E354EEDC2006BB9500B062BE /* GPKGSDesctiptionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSDesctiptionCell.h; sourceTree = "<group>"; };
 		E354EEDD2006BB9500B062BE /* GPKGSDesctiptionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSDesctiptionCell.m; sourceTree = "<group>"; };
@@ -445,6 +453,8 @@
 				04082B551B4F18A000D65E6B /* GPKGSUtils.m */,
 				045C94991B5D4C560005CCD0 /* GPKGSDecimalValidator.h */,
 				045C949A1B5D4C560005CCD0 /* GPKGSDecimalValidator.m */,
+				E3470CC52020E67D0098D783 /* GPKGSColorUtil.h */,
+				E3470CC62020E67D0098D783 /* GPKGSColorUtil.m */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -557,6 +567,8 @@
 				E354EEDD2006BB9500B062BE /* GPKGSDesctiptionCell.m */,
 				E36D2DCF2017C0A70097A8DE /* GPKGSPickerViewCell.h */,
 				E36D2DD02017C0A70097A8DE /* GPKGSPickerViewCell.m */,
+				E3470CCA2021962D0098D783 /* GPKGSSegmentedControlCell.h */,
+				E3470CCB2021962D0098D783 /* GPKGSSegmentedControlCell.m */,
 			);
 			path = cells;
 			sourceTree = "<group>";
@@ -629,6 +641,7 @@
 			children = (
 				E3A651AC2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib */,
 				E36D2DCD2017BFBE0097A8DE /* GPKGSPickerViewCell.xib */,
+				E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */,
 			);
 			path = EditCells;
 			sourceTree = "<group>";
@@ -727,6 +740,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3470CC9202126140098D783 /* GPKGSSegmentedControlCell.xib in Resources */,
 				E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */,
 				E354EEDB2006B9B000B062BE /* GPKGSDescriptionCell.xib in Resources */,
 				E36D2DCE2017BFBE0097A8DE /* GPKGSPickerViewCell.xib in Resources */,
@@ -826,6 +840,7 @@
 				047733C91B4C496600E523BD /* GPKGSTableOptionsButton.m in Sources */,
 				04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */,
 				043A459E1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.m in Sources */,
+				E3470CC72020E67E0098D783 /* GPKGSColorUtil.m in Sources */,
 				E3A4920B1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m in Sources */,
 				E3A674D31FFEE52500089211 /* GPKGSNewLayerWizard.m in Sources */,
 				E33F55751FC4A25500F252FD /* GPKGSSectionTitleCell.m in Sources */,
@@ -883,6 +898,7 @@
 				E3A651B0200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.m in Sources */,
 				040136751AF94FB200C92AFC /* main.m in Sources */,
 				E312A3381FAA416500C088FB /* GPKGSDownloadCoordinator.m in Sources */,
+				E3470CCC2021962D0098D783 /* GPKGSSegmentedControlCell.m in Sources */,
 				04E0EE081B6919D80095E53E /* GPKGSEditTileOverlayViewController.m in Sources */,
 				044648141B4B20950052913B /* GPKGSDatabaseCell.m in Sources */,
 			);

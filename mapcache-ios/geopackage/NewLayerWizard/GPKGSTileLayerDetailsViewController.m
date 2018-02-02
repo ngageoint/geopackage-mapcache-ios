@@ -10,6 +10,7 @@
 
 @interface GPKGSTileLayerDetailsViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
+@property (strong, nonatomic) GPKGSButtonCell *buttonCell;
 @end
 
 @implementation GPKGSTileLayerDetailsViewController
@@ -25,7 +26,7 @@
     self.tableView.estimatedRowHeight = 100;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UIAccessibilityTraitNone;
-    [self.tableView setBackgroundColor:[UIColor colorWithRed:(229/255.0) green:(230/255.0) blue:(230/255.0) alpha:1]];
+    [self.tableView setBackgroundColor:[UIColor whiteColor]];
 }
 
 
@@ -55,6 +56,22 @@
     urlCell.title.text = @"What is the URL to your tiles?";
     urlCell.field.placeholder = @"http://openstreetmap.org/{x}/{y}/{z}";
     [_cellArray addObject:urlCell];
+    
+    GPKGSDesctiptionCell *urlDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+    urlDescription.descriptionLabel.text = @"Tip: Enter the full URL to the tile server with any of the following template options {x}, {y}, {z}, {minLat}, {minLon}, {maxLat}, {maxLon}.";
+    [_cellArray addObject:urlDescription];
+    
+    GPKGSSegmentedControlCell *referenceSystemSelector = [self.tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
+    referenceSystemSelector.label.text = @"Spatial Reference System";
+    NSArray *referenceSystems = [[NSArray alloc] initWithObjects:@"EPSG 3857", @"EPSG 4326", nil];
+    [referenceSystemSelector setItems:referenceSystems];
+    [_cellArray addObject:referenceSystemSelector];
+    
+    _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
+    [_buttonCell.button setTitle:@"Next" forState:UIControlStateNormal];
+    _buttonCell.delegate = self;
+    [_cellArray addObject:_buttonCell];
+    
 }
 
 
@@ -62,11 +79,12 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSegmentedControlCell" bundle:nil] forCellReuseIdentifier:@"segmentedControl"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
 }
 
 
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-    NSLog(@"cell count %D, and indexPath row %D", [_cellArray count], indexPath.row);
     return [_cellArray objectAtIndex:indexPath.row];
 }
 
@@ -77,6 +95,14 @@
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_cellArray count];
+}
+
+
+#pragma mark - GPKGSSegmentedControlDelegate methods
+
+#pragma mark - GPKGSButtonCellDelegate methods
+- (void) performButtonAction:(NSString *)action {
+    
 }
 
 @end
