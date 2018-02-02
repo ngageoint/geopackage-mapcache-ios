@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GPKGSColorUtil.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
