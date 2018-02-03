@@ -15,7 +15,10 @@
 #import "GPKGSSegmentedControlCell.h"
 #import "GPKGSButtonCell.h"
 
+@protocol MCTileLayerDetailsDelegate
+- (void) tileLayerDetailsCompletionHandler;
+@end
 
 @interface GPKGSTileLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, GPKGSSegmentedControlCellDelegate, GPKGSButtonCellDelegate>
-
+@property (weak, nonatomic) id<MCTileLayerDetailsDelegate> delegate;
 @end

@@ -70,6 +70,7 @@
     _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_buttonCell.button setTitle:@"Next" forState:UIControlStateNormal];
     _buttonCell.delegate = self;
+    _buttonCell.action = @"BoundingBox";
     [_cellArray addObject:_buttonCell];
     
 }
@@ -102,7 +103,7 @@
 
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
-    
+    [_delegate tileLayerDetailsCompletionHandler];
 }
 
 @end

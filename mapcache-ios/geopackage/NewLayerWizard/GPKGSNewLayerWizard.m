@@ -65,8 +65,8 @@
     GPKGSFeatureLayerDetailsViewController *featureDetailsController = [[GPKGSFeatureLayerDetailsViewController alloc] init];
     featureDetailsController.database = _database;
     featureDetailsController.delegate = _featureLayerDelegate;
-    [_pages addObject:featureDetailsController];
     
+    [_pages addObject:featureDetailsController];
     [self setViewControllers:@[featureDetailsController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 
@@ -74,25 +74,21 @@
 - (void) newTileLayer {
     NSLog(@"Adding new tile layer");
     GPKGSTileLayerDetailsViewController *tileDetailsController = [[GPKGSTileLayerDetailsViewController alloc] init];
-    [_pages addObject: tileDetailsController];
+    tileDetailsController.delegate = self;
     
+    [_pages addObject: tileDetailsController];
     [self setViewControllers:@[tileDetailsController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 
 
-#pragma mark - GPKGSFeatureLayerCreationCompletionHandler delegate method
-- (void) featureLayerCreationComplete:(BOOL)layerCreated withError:(NSString *)error {
-    if (error != nil) {
-        // TODO handle that business, maybe with an alert controller
-        UIAlertController *confirmation = [UIAlertController alertControllerWithTitle:@"Error" message:@"There was a problem creating your layer." preferredStyle:UIAlertControllerStyleAlert];
-        [self presentViewController:confirmation animated:YES completion:nil];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [confirmation dismissViewControllerAnimated:YES completion:nil];
-        });
-    } else {
-        [self.navigationController popViewControllerAnimated:YES];
-        // TODO make sure that the view that spawned this updates to show the new layer
-    }
+#pragma mark - MCTileLayerDetailsDelegate methods
+- (void) tileLayerDetailsCompletionHandler { // todo build on this stub
+    NSLog(@"Building bounding box view");
+    MCBoundingBoxViewController *boundingBoxViewController = [[MCBoundingBoxViewController alloc] init];
+    // TODO get some delegate action going for the bounding box view controller as well
+    
+    [_pages addObject:boundingBoxViewController];
+    [self setViewControllers:@[boundingBoxViewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 
 

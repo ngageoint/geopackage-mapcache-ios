@@ -79,6 +79,8 @@
 		E33F557A1FC4FF1E00F252FD /* GPKGSLayerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F55791FC4FF1E00F252FD /* GPKGSLayerCell.m */; };
 		E33F557C1FCC954B00F252FD /* GPKGSButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F557B1FCC954B00F252FD /* GPKGSButtonCell.xib */; };
 		E33F557F1FCC956A00F252FD /* GPKGSButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */; };
+		E33FB474202506B500AF509B /* MCBoundingBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33FB473202506B500AF509B /* MCBoundingBoxView.xib */; };
+		E346590C2025315D001E6E81 /* MCBoundingBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E346590B2025315D001E6E81 /* MCBoundingBoxViewController.m */; };
 		E3470CC72020E67E0098D783 /* GPKGSColorUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CC62020E67D0098D783 /* GPKGSColorUtil.m */; };
 		E3470CC9202126140098D783 /* GPKGSSegmentedControlCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */; };
 		E3470CCC2021962D0098D783 /* GPKGSSegmentedControlCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CCB2021962D0098D783 /* GPKGSSegmentedControlCell.m */; };
@@ -254,6 +256,9 @@
 		E33F557B1FCC954B00F252FD /* GPKGSButtonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSButtonCell.xib; sourceTree = "<group>"; };
 		E33F557D1FCC956A00F252FD /* GPKGSButtonCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSButtonCell.h; sourceTree = "<group>"; };
 		E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSButtonCell.m; sourceTree = "<group>"; };
+		E33FB473202506B500AF509B /* MCBoundingBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCBoundingBoxView.xib; sourceTree = "<group>"; };
+		E346590A2025315D001E6E81 /* MCBoundingBoxViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCBoundingBoxViewController.h; sourceTree = "<group>"; };
+		E346590B2025315D001E6E81 /* MCBoundingBoxViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCBoundingBoxViewController.m; sourceTree = "<group>"; };
 		E3470CC52020E67D0098D783 /* GPKGSColorUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSColorUtil.h; sourceTree = "<group>"; };
 		E3470CC62020E67D0098D783 /* GPKGSColorUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSColorUtil.m; sourceTree = "<group>"; };
 		E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSSegmentedControlCell.xib; sourceTree = "<group>"; };
@@ -611,6 +616,8 @@
 				E3A674D21FFEE52500089211 /* GPKGSNewLayerWizard.m */,
 				E354EEE120091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.h */,
 				E354EEE220091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.m */,
+				E346590A2025315D001E6E81 /* MCBoundingBoxViewController.h */,
+				E346590B2025315D001E6E81 /* MCBoundingBoxViewController.m */,
 			);
 			path = NewLayerWizard;
 			sourceTree = "<group>";
@@ -619,6 +626,7 @@
 			isa = PBXGroup;
 			children = (
 				E3A651AA2003E1B700B8AB27 /* CreateLayerView.xib */,
+				E33FB473202506B500AF509B /* MCBoundingBoxView.xib */,
 			);
 			name = NewLayerWizard;
 			path = "mapcache-ios/views/NewLayerWizard";
@@ -740,6 +748,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E33FB474202506B500AF509B /* MCBoundingBoxView.xib in Resources */,
 				E3470CC9202126140098D783 /* GPKGSSegmentedControlCell.xib in Resources */,
 				E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */,
 				E354EEDB2006B9B000B062BE /* GPKGSDescriptionCell.xib in Resources */,
@@ -896,6 +905,7 @@
 				0446480B1B4AFC100052913B /* GPKGSDatabase.m in Sources */,
 				04E1D8D91B66D4CA002BD947 /* GPKGSEditContentsData.m in Sources */,
 				E3A651B0200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.m in Sources */,
+				E346590C2025315D001E6E81 /* MCBoundingBoxViewController.m in Sources */,
 				040136751AF94FB200C92AFC /* main.m in Sources */,
 				E312A3381FAA416500C088FB /* GPKGSDownloadCoordinator.m in Sources */,
 				E3470CCC2021962D0098D783 /* GPKGSSegmentedControlCell.m in Sources */,
