@@ -21,10 +21,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mts-Os-Q2e">
-                    <rect key="frame" x="16" y="336.5" width="163.5" height="40"/>
+                    <rect key="frame" x="16" y="336.5" width="163.5" height="50"/>
                     <color key="backgroundColor" red="0.2274509804" green="0.65098039220000004" blue="0.67450980390000004" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="40" id="NvF-ki-Aal"/>
+                        <constraint firstAttribute="height" constant="50" id="NvF-ki-Aal"/>
                     </constraints>
                     <state key="normal" title="Fearure Layer">
                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -34,10 +34,10 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qjY-lV-qLl">
-                    <rect key="frame" x="195.5" y="336" width="163.5" height="40"/>
+                    <rect key="frame" x="195.5" y="336" width="163.5" height="50"/>
                     <color key="backgroundColor" red="0.2274509804" green="0.65098039220000004" blue="0.67450980390000004" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="40" id="rGn-wA-Uau"/>
+                        <constraint firstAttribute="height" constant="50" id="rGn-wA-Uau"/>
                     </constraints>
                     <state key="normal" title="Tile Layer">
                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
