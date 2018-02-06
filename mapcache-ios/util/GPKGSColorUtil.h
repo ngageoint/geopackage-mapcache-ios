@@ -13,13 +13,16 @@
 + (UIColor *) getPrimary;
 + (UIColor *) getPrimaryLight;
 
++ (UIColor *) getPolygonFillColor;
++ (UIColor *) getPolygonStrokeColor;
+
+
 + (UIColor *) getAccent;
 + (UIColor *) getAccentLight;
 
-+ (UIColor *) getBackgroundColor;
-
 + (UIColor *) getMediumGrey;
 
+//+ (UIColor *) getBackgroundColor;
 //- (UIColor *) getDanger;
 //- (UIColor *) getWarning;
 //- (UIColor *) getSuccess;
