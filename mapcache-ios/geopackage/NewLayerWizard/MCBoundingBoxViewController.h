@@ -8,8 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "GPKGSProperties.h"
+#import "GPKGSConstants.h"
+#import "GPKGSEditTypes.h"
+#import "GPKGSMapPointData.h"
+#import "GPKGMapShapePoints.h"
+#import "GPKGMapPoint.h"
+#import "GPKGMapShapeConverter.h"
+#import "GPKGSColorUtil.h";
 
-@interface MCBoundingBoxViewController : UIViewController
+@interface MCBoundingBoxViewController : UIViewController <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *boundingBoxButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *confirmButton;

@@ -11,6 +11,8 @@
 @interface GPKGSTileLayerDetailsViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
 @property (strong, nonatomic) GPKGSButtonCell *buttonCell;
+@property (strong, nonatomic) GPKGSFieldWithTitleCell *layerNameCell;
+@property (strong, nonatomic) GPKGSFieldWithTitleCell *urlCell;
 @end
 
 @implementation GPKGSTileLayerDetailsViewController
@@ -43,19 +45,22 @@
     titleCell.sectionTitleLabel.text = @"New Tile Layer";
     [_cellArray addObject:titleCell];
     
-    GPKGSFieldWithTitleCell *layerNameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    layerNameCell.title.text = @"Name your new layer";
-    [_cellArray addObject:layerNameCell];
+    _layerNameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _layerNameCell.title.text = @"Name your new layer";
+    [_layerNameCell.field setReturnKeyType:UIReturnKeyDone]; // TODO look into UIReturnKeyNext
+    _layerNameCell.field.delegate = self;
+    [_cellArray addObject:_layerNameCell];
     
     
     GPKGSDesctiptionCell *tilesDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
     tilesDescription.descriptionLabel.text = @"Tile layers consist of a pyramid of images within a geographic extent and zoom levels.";
     [_cellArray addObject:tilesDescription];
     
-    GPKGSFieldWithTitleCell *urlCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    urlCell.title.text = @"What is the URL to your tiles?";
-    urlCell.field.placeholder = @"http://openstreetmap.org/{x}/{y}/{z}";
-    [_cellArray addObject:urlCell];
+    _urlCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _urlCell.title.text = @"What is the URL to your tiles?";
+    _urlCell.field.placeholder = @"http://openstreetmap.org/{x}/{y}/{z}";
+    [_urlCell.field setReturnKeyType:UIReturnKeyDone];
+    [_cellArray addObject:_urlCell];
     
     GPKGSDesctiptionCell *urlDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
     urlDescription.descriptionLabel.text = @"Tip: Enter the full URL to the tile server with any of the following template options {x}, {y}, {z}, {minLat}, {minLon}, {maxLat}, {maxLon}.";
@@ -98,6 +103,24 @@
     return [_cellArray count];
 }
 
+
+#pragma mark- UITextFieldDelegate methods
+- (void) textFieldDidEndEditing:(UITextField *)textField {
+    if ([_layerNameCell.field.text isEqualToString:@""] && [_urlCell.field.text isEqualToString:@""]) {
+        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccentLight];
+        _buttonCell.button.userInteractionEnabled = NO;
+    } else {
+        _buttonCell.button.userInteractionEnabled = YES;
+        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccent];
+    }
+    
+    [textField resignFirstResponder];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
 
 #pragma mark - GPKGSSegmentedControlDelegate methods
 
