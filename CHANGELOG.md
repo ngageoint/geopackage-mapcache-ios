@@ -8,6 +8,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 * geopackage-ios version updated to 2.0.1
 * Expand the contents bounding box when adding or editing features
+* Enable default polygon fill color
 * Keyboard constraint bug fix
 
 ## [1.15](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.15) (11-21-2017)
