@@ -579,6 +579,30 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }
 }
 
+-(void) expandBoundsWithGeoPackage: (GPKGGeoPackage *) geoPackage andFeatureDao: (GPKGFeatureDao *) featureDao andGeometry: (WKBGeometry *) geometry{
+    if(geometry !=  nil){
+        @try {
+            GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage getGeometryColumnsDao];
+            GPKGContents * contents = [geometryColumnsDao getContents:featureDao.geometryColumns];
+            GPKGBoundingBox *boundingBox = [contents getBoundingBox];
+            if(boundingBox != nil){
+                
+                WKBGeometryEnvelope *envelope = [WKBGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
+                GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithGeometryEnvelope:envelope];
+                GPKGBoundingBox *unionBoundingBox = [GPKGTileBoundingBoxUtils unionWithBoundingBox:boundingBox andBoundingBox:geometryBoundingBox];
+                
+                [contents setBoundingBox:unionBoundingBox];
+                GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
+                [contentsDao update:contents];
+            }
+            
+        }
+        @catch (NSException *e) {
+            NSLog(@"Failed to update contents bounding box. GeoPackage: %@, Table: %@, Error:%@", geoPackage.name, featureDao.tableName, [e description]);
+        }
+    }
+}
+
 -(void) updateLastChangeWithGeoPackage: (GPKGGeoPackage *) geoPackage andFeatureDao: (GPKGFeatureDao *) featureDao{
     @try {
         GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage getGeometryColumnsDao];
@@ -1247,6 +1271,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                         [pointGeomData setGeometry:point];
                         [newPoint setGeometry:pointGeomData];
                         [featureDao insert:newPoint];
+                        [self expandBoundsWithGeoPackage:geoPackage andFeatureDao:featureDao andGeometry:point];
                         [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
                         if(indexedTypes.count > 0){
                             [indexer indexWithFeatureRow:newPoint andFeatureIndexTypes:indexedTypes];
@@ -1264,6 +1289,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     [lineStringGeomData setGeometry:lineString];
                     [newLineString setGeometry:lineStringGeomData];
                     [featureDao insert:newLineString];
+                    [self expandBoundsWithGeoPackage:geoPackage andFeatureDao:featureDao andGeometry:lineString];
                     [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
                     if(indexedTypes.count > 0){
                         [indexer indexWithFeatureRow:newLineString andFeatureIndexTypes:indexedTypes];
@@ -1281,6 +1307,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     [polygonGeomData setGeometry:polygon];
                     [newPolygon setGeometry:polygonGeomData];
                     [featureDao insert:newPolygon];
+                    [self expandBoundsWithGeoPackage:geoPackage andFeatureDao:featureDao andGeometry:polygon];
                     [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
                     if(indexedTypes.count > 0){
                         [indexer indexWithFeatureRow:newPolygon andFeatureIndexTypes:indexedTypes];
@@ -1304,6 +1331,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                         }
                         [featureRow setGeometry:geomData];
                         [featureDao update:featureRow];
+                        [self expandBoundsWithGeoPackage:geoPackage andFeatureDao:featureDao andGeometry:geometry];
                         [self updateLastChangeWithGeoPackage:geoPackage andFeatureDao:featureDao];
                         if(indexedTypes.count > 0){
                             [indexer indexWithFeatureRow:featureRow andFeatureIndexTypes:indexedTypes];

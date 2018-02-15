@@ -272,7 +272,7 @@
 		<integer>1</integer>
 	</dict>
 	<key>default_polygon_fill</key>
-	<false/>
+	<true/>
 	<key>default_polygon_fill_color</key>
 	<dict>
 		<key>white</key>
