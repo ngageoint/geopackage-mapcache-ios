@@ -15,7 +15,13 @@
 #import "GPKGMapShapePoints.h"
 #import "GPKGMapPoint.h"
 #import "GPKGMapShapeConverter.h"
-#import "GPKGSColorUtil.h";
+#import "GPKGSColorUtil.h"
+#import "GPKGBoundingBox.h"
+
+@protocol MCTileLayerBoundingBoxDelegate
+- (void) boundingBoxCompletionHandler;
+@end
+
 
 @interface MCBoundingBoxViewController : UIViewController <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *boundingBoxButton;
@@ -23,4 +29,5 @@
 @property (weak, nonatomic) IBOutlet UIButton *confirmButton;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+@property (weak, nonatomic) id<MCTileLayerBoundingBoxDelegate> delegate;
 @end

@@ -19,7 +19,7 @@
 
 +(void) loadTilesWithCallback: (NSObject<GPKGSLoadTilesProtocol> *) callback
                   andDatabase: (NSString *) database
-                         andTable: (NSString *) tableName
+                     andTable: (NSString *) tableName
                        andUrl: (NSString *) tileUrl
                    andMinZoom: (int) minZoom
                    andMaxZoom: (int) maxZoom
@@ -33,9 +33,9 @@
                      andLabel: (NSString *) label;
 
 +(void) loadTilesWithCallback: (NSObject<GPKGSLoadTilesProtocol> *) callback
-                  andGeoPackage: (GPKGGeoPackage *) geoPackage
+                andGeoPackage: (GPKGGeoPackage *) geoPackage
                      andTable: (NSString *) tableName
-                       andFeatureTiles: (GPKGFeatureTiles *) featureTiles
+              andFeatureTiles: (GPKGFeatureTiles *) featureTiles
                    andMinZoom: (int) minZoom
                    andMaxZoom: (int) maxZoom
             andCompressFormat: (enum GPKGCompressFormat) compressFormat

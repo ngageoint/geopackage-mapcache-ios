@@ -82,14 +82,19 @@
 
 
 #pragma mark - MCTileLayerDetailsDelegate methods
-- (void) tileLayerDetailsCompletionHandler { // todo build on this stub
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(NSString *)referenceCode {
     NSLog(@"Building bounding box view");
     MCBoundingBoxViewController *boundingBoxViewController = [[MCBoundingBoxViewController alloc] init];
-    // TODO get some delegate action going for the bounding box view controller as well
+    boundingBoxViewController.delegate = self;
     
     [_pages addObject:boundingBoxViewController];
     [self setViewControllers:@[boundingBoxViewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 
+
+#pragma mark- MCBoundingBoxDelegate methods
+- (void) boundingBoxCompletionHandler {
+    // TODO handle going to the next view to finish creating the tile layer
+}
 
 @end

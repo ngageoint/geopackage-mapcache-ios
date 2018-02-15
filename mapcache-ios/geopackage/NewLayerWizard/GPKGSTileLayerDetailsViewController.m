@@ -126,7 +126,7 @@
 
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
-    [_delegate tileLayerDetailsCompletionHandler];
+    [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text URL:_urlCell.field.text andReferenceSystemCode:@"EPSG 3857"]; // TODO pass in the reference code from the segmented control
 }
 
 @end

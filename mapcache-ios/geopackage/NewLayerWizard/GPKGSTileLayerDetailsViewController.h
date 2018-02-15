@@ -14,10 +14,10 @@
 #import "GPKGSButtonCell.h"
 #import "GPKGSSegmentedControlCell.h"
 #import "GPKGSButtonCell.h"
-#import "GPKGSColorUtil.h";
+#import "GPKGSColorUtil.h"
 
 @protocol MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandler;
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(NSString *)referenceCode;
 @end
 
 @interface GPKGSTileLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GPKGSSegmentedControlCellDelegate, GPKGSButtonCellDelegate>

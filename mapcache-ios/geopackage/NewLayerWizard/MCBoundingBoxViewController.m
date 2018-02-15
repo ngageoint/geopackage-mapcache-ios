@@ -52,16 +52,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 
 - (IBAction)boundingBoxButtonTapped:(id)sender {
     _boundingBoxMode = YES;
@@ -81,10 +71,38 @@
     [self animateButtonShowHide:_boundingBoxButton :NO];
     [self animateButtonShowHide:_cancelButton :YES];
     [self animateButtonShowHide:_confirmButton :YES];
+    
+    [_mapView removeOverlay:_boundingBox];
+    _boundingBox = nil;
 }
 
 
 - (IBAction)confirmButtonTapped:(id)sender {
+    
+    NSDecimalNumber *minLat;
+    NSDecimalNumber *maxLat;
+    NSDecimalNumber *minLon;
+    NSDecimalNumber *maxLon;
+    
+    
+    if (_boundingBoxStartCorner.latitude < _boundingBoxEndCorner.latitude) {
+        minLat = [NSDecimalNumber numberWithDouble:_boundingBoxStartCorner.latitude];
+        maxLat = [NSDecimalNumber numberWithDouble:_boundingBoxEndCorner.latitude];
+    } else {
+        minLat = [NSDecimalNumber numberWithDouble:_boundingBoxEndCorner.latitude];
+        maxLat = [NSDecimalNumber numberWithDouble:_boundingBoxStartCorner.latitude];
+    }
+    
+    if (_boundingBoxStartCorner.longitude < _boundingBoxEndCorner.longitude) {
+        minLon = [NSDecimalNumber numberWithDouble:_boundingBoxStartCorner.longitude];
+        maxLon = [NSDecimalNumber numberWithDouble:_boundingBoxEndCorner.longitude];
+    } else {
+        minLon = [NSDecimalNumber numberWithDouble:_boundingBoxEndCorner.longitude];
+        maxLon = [NSDecimalNumber numberWithDouble:_boundingBoxStartCorner.longitude];
+    }
+    
+    GPKGBoundingBox *boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitude:minLon  andMinLatitude:minLat andMaxLongitude:maxLon andMaxLatitude:maxLat];
+    [_delegate boundingBoxCompletionHandler];
 }
 
 
@@ -176,8 +194,6 @@
                 }
             }else{
                 GPKGMapPoint * mapPoint = [self addEditPoint:point];
-                GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
-                
                 [self setTitleWithTitle:[GPKGSEditTypes pointName:self.editFeatureType] andMapPoint:mapPoint];
                 [self updateEditState:true]; // TODO figure out if I need all of this method
             }
@@ -187,9 +203,7 @@
 
 
 -(void) updateEditState: (BOOL) updateAcceptClear{
-    
     BOOL accept = false;
-    MKPolygon * editHolePolygon = nil;
     
     switch(self.editFeatureType){
             
@@ -213,31 +227,8 @@
             }
             
             break;
-            
-        case GPKGS_ET_EDIT_FEATURE:
-            accept = true;
-            
-            if(self.editFeatureShape != nil){
-                [self.editFeatureShape updateWithMapView:self.mapView];
-                accept = [self.editFeatureShape isValid];
-            }
-            break;
-            
         default:
             break;
-    }
-    
-    if(updateAcceptClear){
-        if([self.editPoints count] > 0 || self.editFeatureType == GPKGS_ET_EDIT_FEATURE){
-            //[self.editFeaturesClearButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_FEATURES_CLEAR_ACTIVE_IMAGE] forState:UIControlStateNormal];
-        } else{
-            //[self.editFeaturesClearButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_FEATURES_CLEAR_IMAGE] forState:UIControlStateNormal];
-        }
-        if(accept){
-            //[self.editFeaturesConfirmButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_FEATURES_CONFIRM_ACTIVE_IMAGE] forState:UIControlStateNormal];
-        }else{
-            //[self.editFeaturesConfirmButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_FEATURES_CONFIRM_IMAGE] forState:UIControlStateNormal];
-        }
     }
 }
 

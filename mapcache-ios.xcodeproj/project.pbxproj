@@ -81,6 +81,7 @@
 		E33F557F1FCC956A00F252FD /* GPKGSButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */; };
 		E33FB474202506B500AF509B /* MCBoundingBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33FB473202506B500AF509B /* MCBoundingBoxView.xib */; };
 		E346590C2025315D001E6E81 /* MCBoundingBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E346590B2025315D001E6E81 /* MCBoundingBoxViewController.m */; };
+		E346590F202BB20B001E6E81 /* MCZoomAndQualityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E346590E202BB20B001E6E81 /* MCZoomAndQualityViewController.m */; };
 		E3470CC72020E67E0098D783 /* GPKGSColorUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CC62020E67D0098D783 /* GPKGSColorUtil.m */; };
 		E3470CC9202126140098D783 /* GPKGSSegmentedControlCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */; };
 		E3470CCC2021962D0098D783 /* GPKGSSegmentedControlCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CCB2021962D0098D783 /* GPKGSSegmentedControlCell.m */; };
@@ -259,6 +260,8 @@
 		E33FB473202506B500AF509B /* MCBoundingBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCBoundingBoxView.xib; sourceTree = "<group>"; };
 		E346590A2025315D001E6E81 /* MCBoundingBoxViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCBoundingBoxViewController.h; sourceTree = "<group>"; };
 		E346590B2025315D001E6E81 /* MCBoundingBoxViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCBoundingBoxViewController.m; sourceTree = "<group>"; };
+		E346590D202BB20B001E6E81 /* MCZoomAndQualityViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCZoomAndQualityViewController.h; sourceTree = "<group>"; };
+		E346590E202BB20B001E6E81 /* MCZoomAndQualityViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCZoomAndQualityViewController.m; sourceTree = "<group>"; };
 		E3470CC52020E67D0098D783 /* GPKGSColorUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSColorUtil.h; sourceTree = "<group>"; };
 		E3470CC62020E67D0098D783 /* GPKGSColorUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSColorUtil.m; sourceTree = "<group>"; };
 		E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSSegmentedControlCell.xib; sourceTree = "<group>"; };
@@ -618,6 +621,8 @@
 				E354EEE220091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.m */,
 				E346590A2025315D001E6E81 /* MCBoundingBoxViewController.h */,
 				E346590B2025315D001E6E81 /* MCBoundingBoxViewController.m */,
+				E346590D202BB20B001E6E81 /* MCZoomAndQualityViewController.h */,
+				E346590E202BB20B001E6E81 /* MCZoomAndQualityViewController.m */,
 			);
 			path = NewLayerWizard;
 			sourceTree = "<group>";
@@ -848,6 +853,7 @@
 				045C94941B56DF620005CCD0 /* GPKGSIndexerTask.m in Sources */,
 				047733C91B4C496600E523BD /* GPKGSTableOptionsButton.m in Sources */,
 				04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */,
+				E346590F202BB20B001E6E81 /* MCZoomAndQualityViewController.m in Sources */,
 				043A459E1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.m in Sources */,
 				E3470CC72020E67E0098D783 /* GPKGSColorUtil.m in Sources */,
 				E3A4920B1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m in Sources */,

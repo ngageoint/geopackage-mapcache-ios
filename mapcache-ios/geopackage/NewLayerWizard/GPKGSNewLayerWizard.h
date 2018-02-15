@@ -15,8 +15,9 @@
 #import "GPKGSTileLayerDetailsViewController.h"
 #import "GPKGSFeatureLayerDetailsViewController.h"
 #import "MCBoundingBoxViewController.h"
+#import "MCZoomAndQualityViewController.h"
 
-@interface GPKGSNewLayerWizard : UIPageViewController <UIPageViewControllerDelegate, UIPageViewControllerDataSource, GPKGSCreateLayerDelegate, MCTileLayerDetailsDelegate>
+@interface GPKGSNewLayerWizard : UIPageViewController <UIPageViewControllerDelegate, UIPageViewControllerDataSource, GPKGSCreateLayerDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate>
 @property (strong, nonatomic) GPKGSDatabase *database;
 @property (weak, nonatomic) id<GPKGSFeatureLayerCreationDelegate> featureLayerDelegate;
 @end
