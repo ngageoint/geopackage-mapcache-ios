@@ -13,12 +13,17 @@
 @property (strong, nonatomic) GPKGSButtonCell *buttonCell;
 @property (strong, nonatomic) GPKGSFieldWithTitleCell *layerNameCell;
 @property (strong, nonatomic) GPKGSFieldWithTitleCell *urlCell;
+@property (strong, nonatomic) GPKGSSegmentedControlCell *referenceSystemSelector;
+@property (strong, nonatomic) NSDictionary *referenceSystems;
 @end
 
 @implementation GPKGSTileLayerDetailsViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _referenceSystems = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt: 4326], @"EPSG 4326", [NSNumber numberWithInt: 3857], @"EPSG 3857", nil];
+    
     [self registerCellTypes];
     [self initCellArray];
     
@@ -59,6 +64,7 @@
     _urlCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     _urlCell.title.text = @"What is the URL to your tiles?";
     _urlCell.field.placeholder = @"http://openstreetmap.org/{x}/{y}/{z}";
+    _urlCell.field.text = @"http://osm.geointservices.io/osm_tiles/{z}/{x}/{y}.png";
     [_urlCell.field setReturnKeyType:UIReturnKeyDone];
     [_cellArray addObject:_urlCell];
     
@@ -66,11 +72,10 @@
     urlDescription.descriptionLabel.text = @"Tip: Enter the full URL to the tile server with any of the following template options {x}, {y}, {z}, {minLat}, {minLon}, {maxLat}, {maxLon}.";
     [_cellArray addObject:urlDescription];
     
-    GPKGSSegmentedControlCell *referenceSystemSelector = [self.tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
-    referenceSystemSelector.label.text = @"Spatial Reference System";
-    NSArray *referenceSystems = [[NSArray alloc] initWithObjects:@"EPSG 3857", @"EPSG 4326", nil];
-    [referenceSystemSelector setItems:referenceSystems];
-    [_cellArray addObject:referenceSystemSelector];
+    _referenceSystemSelector = [self.tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
+    _referenceSystemSelector.label.text = @"Spatial Reference System";
+    [_referenceSystemSelector setItems:_referenceSystems.allKeys];
+    [_cellArray addObject:_referenceSystemSelector];
     
     _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_buttonCell.button setTitle:@"Next" forState:UIControlStateNormal];
@@ -117,7 +122,7 @@
     [textField resignFirstResponder];
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+- (BOOL) textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
 }
@@ -126,7 +131,10 @@
 
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
-    [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text URL:_urlCell.field.text andReferenceSystemCode:@"EPSG 3857"]; // TODO pass in the reference code from the segmented control
+    NSString *selectedSegmentTitle =  [_referenceSystemSelector.segmentedControl titleForSegmentAtIndex:[_referenceSystemSelector.segmentedControl selectedSegmentIndex]];
+    int referenceSystem = [_referenceSystems[selectedSegmentTitle] intValue];
+    
+    [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text URL:_urlCell.field.text andReferenceSystemCode:referenceSystem];
 }
 
 @end

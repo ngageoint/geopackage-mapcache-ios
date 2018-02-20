@@ -10,6 +10,8 @@
 
 @interface MCZoomAndQualityViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
+@property (strong, nonatomic) GPKGSFieldWithTitleCell *minZoomCell;
+@property (strong, nonatomic) GPKGSFieldWithTitleCell *maxZoomCell;
 @property (strong, nonatomic) GPKGSSegmentedControlCell *tileFormatCell;
 @property (strong, nonatomic) GPKGSButtonCell *buttonCell;
 @end
@@ -18,6 +20,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self registerCellTypes];
+    [self initCellArray];
+    
+    self.tableView.estimatedRowHeight = 100;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.separatorStyle = UIAccessibilityTraitNone;
+    [self.tableView setBackgroundColor:[UIColor whiteColor]];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -26,10 +35,52 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+- (void) initCellArray {
+    _cellArray = [[NSMutableArray alloc] init];
+    
+    GPKGSSectionTitleCell *titleCell = [self.tableView dequeueReusableCellWithIdentifier:@"title"];
+    titleCell.sectionTitleLabel.text = @"Tile Storage Options";
+    [_cellArray addObject:titleCell];
+    
+    _minZoomCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _minZoomCell.title.text = @"Minimum Zoom";
+    _minZoomCell.field.keyboardType = UIKeyboardTypeNumberPad;
+    [_minZoomCell.field setReturnKeyType:UIReturnKeyDone];
+    [_cellArray addObject:_minZoomCell];
+    
+    _maxZoomCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _maxZoomCell.title.text = @"Maximum Zoom";
+    _maxZoomCell.field.keyboardType = UIKeyboardTypeNumberPad;
+    [_maxZoomCell.field setReturnKeyType:UIReturnKeyDone];
+    [_cellArray addObject:_maxZoomCell];
+    
+    _tileFormatCell = [self.tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
+    _tileFormatCell.label.text = @"Tile Format";
+    NSArray *formats = [[NSArray alloc] initWithObjects: @"GeoPackage", @"Standard", nil];
+    [_tileFormatCell setItems:formats];
+    [_cellArray addObject:_tileFormatCell];
+    
+    _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
+    [_buttonCell.button setTitle:@"Create Tile Layer" forState:UIControlStateNormal];
+    _buttonCell.delegate = self;
+    [_cellArray addObject:_buttonCell];
+}
+
+
+- (void) registerCellTypes {
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSegmentedControlCell" bundle:nil] forCellReuseIdentifier:@"segmentedControl"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
+}
+
 
 #pragma mark - Table view data source
 
@@ -38,61 +89,34 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+    return _cellArray.count;
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
-    return cell;
+    return [_cellArray objectAtIndex:indexPath.row];
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
+
+#pragma mark - UITextFieldDelegate methods
+- (void) textFieldDidEndEditing:(UITextField *)textField {
+    // TODO check some values and enable or disable the button accordingly
+}
+
+
+- (BOOL) textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
     return YES;
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+#pragma mark -  GPKGSButtonCellDelegate method
+- (void) performButtonAction:(NSString *)action {
+    NSLog(@"Button tapped in zoom and format screen");
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    NSNumber *minZoom = [formatter numberFromString:_minZoomCell.field.text];
+    NSNumber *maxZoom = [formatter numberFromString:_maxZoomCell.field.text];
+    
+    [_delegate zoomAndQualityCompletionHandlerWith:minZoom andMaxZoom:maxZoom];
 }
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

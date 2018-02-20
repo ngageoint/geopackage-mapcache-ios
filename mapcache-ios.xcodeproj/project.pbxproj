@@ -611,12 +611,12 @@
 		E3A6519F2003DA2D00B8AB27 /* NewLayerWizard */ = {
 			isa = PBXGroup;
 			children = (
+				E3A674D11FFEE52500089211 /* GPKGSNewLayerWizard.h */,
+				E3A674D21FFEE52500089211 /* GPKGSNewLayerWizard.m */,
 				E3A651A62003DDC800B8AB27 /* GPKGSCreateLayerViewController.h */,
 				E3A651A72003DDC800B8AB27 /* GPKGSCreateLayerViewController.m */,
 				E3A651AE200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.h */,
 				E3A651AF200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.m */,
-				E3A674D11FFEE52500089211 /* GPKGSNewLayerWizard.h */,
-				E3A674D21FFEE52500089211 /* GPKGSNewLayerWizard.m */,
 				E354EEE120091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.h */,
 				E354EEE220091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.m */,
 				E346590A2025315D001E6E81 /* MCBoundingBoxViewController.h */,

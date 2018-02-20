@@ -11,6 +11,7 @@
 @interface GPKGSNewLayerWizard()
 @property (strong, nonatomic) NSMutableArray *pages;
 @property (strong, nonatomic) GPKGSCreateLayerViewController *createLayerViewController;
+@property (nonatomic, strong) GPKGSCreateTilesData * tileData;
 @end
 
 @implementation GPKGSNewLayerWizard
@@ -73,6 +74,8 @@
 
 - (void) newTileLayer {
     NSLog(@"Adding new tile layer");
+    _tileData = [[GPKGSCreateTilesData alloc] init];
+    
     GPKGSTileLayerDetailsViewController *tileDetailsController = [[GPKGSTileLayerDetailsViewController alloc] init];
     tileDetailsController.delegate = self;
     
@@ -82,8 +85,12 @@
 
 
 #pragma mark - MCTileLayerDetailsDelegate methods
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(NSString *)referenceCode {
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode {
     NSLog(@"Building bounding box view");
+    _tileData.name = name;
+    _tileData.loadTiles.url = url;
+    _tileData.loadTiles.epsg = referenceCode;
+    
     MCBoundingBoxViewController *boundingBoxViewController = [[MCBoundingBoxViewController alloc] init];
     boundingBoxViewController.delegate = self;
     
@@ -93,8 +100,25 @@
 
 
 #pragma mark- MCBoundingBoxDelegate methods
-- (void) boundingBoxCompletionHandler {
-    // TODO handle going to the next view to finish creating the tile layer
+- (void) boundingBoxCompletionHandler:(GPKGBoundingBox *)boundingBox  {
+    _tileData.loadTiles.generateTiles.boundingBox = boundingBox;
+    
+    MCZoomAndQualityViewController *zoomAndQualityViewController = [[MCZoomAndQualityViewController alloc] init];
+    zoomAndQualityViewController.delegate = self;
+    
+    [_pages addObject:zoomAndQualityViewController];
+    [self setViewControllers:@[zoomAndQualityViewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+}
+
+
+#pragma mark- MCZoomAndQualityDelegate methods
+- (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
+    NSLog(@"In wizard, going to call completion handler");
+    
+    _tileData.loadTiles.generateTiles.minZoom = minZoom;
+    _tileData.loadTiles.generateTiles.maxZoom = maxZoom;
+    
+    [_layerCreationDelegate createTileLayer:_tileData];
 }
 
 @end
