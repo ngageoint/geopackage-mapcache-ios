@@ -52,6 +52,7 @@
     
     _layerWizard = [[GPKGSNewLayerWizard alloc] init];
     _layerWizard.database = _database;
+    _layerWizard.layerCreationDelegate = self;
     _layerWizard.featureLayerDelegate = self;
     [_navigationController pushViewController:_layerWizard animated:YES];
 }
@@ -95,6 +96,47 @@
     }
     
     // TODO handle dismissing the view controllers or displaying an error message
+}
+
+
+#pragma mark - MCNewLayerWizardDelegate methods
+- (void) createTileLayer:(GPKGSCreateTilesData *) tileData {
+    NSLog(@"Coordinator attempting to create tiles");
+    
+    [GPKGSLoadTilesTask loadTilesWithCallback:self
+                                  andDatabase:_database.name
+                                     andTable:tileData.name
+                                       andUrl:tileData.loadTiles.url
+                                   andMinZoom:[tileData.loadTiles.generateTiles.minZoom intValue]
+                                   andMaxZoom:[tileData.loadTiles.generateTiles.maxZoom intValue]
+                            andCompressFormat:GPKG_CF_NONE // TODO: let user set this
+                           andCompressQuality:[[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT] intValue]
+                             andCompressScale:100 // TODO: let user set this
+                            andStandardFormat:tileData.loadTiles.generateTiles.standardWebMercatorFormat
+                               andBoundingBox:tileData.loadTiles.generateTiles.boundingBox
+                                 andAuthority:PROJ_AUTHORITY_EPSG
+                                      andCode:[NSString stringWithFormat:@"%d",tileData.loadTiles.epsg]
+                                     andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
+
+}
+
+
+#pragma mark - GPKGSLoadTilesProtocol methods
+-(void) onLoadTilesCanceled: (NSString *) result withCount: (int) count {
+    //TODO: fill in
+    NSLog(@"Loading tiles canceled");
+}
+
+-(void) onLoadTilesFailure: (NSString *) result withCount: (int) count {
+    //TODO: fill in
+    NSLog(@"Loading tiles failed");
+}
+
+-(void) onLoadTilesCompleted: (int) count {
+    //TODO: fill in
+    NSLog(@"Loading tiles completed");
+    [_layerWizard dismissViewControllerAnimated:YES completion:nil];
+    [_geoPackageViewController update];
 }
 
 

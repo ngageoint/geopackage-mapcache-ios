@@ -22,6 +22,7 @@
                         <segment title="First"/>
                         <segment title="Second"/>
                     </segments>
+                    <color key="tintColor" red="0.0" green="0.31372549020000001" blue="0.49019607840000001" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
                         <action selector="selectionChanged:" destination="iN0-l3-epB" eventType="valueChanged" id="zlJ-Yc-Nrc"/>
                     </connections>

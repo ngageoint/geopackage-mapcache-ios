@@ -19,7 +19,7 @@
 #import "GPKGBoundingBox.h"
 
 @protocol MCTileLayerBoundingBoxDelegate
-- (void) boundingBoxCompletionHandler;
+- (void) boundingBoxCompletionHandler:(GPKGBoundingBox *) boundingBox;
 @end
 
 

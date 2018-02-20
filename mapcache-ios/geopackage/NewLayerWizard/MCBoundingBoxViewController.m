@@ -86,23 +86,23 @@
     
     
     if (_boundingBoxStartCorner.latitude < _boundingBoxEndCorner.latitude) {
-        minLat = [NSDecimalNumber numberWithDouble:_boundingBoxStartCorner.latitude];
-        maxLat = [NSDecimalNumber numberWithDouble:_boundingBoxEndCorner.latitude];
+        minLat = [[NSDecimalNumber alloc] initWithDouble: _boundingBoxStartCorner.latitude];
+        maxLat = [[NSDecimalNumber alloc] initWithDouble: _boundingBoxEndCorner.latitude];
     } else {
-        minLat = [NSDecimalNumber numberWithDouble:_boundingBoxEndCorner.latitude];
-        maxLat = [NSDecimalNumber numberWithDouble:_boundingBoxStartCorner.latitude];
+        minLat = [[NSDecimalNumber alloc] initWithDouble: _boundingBoxEndCorner.latitude];
+        maxLat = [[NSDecimalNumber alloc] initWithDouble: _boundingBoxStartCorner.latitude];
     }
     
     if (_boundingBoxStartCorner.longitude < _boundingBoxEndCorner.longitude) {
-        minLon = [NSDecimalNumber numberWithDouble:_boundingBoxStartCorner.longitude];
-        maxLon = [NSDecimalNumber numberWithDouble:_boundingBoxEndCorner.longitude];
+        minLon = [[NSDecimalNumber alloc] initWithDouble: _boundingBoxStartCorner.longitude];
+        maxLon = [[NSDecimalNumber alloc] initWithDouble:_boundingBoxEndCorner.longitude];
     } else {
-        minLon = [NSDecimalNumber numberWithDouble:_boundingBoxEndCorner.longitude];
-        maxLon = [NSDecimalNumber numberWithDouble:_boundingBoxStartCorner.longitude];
+        minLon = [[NSDecimalNumber alloc] initWithDouble:_boundingBoxEndCorner.longitude];
+        maxLon = [[NSDecimalNumber alloc] initWithDouble:_boundingBoxStartCorner.longitude];
     }
     
     GPKGBoundingBox *boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitude:minLon  andMinLatitude:minLat andMaxLongitude:maxLon andMaxLatitude:maxLat];
-    [_delegate boundingBoxCompletionHandler];
+    [_delegate boundingBoxCompletionHandler: boundingBox];
 }
 
 

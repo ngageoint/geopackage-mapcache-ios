@@ -11,13 +11,21 @@
 #import "GPKGSFeatureTable.h"
 #import "GPKGSTileTable.h"
 #import "GPKGSDatabase.h"
+#import "GPKGSCreateTilesData.h"
+#import "GPKGSLoadTilesData.h"
+#import "GPKGSGenerateTilesData.h"
 #import "GPKGSCreateLayerViewController.h"
 #import "GPKGSTileLayerDetailsViewController.h"
 #import "GPKGSFeatureLayerDetailsViewController.h"
 #import "MCBoundingBoxViewController.h"
 #import "MCZoomAndQualityViewController.h"
 
-@interface GPKGSNewLayerWizard : UIPageViewController <UIPageViewControllerDelegate, UIPageViewControllerDataSource, GPKGSCreateLayerDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate>
+@protocol MCNewLayerWizardDelegate
+- (void) createTileLayer:(GPKGSCreateTilesData *) tileData;
+@end
+
+@interface GPKGSNewLayerWizard : UIPageViewController <UIPageViewControllerDelegate, UIPageViewControllerDataSource, GPKGSCreateLayerDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate, MCZoomAndQualityDelegate>
 @property (strong, nonatomic) GPKGSDatabase *database;
+@property (weak, nonatomic) id<MCNewLayerWizardDelegate> layerCreationDelegate;
 @property (weak, nonatomic) id<GPKGSFeatureLayerCreationDelegate> featureLayerDelegate;
 @end
