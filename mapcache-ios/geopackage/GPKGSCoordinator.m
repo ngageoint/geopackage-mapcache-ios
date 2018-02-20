@@ -135,7 +135,7 @@
 -(void) onLoadTilesCompleted: (int) count {
     //TODO: fill in
     NSLog(@"Loading tiles completed");
-    [_layerWizard dismissViewControllerAnimated:YES completion:nil];
+    [_layerWizard.navigationController popViewControllerAnimated:YES];
     [_geoPackageViewController update];
 }
 

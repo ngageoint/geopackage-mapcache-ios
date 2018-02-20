@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GPKGSColorUtil.h"
 #import "GPKGSConstants.h"
 
 @protocol GPKGSButtonCellDelegate <NSObject>
@@ -18,4 +19,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *button;
 @property (weak, nonatomic) id<GPKGSButtonCellDelegate> delegate;
 @property (strong, nonatomic) NSString *action;
+- (void) enableButton;
+- (void) disableButton;
 @end

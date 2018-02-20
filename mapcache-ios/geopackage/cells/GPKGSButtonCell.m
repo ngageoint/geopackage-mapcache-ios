@@ -26,4 +26,16 @@
     [_delegate performButtonAction:_action];
 }
 
+
+- (void) enableButton {
+    _button.userInteractionEnabled = YES;
+    _button.backgroundColor = [GPKGSColorUtil getAccent];
+}
+
+
+- (void) disableButton {
+    _button.userInteractionEnabled = NO;
+    _button.backgroundColor = [GPKGSColorUtil getAccentLight];
+}
+
 @end

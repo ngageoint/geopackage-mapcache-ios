@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MCZoomCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="90"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Min zoom level:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QgZ-S1-U3x">
+                    <rect key="frame" x="16" y="12" width="119" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xcp-Jg-gCH" userLabel="minZoomDisplay">
+                    <rect key="frame" x="166" y="12" width="42" height="20.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="yY7-Qq-Z8a" userLabel="minZoomStepper">
+                    <rect key="frame" x="265" y="8" width="94" height="29"/>
+                    <color key="tintColor" red="0.0" green="0.31372549020000001" blue="0.49019607840000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <connections>
+                        <action selector="minZoomStepperTapped:" destination="iN0-l3-epB" eventType="valueChanged" id="qgg-Ss-Y1U"/>
+                    </connections>
+                </stepper>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Max zoom level: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fiy-nK-URP">
+                    <rect key="frame" x="16" y="57" width="127" height="20.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LIM-ih-fa0" userLabel="maxZoomDisplay">
+                    <rect key="frame" x="166" y="57" width="42" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="5C2-Eb-e5K" userLabel="maxZoomStepper">
+                    <rect key="frame" x="265" y="53" width="94" height="29"/>
+                    <color key="tintColor" red="0.0" green="0.31372549020000001" blue="0.49019607840000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <connections>
+                        <action selector="maxZoomStepperTapped:" destination="iN0-l3-epB" eventType="valueChanged" id="slA-eh-Lb3"/>
+                    </connections>
+                </stepper>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="LIM-ih-fa0" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="1ov-zE-H9a"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="5C2-Eb-e5K" secondAttribute="trailing" constant="16" id="HYl-vn-yVJ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="5C2-Eb-e5K" secondAttribute="bottom" constant="8" id="MD4-1d-ak8"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="fiy-nK-URP" secondAttribute="bottom" constant="12" id="Oc0-W7-rKS"/>
+                <constraint firstItem="fiy-nK-URP" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="Odz-2P-eoW"/>
+                <constraint firstItem="yY7-Qq-Z8a" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="8" id="Rsv-Bk-Ygj"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="LIM-ih-fa0" secondAttribute="bottom" constant="12" id="S79-gy-oRT"/>
+                <constraint firstItem="xcp-Jg-gCH" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="12" id="USO-b9-Sib"/>
+                <constraint firstItem="QgZ-S1-U3x" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="UmM-Wt-nmm"/>
+                <constraint firstItem="xcp-Jg-gCH" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="e2e-LD-EAk"/>
+                <constraint firstItem="5C2-Eb-e5K" firstAttribute="top" secondItem="yY7-Qq-Z8a" secondAttribute="bottom" constant="16" id="fJh-75-biS"/>
+                <constraint firstItem="QgZ-S1-U3x" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="12" id="hAD-i3-vMt"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="yY7-Qq-Z8a" secondAttribute="trailing" constant="16" id="rUy-PK-idp"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="maxZoomDisplay" destination="LIM-ih-fa0" id="f4U-it-VOk"/>
+                <outlet property="maxZoomStepper" destination="5C2-Eb-e5K" id="cqd-G8-cqk"/>
+                <outlet property="minZoomDisplay" destination="xcp-Jg-gCH" id="Oyg-la-f1b"/>
+                <outlet property="minZoomStepper" destination="yY7-Qq-Z8a" id="qWD-zi-7E1"/>
+            </connections>
+            <point key="canvasLocation" x="26.5" y="-238"/>
+        </view>
+    </objects>
+</document>

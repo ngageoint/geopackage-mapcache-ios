@@ -10,8 +10,7 @@
 
 @interface MCZoomAndQualityViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
-@property (strong, nonatomic) GPKGSFieldWithTitleCell *minZoomCell;
-@property (strong, nonatomic) GPKGSFieldWithTitleCell *maxZoomCell;
+@property (strong, nonatomic) MCZoomCell *zoomCell;
 @property (strong, nonatomic) GPKGSSegmentedControlCell *tileFormatCell;
 @property (strong, nonatomic) GPKGSButtonCell *buttonCell;
 @end
@@ -49,17 +48,8 @@
     titleCell.sectionTitleLabel.text = @"Tile Storage Options";
     [_cellArray addObject:titleCell];
     
-    _minZoomCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    _minZoomCell.title.text = @"Minimum Zoom";
-    _minZoomCell.field.keyboardType = UIKeyboardTypeNumberPad;
-    [_minZoomCell.field setReturnKeyType:UIReturnKeyDone];
-    [_cellArray addObject:_minZoomCell];
-    
-    _maxZoomCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    _maxZoomCell.title.text = @"Maximum Zoom";
-    _maxZoomCell.field.keyboardType = UIKeyboardTypeNumberPad;
-    [_maxZoomCell.field setReturnKeyType:UIReturnKeyDone];
-    [_cellArray addObject:_maxZoomCell];
+    _zoomCell = [self.tableView dequeueReusableCellWithIdentifier:@"zoom"];
+    [_cellArray addObject:_zoomCell];
     
     _tileFormatCell = [self.tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
     _tileFormatCell.label.text = @"Tile Format";
@@ -76,7 +66,7 @@
 
 - (void) registerCellTypes {
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCZoomCell" bundle:nil] forCellReuseIdentifier:@"zoom"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSegmentedControlCell" bundle:nil] forCellReuseIdentifier:@"segmentedControl"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
 }
@@ -112,11 +102,7 @@
 #pragma mark -  GPKGSButtonCellDelegate method
 - (void) performButtonAction:(NSString *)action {
     NSLog(@"Button tapped in zoom and format screen");
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    NSNumber *minZoom = [formatter numberFromString:_minZoomCell.field.text];
-    NSNumber *maxZoom = [formatter numberFromString:_maxZoomCell.field.text];
-    
-    [_delegate zoomAndQualityCompletionHandlerWith:minZoom andMaxZoom:maxZoom];
+    [_delegate zoomAndQualityCompletionHandlerWith:_zoomCell.minZoom andMaxZoom:_zoomCell.maxZoom];
 }
 
 @end

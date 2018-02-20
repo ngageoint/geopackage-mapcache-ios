@@ -22,7 +22,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _referenceSystems = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt: 4326], @"EPSG 4326", [NSNumber numberWithInt: 3857], @"EPSG 3857", nil];
+    _referenceSystems = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt: 3857], @"EPSG 3857", [NSNumber numberWithInt: 4326], @"EPSG 4326", nil];
     
     [self registerCellTypes];
     [self initCellArray];
@@ -79,6 +79,7 @@
     
     _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_buttonCell.button setTitle:@"Next" forState:UIControlStateNormal];
+    [_buttonCell disableButton];
     _buttonCell.delegate = self;
     _buttonCell.action = @"BoundingBox";
     [_cellArray addObject:_buttonCell];
@@ -111,12 +112,10 @@
 
 #pragma mark- UITextFieldDelegate methods
 - (void) textFieldDidEndEditing:(UITextField *)textField {
-    if ([_layerNameCell.field.text isEqualToString:@""] && [_urlCell.field.text isEqualToString:@""]) {
-        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccentLight];
-        _buttonCell.button.userInteractionEnabled = NO;
+    if ([_layerNameCell.field.text isEqualToString:@""] || [_urlCell.field.text isEqualToString:@""]) {
+        [_buttonCell disableButton];
     } else {
-        _buttonCell.button.userInteractionEnabled = YES;
-        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccent];
+        [_buttonCell enableButton];
     }
     
     [textField resignFirstResponder];

@@ -11,11 +11,12 @@
 #import "GPKGSFieldWithTitleCell.h"
 #import "GPKGSSegmentedControlCell.h"
 #import "GPKGSButtonCell.h"
+#import "MCZoomCell.h"
 
 @protocol MCZoomAndQualityDelegate
 - (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom;
 @end
 
-@interface MCZoomAndQualityViewController : UITableViewController <UITextFieldDelegate, GPKGSButtonCellDelegate>
+@interface MCZoomAndQualityViewController : UITableViewController <GPKGSButtonCellDelegate>
 @property (weak, nonatomic) id<MCZoomAndQualityDelegate> delegate;
 @end
