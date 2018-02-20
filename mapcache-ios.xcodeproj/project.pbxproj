@@ -72,6 +72,7 @@
 		CF52A7895D9F544D637D87A3 /* libPods-mapcache-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C949BBDA5ECEE9FFAC05F51 /* libPods-mapcache-ios.a */; };
 		E308FBC11FBE400500348577 /* SingleGeoPackageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E308FBC01FBE400500348577 /* SingleGeoPackageView.xib */; };
 		E308FBC61FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E308FBC51FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.m */; };
+		E3100EAF203CAF1E00FFA56E /* MCZoomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */; };
 		E312A3381FAA416500C088FB /* GPKGSDownloadCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E312A3371FAA416500C088FB /* GPKGSDownloadCoordinator.m */; };
 		E33F55721FC4A1C000F252FD /* GPKGSSectionTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F55711FC4A1C000F252FD /* GPKGSSectionTitleCell.xib */; };
 		E33F55751FC4A25500F252FD /* GPKGSSectionTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F55741FC4A25500F252FD /* GPKGSSectionTitleCell.m */; };
@@ -85,6 +86,7 @@
 		E3470CC72020E67E0098D783 /* GPKGSColorUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CC62020E67D0098D783 /* GPKGSColorUtil.m */; };
 		E3470CC9202126140098D783 /* GPKGSSegmentedControlCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */; };
 		E3470CCC2021962D0098D783 /* GPKGSSegmentedControlCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CCB2021962D0098D783 /* GPKGSSegmentedControlCell.m */; };
+		E34C378F203CD8BC00287CF9 /* MCZoomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C378E203CD8BC00287CF9 /* MCZoomCell.m */; };
 		E354EEDB2006B9B000B062BE /* GPKGSDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354EEDA2006B9B000B062BE /* GPKGSDescriptionCell.xib */; };
 		E354EEDE2006BB9500B062BE /* GPKGSDesctiptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEDD2006BB9500B062BE /* GPKGSDesctiptionCell.m */; };
 		E354EEE320091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEE220091BCD00B062BE /* GPKGSFeatureLayerDetailsViewController.m */; };
@@ -246,6 +248,7 @@
 		E308FBC01FBE400500348577 /* SingleGeoPackageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SingleGeoPackageView.xib; sourceTree = "<group>"; };
 		E308FBC41FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSHeaderCellTableViewCell.h; sourceTree = "<group>"; };
 		E308FBC51FBFA7CA00348577 /* GPKGSHeaderCellTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSHeaderCellTableViewCell.m; sourceTree = "<group>"; };
+		E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCZoomCell.xib; sourceTree = "<group>"; };
 		E312A3361FAA416500C088FB /* GPKGSDownloadCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSDownloadCoordinator.h; sourceTree = "<group>"; };
 		E312A3371FAA416500C088FB /* GPKGSDownloadCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSDownloadCoordinator.m; sourceTree = "<group>"; };
 		E33F55711FC4A1C000F252FD /* GPKGSSectionTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSSectionTitleCell.xib; sourceTree = "<group>"; };
@@ -267,6 +270,8 @@
 		E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSSegmentedControlCell.xib; sourceTree = "<group>"; };
 		E3470CCA2021962D0098D783 /* GPKGSSegmentedControlCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSSegmentedControlCell.h; sourceTree = "<group>"; };
 		E3470CCB2021962D0098D783 /* GPKGSSegmentedControlCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSSegmentedControlCell.m; sourceTree = "<group>"; };
+		E34C378D203CD8BC00287CF9 /* MCZoomCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCZoomCell.h; sourceTree = "<group>"; };
+		E34C378E203CD8BC00287CF9 /* MCZoomCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCZoomCell.m; sourceTree = "<group>"; };
 		E354EEDA2006B9B000B062BE /* GPKGSDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSDescriptionCell.xib; sourceTree = "<group>"; };
 		E354EEDC2006BB9500B062BE /* GPKGSDesctiptionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSDesctiptionCell.h; sourceTree = "<group>"; };
 		E354EEDD2006BB9500B062BE /* GPKGSDesctiptionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSDesctiptionCell.m; sourceTree = "<group>"; };
@@ -577,6 +582,8 @@
 				E36D2DD02017C0A70097A8DE /* GPKGSPickerViewCell.m */,
 				E3470CCA2021962D0098D783 /* GPKGSSegmentedControlCell.h */,
 				E3470CCB2021962D0098D783 /* GPKGSSegmentedControlCell.m */,
+				E34C378D203CD8BC00287CF9 /* MCZoomCell.h */,
+				E34C378E203CD8BC00287CF9 /* MCZoomCell.m */,
 			);
 			path = cells;
 			sourceTree = "<group>";
@@ -655,6 +662,7 @@
 				E3A651AC2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib */,
 				E36D2DCD2017BFBE0097A8DE /* GPKGSPickerViewCell.xib */,
 				E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */,
+				E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */,
 			);
 			path = EditCells;
 			sourceTree = "<group>";
@@ -755,6 +763,7 @@
 			files = (
 				E33FB474202506B500AF509B /* MCBoundingBoxView.xib in Resources */,
 				E3470CC9202126140098D783 /* GPKGSSegmentedControlCell.xib in Resources */,
+				E3100EAF203CAF1E00FFA56E /* MCZoomCell.xib in Resources */,
 				E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */,
 				E354EEDB2006B9B000B062BE /* GPKGSDescriptionCell.xib in Resources */,
 				E36D2DCE2017BFBE0097A8DE /* GPKGSPickerViewCell.xib in Resources */,
@@ -910,6 +919,7 @@
 				045C94981B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m in Sources */,
 				0446480B1B4AFC100052913B /* GPKGSDatabase.m in Sources */,
 				04E1D8D91B66D4CA002BD947 /* GPKGSEditContentsData.m in Sources */,
+				E34C378F203CD8BC00287CF9 /* MCZoomCell.m in Sources */,
 				E3A651B0200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.m in Sources */,
 				E346590C2025315D001E6E81 /* MCBoundingBoxViewController.m in Sources */,
 				040136751AF94FB200C92AFC /* main.m in Sources */,

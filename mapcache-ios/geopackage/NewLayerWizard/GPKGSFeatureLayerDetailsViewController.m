@@ -86,11 +86,9 @@
     [_buttonCell.button setTitle:@"Create Layer" forState:UIControlStateNormal];
     
     if ([_layerNameCell.field.text isEqualToString:@""]) {
-        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccentLight];
-        _buttonCell.button.userInteractionEnabled = NO;
+        [_buttonCell disableButton];
     } else {
-        _buttonCell.button.userInteractionEnabled = YES;
-        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccent];
+        [_buttonCell enableButton];
     }
 
     [_cellArray addObject:_buttonCell];
@@ -131,11 +129,9 @@
 #pragma mark - UITextFieldDelegate
 - (void) textFieldDidEndEditing:(UITextField *)textField {
     if ([_layerNameCell.field.text isEqualToString:@""]) {
-        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccentLight];
-        _buttonCell.button.userInteractionEnabled = NO;
+        [_buttonCell disableButton];
     } else {
-        _buttonCell.button.userInteractionEnabled = YES;
-        _buttonCell.button.backgroundColor = [GPKGSColorUtil getAccent];
+        [_buttonCell enableButton];
     }
     
     [textField resignFirstResponder];
