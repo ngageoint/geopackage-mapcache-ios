@@ -14,9 +14,13 @@
 @property (strong, nonatomic) id<GPKGSCoordinatorDelegate> delegate;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
 @property (strong, nonatomic) UINavigationController *navigationController;
-@property (strong, nonatomic) GPKGSNewLayerWizard *layerWizard;
+@property (strong, nonatomic) GPKGSFeatureLayerDetailsViewController *featureDetailsController;
+@property (strong, nonatomic) GPKGSTileLayerDetailsViewController *tileDetailsController;
+@property (strong, nonatomic) MCBoundingBoxViewController *boundingBoxViewController;
+@property (strong, nonatomic) MCZoomAndQualityViewController *zoomAndQualityViewController;
 @property (strong, nonatomic) UIBarButtonItem *backButton;
 @property (strong, nonatomic) GPKGSDatabase *database;
+@property (nonatomic, strong) GPKGSCreateTilesData * tileData;
 @end
 
 
@@ -29,7 +33,7 @@
     _navigationController = navigationController;
     _delegate = delegate;
     _database = database;
-    
+
     return self;
 }
 
@@ -50,11 +54,9 @@
 - (void) newLayer {
     NSLog(@"Coordinator handling new layer");
     
-    _layerWizard = [[GPKGSNewLayerWizard alloc] init];
-    _layerWizard.database = _database;
-    _layerWizard.layerCreationDelegate = self;
-    _layerWizard.featureLayerDelegate = self;
-    [_navigationController pushViewController:_layerWizard animated:YES];
+    GPKGSCreateLayerViewController *createLayerViewControler = [[GPKGSCreateLayerViewController alloc] initWithNibName:@"CreateLayerView" bundle:nil];
+    createLayerViewControler.delegate = self;
+    [_navigationController pushViewController:createLayerViewControler animated:YES];
 }
 
 
@@ -77,6 +79,25 @@
 }
 
 
+#pragma mark - CreateLayerViewController delegate methods
+- (void) newFeatureLayer {
+    NSLog(@"Adding new feature layer");
+    _featureDetailsController = [[GPKGSFeatureLayerDetailsViewController alloc] init];
+    _featureDetailsController.database = _database;
+    _featureDetailsController.delegate = self;
+    [_navigationController pushViewController:_featureDetailsController animated:YES];
+}
+
+
+- (void) newTileLayer {
+    NSLog(@"Adding new tile layer");
+    _tileData = [[GPKGSCreateTilesData alloc] init];
+    _tileDetailsController = [[GPKGSTileLayerDetailsViewController alloc] init];
+    _tileDetailsController.delegate = self;
+    [_navigationController pushViewController:_tileDetailsController animated:YES];
+}
+
+
 #pragma mark - GPKGSFeatureLayerCreationDelegate
 - (void) createFeatueLayerIn:(NSString *)database with:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId {
     
@@ -84,7 +105,6 @@
     @try {
         geoPackage = [_manager open:database];
         [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:boundingBox andSrsId:srsId];
-        [_layerWizard.navigationController popViewControllerAnimated:YES];
     }
     @catch (NSException *e) {
         // TODO handle this
@@ -92,10 +112,44 @@
     }
     @finally {
         [geoPackage close];
+        [_navigationController popToViewController:_geoPackageViewController animated:YES];
         [_geoPackageViewController update];
     }
     
     // TODO handle dismissing the view controllers or displaying an error message
+}
+
+
+#pragma mark - MCTileLayerDetailsDelegate
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode {
+    _tileData.name = name;
+    _tileData.loadTiles.url = url;
+    _tileData.loadTiles.epsg = referenceCode;
+    
+    _boundingBoxViewController = [[MCBoundingBoxViewController alloc] init];
+    _boundingBoxViewController.delegate = self;
+    [_navigationController pushViewController:_boundingBoxViewController animated:YES];
+}
+
+
+#pragma mark- MCBoundingBoxDelegate
+- (void) boundingBoxCompletionHandler:(GPKGBoundingBox *)boundingBox  {
+    _tileData.loadTiles.generateTiles.boundingBox = boundingBox;
+    
+    _zoomAndQualityViewController = [[MCZoomAndQualityViewController alloc] init];
+    _zoomAndQualityViewController.delegate = self;
+    [_navigationController pushViewController:_zoomAndQualityViewController animated:YES];
+}
+
+
+#pragma mark- MCZoomAndQualityDelegate methods
+- (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
+    NSLog(@"In wizard, going to call completion handler");
+    
+    _tileData.loadTiles.generateTiles.minZoom = minZoom;
+    _tileData.loadTiles.generateTiles.maxZoom = maxZoom;
+    
+    [self createTileLayer:_tileData];
 }
 
 
@@ -135,7 +189,7 @@
 -(void) onLoadTilesCompleted: (int) count {
     //TODO: fill in
     NSLog(@"Loading tiles completed");
-    [_layerWizard.navigationController popViewControllerAnimated:YES];
+    [_navigationController popToViewController:_geoPackageViewController animated:YES];
     [_geoPackageViewController update];
 }
 

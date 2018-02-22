@@ -19,7 +19,7 @@
     _minZoomStepper.minimumValue = [_minZoom doubleValue];
     _minZoomStepper.stepValue = 1;
     
-    _maxZoom = [NSNumber numberWithInt:3];
+    _maxZoom = [NSNumber numberWithInt:10];
     _maxZoomStepper.minimumValue = [_maxZoom doubleValue];
     _maxZoomStepper.maximumValue = 18;
     _maxZoomStepper.stepValue = 1;

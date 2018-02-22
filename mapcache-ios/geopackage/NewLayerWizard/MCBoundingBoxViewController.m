@@ -29,9 +29,9 @@
     
     _mapView.delegate = self;
     
-    _statusLabel.text = @"Tap the Draw tile bounds button and draw a box to set the area for your tile layer.";
+    _statusLabel.text = @"Long press on the map to start drawing your bounding box.";
     
-    _boundingBoxMode = NO;
+    _boundingBoxMode = YES;
     [_cancelButton setHidden:YES];
     [_confirmButton setHidden:YES];
     
