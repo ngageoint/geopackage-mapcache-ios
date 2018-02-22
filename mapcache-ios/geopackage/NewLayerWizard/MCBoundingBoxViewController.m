@@ -169,6 +169,8 @@
                             [self.mapView removeOverlay:self.boundingBox];
                             [self.mapView addOverlay:newBoundingBox];
                             self.boundingBox = newBoundingBox;
+                            
+                            _statusLabel.text = @"You can long press on the corners of the bounding box and drag to adjust it.";
                         }
                         if(longPressGestureRecognizer.state == UIGestureRecognizerStateEnded){
                             [self setDrawing:false];

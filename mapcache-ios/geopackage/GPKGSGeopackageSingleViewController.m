@@ -25,6 +25,9 @@
     self.manager = [GPKGGeoPackageFactory getManager];
     _tableView.estimatedRowHeight = 45.0;
     _tableView.rowHeight = UITableViewAutomaticDimension;
+    
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.automaticallyAdjustsScrollViewInsets = NO;
 }
 
 
