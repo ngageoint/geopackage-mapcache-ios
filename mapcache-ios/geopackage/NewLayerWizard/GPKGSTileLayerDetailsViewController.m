@@ -65,6 +65,7 @@
     _urlCell.title.text = @"What is the URL to your tiles?";
     _urlCell.field.placeholder = @"http://openstreetmap.org/{x}/{y}/{z}";
     _urlCell.field.text = @"http://osm.geointservices.io/osm_tiles/{z}/{x}/{y}.png";
+    _urlCell.field.delegate = self;
     [_urlCell.field setReturnKeyType:UIReturnKeyDone];
     [_cellArray addObject:_urlCell];
     
