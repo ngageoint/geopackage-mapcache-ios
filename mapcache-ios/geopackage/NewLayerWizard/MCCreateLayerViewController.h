@@ -10,12 +10,12 @@
 #import "GPKGSDatabase.h"
 
 
-@protocol GPKGSCreateLayerDelegate <NSObject>
+@protocol MCCreateLayerDelegate <NSObject>
 - (void) newFeatureLayer;
 - (void) newTileLayer;
 @end
 
 
-@interface GPKGSCreateLayerViewController : UIViewController
-@property (weak, nonatomic) id<GPKGSCreateLayerDelegate> delegate;
+@interface MCCreateLayerViewController : UIViewController
+@property (weak, nonatomic) id<MCCreateLayerDelegate> delegate;
 @end

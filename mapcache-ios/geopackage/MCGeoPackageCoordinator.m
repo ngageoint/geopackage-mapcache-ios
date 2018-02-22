@@ -6,16 +6,16 @@
 //  Copyright © 2017 NGA. All rights reserved.
 //
 
-#import "GPKGSCoordinator.h"
+#import "MCGeoPackageCoordinator.h"
 
 
-@interface GPKGSCoordinator()
-@property (strong, nonatomic) GPKGSGeopackageSingleViewController *geoPackageViewController;
-@property (strong, nonatomic) id<GPKGSCoordinatorDelegate> delegate;
+@interface MCGeoPackageCoordinator()
+@property (strong, nonatomic) MCGeopackageSingleViewController *geoPackageViewController;
+@property (strong, nonatomic) id<MCGeoPackageCoordinatorDelegate> delegate;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
 @property (strong, nonatomic) UINavigationController *navigationController;
-@property (strong, nonatomic) GPKGSFeatureLayerDetailsViewController *featureDetailsController;
-@property (strong, nonatomic) GPKGSTileLayerDetailsViewController *tileDetailsController;
+@property (strong, nonatomic) MCFeatureLayerDetailsViewController *featureDetailsController;
+@property (strong, nonatomic) MCTileLayerDetailsViewController *tileDetailsController;
 @property (strong, nonatomic) MCBoundingBoxViewController *boundingBoxViewController;
 @property (strong, nonatomic) MCZoomAndQualityViewController *zoomAndQualityViewController;
 @property (strong, nonatomic) UIBarButtonItem *backButton;
@@ -24,9 +24,9 @@
 @end
 
 
-@implementation GPKGSCoordinator
+@implementation MCGeoPackageCoordinator
 
-- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<GPKGSCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database {
+- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<MCGeoPackageCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database {
     self = [super init];
     
     _manager = [GPKGGeoPackageFactory getManager];
@@ -39,7 +39,7 @@
 
 
 - (void) start {
-    _geoPackageViewController = [[GPKGSGeopackageSingleViewController alloc] initWithNibName:@"SingleGeoPackageView" bundle:nil];
+    _geoPackageViewController = [[MCGeopackageSingleViewController alloc] initWithNibName:@"SingleGeoPackageView" bundle:nil];
     _geoPackageViewController.database = _database;
     
     _geoPackageViewController.delegate = self;
@@ -54,7 +54,7 @@
 - (void) newLayer {
     NSLog(@"Coordinator handling new layer");
     
-    GPKGSCreateLayerViewController *createLayerViewControler = [[GPKGSCreateLayerViewController alloc] initWithNibName:@"CreateLayerView" bundle:nil];
+    MCCreateLayerViewController *createLayerViewControler = [[MCCreateLayerViewController alloc] initWithNibName:@"CreateLayerView" bundle:nil];
     createLayerViewControler.delegate = self;
     [_navigationController pushViewController:createLayerViewControler animated:YES];
 }
@@ -82,7 +82,7 @@
 #pragma mark - CreateLayerViewController delegate methods
 - (void) newFeatureLayer {
     NSLog(@"Adding new feature layer");
-    _featureDetailsController = [[GPKGSFeatureLayerDetailsViewController alloc] init];
+    _featureDetailsController = [[MCFeatureLayerDetailsViewController alloc] init];
     _featureDetailsController.database = _database;
     _featureDetailsController.delegate = self;
     [_navigationController pushViewController:_featureDetailsController animated:YES];
@@ -92,7 +92,7 @@
 - (void) newTileLayer {
     NSLog(@"Adding new tile layer");
     _tileData = [[GPKGSCreateTilesData alloc] init];
-    _tileDetailsController = [[GPKGSTileLayerDetailsViewController alloc] init];
+    _tileDetailsController = [[MCTileLayerDetailsViewController alloc] init];
     _tileDetailsController.delegate = self;
     [_navigationController pushViewController:_tileDetailsController animated:YES];
 }

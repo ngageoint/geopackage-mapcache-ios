@@ -6,13 +6,13 @@
 //  Copyright © 2018 NGA. All rights reserved.
 //
 
-#import "GPKGSCreateLayerViewController.h"
+#import "MCCreateLayerViewController.h"
 
-@interface GPKGSCreateLayerViewController ()
+@interface MCCreateLayerViewController ()
 
 @end
 
-@implementation GPKGSCreateLayerViewController
+@implementation MCCreateLayerViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

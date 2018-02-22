@@ -6,9 +6,9 @@
 //  Copyright © 2018 NGA. All rights reserved.
 //
 
-#import "GPKGSFeatureLayerDetailsViewController.h"
+#import "MCFeatureLayerDetailsViewController.h"
 
-@interface GPKGSFeatureLayerDetailsViewController ()
+@interface MCFeatureLayerDetailsViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
 @property (strong, nonatomic) UIPickerView *pickerView;
 @property (strong, nonatomic) NSArray *geometryTypes;
@@ -22,7 +22,7 @@
 @property (strong, nonatomic) GPKGSButtonCell *buttonCell;
 @end
 
-@implementation GPKGSFeatureLayerDetailsViewController
+@implementation MCFeatureLayerDetailsViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

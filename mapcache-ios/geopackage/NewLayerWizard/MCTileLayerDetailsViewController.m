@@ -6,9 +6,9 @@
 //  Copyright © 2018 NGA. All rights reserved.
 //
 
-#import "GPKGSTileLayerDetailsViewController.h"
+#import "MCTileLayerDetailsViewController.h"
 
-@interface GPKGSTileLayerDetailsViewController ()
+@interface MCTileLayerDetailsViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
 @property (strong, nonatomic) GPKGSButtonCell *buttonCell;
 @property (strong, nonatomic) GPKGSFieldWithTitleCell *layerNameCell;
@@ -17,7 +17,7 @@
 @property (strong, nonatomic) NSDictionary *referenceSystems;
 @end
 
-@implementation GPKGSTileLayerDetailsViewController
+@implementation MCTileLayerDetailsViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

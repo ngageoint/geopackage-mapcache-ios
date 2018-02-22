@@ -6,16 +6,16 @@
 //  Copyright © 2017 NGA. All rights reserved.
 //
 
-#import "GPKGSGeopackageSingleViewController.h"
+#import "MCGeopackageSingleViewController.h"
 
-@interface GPKGSGeopackageSingleViewController ()
+@interface MCGeopackageSingleViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *cellArray;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
 @property (strong, nonatomic) UIDocumentInteractionController *shareDocumentController;
 @end
 
-@implementation GPKGSGeopackageSingleViewController
+@implementation MCGeopackageSingleViewController
 
 - (void) viewDidLoad {
     [super viewDidLoad];

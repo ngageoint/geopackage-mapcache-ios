@@ -23,12 +23,12 @@
 #import "GPKGSPickerViewCell.h"
 #import "GPKGSColorUtil.h"
 
-@protocol GPKGSFeatureLayerCreationDelegate <NSObject>
+@protocol MCFeatureLayerCreationDelegate <NSObject>
 //- (void) featureLayerCreationComplete:(BOOL)layerCreated withError:(NSString *)error;
 - (void) createFeatueLayerIn:(NSString *)database with:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId;
 @end
 
-@interface GPKGSFeatureLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate>
+@interface MCFeatureLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate>
 @property (strong, nonatomic) GPKGSDatabase *database;
-@property (weak, nonatomic) id<GPKGSFeatureLayerCreationDelegate> delegate;
+@property (weak, nonatomic) id<MCFeatureLayerCreationDelegate> delegate;
 @end
