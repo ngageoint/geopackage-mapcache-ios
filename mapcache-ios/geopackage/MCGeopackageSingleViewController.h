@@ -22,7 +22,7 @@
 #import "GPKGSUtils.h"
 
 
-@protocol GPKGSOperationsDelegate <NSObject>
+@protocol MCOperationsDelegate <NSObject>
 - (void) newLayer;
 - (void) deleteGeoPackage;
 - (void) copyGeoPackage;
@@ -30,8 +30,8 @@
 @end
 
 
-@interface GPKGSGeopackageSingleViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSButtonCellDelegate, GPKGSHeaderCellButtonPressedDelegate>
+@interface MCGeopackageSingleViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSButtonCellDelegate, GPKGSHeaderCellButtonPressedDelegate>
 @property (strong, nonatomic) GPKGSDatabase *database;
-@property (weak, nonatomic) id<GPKGSOperationsDelegate> delegate;
+@property (weak, nonatomic) id<MCOperationsDelegate> delegate;
 - (void) update;
 @end
