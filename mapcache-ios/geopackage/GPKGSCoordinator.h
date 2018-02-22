@@ -11,7 +11,6 @@
 #import "GPKGSLoadTilesTask.h"
 #import "GPKGSGeopackageSingleViewController.h"
 #import "GPKGSDatabase.h"
-#import "GPKGSNewLayerWizard.h"
 #import "GPKGSLoadTilesProtocol.h"
 #import "GPKGSCreateLayerViewController.h"
 #import "GPKGSFeatureLayerDetailsViewController.h"
@@ -26,7 +25,7 @@
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete;
 @end
 
-@interface GPKGSCoordinator: NSObject <GPKGSOperationsDelegate, GPKGSFeatureLayerCreationDelegate, MCNewLayerWizardDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate, MCZoomAndQualityDelegate, GPKGSCreateLayerDelegate, GPKGSLoadTilesProtocol>
+@interface GPKGSCoordinator: NSObject <GPKGSOperationsDelegate, GPKGSFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate, MCZoomAndQualityDelegate, GPKGSCreateLayerDelegate, GPKGSLoadTilesProtocol>
 - (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<GPKGSCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database;
 - (void) start;
 @end

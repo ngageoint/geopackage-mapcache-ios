@@ -101,7 +101,6 @@
 		E3A651AD2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A651AC2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib */; };
 		E3A651B0200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651AF200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.m */; };
 		E3A651B32005652400B8AB27 /* GPKGSFieldWithTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651B22005652400B8AB27 /* GPKGSFieldWithTitleCell.m */; };
-		E3A674D31FFEE52500089211 /* GPKGSNewLayerWizard.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A674D21FFEE52500089211 /* GPKGSNewLayerWizard.m */; };
 		E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */; };
 /* End PBXBuildFile section */
 
@@ -295,8 +294,6 @@
 		E3A651AF200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSTileLayerDetailsViewController.m; sourceTree = "<group>"; };
 		E3A651B12005652400B8AB27 /* GPKGSFieldWithTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSFieldWithTitleCell.h; sourceTree = "<group>"; };
 		E3A651B22005652400B8AB27 /* GPKGSFieldWithTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSFieldWithTitleCell.m; sourceTree = "<group>"; };
-		E3A674D11FFEE52500089211 /* GPKGSNewLayerWizard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSNewLayerWizard.h; sourceTree = "<group>"; };
-		E3A674D21FFEE52500089211 /* GPKGSNewLayerWizard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSNewLayerWizard.m; sourceTree = "<group>"; };
 		E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSHeaderCellDisplay.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -618,8 +615,6 @@
 		E3A6519F2003DA2D00B8AB27 /* NewLayerWizard */ = {
 			isa = PBXGroup;
 			children = (
-				E3A674D11FFEE52500089211 /* GPKGSNewLayerWizard.h */,
-				E3A674D21FFEE52500089211 /* GPKGSNewLayerWizard.m */,
 				E3A651A62003DDC800B8AB27 /* GPKGSCreateLayerViewController.h */,
 				E3A651A72003DDC800B8AB27 /* GPKGSCreateLayerViewController.m */,
 				E3A651AE200563AF00B8AB27 /* GPKGSTileLayerDetailsViewController.h */,
@@ -866,7 +861,6 @@
 				043A459E1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.m in Sources */,
 				E3470CC72020E67E0098D783 /* GPKGSColorUtil.m in Sources */,
 				E3A4920B1FA9538800FFE613 /* GPKGSGeopackageSingleViewController.m in Sources */,
-				E3A674D31FFEE52500089211 /* GPKGSNewLayerWizard.m in Sources */,
 				E33F55751FC4A25500F252FD /* GPKGSSectionTitleCell.m in Sources */,
 				044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */,
 				045C94A91B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m in Sources */,
