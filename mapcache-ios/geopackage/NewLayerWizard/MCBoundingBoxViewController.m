@@ -20,20 +20,31 @@
 @property (nonatomic, strong) MKPolygon * editPolygon;
 @property (nonatomic, strong) NSMutableArray * editPoints;
 @property (nonatomic, strong) NSNumberFormatter *locationDecimalFormatter;
+@property (nonatomic, strong) UIBarButtonItem *nextButton;
 @end
 
 @implementation MCBoundingBoxViewController
+
+- (void)viewWillAppear:(BOOL)animated {
+    [UILabel appearanceWhenContainedInInstancesOfClasses:@[[UINavigationBar class]]].textColor = [UIColor whiteColor];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     _mapView.delegate = self;
-    
-    _statusLabel.text = @"Long press on the map to start drawing your bounding box.";
-    
     _boundingBoxMode = YES;
-    [_cancelButton setHidden:YES];
-    [_confirmButton setHidden:YES];
+    
+    self.navigationItem.title = @"Select an area";
+    self.navigationItem.prompt = @"Long press on the map to start drawing your bounding box.";
+    
+    _upperLeftValueLabel.text = @"0.0, 0.0";
+    _lowerRightValueLabel.text = @"0.0, 0.0";
+    
+    [_editBoundingBoxButton setTitle:@"Enter Bounding Box" forState:UIControlStateNormal];
+    [_editBoundingBoxButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
     
     [_mapView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget: self action:@selector(longPressGesture:)]];
     
@@ -45,6 +56,10 @@
     
     self.boundingBoxStartCorner = kCLLocationCoordinate2DInvalid;
     self.boundingBoxEndCorner = kCLLocationCoordinate2DInvalid;
+    
+    _nextButton = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStylePlain target:self action:@selector(nextButtonTapped)];
+    _nextButton.enabled = NO;
+    self.navigationItem.rightBarButtonItem = _nextButton;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -53,31 +68,12 @@
 }
 
 
-- (IBAction)boundingBoxButtonTapped:(id)sender {
-    _boundingBoxMode = YES;
-    
-    [self animateButtonShowHide:_boundingBoxButton :YES];
-    [self animateButtonShowHide:_cancelButton :NO];
-    [self animateButtonShowHide:_confirmButton :NO];
-    
-    _statusLabel.text = @"Long press on the map to start drawing your bounding box.";
+- (IBAction)editCoordinatesButtonTapped:(id)sender {
+    [_delegate showManualBoundingBoxView];
 }
 
 
-- (IBAction)cancelButtonTapped:(id)sender {
-    _statusLabel.text = @"Tap the Draw tile bounds button and draw a box to set the area for your tile layer.";
-    
-    _boundingBoxMode = NO;
-    [self animateButtonShowHide:_boundingBoxButton :NO];
-    [self animateButtonShowHide:_cancelButton :YES];
-    [self animateButtonShowHide:_confirmButton :YES];
-    
-    [_mapView removeOverlay:_boundingBox];
-    _boundingBox = nil;
-}
-
-
-- (IBAction)confirmButtonTapped:(id)sender {
+- (void) nextButtonTapped {
     
     NSDecimalNumber *minLat;
     NSDecimalNumber *maxLat;
@@ -115,6 +111,7 @@
     if(self.boundingBoxMode){
         NSLog(@"Bounding Box mode");
         if(longPressGestureRecognizer.state == UIGestureRecognizerStateBegan){
+            [_editBoundingBoxButton setTitle:@"Edit Bounding Box" forState:UIControlStateNormal];
             
             // Check to see if editing any of the bounding box corners
             if (self.boundingBox != nil && CLLocationCoordinate2DIsValid(self.boundingBoxEndCorner)) {
@@ -154,7 +151,6 @@
                 
                 [self.mapView addOverlay:self.boundingBox];
                 [self setDrawing:true];
-                //[self.boundingBoxClearButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_CLEAR_ACTIVE_IMAGE] forState:UIControlStateNormal];
             }
             
         }else{
@@ -169,8 +165,17 @@
                             [self.mapView removeOverlay:self.boundingBox];
                             [self.mapView addOverlay:newBoundingBox];
                             self.boundingBox = newBoundingBox;
+                            _nextButton.enabled = YES;
+                            self.navigationItem.prompt = @"You can drag the corners of the bounding box to adjust it.";
                             
-                            _statusLabel.text = @"You can long press on the corners of the bounding box and drag to adjust it.";
+                            _upperLeftValueLabel.text = [NSString stringWithFormat:@"%.2f, %.2f", self.boundingBoxStartCorner.latitude, self.boundingBoxStartCorner.longitude];
+                            
+                            _lowerRightValueLabel.text = [NSString stringWithFormat:@"%.2f, %.2f", self.boundingBoxEndCorner.latitude, self.boundingBoxEndCorner.longitude];
+                            
+                            [self animateShowHide:_upperLeftLabel :NO];
+                            [self animateShowHide:_lowerRightLabel :NO];
+                            [self animateShowHide:_upperLeftValueLabel :NO];
+                            [self animateShowHide:_lowerRightValueLabel :NO];
                         }
                         if(longPressGestureRecognizer.state == UIGestureRecognizerStateEnded){
                             [self setDrawing:false];
@@ -336,12 +341,12 @@
 
 
 
-- (void) animateButtonShowHide:(UIButton *) button :(BOOL)isHidden {
-    [UIView transitionWithView:button
+- (void) animateShowHide:(UIView *) view :(BOOL)isHidden {
+    [UIView transitionWithView:view
                       duration:0.3
                        options:UIViewAnimationOptionTransitionCrossDissolve
                     animations:^{
-                        button.hidden = isHidden;
+                        view.hidden = isHidden;
                     }
                     completion:NULL];
 }

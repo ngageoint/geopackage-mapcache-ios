@@ -13,11 +13,14 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="GPKGSSegmentedControlCell">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="85"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="103"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="y5L-Ts-A21">
-                    <rect key="frame" x="16" y="37" width="343" height="33"/>
+                    <rect key="frame" x="16" y="37" width="343" height="51"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="6Uf-fr-Ui3"/>
+                    </constraints>
                     <segments>
                         <segment title="First"/>
                         <segment title="Second"/>

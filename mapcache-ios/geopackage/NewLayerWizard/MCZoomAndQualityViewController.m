@@ -21,7 +21,8 @@
     [super viewDidLoad];
     [self registerCellTypes];
     [self initCellArray];
-    
+
+    self.navigationItem.title = @"Tile Storage Options";
     self.tableView.estimatedRowHeight = 100;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UIAccessibilityTraitNone;
@@ -44,10 +45,6 @@
 - (void) initCellArray {
     _cellArray = [[NSMutableArray alloc] init];
     
-    GPKGSSectionTitleCell *titleCell = [self.tableView dequeueReusableCellWithIdentifier:@"title"];
-    titleCell.sectionTitleLabel.text = @"Tile Storage Options";
-    [_cellArray addObject:titleCell];
-    
     _zoomCell = [self.tableView dequeueReusableCellWithIdentifier:@"zoom"];
     [_cellArray addObject:_zoomCell];
     
@@ -65,7 +62,6 @@
 
 
 - (void) registerCellTypes {
-    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCZoomCell" bundle:nil] forCellReuseIdentifier:@"zoom"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSegmentedControlCell" bundle:nil] forCellReuseIdentifier:@"segmentedControl"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];

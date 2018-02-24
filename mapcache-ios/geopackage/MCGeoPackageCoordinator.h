@@ -11,21 +11,22 @@
 #import "GPKGSLoadTilesTask.h"
 #import "MCGeopackageSingleViewController.h"
 #import "GPKGSDatabase.h"
+#import "GPKGSCreateTilesData.h"
+#import "GPKGSLoadTilesData.h"
+#import "GPKGSGenerateTilesData.h"
 #import "GPKGSLoadTilesProtocol.h"
 #import "MCCreateLayerViewController.h"
 #import "MCFeatureLayerDetailsViewController.h"
 #import "MCTileLayerDetailsViewController.h"
 #import "MCBoundingBoxViewController.h"
 #import "MCZoomAndQualityViewController.h"
-#import "GPKGSCreateTilesData.h"
-#import "GPKGSLoadTilesData.h"
-#import "GPKGSGenerateTilesData.h"
+#import "MCManualBoundingBoxViewController.h"
 
 @protocol MCGeoPackageCoordinatorDelegate <NSObject>
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete;
 @end
 
-@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate, MCZoomAndQualityDelegate, MCCreateLayerDelegate, GPKGSLoadTilesProtocol>
+@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate, MCZoomAndQualityDelegate, MCCreateLayerDelegate, GPKGSLoadTilesProtocol, MCManualBoundingBoxDelegate>
 - (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<MCGeoPackageCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database;
 - (void) start;
 @end

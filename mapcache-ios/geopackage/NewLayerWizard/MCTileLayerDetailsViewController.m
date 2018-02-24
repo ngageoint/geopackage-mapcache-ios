@@ -27,6 +27,7 @@
     [self registerCellTypes];
     [self initCellArray];
     
+    self.navigationItem.title = @"New Tile Layer";
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
@@ -45,10 +46,6 @@
 
 - (void) initCellArray {
     _cellArray = [[NSMutableArray alloc] init];
-    
-    GPKGSSectionTitleCell *titleCell = [self.tableView dequeueReusableCellWithIdentifier:@"title"];
-    titleCell.sectionTitleLabel.text = @"New Tile Layer";
-    [_cellArray addObject:titleCell];
     
     _layerNameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     _layerNameCell.title.text = @"Name your new layer";
@@ -91,7 +88,6 @@
 - (void) registerCellTypes {
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSegmentedControlCell" bundle:nil] forCellReuseIdentifier:@"segmentedControl"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
 }

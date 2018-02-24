@@ -93,6 +93,7 @@ annotation {
     [[UINavigationBar appearance] setBarTintColor:[GPKGSColorUtil getPrimary]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+    [UILabel appearanceWhenContainedInInstancesOfClasses:@[[UINavigationBar class]]].textColor = [UIColor whiteColor];
     [[UINavigationBar appearance] setTranslucent:NO];
     
     [[UITabBar appearance] setBarTintColor:[GPKGSColorUtil getPrimary]];
