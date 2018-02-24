@@ -19,15 +19,17 @@
 #import "GPKGBoundingBox.h"
 
 @protocol MCTileLayerBoundingBoxDelegate
+- (void) showManualBoundingBoxView;
 - (void) boundingBoxCompletionHandler:(GPKGBoundingBox *) boundingBox;
 @end
 
 
 @interface MCBoundingBoxViewController : UIViewController <MKMapViewDelegate>
-@property (weak, nonatomic) IBOutlet UIButton *boundingBoxButton;
-@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
-@property (weak, nonatomic) IBOutlet UIButton *confirmButton;
+@property (weak, nonatomic) IBOutlet UIButton *editBoundingBoxButton;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+@property (weak, nonatomic) IBOutlet UILabel *upperLeftValueLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lowerRightValueLabel;
+@property (weak, nonatomic) IBOutlet UILabel *upperLeftLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lowerRightLabel;
 @property (weak, nonatomic) id<MCTileLayerBoundingBoxDelegate> delegate;
 @end

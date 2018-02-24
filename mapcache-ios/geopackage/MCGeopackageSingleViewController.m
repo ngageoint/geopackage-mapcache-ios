@@ -9,7 +9,6 @@
 #import "MCGeopackageSingleViewController.h"
 
 @interface MCGeopackageSingleViewController ()
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *cellArray;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
 @property (strong, nonatomic) UIDocumentInteractionController *shareDocumentController;
@@ -23,8 +22,8 @@
     [self initCellArray];
     
     self.manager = [GPKGGeoPackageFactory getManager];
-    _tableView.estimatedRowHeight = 45.0;
-    _tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 45.0;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -48,7 +47,7 @@
         }*/
     }
     
-    GPKGSHeaderCellTableViewCell *headerCell = [_tableView dequeueReusableCellWithIdentifier:@"header"];
+    GPKGSHeaderCellTableViewCell *headerCell = [self.tableView dequeueReusableCellWithIdentifier:@"header"];
     headerCell.nameLabel.text = _database.name;
     
     NSLog(@"GeoPackage Size %@", [self.manager readableSize:_database.name]);
@@ -64,7 +63,7 @@
     
     headerCell.delegate = self;
     
-    GPKGSSectionTitleCell *titleCell = [_tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
+    GPKGSSectionTitleCell *titleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
     titleCell.sectionTitleLabel.text = @"Layers";
     
     _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, titleCell, nil];
@@ -72,7 +71,7 @@
     NSArray *tables = [_database getTables];
     
     for (GPKGSTable *table in tables) {
-        GPKGSLayerCell *layerCell = [_tableView dequeueReusableCellWithIdentifier:@"layerCell"];
+        GPKGSLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
         NSString *typeImageName = @"";
         
         if ([table isMemberOfClass:[GPKGSFeatureTable class]]) {
@@ -86,7 +85,7 @@
         [_cellArray addObject:layerCell];
     }
     
-    GPKGSButtonCell *newLayerButtonCell = [_tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
+    GPKGSButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
     [newLayerButtonCell.button setTitle:@"New Layer" forState:UIControlStateNormal];
     newLayerButtonCell.action = GPKGS_ACTION_NEW_LAYER;
     newLayerButtonCell.delegate = self;
@@ -98,10 +97,10 @@
 
 
 - (void) registerCellTypes {
-    [_tableView registerNib:[UINib nibWithNibName:@"GPKGSHeaderCellDisplay" bundle:nil] forCellReuseIdentifier:@"header"];
-    [_tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"sectionTitle"];
-    [_tableView registerNib:[UINib nibWithNibName:@"GPKGSLayerCell" bundle:nil] forCellReuseIdentifier:@"layerCell"];
-    [_tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"buttonCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSHeaderCellDisplay" bundle:nil] forCellReuseIdentifier:@"header"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"sectionTitle"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSLayerCell" bundle:nil] forCellReuseIdentifier:@"layerCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"buttonCell"];
 }
 
 
@@ -163,7 +162,7 @@
     }
     
     [self initCellArray]; // May not need to call this, or may need to call it closer to the end
-    [_tableView reloadData];
+    [self.tableView reloadData];
 }
 
 
@@ -243,7 +242,7 @@
                 if([_manager rename:_database.name to:newName]){
                     _database.name = newName;
                     [self initCellArray];
-                    [_tableView reloadData];
+                    [self.tableView reloadData];
                 }else{
                     [GPKGSUtils showMessageWithDelegate:self
                                                andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]

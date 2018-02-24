@@ -30,7 +30,7 @@
 @end
 
 
-@interface MCGeopackageSingleViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSButtonCellDelegate, GPKGSHeaderCellButtonPressedDelegate>
+@interface MCGeopackageSingleViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, GPKGSButtonCellDelegate, GPKGSHeaderCellButtonPressedDelegate>
 @property (strong, nonatomic) GPKGSDatabase *database;
 @property (weak, nonatomic) id<MCOperationsDelegate> delegate;
 - (void) update;

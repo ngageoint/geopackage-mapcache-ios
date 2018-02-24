@@ -18,6 +18,7 @@
 @property (strong, nonatomic) MCTileLayerDetailsViewController *tileDetailsController;
 @property (strong, nonatomic) MCBoundingBoxViewController *boundingBoxViewController;
 @property (strong, nonatomic) MCZoomAndQualityViewController *zoomAndQualityViewController;
+@property (strong, nonatomic) MCManualBoundingBoxViewController *manualBoundingBoxViewController;
 @property (strong, nonatomic) UIBarButtonItem *backButton;
 @property (strong, nonatomic) GPKGSDatabase *database;
 @property (nonatomic, strong) GPKGSCreateTilesData * tileData;
@@ -39,7 +40,7 @@
 
 
 - (void) start {
-    _geoPackageViewController = [[MCGeopackageSingleViewController alloc] initWithNibName:@"SingleGeoPackageView" bundle:nil];
+    _geoPackageViewController = [[MCGeopackageSingleViewController alloc] init];
     _geoPackageViewController.database = _database;
     
     _geoPackageViewController.delegate = self;
@@ -141,6 +142,19 @@
     [_navigationController pushViewController:_zoomAndQualityViewController animated:YES];
 }
 
+- (void)showManualBoundingBoxView {
+    _manualBoundingBoxViewController = [[MCManualBoundingBoxViewController alloc] init];
+    _manualBoundingBoxViewController.delegate = self;
+    _manualBoundingBoxViewController.modalPresentationStyle = UIModalPresentationPopover;
+    [_boundingBoxViewController presentViewController:_manualBoundingBoxViewController animated:YES completion:nil];
+    
+}
+
+
+#pragma mark- MCManualBoundingBoxDelegate
+- (void) manualBoundingBoxCompletionHandler:(GPKGBoundingBox *)boundingBox {
+    // TODO update the bounding box in the BoundingBox view controller
+}
 
 #pragma mark- MCZoomAndQualityDelegate methods
 - (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
