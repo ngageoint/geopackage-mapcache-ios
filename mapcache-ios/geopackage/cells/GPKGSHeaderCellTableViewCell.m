@@ -16,6 +16,10 @@
     _nameLabel.numberOfLines = 0;
     [self setBackgroundColor:[UIColor clearColor]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    
+    self.mapView.zoomEnabled = false;
+    self.mapView.scrollEnabled = false;
+    self.mapView.userInteractionEnabled = false;
 }
 
 

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import <QuartzCore/QuartzCore.h>
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
 #import "GPKGSEditTypes.h"
@@ -19,7 +20,7 @@
 #import "GPKGBoundingBox.h"
 
 @protocol MCTileLayerBoundingBoxDelegate
-- (void) showManualBoundingBoxView;
+- (void) showManualBoundingBoxViewWithMinLat:(double)minLat andMaxLat:(double)maxLat andMinLon:(double)minLon andMaxLon:(double)maxLon;
 - (void) boundingBoxCompletionHandler:(GPKGBoundingBox *) boundingBox;
 @end
 
@@ -27,9 +28,12 @@
 @interface MCBoundingBoxViewController : UIViewController <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *editBoundingBoxButton;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property (weak, nonatomic) IBOutlet UILabel *upperLeftValueLabel;
-@property (weak, nonatomic) IBOutlet UILabel *lowerRightValueLabel;
-@property (weak, nonatomic) IBOutlet UILabel *upperLeftLabel;
-@property (weak, nonatomic) IBOutlet UILabel *lowerRightLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lowerLeftLatitudeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lowerLeftLongitudeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *upperRightLatitudeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *upperRightLongitudeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lowerLeftLabel;
+@property (weak, nonatomic) IBOutlet UILabel *upperRightLabel;
 @property (weak, nonatomic) id<MCTileLayerBoundingBoxDelegate> delegate;
+- (void) setBoundingBoxWithLowerLeftLat:(double)lowerLeftLat andLowerLeftLon:(double)lowerLeftLon andUpperRightLat:(double) upperRightLat andUpperRightLon:(double)upperRightLon;
 @end

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 
 @protocol GPKGSHeaderCellButtonPressedDelegate <NSObject>
 - (void) deleteGeoPackage;
@@ -23,4 +24,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tileCountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *featureCountLabel;
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @end

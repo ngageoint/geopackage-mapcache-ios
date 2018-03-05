@@ -10,18 +10,35 @@
 
 @interface MCManualBoundingBoxViewController ()
 @property (nonatomic, strong) NSMutableArray *cellArray;
-@property (nonatomic, strong) GPKGSFieldWithTitleCell *upperLeftLatitudeCell;
-@property (nonatomic, strong) GPKGSFieldWithTitleCell *upperLeftLongitudeCell;
-@property (nonatomic, strong) GPKGSFieldWithTitleCell *lowerRightLatitudeCell;
-@property (nonatomic, strong) GPKGSFieldWithTitleCell *lowerRightLongitudeCell;
+@property (nonatomic) double lowerLeftLat;
+@property (nonatomic) double lowerLeftLon;
+@property (nonatomic) double upperRightLat;
+@property (nonatomic) double upperRightLon;
+@property (nonatomic, strong) GPKGSFieldWithTitleCell *lowerLeftLatitudeCell;
+@property (nonatomic, strong) GPKGSFieldWithTitleCell *lowerLeftLongitudeCell;
+@property (nonatomic, strong) GPKGSFieldWithTitleCell *upperRightLatitudeCell;
+@property (nonatomic, strong) GPKGSFieldWithTitleCell *upperRightLongitudeCell;
 @property (nonatomic, strong) GPKGSButtonCell *buttonCell;
 @property (nonatomic, strong) GPKGBoundingBox *boundingBox;
 @end
 
 @implementation MCManualBoundingBoxViewController
 
+- (instancetype) initWithLowerLeftLat:(double)lowerLeftLat andLowerLeftLon:(double)lowerLeftLon andUpperRightLat:(double)upperRightLat andUpperRightLon:(double)upperRightLon {
+    self = [super init];
+    
+    _lowerLeftLat = lowerLeftLat;
+    _lowerLeftLon = lowerLeftLon;
+    _upperRightLat = upperRightLat;
+    _upperRightLon = upperRightLon;
+    
+    return self;
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     [self registerCellTypes];
     [self initCellArray];
     
@@ -42,28 +59,33 @@
     titleCell.sectionTitleLabel.text = @"Edit Bounding Box";
     [_cellArray addObject:titleCell];
     
-    _upperLeftLatitudeCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    _upperLeftLatitudeCell.title.text = @"Upper left latitude";
-    _upperLeftLatitudeCell.field.delegate = self;
-    [_cellArray addObject:_upperLeftLatitudeCell];
+    _lowerLeftLatitudeCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _lowerLeftLatitudeCell.title.text = @"Lower left latitude";
+    _lowerLeftLatitudeCell.field.text = [NSString stringWithFormat:@"%f", _lowerLeftLat];
+    _lowerLeftLatitudeCell.field.delegate = self;
+    [_cellArray addObject:_lowerLeftLatitudeCell];
     
-    _upperLeftLongitudeCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    _upperLeftLongitudeCell.title.text = @"Upper left longitude";
-    _upperLeftLongitudeCell.field.delegate = self;
-    [_cellArray addObject:_upperLeftLongitudeCell];
+    _lowerLeftLongitudeCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _lowerLeftLongitudeCell.title.text = @"Lower left longitude";
+    _lowerLeftLongitudeCell.field.text = [NSString stringWithFormat:@"%f", _lowerLeftLon];
+    _lowerLeftLongitudeCell.field.delegate = self;
+    [_cellArray addObject:_lowerLeftLongitudeCell];
     
-    _lowerRightLatitudeCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    _lowerRightLatitudeCell.title.text = @"Lower right latitude";
-    _lowerRightLatitudeCell.field.delegate = self;
-    [_cellArray addObject:_lowerRightLatitudeCell];
+    _upperRightLatitudeCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _upperRightLatitudeCell.title.text = @"Upper right latitude";
+    _upperRightLatitudeCell.field.text = [NSString stringWithFormat:@"%f", _upperRightLat];
+    _upperRightLatitudeCell.field.delegate = self;
+    [_cellArray addObject:_upperRightLatitudeCell];
     
-    _lowerRightLongitudeCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    _lowerRightLongitudeCell.title.text = @"Lower right longitude";
-    _lowerRightLongitudeCell.field.delegate = self;
-    [_cellArray addObject:_lowerRightLongitudeCell];
+    _upperRightLongitudeCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _upperRightLongitudeCell.title.text = @"Upper right longitude";
+    _upperRightLongitudeCell.field.text = [NSString stringWithFormat:@"%f", _upperRightLon];
+    _upperRightLongitudeCell.field.delegate = self;
+    [_cellArray addObject:_upperRightLongitudeCell];
     
     _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_buttonCell.button setTitle:@"OK" forState:UIControlStateNormal];
+    [_buttonCell disableButton];
     _buttonCell.delegate = self;
     [_cellArray addObject:_buttonCell];
     
@@ -101,17 +123,26 @@
 
 - (void)performButtonAction:(NSString *)action {
     [self dismissViewControllerAnimated:YES completion:nil];
-    [_delegate manualBoundingBoxCompletionHandler:_boundingBox];
+    [_delegate manualBoundingBoxCompletionHandlerWithLowerLeftLat:_lowerLeftLat andLowerLeftLon:_lowerLeftLon andUpperRightLat:_upperRightLat andUpperRightLon:_upperRightLon];
 }
 
 
 #pragma mark- UITextFieldDelegate methods
 - (void) textFieldDidEndEditing:(UITextField *)textField {
-    // validate data
-    // enable or disable button accordingly
-    
     [textField resignFirstResponder];
+    
+    _lowerLeftLat = [_lowerLeftLatitudeCell.field.text doubleValue];
+    _lowerLeftLon = [_lowerLeftLongitudeCell.field.text doubleValue];
+    _upperRightLat = [_upperRightLatitudeCell.field.text doubleValue];
+    _upperRightLon = [_upperRightLongitudeCell.field.text doubleValue];
+    
+    if (_lowerLeftLat < _upperRightLat && _lowerLeftLon < _upperRightLon) {
+        [_buttonCell enableButton];
+    } else {
+        [_buttonCell disableButton];
+    }
 }
+
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];

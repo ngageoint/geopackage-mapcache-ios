@@ -27,6 +27,7 @@
 - (void) deleteGeoPackage;
 - (void) copyGeoPackage;
 - (void) callCompletionHandler;
+- (void) deleteLayer:(NSString *) layerName;
 @end
 
 
@@ -34,4 +35,5 @@
 @property (strong, nonatomic) GPKGSDatabase *database;
 @property (weak, nonatomic) id<MCOperationsDelegate> delegate;
 - (void) update;
+- (void) removeLayerNamed:(NSString *) layerName;
 @end

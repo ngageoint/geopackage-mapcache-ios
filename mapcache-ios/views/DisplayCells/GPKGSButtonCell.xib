@@ -25,6 +25,11 @@
                     <state key="normal" title="Button">
                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="10"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="buttonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="qhR-ej-AzU"/>
                     </connections>
