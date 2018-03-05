@@ -13,10 +13,11 @@
 #import "GPKGBoundingBox.h"
 
 @protocol MCManualBoundingBoxDelegate
-- (void)manualBoundingBoxCompletionHandler:(GPKGBoundingBox *) boundingBox;
+- (void)manualBoundingBoxCompletionHandlerWithLowerLeftLat:(double)lowerLeftLat andLowerLeftLon:(double)lowerLeftLon andUpperRightLat:(double)upperRightLat andUpperRightLon:(double)upperRightLon;
 @end
 
 
 @interface MCManualBoundingBoxViewController : UITableViewController <UITextFieldDelegate, GPKGSButtonCellDelegate>
 @property (weak, nonatomic) id<MCManualBoundingBoxDelegate> delegate;
+- (instancetype) initWithLowerLeftLat:(double)lowerLeftLat andLowerLeftLon:(double)lowerLeftLon andUpperRightLat:(double)upperRightLat andUpperRightLon:(double)upperRightLon;
 @end

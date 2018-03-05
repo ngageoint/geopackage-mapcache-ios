@@ -22,11 +22,18 @@
     [self initCellArray];
     
     self.manager = [GPKGGeoPackageFactory getManager];
-    self.tableView.estimatedRowHeight = 45.0;
+    self.tableView.estimatedRowHeight = 390.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.allowsMultipleSelectionDuringEditing = NO;
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.extendedLayoutIncludesOpaqueBars = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
+    self.tableView.contentInset = tabBarInsets;
+    self.tableView.scrollIndicatorInsets = tabBarInsets;
 }
 
 
@@ -91,7 +98,7 @@
     newLayerButtonCell.delegate = self;
     [_cellArray addObject:newLayerButtonCell];
     
-    // add title cell for reference systems
+    // TODO: add title cell for reference systems
     // loop over geospatial reference systems create cells, push to array
 }
 
@@ -147,6 +154,8 @@
         // TODO: Figure out what to do about overlays
     }
     @finally {
+        
+        
         if (geoPackage == nil) {
             @try {
                 [_manager delete:_database.name];
@@ -175,6 +184,20 @@
 }
 
 
+- (void) removeLayerNamed:(NSString *)layerName {
+    UITableViewCell *cell;
+    
+    for (int i = 0; i <  _cellArray.count; i++) {
+        cell = [_cellArray objectAtIndex:i];
+        
+        if ([cell isKindOfClass:[GPKGSLayerCell class]] && [((GPKGSLayerCell *)cell).layerNameLabel.text isEqualToString:layerName]) {
+            [_cellArray removeObject:cell];
+            [self update];
+        }
+    }
+}
+
+
 #pragma mark - TableView delegate methods
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     return [_cellArray objectAtIndex:indexPath.row];
@@ -183,6 +206,24 @@
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_cellArray count];
+}
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([[_cellArray objectAtIndex:indexPath.row] isKindOfClass:[GPKGSLayerCell class]]) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        GPKGSLayerCell *layerCell = [_cellArray objectAtIndex:indexPath.row];
+        NSString *layerName = layerCell.layerNameLabel.text;
+        [_delegate deleteLayer:layerName];
+    }
 }
 
 

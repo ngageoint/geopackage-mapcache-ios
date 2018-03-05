@@ -14,6 +14,10 @@
 @property (nonatomic, strong) MKPolygon * boundingBox;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxEndCorner;
+@property (nonatomic) double minLat;
+@property (nonatomic) double maxLat;
+@property (nonatomic) double minLon;
+@property (nonatomic) double maxLon;
 @property (nonatomic) enum GPKGSEditType editFeatureType;
 @property (nonatomic, strong) GPKGMapShapePoints * editFeatureShape;
 @property (nonatomic, strong) NSObject <GPKGShapePoints> * editFeatureShapePoints;
@@ -40,9 +44,6 @@
     self.navigationItem.title = @"Select an area";
     self.navigationItem.prompt = @"Long press on the map to start drawing your bounding box.";
     
-    _upperLeftValueLabel.text = @"0.0, 0.0";
-    _lowerRightValueLabel.text = @"0.0, 0.0";
-    
     [_editBoundingBoxButton setTitle:@"Enter Bounding Box" forState:UIControlStateNormal];
     [_editBoundingBoxButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
     
@@ -56,6 +57,10 @@
     
     self.boundingBoxStartCorner = kCLLocationCoordinate2DInvalid;
     self.boundingBoxEndCorner = kCLLocationCoordinate2DInvalid;
+    _minLat = 0.0;
+    _minLon = 0.0;
+    _maxLat = 0.0;
+    _maxLon = 0.0;
     
     _nextButton = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStylePlain target:self action:@selector(nextButtonTapped)];
     _nextButton.enabled = NO;
@@ -69,35 +74,16 @@
 
 
 - (IBAction)editCoordinatesButtonTapped:(id)sender {
-    [_delegate showManualBoundingBoxView];
+    [_delegate showManualBoundingBoxViewWithMinLat: _minLat andMaxLat:_maxLat andMinLon:_minLon andMaxLon:_maxLon];
 }
 
 
 - (void) nextButtonTapped {
     
-    NSDecimalNumber *minLat;
-    NSDecimalNumber *maxLat;
-    NSDecimalNumber *minLon;
-    NSDecimalNumber *maxLon;
-    
-    
-    if (_boundingBoxStartCorner.latitude < _boundingBoxEndCorner.latitude) {
-        minLat = [[NSDecimalNumber alloc] initWithDouble: _boundingBoxStartCorner.latitude];
-        maxLat = [[NSDecimalNumber alloc] initWithDouble: _boundingBoxEndCorner.latitude];
-    } else {
-        minLat = [[NSDecimalNumber alloc] initWithDouble: _boundingBoxEndCorner.latitude];
-        maxLat = [[NSDecimalNumber alloc] initWithDouble: _boundingBoxStartCorner.latitude];
-    }
-    
-    if (_boundingBoxStartCorner.longitude < _boundingBoxEndCorner.longitude) {
-        minLon = [[NSDecimalNumber alloc] initWithDouble: _boundingBoxStartCorner.longitude];
-        maxLon = [[NSDecimalNumber alloc] initWithDouble:_boundingBoxEndCorner.longitude];
-    } else {
-        minLon = [[NSDecimalNumber alloc] initWithDouble:_boundingBoxEndCorner.longitude];
-        maxLon = [[NSDecimalNumber alloc] initWithDouble:_boundingBoxStartCorner.longitude];
-    }
-    
-    GPKGBoundingBox *boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitude:minLon  andMinLatitude:minLat andMaxLongitude:maxLon andMaxLatitude:maxLat];
+    GPKGBoundingBox *boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitude:[[NSDecimalNumber alloc] initWithDouble:_minLon]
+                                                                  andMinLatitude:[[NSDecimalNumber alloc] initWithDouble:_minLat]
+                                                                 andMaxLongitude:[[NSDecimalNumber alloc] initWithDouble:_maxLon]
+                                                                  andMaxLatitude:[[NSDecimalNumber alloc] initWithDouble:_maxLat]];
     [_delegate boundingBoxCompletionHandler: boundingBox];
 }
 
@@ -168,14 +154,41 @@
                             _nextButton.enabled = YES;
                             self.navigationItem.prompt = @"You can drag the corners of the bounding box to adjust it.";
                             
-                            _upperLeftValueLabel.text = [NSString stringWithFormat:@"%.2f, %.2f", self.boundingBoxStartCorner.latitude, self.boundingBoxStartCorner.longitude];
+                            if (_boundingBoxStartCorner.latitude > _boundingBoxEndCorner.latitude) {
+                                _minLat = _boundingBoxEndCorner.latitude;
+                                _maxLat = _boundingBoxStartCorner.latitude;
+                                
+                                _upperRightLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxStartCorner.latitude];
+                                _lowerLeftLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxEndCorner.latitude];
+                            } else {
+                                _minLat = _boundingBoxStartCorner.latitude;
+                                _maxLat = _boundingBoxEndCorner.latitude;
+                                
+                                _upperRightLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxEndCorner.latitude];
+                                _lowerLeftLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxStartCorner.latitude];
+                            }
                             
-                            _lowerRightValueLabel.text = [NSString stringWithFormat:@"%.2f, %.2f", self.boundingBoxEndCorner.latitude, self.boundingBoxEndCorner.longitude];
+                            if (_boundingBoxStartCorner.longitude < _boundingBoxEndCorner.longitude) {
+                                _minLon = _boundingBoxStartCorner.longitude;
+                                _maxLon = _boundingBoxEndCorner.longitude;
+                                
+                                _lowerLeftLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxStartCorner.longitude];
+                                _upperRightLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxEndCorner.longitude];
+                            } else {
+                                _minLon = _boundingBoxEndCorner.longitude;
+                                _maxLon = _boundingBoxStartCorner.longitude;
+                                
+                                _lowerLeftLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxEndCorner.longitude];
+                                _upperRightLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxStartCorner.longitude];
+                            }
                             
-                            [self animateShowHide:_upperLeftLabel :NO];
-                            [self animateShowHide:_lowerRightLabel :NO];
-                            [self animateShowHide:_upperLeftValueLabel :NO];
-                            [self animateShowHide:_lowerRightValueLabel :NO];
+                            
+                            [self animateShowHide:_lowerLeftLabel :NO];
+                            [self animateShowHide:_upperRightLabel :NO];
+                            [self animateShowHide:_lowerLeftLatitudeLabel :NO];
+                            [self animateShowHide:_lowerLeftLongitudeLabel :NO];
+                            [self animateShowHide:_upperRightLatitudeLabel :NO];
+                            [self animateShowHide:_upperRightLongitudeLabel :NO];
                         }
                         if(longPressGestureRecognizer.state == UIGestureRecognizerStateEnded){
                             [self setDrawing:false];
@@ -265,6 +278,23 @@
         mapPoint.data = [[GPKGSMapPointData alloc] init];
     }
     return (GPKGSMapPointData *) mapPoint.data;
+}
+
+
+- (void) setBoundingBoxWithLowerLeftLat:(double)lowerLeftLat andLowerLeftLon:(double)lowerLeftLon andUpperRightLat:(double) upperRightLat andUpperRightLon:(double)upperRightLon {
+    _boundingBoxStartCorner = CLLocationCoordinate2DMake(lowerLeftLat, lowerLeftLon);
+    _boundingBoxEndCorner = CLLocationCoordinate2DMake(upperRightLat, upperRightLon);
+    
+    CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:_boundingBoxStartCorner andPoint2: _boundingBoxEndCorner];
+    MKPolygon * newBoundingBox = [MKPolygon polygonWithCoordinates:points count:4];
+    [self.mapView removeOverlay:self.boundingBox];
+    [self.mapView addOverlay:newBoundingBox];
+    self.boundingBox = newBoundingBox;
+    
+    _minLat = lowerLeftLat;
+    _minLon = lowerLeftLon;
+    _maxLat = upperRightLat;
+    _maxLon = upperRightLon;
 }
 
 

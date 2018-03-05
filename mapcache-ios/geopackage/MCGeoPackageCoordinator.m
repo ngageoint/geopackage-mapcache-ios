@@ -50,7 +50,7 @@
 }
 
 
-#pragma mark - Delegate methods
+#pragma mark - GeoPackage View delegate methods
 
 - (void) newLayer {
     NSLog(@"Coordinator handling new layer");
@@ -77,6 +77,25 @@
 - (void) callCompletionHandler {
     NSLog(@"Back pressed");
     [_delegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
+}
+
+
+- (void) deleteLayer:(NSString *) layerName {
+    
+    GPKGGeoPackage *geoPackage = [_manager open:_database.name];
+    
+    @try {
+        [geoPackage deleteUserTable:layerName];
+        [_geoPackageViewController removeLayerNamed:layerName];
+    }
+    @catch (NSException *exception) {
+        [GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], _database.name, layerName]
+                                 andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
+    }
+    @finally {
+        [geoPackage close];
+    }
 }
 
 
@@ -142,18 +161,19 @@
     [_navigationController pushViewController:_zoomAndQualityViewController animated:YES];
 }
 
-- (void)showManualBoundingBoxView {
-    _manualBoundingBoxViewController = [[MCManualBoundingBoxViewController alloc] init];
+- (void) showManualBoundingBoxViewWithMinLat:(double)minLat andMaxLat:(double)maxLat andMinLon:(double)minLon andMaxLon:(double) maxLon {
+    _manualBoundingBoxViewController = [[MCManualBoundingBoxViewController alloc] initWithLowerLeftLat:minLat andLowerLeftLon:minLon andUpperRightLat:maxLat andUpperRightLon:maxLon];
     _manualBoundingBoxViewController.delegate = self;
-    _manualBoundingBoxViewController.modalPresentationStyle = UIModalPresentationPopover;
-    [_boundingBoxViewController presentViewController:_manualBoundingBoxViewController animated:YES completion:nil];
+    [_navigationController pushViewController:_manualBoundingBoxViewController animated:YES];
     
 }
 
 
 #pragma mark- MCManualBoundingBoxDelegate
-- (void) manualBoundingBoxCompletionHandler:(GPKGBoundingBox *)boundingBox {
-    // TODO update the bounding box in the BoundingBox view controller
+- (void) manualBoundingBoxCompletionHandlerWithLowerLeftLat:(double)lowerLeftLat andLowerLeftLon:(double)lowerLeftLon andUpperRightLat:(double)upperRightLat andUpperRightLon:(double)upperRightLon{
+    [_boundingBoxViewController setBoundingBoxWithLowerLeftLat:lowerLeftLat andLowerLeftLon:lowerLeftLon andUpperRightLat:upperRightLat andUpperRightLon:upperRightLon];
+    [_navigationController popToViewController:_boundingBoxViewController animated:YES];
+    
 }
 
 #pragma mark- MCZoomAndQualityDelegate methods
