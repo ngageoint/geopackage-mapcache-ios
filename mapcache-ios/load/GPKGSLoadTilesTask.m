@@ -45,6 +45,7 @@
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
                andBoundingBox: (GPKGBoundingBox *) boundingBox
+               andTileScaling: (GPKGTileScaling *) scaling
                  andAuthority: (NSString *) authority
                       andCode: (NSString *) code
                      andLabel: (NSString *) label{
@@ -62,7 +63,7 @@
     GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
     
     GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andTileUrl:tileUrl andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
-    [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andStandardFormat:standardWebMercatorFormat andBoundingBox:boundingBox];
+    [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andStandardFormat:standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:scaling];
     
     [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
 }
@@ -78,6 +79,7 @@
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
                andBoundingBox: (GPKGBoundingBox *) boundingBox
+               andTileScaling: (GPKGTileScaling *) scaling
                  andAuthority: (NSString *) authority
                       andCode: (NSString *) code
                      andLabel: (NSString *) label{
@@ -86,7 +88,7 @@
     GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
     
     GPKGTileGenerator * tileGenerator = [[GPKGFeatureTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andFeatureTiles:featureTiles andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
-    [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andStandardFormat:standardWebMercatorFormat andBoundingBox:boundingBox];
+    [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andStandardFormat:standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:scaling];
     
     [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
 }
@@ -111,7 +113,8 @@
       andCompressQuality: (int) compressQuality
         andCompressScale: (int) compressScale
        andStandardFormat: (BOOL) standardWebMercatorFormat
-          andBoundingBox: (GPKGBoundingBox *) boundingBox{
+          andBoundingBox: (GPKGBoundingBox *) boundingBox
+          andTileScaling: (GPKGTileScaling *) scaling{
     
     if(minZoom > maxZoom){
         [NSException raise:@"Zoom Range" format:@"Min zoom of %d can not be larger than max zoom of %d", minZoom, maxZoom];
@@ -121,6 +124,7 @@
     [tileGenerator setCompressQualityAsIntPercentage:compressQuality];
     [tileGenerator setCompressScaleAsIntPercentage:compressScale];
     [tileGenerator setStandardWebMercatorFormat:standardWebMercatorFormat];
+    [tileGenerator setScaling:scaling];
 }
 
 +(void) loadTilesWithCallback:(NSObject<GPKGSLoadTilesProtocol> *)callback andGeoPackage:(GPKGGeoPackage *)geoPackage andTable:(NSString *)tableName andTileGenerator: (GPKGTileGenerator *) tileGenerator andLabel: (NSString *) label{
@@ -174,7 +178,7 @@
         
         @try {
             count = [self.tileGenerator generateTiles];
-            if(count < [self.maxTiles intValue]){
+            if(count < [self.maxTiles intValue] && [self.tileGenerator class] != [GPKGFeatureTileGenerator class]){
                 NSString * countError = [NSString stringWithFormat:@"Fewer tiles were generated than expected. Expected: %@, Actual: %u", self.maxTiles, count];
                 if(self.error != nil){
                     countError = [NSString stringWithFormat:@"%@, Error: %@", countError, self.error];
@@ -235,6 +239,11 @@
 
 -(void) failureWithError: (NSString *) error{
     self.error = error;
+}
+
++(GPKGTileScaling *) tileScaling{
+    // TODO Set these values from tile creation and updates
+    return [[GPKGTileScaling alloc] initWithScalingType:GPKG_TSC_CLOSEST_IN_OUT andZoomIn:[NSNumber numberWithInt:2] andZoomOut:[NSNumber numberWithInt:2]];
 }
 
 @end

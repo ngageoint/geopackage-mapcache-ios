@@ -1065,6 +1065,14 @@ const char ConstantKey;
     }
 }
 
+- (void)editTilesViewController:(GPKGSEditTilesViewController *)controller tilesEdited:(BOOL)edited{
+    if(edited){
+        [self updateAndReloadData];
+        self.retainModifiedForMap = true;
+        [self.active setModified:true];
+    }
+}
+
 - (void)createFeatureTilesViewController:(GPKGSCreateFeatureTilesViewController *)controller createdTiles:(int)count withError: (NSString *) error{
     [self updateAndReloadData];
     if(count > 0){
@@ -1153,6 +1161,7 @@ const char ConstantKey;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_EDIT_TILES]){
         GPKGSEditTilesViewController *editTilesViewController = segue.destinationViewController;
         GPKGSTable * table = (GPKGSTable *)sender;
+        editTilesViewController.delegate = self;
         editTilesViewController.table = table;
         editTilesViewController.manager = self.manager;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_CREATE_FEATURE_TILES]){

@@ -14,6 +14,7 @@
 #import "GPKGBoundingBox.h"
 #import "GPKGGeoPackage.h"
 #import "GPKGFeatureTiles.h"
+#import "GPKGTileScaling.h"
 
 @interface GPKGSLoadTilesTask : NSObject<GPKGProgress>
 
@@ -28,6 +29,7 @@
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
                andBoundingBox: (GPKGBoundingBox *) boundingBox
+               andTileScaling: (GPKGTileScaling *) scaling
                  andAuthority: (NSString *) authority
                       andCode: (NSString *) code
                      andLabel: (NSString *) label;
@@ -43,10 +45,13 @@
              andCompressScale: (int) compressScale
             andStandardFormat: (BOOL) standardWebMercatorFormat
                andBoundingBox: (GPKGBoundingBox *) boundingBox
+               andTileScaling: (GPKGTileScaling *) scaling
                  andAuthority: (NSString *) authority
                       andCode: (NSString *) code
                      andLabel: (NSString *) label;
 
 +(GPKGBoundingBox *) transformBoundingBox: (GPKGBoundingBox *) boundingBox withProjection: (GPKGProjection *) projection;
+
++(GPKGTileScaling *) tileScaling;
 
 @end
