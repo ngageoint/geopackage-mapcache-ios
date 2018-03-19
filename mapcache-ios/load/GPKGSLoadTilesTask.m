@@ -243,7 +243,9 @@
 
 +(GPKGTileScaling *) tileScaling{
     // TODO Set these values from tile creation and updates
-    return [[GPKGTileScaling alloc] initWithScalingType:GPKG_TSC_CLOSEST_IN_OUT andZoomIn:[NSNumber numberWithInt:2] andZoomOut:[NSNumber numberWithInt:2]];
+    //return [[GPKGTileScaling alloc] initWithScalingType:GPKG_TSC_CLOSEST_IN_OUT andZoomIn:[NSNumber numberWithInt:2] andZoomOut:[NSNumber numberWithInt:2]];
+    //return [[GPKGTileScaling alloc] initWithScalingType:GPKG_TSC_CLOSEST_IN_OUT andZoomIn:nil andZoomOut:nil];
+    return nil;
 }
 
 @end
