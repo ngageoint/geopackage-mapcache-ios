@@ -11,8 +11,15 @@
 #import "GPKGGeoPackageManager.h"
 #import "GPKGSEditContentsData.h"
 
+@class GPKGSEditTilesViewController;
+
+@protocol GPKGSEditTilesDelegate <NSObject>
+- (void)editTilesViewController:(GPKGSEditTilesViewController *)controller tilesEdited:(BOOL)edited;
+@end
+
 @interface GPKGSEditTilesViewController : UIViewController
 
+@property (nonatomic, weak) id <GPKGSEditTilesDelegate> delegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) GPKGSTable *table;
 @property (weak, nonatomic) IBOutlet UITextField *minYTextField;
