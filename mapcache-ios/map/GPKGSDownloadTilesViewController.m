@@ -122,8 +122,10 @@ NSString * const GPKGS_DOWNLOAD_TILES_SEG_CREATE_TILES = @"createTiles";
             [self.manager create:database];
         }
         
+        GPKGTileScaling *scaling = [GPKGSLoadTilesTask tileScaling];
+        
         // Load tiles
-        [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:database andTable:tableName andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",loadTiles.epsg] andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_CREATE_TILES_DIALOG_LABEL]];
+        [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:database andTable:tableName andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:scaling andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",loadTiles.epsg] andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_CREATE_TILES_DIALOG_LABEL]];
         
     }
     @catch (NSException *e) {
