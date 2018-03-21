@@ -10,6 +10,8 @@
 #import "GPKGSEditContentsViewController.h"
 #import "GPKGSUtils.h"
 #import "GPKGSDecimalValidator.h"
+#import "GPKGSLoadTilesTask.h"
+#import "GPKGTileTableScaling.h"
 
 NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
 
@@ -70,33 +72,45 @@ NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
         
         NSDecimalNumber * minYNumber = nil;
         if(self.minYTextField.text.length > 0){
-            int minY = [self.minYTextField.text doubleValue];
+            double minY = [self.minYTextField.text doubleValue];
             minYNumber = [[NSDecimalNumber alloc] initWithDouble:minY];
         }
         [tileMatrixSet setMinY:minYNumber];
         
         NSDecimalNumber * maxYNumber = nil;
         if(self.maxYTextField.text.length > 0){
-            int maxY = [self.maxYTextField.text doubleValue];
+            double maxY = [self.maxYTextField.text doubleValue];
             maxYNumber = [[NSDecimalNumber alloc] initWithDouble:maxY];
         }
         [tileMatrixSet setMaxY:maxYNumber];
         
         NSDecimalNumber * minXNumber = nil;
         if(self.minXTextField.text.length > 0){
-            int minX = [self.minXTextField.text doubleValue];
+            double minX = [self.minXTextField.text doubleValue];
             minXNumber = [[NSDecimalNumber alloc] initWithDouble:minX];
         }
         [tileMatrixSet setMinX:minXNumber];
         
         NSDecimalNumber * maxXNumber = nil;
         if(self.maxXTextField.text.length > 0){
-            int maxX = [self.maxXTextField.text doubleValue];
+            double maxX = [self.maxXTextField.text doubleValue];
             maxXNumber = [[NSDecimalNumber alloc] initWithDouble:maxX];
         }
         [tileMatrixSet setMaxX:maxXNumber];
 
         [tileMatrixSetDao update:tileMatrixSet];
+        
+        GPKGTileScaling *scaling = [GPKGSLoadTilesTask tileScaling];
+        GPKGTileTableScaling *tileTableScaling = [[GPKGTileTableScaling alloc] initWithGeoPackage:geoPackage andTileMatrixSet:tileMatrixSet];
+        if(scaling != nil){
+            [tileTableScaling createOrUpdate:scaling];
+        }else{
+            [tileTableScaling delete];
+        }
+        
+        if(self.delegate != nil){
+            [self.delegate editTilesViewController:self tilesEdited:YES];
+        }
     }
     @catch (NSException *e) {
         [GPKGSUtils showMessageWithDelegate:self
