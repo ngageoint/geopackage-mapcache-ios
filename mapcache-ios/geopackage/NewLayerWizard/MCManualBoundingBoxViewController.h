@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GPKGSSectionTitleCell.h"
 #import "GPKGSFieldWithTitleCell.h"
+#import "GPKGSDesctiptionCell.h"
 #import "GPKGSButtonCell.h"
 #import "GPKGBoundingBox.h"
 
