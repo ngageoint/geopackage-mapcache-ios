@@ -44,6 +44,7 @@
 #import "WKBGeometryEnvelopeBuilder.h"
 #import "GPKGMultipleFeatureIndexResults.h"
 #import "GPKGFeatureIndexListResults.h"
+#import "GPKGTileTableScaling.h"
 
 NSString * const GPKGS_MAP_SEG_DOWNLOAD_TILES = @"downloadTiles";
 NSString * const GPKGS_MAP_SEG_SELECT_FEATURE_TABLE = @"selectFeatureTable";
@@ -2052,7 +2053,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName:tiles.name];
     
-    GPKGBoundedOverlay * overlay = [GPKGOverlayFactory getBoundedOverlay:tileDao];
+    GPKGTileTableScaling *tileTableScaling = [[GPKGTileTableScaling alloc] initWithGeoPackage:geoPackage andTileDao:tileDao];
+    GPKGTileScaling *tileScaling = [tileTableScaling get];
+    
+    GPKGBoundedOverlay * overlay = [GPKGOverlayFactory getBoundedOverlay:tileDao andScaling:tileScaling];
     overlay.canReplaceMapContent = false;
     
     GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
@@ -2075,8 +2079,22 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self.featureOverlayQueries addObject:featureOverlayQuery];
     }
     
-    GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
-    [self displayTilesWithOverlay:overlay andBoundingBox:[tileMatrixSet getBoundingBox] andSrs:[tileMatrixSetDao getSrs:tileMatrixSet] andSpecifiedBoundingBox:nil];
+    GPKGBoundingBox *displayBoundingBox = [tileMatrixSet getBoundingBox];
+    GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
+    GPKGSpatialReferenceSystem *tileMatrixSetSrs = [tileMatrixSetDao getSrs:tileMatrixSet];
+    GPKGContents *contents = [tileMatrixSetDao getContents:tileMatrixSet];
+    GPKGBoundingBox *contentsBoundingBox = [contents getBoundingBox];
+    if(contentsBoundingBox != nil){
+        GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
+        GPKGProjectionTransform *transform = [[GPKGProjectionTransform alloc] initWithFromSrs:[contentsDao getSrs:contents] andToSrs:tileMatrixSetSrs];
+        GPKGBoundingBox *transformedContentsBoundingBox = contentsBoundingBox;
+        if(![transform isSameProjection]){
+            transformedContentsBoundingBox = [transform transformWithBoundingBox:transformedContentsBoundingBox];
+        }
+        displayBoundingBox = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:displayBoundingBox andBoundingBox:transformedContentsBoundingBox];
+    }
+    
+    [self displayTilesWithOverlay:overlay andBoundingBox:displayBoundingBox andSrs:tileMatrixSetSrs andSpecifiedBoundingBox:nil];
 }
 
 -(void) displayFeatureTiles: (GPKGSFeatureOverlayTable *) featureOverlay{
