@@ -19,6 +19,7 @@
 #import "GPKGSLinkedTablesViewController.h"
 #import "GPKGSDownloadCoordinator.h"
 #import "MCGeoPackageCoordinator.h"
+#import "GPKGSEditTilesViewController.h"
 
 extern NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE;
 extern NSString * const GPKGS_MANAGER_SEG_DISPLAY_TEXT;
@@ -28,7 +29,7 @@ extern NSString * const GPKGS_EXPANDED_PREFERENCE;
 
 extern const char ConstantKey;
 
-@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadCoordinatorDelegate, MCGeoPackageCoordinatorDelegate, GPKGSIndexerProtocol, GPKGSCreateFeaturesDelegate, GPKGSManagerCreateTilesDelegate, GPKGSManagerLoadTilesDelegate, GPKGSEditFeaturesDelegate, GPKGSCreateFeatureTilesDelegate, GPKGSAddTileOverlayDelegate, GPKGSEditTileOverlayDelegate, GPKGSLinkedTablesDelegate>
+@interface GPKGSManagerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, GPKGSDownloadCoordinatorDelegate, MCGeoPackageCoordinatorDelegate, GPKGSIndexerProtocol, GPKGSCreateFeaturesDelegate, GPKGSManagerCreateTilesDelegate, GPKGSManagerLoadTilesDelegate, GPKGSEditFeaturesDelegate, GPKGSCreateFeatureTilesDelegate, GPKGSAddTileOverlayDelegate, GPKGSEditTileOverlayDelegate, GPKGSLinkedTablesDelegate, GPKGSEditTilesDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *clearActiveButton;
 

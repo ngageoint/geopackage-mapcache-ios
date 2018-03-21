@@ -191,6 +191,8 @@
 - (void) createTileLayer:(GPKGSCreateTilesData *) tileData {
     NSLog(@"Coordinator attempting to create tiles");
     
+    GPKGTileScaling *scaling = [GPKGSLoadTilesTask tileScaling];
+    
     [GPKGSLoadTilesTask loadTilesWithCallback:self
                                   andDatabase:_database.name
                                      andTable:tileData.name
@@ -202,6 +204,7 @@
                              andCompressScale:100 // TODO: let user set this
                             andStandardFormat:tileData.loadTiles.generateTiles.standardWebMercatorFormat
                                andBoundingBox:tileData.loadTiles.generateTiles.boundingBox
+                               andTileScaling:scaling
                                  andAuthority:PROJ_AUTHORITY_EPSG
                                       andCode:[NSString stringWithFormat:@"%d",tileData.loadTiles.epsg]
                                      andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
