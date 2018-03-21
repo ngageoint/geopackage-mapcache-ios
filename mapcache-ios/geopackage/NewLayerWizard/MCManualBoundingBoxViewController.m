@@ -19,6 +19,7 @@
 @property (nonatomic, strong) GPKGSFieldWithTitleCell *upperRightLatitudeCell;
 @property (nonatomic, strong) GPKGSFieldWithTitleCell *upperRightLongitudeCell;
 @property (nonatomic, strong) GPKGSButtonCell *buttonCell;
+@property (nonatomic, strong) GPKGSDesctiptionCell *descriptionCell; // TODO spell this right...
 @property (nonatomic, strong) GPKGBoundingBox *boundingBox;
 @end
 
@@ -63,38 +64,46 @@
     _lowerLeftLatitudeCell.title.text = @"Lower left latitude";
     _lowerLeftLatitudeCell.field.text = [NSString stringWithFormat:@"%f", _lowerLeftLat];
     _lowerLeftLatitudeCell.field.delegate = self;
+    [_lowerLeftLatitudeCell.field setKeyboardType:UIKeyboardTypeNumbersAndPunctuation];
     [_cellArray addObject:_lowerLeftLatitudeCell];
     
     _lowerLeftLongitudeCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     _lowerLeftLongitudeCell.title.text = @"Lower left longitude";
     _lowerLeftLongitudeCell.field.text = [NSString stringWithFormat:@"%f", _lowerLeftLon];
     _lowerLeftLongitudeCell.field.delegate = self;
+    [_lowerLeftLongitudeCell.field setKeyboardType:UIKeyboardTypeNumbersAndPunctuation];
     [_cellArray addObject:_lowerLeftLongitudeCell];
     
     _upperRightLatitudeCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     _upperRightLatitudeCell.title.text = @"Upper right latitude";
     _upperRightLatitudeCell.field.text = [NSString stringWithFormat:@"%f", _upperRightLat];
     _upperRightLatitudeCell.field.delegate = self;
+    [_upperRightLatitudeCell.field setKeyboardType:UIKeyboardTypeNumbersAndPunctuation];
     [_cellArray addObject:_upperRightLatitudeCell];
     
     _upperRightLongitudeCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     _upperRightLongitudeCell.title.text = @"Upper right longitude";
     _upperRightLongitudeCell.field.text = [NSString stringWithFormat:@"%f", _upperRightLon];
     _upperRightLongitudeCell.field.delegate = self;
+    [_upperRightLongitudeCell.field setKeyboardType:UIKeyboardTypeNumbersAndPunctuation];
     [_cellArray addObject:_upperRightLongitudeCell];
+    
+    _descriptionCell = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+    _descriptionCell.descriptionLabel.text = @"ohai";
+    [_cellArray addObject:_descriptionCell];
     
     _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_buttonCell.button setTitle:@"OK" forState:UIControlStateNormal];
     [_buttonCell disableButton];
     _buttonCell.delegate = self;
     [_cellArray addObject:_buttonCell];
-    
 }
 
 
 - (void)registerCellTypes {
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
 }
 
@@ -139,6 +148,12 @@
     if (_lowerLeftLat < _upperRightLat && _lowerLeftLon < _upperRightLon) {
         [_buttonCell enableButton];
     } else {
+        _descriptionCell.descriptionLabel.text = @"Lower left values should be less than upper right values.";
+        [_buttonCell disableButton];
+    }
+    
+    if (_lowerLeftLat > 90 || _upperRightLat > 90 || _lowerLeftLat < -90 || _upperRightLat < -90 || _lowerLeftLon > 180 || _upperRightLon > 180 || _lowerLeftLon < -180 || _upperRightLon < -180) {
+        _descriptionCell.descriptionLabel.text = @"Latitude should be between -90 and 90, longitude values should be between -180 and -180.";
         [_buttonCell disableButton];
     }
 }
@@ -148,4 +163,23 @@
     [textField resignFirstResponder];
     return YES;
 }
+
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSCharacterSet *characterSet = [[NSCharacterSet characterSetWithCharactersInString:@"01234567890-."] invertedSet];
+    NSString *filtered = [[string componentsSeparatedByCharactersInSet:characterSet] componentsJoinedByString:@""];
+
+    int numberOfDecimals = [[textField.text componentsSeparatedByString:@"."] count] - 1;
+    if (numberOfDecimals == 1 && [filtered isEqualToString:@"."]) {
+        return false;
+    }
+    
+    if ([filtered isEqualToString:@"-"] && range.location > 0) {
+        return false;
+    }
+    
+    return [string isEqualToString:filtered];
+}
+
+
 @end
