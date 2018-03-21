@@ -4,9 +4,12 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 1.17 (TBD)
+## [1.17](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.17) (03-21-2018)
 
-* TBD
+* geopackage-ios version updated to 2.0.2
+* Tile Scaling limited (read-only) support for displaying missing tiles using nearby zoom levels
+* Zoom to tiles using the intersection between the Contents and Tile Matrix Set bounds
+* Fix loss of decimal precision when editing tile table bounds
 
 ## [1.16](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.16) (02-15-2018)
 
