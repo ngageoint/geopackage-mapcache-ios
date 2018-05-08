@@ -145,7 +145,7 @@ const char ConstantKey;
                 
                 GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
                 GPKGGeometryColumns * geometryColumns = [contentsDao getGeometryColumns:contents];
-                enum WKBGeometryType geometryType = [WKBGeometryTypes fromName:geometryColumns.geometryTypeName];
+                enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
                 
                 GPKGSFeatureTable * table = [[GPKGSFeatureTable alloc] initWithDatabase:database andName:tableName andGeometryType:geometryType andCount:count];
                 [table setActive:[self.active exists:table]];
@@ -235,33 +235,33 @@ const char ConstantKey;
         }else if([cellObject isKindOfClass:[GPKGSFeatureTable class]]){
             GPKGSFeatureTable * featureTable = (GPKGSFeatureTable *) cellObject;
             typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
-            if(featureTable.geometryType != WKB_NONE){
+            if(featureTable.geometryType != SF_NONE){
                 switch(featureTable.geometryType){
-                    case WKB_POINT:
-                    case WKB_MULTIPOINT:
+                    case SF_POINT:
+                    case SF_MULTIPOINT:
                         typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_POINT];
                         break;
-                    case WKB_LINESTRING:
-                    case WKB_MULTILINESTRING:
-                    case WKB_CURVE:
-                    case WKB_COMPOUNDCURVE:
-                    case WKB_CIRCULARSTRING:
-                    case WKB_MULTICURVE:
+                    case SF_LINESTRING:
+                    case SF_MULTILINESTRING:
+                    case SF_CURVE:
+                    case SF_COMPOUNDCURVE:
+                    case SF_CIRCULARSTRING:
+                    case SF_MULTICURVE:
                         typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_LINESTRING];
                         break;
-                    case WKB_POLYGON:
-                    case WKB_SURFACE:
-                    case WKB_CURVEPOLYGON:
-                    case WKB_TRIANGLE:
-                    case WKB_POLYHEDRALSURFACE:
-                    case WKB_TIN:
-                    case WKB_MULTIPOLYGON:
-                    case WKB_MULTISURFACE:
+                    case SF_POLYGON:
+                    case SF_SURFACE:
+                    case SF_CURVEPOLYGON:
+                    case SF_TRIANGLE:
+                    case SF_POLYHEDRALSURFACE:
+                    case SF_TIN:
+                    case SF_MULTIPOLYGON:
+                    case SF_MULTISURFACE:
                         typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_POLYGON];
                         break;
-                    case WKB_GEOMETRY:
-                    case WKB_GEOMETRYCOLLECTION:
-                    case WKB_NONE:
+                    case SF_GEOMETRY:
+                    case SF_GEOMETRYCOLLECTION:
+                    case SF_NONE:
                         typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
                         break;
                 }

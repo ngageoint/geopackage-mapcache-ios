@@ -36,7 +36,7 @@
 @property (nonatomic, strong) NSString * polygonFillColorName;
 @property (nonatomic) int polygonFillAlpha;
 
--(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andFeatureTable: (NSString *) featureTable andGeometryType: (enum WKBGeometryType) geometryType andCount: (int) count;
+-(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andFeatureTable: (NSString *) featureTable andGeometryType: (enum SFGeometryType) geometryType andCount: (int) count;
 
 -(instancetype) initWithValues: (NSDictionary *) values;
 
