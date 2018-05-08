@@ -211,7 +211,7 @@ static GPKGSDatabases * instance;
         }
         if(features != nil){
             for(NSString * feature in features){
-                [self addTable:[[GPKGSFeatureTable alloc] initWithDatabase:database andName:feature andGeometryType:WKB_NONE andCount:0] andUpdatePreferences:false];
+                [self addTable:[[GPKGSFeatureTable alloc] initWithDatabase:database andName:feature andGeometryType:SF_NONE andCount:0] andUpdatePreferences:false];
             }
         }
         if(featureOverlays != nil){
