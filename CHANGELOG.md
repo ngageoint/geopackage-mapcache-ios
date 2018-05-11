@@ -6,7 +6,9 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ## 1.18 (TBD)
 
-* TBD
+* geopackage-ios version updated to 3.0.0
+* Feature Overlays turn on a single composite overlay with linked tiles and features
+* GeoPackage tile type handler rank lowered from Owner to Default
 
 ## [1.17](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.17) (03-21-2018)
 
