@@ -69,7 +69,7 @@ NSString * const GPKGS_MANAGER_EDIT_FEATURES_SEG_EDIT_CONTENTS = @"editContents"
         [contents setLastChange:[NSDate date]];
         [contentsDao update:contents];
         
-        enum WKBGeometryType geometryType = [WKBGeometryTypes fromName:self.geometryTypeButton.titleLabel.text];
+        enum SFGeometryType geometryType = [SFGeometryTypes fromName:self.geometryTypeButton.titleLabel.text];
         [geometryColumns setGeometryType:geometryType];
         
         NSNumber * zNumber = nil;
@@ -167,8 +167,8 @@ NSString * const GPKGS_MANAGER_EDIT_FEATURES_SEG_EDIT_CONTENTS = @"editContents"
         [self.data setMinX:contents.minX];
         [self.data setMaxX:contents.maxX];
         
-        enum WKBGeometryType geometryType = [geometryColumns getGeometryType];
-        [self.geometryTypeButton setTitle:[WKBGeometryTypes name:geometryType] forState:UIControlStateNormal];
+        enum SFGeometryType geometryType = [geometryColumns getGeometryType];
+        [self.geometryTypeButton setTitle:[SFGeometryTypes name:geometryType] forState:UIControlStateNormal];
         [self.zTextField setText:[geometryColumns.z stringValue]];
         [self.mTextField setText:[geometryColumns.m stringValue]];
     }

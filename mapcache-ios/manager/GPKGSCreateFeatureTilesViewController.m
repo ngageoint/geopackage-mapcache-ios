@@ -11,12 +11,12 @@
 #import "GPKGSFeatureTilesDrawViewController.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
-#import "GPKGProjectionTransform.h"
-#import "GPKGProjectionConstants.h"
+#import "SFPProjectionTransform.h"
+#import "SFPProjectionConstants.h"
 #import "GPKGTileBoundingBoxUtils.h"
 #import "GPKGSLoadTilesTask.h"
 #import "GPKGSUtils.h"
-#import "GPKGProjectionFactory.h"
+#import "SFPProjectionFactory.h"
 #import "GPKGNumberFeaturesTile.h"
 
 NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_GENERATE_TILES = @"generateTiles";
@@ -178,25 +178,25 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
             
             GPKGBoundingBox * webMercatorBoundingBox = nil;
             GPKGBoundingBox * boundingBox = nil;
-            GPKGProjection * projection = nil;
+            SFPProjection * projection = nil;
             if(self.generateTilesData.boundingBox != nil){
                 boundingBox = self.generateTilesData.boundingBox;
-                projection = [GPKGProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                projection = [SFPProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
             }else{
                 boundingBox = [contents getBoundingBox];
                 if(boundingBox == nil){
                     boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-PROJ_WGS84_HALF_WORLD_LON_WIDTH andMinLatitudeDouble:PROJ_WEB_MERCATOR_MIN_LAT_RANGE andMaxLongitudeDouble:PROJ_WGS84_HALF_WORLD_LON_WIDTH andMaxLatitudeDouble:PROJ_WEB_MERCATOR_MAX_LAT_RANGE];
-                    projection = [GPKGProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                    projection = [SFPProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
                 }else{
                     projection = [contentsDao getProjection:contents];
                 }
             }
             
-            GPKGProjectionTransform * webMercatorTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
-            if([projection getUnit] == GPKG_UNIT_DEGREES){
+            SFPProjectionTransform * webMercatorTransform = [[SFPProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+            if([projection getUnit] == SFP_UNIT_DEGREES){
                 boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
             }
-            webMercatorBoundingBox = [webMercatorTransform transformWithBoundingBox:boundingBox];
+            webMercatorBoundingBox = [boundingBox transform:webMercatorTransform];
             
             // Try to find a good zoom starting point
             int zoomLevel = [GPKGTileBoundingBoxUtils getZoomLevelWithWebMercatorBoundingBox:webMercatorBoundingBox];
@@ -218,8 +218,8 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
             }
             
             if(self.generateTilesData.boundingBox == nil){
-                GPKGProjectionTransform * worldGeodeticTransform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
-                GPKGBoundingBox * worldGeodeticBoundingBox = [worldGeodeticTransform transformWithBoundingBox:webMercatorBoundingBox];
+                SFPProjectionTransform * worldGeodeticTransform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                GPKGBoundingBox * worldGeodeticBoundingBox = [webMercatorBoundingBox transform:worldGeodeticTransform];
                 self.generateTilesData.boundingBox = worldGeodeticBoundingBox;
             }
         }

@@ -11,7 +11,7 @@
 #import "GPKGSConstants.h"
 #import "GPKGSDecimalValidator.h"
 #import "GPKGGeoPackage.h"
-#import "GPKGProjectionConstants.h"
+#import "SFPProjectionConstants.h"
 #import "GPKGSBoundingBoxViewController.h"
 #import "GPKGSUtils.h"
 
@@ -67,7 +67,7 @@ NSString * const GPKGS_CREATE_FEATURES_SEG_BOUNDING_BOX = @"boundingBox";
             [NSException raise:@"Longitude Range" format:@"Min longitude can not be larger than max longitude"];
         }
         
-        enum WKBGeometryType geometryType = [WKBGeometryTypes fromName:self.geometryTypeButton.titleLabel.text];
+        enum SFGeometryType geometryType = [SFGeometryTypes fromName:self.geometryTypeButton.titleLabel.text];
         
         GPKGGeometryColumns * geometryColumns = [[GPKGGeometryColumns alloc] init];
         [geometryColumns setTableName:tableName];
