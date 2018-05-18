@@ -130,7 +130,7 @@
             
             GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
             GPKGGeometryColumns *geometryColumns = [contentsDao getGeometryColumns:contents];
-            enum WKBGeometryType geometryType = [WKBGeometryTypes fromName:geometryColumns.geometryTypeName];
+            enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
             
             GPKGSFeatureTable *table = [[GPKGSFeatureTable alloc] initWithDatabase:_database.name andName:tableName andGeometryType:geometryType andCount:count];
             // there was some bit about setting the table as active, but I think that was for the OG manager

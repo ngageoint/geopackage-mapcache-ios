@@ -12,7 +12,7 @@
 #import <GPKGGeoPackageFactory.h>
 #import "GPKGSUtils.h"
 #import "GPKGSConstants.h"
-#import "GPKGProjectionConstants.h"
+#import "SFPProjectionConstants.h"
 #import "GPKGSProperties.h"
 #import "GPKGSButtonCell.h"
 #import "GPKGBoundingBox.h"
