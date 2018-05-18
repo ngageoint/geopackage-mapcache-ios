@@ -13,7 +13,7 @@
 #import "GPKGSUtils.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
-#import "WKBGeometryPrinter.h"
+#import "SFGeometryPrinter.h"
 #import "GPKGSFeatureOverlayTable.h"
 
 @interface GPKGSDisplayTextViewController ()
@@ -297,14 +297,14 @@
                 
                 GPKGGeometryData * geomData = [featureRow getGeometry];
                 if(geomData != nil){
-                    WKBGeometry * geometry = geomData.geometry;
+                    SFGeometry * geometry = geomData.geometry;
                     if(geometry != nil){
                         
                         if(info.length > 0){
                             [info appendString:@"\n"];
                         }
                         
-                        [info appendString:[WKBGeometryPrinter getGeometryString:geometry]];
+                        [info appendString:[SFGeometryPrinter getGeometryString:geometry]];
                     }
                 }
             }

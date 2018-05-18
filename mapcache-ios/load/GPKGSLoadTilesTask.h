@@ -50,7 +50,7 @@
                       andCode: (NSString *) code
                      andLabel: (NSString *) label;
 
-+(GPKGBoundingBox *) transformBoundingBox: (GPKGBoundingBox *) boundingBox withProjection: (GPKGProjection *) projection;
++(GPKGBoundingBox *) transformBoundingBox: (GPKGBoundingBox *) boundingBox withProjection: (SFPProjection *) projection;
 
 +(GPKGTileScaling *) tileScaling;
 
