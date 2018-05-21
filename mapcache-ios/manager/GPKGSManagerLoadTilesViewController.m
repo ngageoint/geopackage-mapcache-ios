@@ -9,13 +9,13 @@
 #import "GPKGSManagerLoadTilesViewController.h"
 #import "GPKGSLoadTilesViewController.h"
 #import "GPKGUrlTileGenerator.h"
-#import "GPKGProjectionTransform.h"
-#import "GPKGProjectionConstants.h"
+#import "SFPProjectionTransform.h"
+#import "SFPProjectionConstants.h"
 #import "GPKGTileBoundingBoxUtils.h"
 #import "GPKGSLoadTilesTask.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
-#import "GPKGProjectionFactory.h"
+#import "SFPProjectionFactory.h"
 #import "GPKGTileTableScaling.h"
 
 NSString * const GPKGS_MANAGER_LOAD_TILES_SEG_LOAD_TILES = @"loadTiles";
@@ -66,7 +66,7 @@ NSString * const GPKGS_MANAGER_LOAD_TILES_SEG_LOAD_TILES = @"loadTiles";
                 GPKGSpatialReferenceSystemDao * srsDao = [geoPackage getSpatialReferenceSystemDao];
                 GPKGSpatialReferenceSystem * srs = [srsDao getOrCreateWithEpsg:[NSNumber numberWithInt:loadTiles.epsg]];
                 // Create the tile table
-                GPKGProjection * projection = [GPKGProjectionFactory projectionWithEpsgInt:loadTiles.epsg];
+                SFPProjection * projection = [SFPProjectionFactory projectionWithEpsgInt:loadTiles.epsg];
                 GPKGBoundingBox * bbox = [GPKGSLoadTilesTask transformBoundingBox:boundingBox withProjection:projection];
                 [geoPackage createTileTableWithTableName:name andContentsBoundingBox:bbox andContentsSrsId:srs.srsId andTileMatrixSetBoundingBox:bbox andTileMatrixSetSrsId:srs.srsId];
             }

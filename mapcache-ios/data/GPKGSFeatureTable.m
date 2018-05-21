@@ -12,7 +12,7 @@ NSString * const GPKGS_FEATURE_TABLE_GEOMETRY_TYPE = @"geometry_type";
 
 @implementation GPKGSFeatureTable
 
--(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andGeometryType: (enum WKBGeometryType) geometryType andCount: (int) count{
+-(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andGeometryType: (enum SFGeometryType) geometryType andCount: (int) count{
     self = [super initWithDatabase:database andName:name andCount:count];
     if(self != nil){
         self.geometryType = geometryType;
@@ -23,7 +23,7 @@ NSString * const GPKGS_FEATURE_TABLE_GEOMETRY_TYPE = @"geometry_type";
 -(instancetype) initWithValues: (NSDictionary *) values{
     self = [super initWithValues:values];
     if(self != nil){
-        self.geometryType = (enum WKBGeometryType)[values objectForKey:GPKGS_FEATURE_TABLE_GEOMETRY_TYPE];
+        self.geometryType = (enum SFGeometryType)[values objectForKey:GPKGS_FEATURE_TABLE_GEOMETRY_TYPE];
     }
     return self;
 }

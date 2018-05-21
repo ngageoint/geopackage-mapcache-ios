@@ -298,10 +298,10 @@
 }
 
 
--(void) setTitleWithGeometryType: (enum WKBGeometryType) type andMapPoint: (GPKGMapPoint *) mapPoint{
+-(void) setTitleWithGeometryType: (enum SFGeometryType) type andMapPoint: (GPKGMapPoint *) mapPoint{
     NSString * title = nil;
-    if(type != WKB_NONE){
-        title = [WKBGeometryTypes name:type];
+    if(type != SF_NONE){
+        title = [SFGeometryTypes name:type];
     }
     [self setTitleWithTitle:title andMapPoint:mapPoint];
 }
