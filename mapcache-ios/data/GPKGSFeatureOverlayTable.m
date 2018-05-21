@@ -41,7 +41,7 @@ NSString * const GPKGS_FEATURE_OVERLAY_TABLE_COLOR_SUFFIX_ALPHA = @"_alpha";
 
 @implementation GPKGSFeatureOverlayTable
 
--(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andFeatureTable: (NSString *) featureTable andGeometryType: (enum WKBGeometryType) geometryType andCount: (int) count{
+-(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andFeatureTable: (NSString *) featureTable andGeometryType: (enum SFGeometryType) geometryType andCount: (int) count{
     self = [super initWithDatabase:database andName:name andGeometryType:geometryType andCount:count];
     if(self != nil){
         self.featureTable = featureTable;

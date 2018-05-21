@@ -48,7 +48,7 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
 
 - (IBAction)addButton:(id)sender {
     
-    GPKGSFeatureOverlayTable * overlayTable = [[GPKGSFeatureOverlayTable alloc] initWithDatabase:self.table.database andName:self.nameValue.text andFeatureTable:self.table.name andGeometryType:WKB_NONE andCount:0];
+    GPKGSFeatureOverlayTable * overlayTable = [[GPKGSFeatureOverlayTable alloc] initWithDatabase:self.table.database andName:self.nameValue.text andFeatureTable:self.table.name andGeometryType:SF_NONE andCount:0];
     
     [overlayTable setMinZoom:[self.editTileOverlayData.minZoom intValue]];
     [overlayTable setMaxZoom:[self.editTileOverlayData.maxZoom intValue]];
@@ -107,7 +107,7 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
                 // not show any tiles with features
                 NSNumber * maxFeatures = nil;
                 switch([featureDao getGeometryType]){
-                    case WKB_POINT:
+                    case SF_POINT:
                         maxFeatures = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_OVERLAY_MAX_POINTS_PER_TILE_DEFAULT];
                         break;
                     default:

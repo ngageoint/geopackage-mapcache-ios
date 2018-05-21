@@ -167,7 +167,7 @@
                 [NSException raise:@"Longitude Range" format:@"Min longitude can not be larger than max longitude"];
             }
             
-            enum WKBGeometryType geometryType = [WKBGeometryTypes fromName:_selectedGeometryType];
+            enum SFGeometryType geometryType = [SFGeometryTypes fromName:_selectedGeometryType];
             
             GPKGGeometryColumns * geometryColumns = [[GPKGGeometryColumns alloc] init];
             [geometryColumns setTableName:tableName];

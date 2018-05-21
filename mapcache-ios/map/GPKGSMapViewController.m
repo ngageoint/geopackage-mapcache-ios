@@ -13,9 +13,9 @@
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGSTileTable.h"
 #import "GPKGOverlayFactory.h"
-#import "GPKGProjectionTransform.h"
-#import "GPKGProjectionConstants.h"
-#import "GPKGProjectionFactory.h"
+#import "SFPProjectionTransform.h"
+#import "SFPProjectionConstants.h"
+#import "SFPProjectionFactory.h"
 #import "GPKGTileBoundingBoxUtils.h"
 #import "GPKGSFeatureOverlayTable.h"
 #import "GPKGMapShapeConverter.h"
@@ -32,7 +32,7 @@
 #import "GPKGSMapPointData.h"
 #import "GPKGSEditTypes.h"
 #import "GPKGSDisplayTextViewController.h"
-#import "WKBGeometryPrinter.h"
+#import "SFGeometryPrinter.h"
 #import "GPKGShapePoints.h"
 #import "GPKGShapeWithChildrenPoints.h"
 #import "GPGKSMapPointInitializer.h"
@@ -41,7 +41,7 @@
 #import "GPKGFeatureTileTableLinker.h"
 #import "GPKGFeatureShapes.h"
 #import "GPKGMapUtils.h"
-#import "WKBGeometryEnvelopeBuilder.h"
+#import "SFGeometryEnvelopeBuilder.h"
 #import "GPKGMultipleFeatureIndexResults.h"
 #import "GPKGFeatureIndexListResults.h"
 #import "GPKGTileTableScaling.h"
@@ -580,7 +580,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }
 }
 
--(void) expandBoundsWithGeoPackage: (GPKGGeoPackage *) geoPackage andFeatureDao: (GPKGFeatureDao *) featureDao andGeometry: (WKBGeometry *) geometry{
+-(void) expandBoundsWithGeoPackage: (GPKGGeoPackage *) geoPackage andFeatureDao: (GPKGFeatureDao *) featureDao andGeometry: (SFGeometry *) geometry{
     if(geometry !=  nil){
         @try {
             GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage getGeometryColumnsDao];
@@ -588,7 +588,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             GPKGBoundingBox *boundingBox = [contents getBoundingBox];
             if(boundingBox != nil){
                 
-                WKBGeometryEnvelope *envelope = [WKBGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
+                SFGeometryEnvelope *envelope = [SFGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
                 GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithGeometryEnvelope:envelope];
                 GPKGBoundingBox *unionBoundingBox = [GPKGTileBoundingBoxUtils unionWithBoundingBox:boundingBox andBoundingBox:geometryBoundingBox];
                 
@@ -711,7 +711,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 
                 GPKGBoundingBox *clickBoundingBox = [GPKGMapUtils buildClickBoundingBoxWithLocationCoordinate:point andMapView:self.mapView andScreenPercentage:screenClickPercentage];
                 clickBoundingBox = [clickBoundingBox expandWgs84Coordinates];
-                GPKGProjection *clickProjection = [GPKGProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                SFPProjection *clickProjection = [SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
                 
                 GPKGMapTolerance *tolerance = [GPKGMapUtils toleranceWithLocationCoordinate:point andMapView:self.mapView andScreenPercentage:screenClickPercentage];
                 
@@ -740,15 +740,15 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                                 
                             } else {
                                 
-                                GPKGProjection *featureProjection = featureDao.projection;
-                                GPKGProjectionTransform *projectionTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:clickProjection andToProjection:featureProjection];
+                                SFPProjection *featureProjection = featureDao.projection;
+                                SFPProjectionTransform *projectionTransform = [[SFPProjectionTransform alloc] initWithFromProjection:clickProjection andToProjection:featureProjection];
                                 GPKGBoundingBox *boundedClickBoundingBox = [clickBoundingBox boundWgs84Coordinates];
-                                GPKGBoundingBox *transformedBoundingBox = [projectionTransform transformWithBoundingBox:boundedClickBoundingBox];
-                                enum GPKGUnit unit = [featureProjection getUnit];
+                                GPKGBoundingBox *transformedBoundingBox = [boundedClickBoundingBox transform:projectionTransform];
+                                enum SFPUnit unit = [featureProjection getUnit];
                                 double filterMaxLongitude = 0;
-                                if(unit == GPKG_UNIT_DEGREES){
+                                if(unit == SFP_UNIT_DEGREES){
                                     filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
-                                }else if(unit == GPKG_UNIT_METERS){
+                                }else if(unit == SFP_UNIT_METERS){
                                     filterMaxLongitude = PROJ_WEB_MERCATOR_HALF_WORLD_WIDTH;
                                 }
                                 
@@ -764,13 +764,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                                             GPKGGeometryData *geometryData = [row getGeometry];
                                             if(geometryData != nil && !geometryData.empty){
                                                 
-                                                WKBGeometry *geometry = geometryData.geometry;
+                                                SFGeometry *geometry = geometryData.geometry;
                                                 
                                                 if (geometry != nil) {
                                                     
-                                                    WKBGeometryEnvelope *envelope = geometryData.envelope;
+                                                    SFGeometryEnvelope *envelope = geometryData.envelope;
                                                     if (envelope == nil) {
-                                                        envelope = [WKBGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
+                                                        envelope = [SFGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
                                                     }
                                                     if (envelope != nil) {
                                                         GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithGeometryEnvelope:envelope];
@@ -798,7 +798,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                             
                             if ([indexResults count] > 0) {
                                 GPKGFeatureInfoBuilder *featureInfoBuilder = [[GPKGFeatureInfoBuilder alloc] initWithFeatureDao:featureDao];
-                                [featureInfoBuilder ignoreGeometryType:WKB_POINT];
+                                [featureInfoBuilder ignoreGeometryType:SF_POINT];
                                 NSString *message = [featureInfoBuilder buildResultsInfoMessageAndCloseWithFeatureIndexResults:indexResults andTolerance:tolerance andLocationCoordinate:point];
                                 if(message != nil){
                                     if(clickMessage.length > 0){
@@ -1171,7 +1171,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     @try {
                         GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.editFeaturesTable];
                         GPKGFeatureRow * featureRow = (GPKGFeatureRow *)[featureDao queryForIdObject:featureId];
-                        WKBGeometry * geometry = [featureRow getGeometry].geometry;
+                        SFGeometry * geometry = [featureRow getGeometry].geometry;
                         GPKGMapShapeConverter * converter = [[GPKGMapShapeConverter alloc] initWithProjection:featureDao.projection];
                         GPKGMapShape * shape = [converter toShapeWithGeometry:geometry];
                         
@@ -1206,7 +1206,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         GPKGFeatureRow * featureRow = (GPKGFeatureRow *) [featureDao queryForIdObject:featureId];
         GPKGGeometryData * geomData = [featureRow getGeometry];
         if(geomData != nil){
-            WKBGeometry * geometry = geomData.geometry;
+            SFGeometry * geometry = geomData.geometry;
             if(geometry != nil){
                 GPKGMapShapeConverter * converter = [[GPKGMapShapeConverter alloc] initWithProjection:featureDao.projection];
                 GPKGMapShape * shape = [converter toShapeWithGeometry:geometry];
@@ -1266,7 +1266,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             case GPKGS_ET_POINT:
                 {
                     for(GPKGMapPoint * mapPoint in self.editPoints){
-                        WKBPoint * point = [converter toPointWithMapPoint:mapPoint];
+                        SFPoint * point = [converter toPointWithMapPoint:mapPoint];
                         GPKGFeatureRow * newPoint = [featureDao newRow];
                         GPKGGeometryData * pointGeomData = [[GPKGGeometryData alloc] initWithSrsId:srsId];
                         [pointGeomData setGeometry:point];
@@ -1284,7 +1284,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 
             case GPKGS_ET_LINESTRING:
                 {
-                    WKBLineString * lineString = [converter toLineStringWithMapPolyline:self.editLinestring];
+                    SFLineString * lineString = [converter toLineStringWithMapPolyline:self.editLinestring];
                     GPKGFeatureRow * newLineString = [featureDao newRow];
                     GPKGGeometryData * lineStringGeomData = [[GPKGGeometryData alloc] initWithSrsId:srsId];
                     [lineStringGeomData setGeometry:lineString];
@@ -1302,7 +1302,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             case GPKGS_ET_POLYGON:
             case GPKGS_ET_POLYGON_HOLE:
                 {
-                    WKBPolygon * polygon = [converter toPolygonWithMapPolygon:self.editPolygon];
+                    SFPolygon * polygon = [converter toPolygonWithMapPolygon:self.editPolygon];
                     GPKGFeatureRow * newPolygon = [featureDao newRow];
                     GPKGGeometryData * polygonGeomData = [[GPKGGeometryData alloc] initWithSrsId:srsId];
                     [polygonGeomData setGeometry:polygon];
@@ -1322,13 +1322,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     self.editFeatureType = GPKGS_ET_NONE;
                     NSNumber * featureId = [self.editFeatureIds objectForKey:[self.editFeatureMapPoint getIdAsNumber]];
                     
-                    WKBGeometry * geometry = [converter toGeometryFromMapShape:self.editFeatureShape.shape];
+                    SFGeometry * geometry = [converter toGeometryFromMapShape:self.editFeatureShape.shape];
                     if(geometry != nil){
                         GPKGFeatureRow * featureRow = (GPKGFeatureRow *)[featureDao queryForIdObject:featureId];
                         GPKGGeometryData * geomData = [featureRow getGeometry];
                         [geomData setGeometry:geometry];
                         if(geomData.envelope != nil){
-                            geomData.envelope = [WKBGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
+                            geomData.envelope = [SFGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
                         }
                         [featureRow setGeometry:geomData];
                         [featureDao update:featureRow];
@@ -1771,14 +1771,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(GPKGBoundingBox *) transformBoundingBoxToWgs84: (GPKGBoundingBox *) boundingBox withSrs: (GPKGSpatialReferenceSystem *) srs{
     
-    GPKGProjection *projection = [GPKGProjectionFactory projectionWithSrs:srs];
-    if([projection getUnit] == GPKG_UNIT_DEGREES){
+    SFPProjection *projection = [srs projection];
+    if([projection getUnit] == SFP_UNIT_DEGREES){
         boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
     }
-    GPKGProjectionTransform *transformToWebMercator = [[GPKGProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
-    GPKGBoundingBox *webMercatorBoundingBox = [transformToWebMercator transformWithBoundingBox:boundingBox];
-    GPKGProjectionTransform *transform = [[GPKGProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
-    boundingBox = [transform transformWithBoundingBox:webMercatorBoundingBox];
+    SFPProjectionTransform *transformToWebMercator = [[SFPProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+    GPKGBoundingBox *webMercatorBoundingBox = [boundingBox transform:transformToWebMercator];
+    SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+    boundingBox = [webMercatorBoundingBox transform:transform];
     return boundingBox;
 }
 
@@ -2056,7 +2056,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGTileTableScaling *tileTableScaling = [[GPKGTileTableScaling alloc] initWithGeoPackage:geoPackage andTileDao:tileDao];
     GPKGTileScaling *tileScaling = [tileTableScaling get];
     
-    GPKGBoundedOverlay * overlay = [GPKGOverlayFactory getBoundedOverlay:tileDao andScaling:tileScaling];
+    GPKGBoundedOverlay * overlay = [GPKGOverlayFactory boundedOverlay:tileDao andScaling:tileScaling];
     overlay.canReplaceMapContent = false;
     
     GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
@@ -2086,10 +2086,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGBoundingBox *contentsBoundingBox = [contents getBoundingBox];
     if(contentsBoundingBox != nil){
         GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
-        GPKGProjectionTransform *transform = [[GPKGProjectionTransform alloc] initWithFromSrs:[contentsDao getSrs:contents] andToSrs:tileMatrixSetSrs];
+        SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromProjection:[[contentsDao getSrs:contents] projection] andToProjection:[tileMatrixSetSrs projection]];
         GPKGBoundingBox *transformedContentsBoundingBox = contentsBoundingBox;
         if(![transform isSameProjection]){
-            transformedContentsBoundingBox = [transform transformWithBoundingBox:transformedContentsBoundingBox];
+            transformedContentsBoundingBox = [transformedContentsBoundingBox transform:transform];
         }
         displayBoundingBox = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:displayBoundingBox andBoundingBox:transformedContentsBoundingBox];
     }
@@ -2097,54 +2097,53 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self displayTilesWithOverlay:overlay andBoundingBox:displayBoundingBox andSrs:tileMatrixSetSrs andSpecifiedBoundingBox:nil];
 }
 
--(void) displayFeatureTiles: (GPKGSFeatureOverlayTable *) featureOverlay{
+-(void) displayFeatureTiles: (GPKGSFeatureOverlayTable *) featureOverlayTable{
     
-    GPKGGeoPackage * geoPackage = [self.geoPackages objectForKey:featureOverlay.database];
+    GPKGGeoPackage * geoPackage = [self.geoPackages objectForKey:featureOverlayTable.database];
     
-    GPKGFeatureDao * featureDao = [[self.featureDaos objectForKey:featureOverlay.database] objectForKey:featureOverlay.featureTable];
+    GPKGFeatureDao * featureDao = [[self.featureDaos objectForKey:featureOverlayTable.database] objectForKey:featureOverlayTable.featureTable];
     
-    GPKGBoundingBox * boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:featureOverlay.minLon andMinLatitudeDouble:featureOverlay.minLat andMaxLongitudeDouble:featureOverlay.maxLon andMaxLatitudeDouble:featureOverlay.maxLat];
+    GPKGBoundingBox * boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:featureOverlayTable.minLon andMinLatitudeDouble:featureOverlayTable.minLat andMaxLongitudeDouble:featureOverlayTable.maxLon andMaxLatitudeDouble:featureOverlayTable.maxLat];
     
     // Load tiles
     GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithFeatureDao:featureDao];
     
-    [featureTiles setMaxFeaturesPerTile:featureOverlay.maxFeaturesPerTile];
-    if(featureOverlay.maxFeaturesPerTile != nil){
+    [featureTiles setMaxFeaturesPerTile:featureOverlayTable.maxFeaturesPerTile];
+    if(featureOverlayTable.maxFeaturesPerTile != nil){
         [featureTiles setMaxFeaturesTileDraw:[[GPKGNumberFeaturesTile alloc] init]];
     }
     
     GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
     [featureTiles setIndexManager:indexer];
     
-    [featureTiles setPointColor:featureOverlay.pointColor];
-    [featureTiles setPointRadius:featureOverlay.pointRadius];
-    [featureTiles setLineColor:featureOverlay.lineColor];
-    [featureTiles setLineStrokeWidth:featureOverlay.lineStroke];
-    [featureTiles setPolygonColor:featureOverlay.polygonColor];
-    [featureTiles setPolygonStrokeWidth:featureOverlay.polygonStroke];
-    [featureTiles setFillPolygon:featureOverlay.polygonFill];
+    [featureTiles setPointColor:featureOverlayTable.pointColor];
+    [featureTiles setPointRadius:featureOverlayTable.pointRadius];
+    [featureTiles setLineColor:featureOverlayTable.lineColor];
+    [featureTiles setLineStrokeWidth:featureOverlayTable.lineStroke];
+    [featureTiles setPolygonColor:featureOverlayTable.polygonColor];
+    [featureTiles setPolygonStrokeWidth:featureOverlayTable.polygonStroke];
+    [featureTiles setFillPolygon:featureOverlayTable.polygonFill];
     if(featureTiles.fillPolygon){
-        [featureTiles setPolygonFillColor:featureOverlay.polygonFillColor];
+        [featureTiles setPolygonFillColor:featureOverlayTable.polygonFillColor];
     }
     
     [featureTiles calculateDrawOverlap];
     
-    GPKGFeatureOverlay * overlay = [[GPKGFeatureOverlay alloc] initWithFeatureTiles:featureTiles];
+    GPKGFeatureOverlay * featureOverlay = [[GPKGFeatureOverlay alloc] initWithFeatureTiles:featureTiles];
     boundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
-    [overlay setBoundingBox:boundingBox withProjection:[GPKGProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
-    [overlay setMinZoom:[NSNumber numberWithInt:featureOverlay.minZoom]];
-    [overlay setMaxZoom:[NSNumber numberWithInt:featureOverlay.maxZoom]];
+    [featureOverlay setBoundingBox:boundingBox withProjection:[SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
+    [featureOverlay setMinZoom:[NSNumber numberWithInt:featureOverlayTable.minZoom]];
+    [featureOverlay setMaxZoom:[NSNumber numberWithInt:featureOverlayTable.maxZoom]];
     
-    GPKGFeatureTileTableLinker * linker = [[GPKGFeatureTileTableLinker alloc] initWithGeoPackage:geoPackage];
-    NSArray<GPKGTileDao *> * tileDaos = [linker getTileDaosForFeatureTable:featureDao.tableName];
-    [overlay ignoreTileDaos:tileDaos];
+    // Get the tile linked overlay
+    GPKGBoundedOverlay *overlay = [GPKGOverlayFactory linkedFeatureOverlayWithOverlay:featureOverlay andGeoPackage:geoPackage];
     
     GPKGGeometryColumns * geometryColumns = featureDao.geometryColumns;
     GPKGContents * contents = [[geoPackage getGeometryColumnsDao] getContents:geometryColumns];
     
     self.featureOverlayTiles = true;
     
-    GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithFeatureOverlay:overlay];
+    GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithBoundedOverlay:overlay andFeatureTiles:featureTiles];
     [self.featureOverlayQueries addObject:featureOverlayQuery];
     
     GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
@@ -2188,7 +2187,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if(![self featureUpdateCanceled:updateId] && count < maxFeatures){
     
-        GPKGProjection *mapViewProjection = [GPKGProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+        SFPProjection *mapViewProjection = [SFPProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
         
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         if(filter && [indexer isIndexed]){
@@ -2207,14 +2206,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             double filterMaxLongitude = 0;
             
             if(filter){
-                GPKGProjection *featureProjection = featureDao.projection;
-                GPKGProjectionTransform * projectionTransform = [[GPKGProjectionTransform alloc] initWithFromProjection:mapViewProjection andToProjection:featureProjection];
+                SFPProjection *featureProjection = featureDao.projection;
+                SFPProjectionTransform * projectionTransform = [[SFPProjectionTransform alloc] initWithFromProjection:mapViewProjection andToProjection:featureProjection];
                 GPKGBoundingBox *boundedMapViewBoundingBox = [mapViewBoundingBox boundWgs84Coordinates];
-                GPKGBoundingBox *transformedBoundingBox = [projectionTransform transformWithBoundingBox:boundedMapViewBoundingBox];
-                enum GPKGUnit unit = [featureProjection getUnit];
-                if(unit == GPKG_UNIT_DEGREES){
+                GPKGBoundingBox *transformedBoundingBox = [boundedMapViewBoundingBox transform:projectionTransform];
+                enum SFPUnit unit = [featureProjection getUnit];
+                if(unit == SFP_UNIT_DEGREES){
                     filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
-                }else if(unit == GPKG_UNIT_METERS){
+                }else if(unit == SFP_UNIT_METERS){
                     filterMaxLongitude = PROJ_WEB_MERCATOR_HALF_WORLD_WIDTH;
                 }
                 filterBoundingBox = [transformedBoundingBox expandCoordinatesWithMaxLongitude:filterMaxLongitude];
@@ -2276,20 +2275,20 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGGeometryData * geometryData = [row getGeometry];
     if(geometryData != nil && !geometryData.empty){
         
-        WKBGeometry * geometry = geometryData.geometry;
+        SFGeometry * geometry = geometryData.geometry;
         
         if(geometry != nil){
             
             BOOL passesFilter = YES;
             
             if(filter && boundingBox != nil){
-                WKBGeometryEnvelope * envelope = geometryData.envelope;
+                SFGeometryEnvelope * envelope = geometryData.envelope;
                 if(envelope == nil){
-                    envelope = [WKBGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
+                    envelope = [SFGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
                 }
                 if(envelope != nil){
-                    if(geometry.geometryType == WKB_POINT){
-                        WKBPoint *point = (WKBPoint *) geometry;
+                    if(geometry.geometryType == SF_POINT){
+                        SFPoint *point = (SFPoint *) geometry;
                         passesFilter = [GPKGTileBoundingBoxUtils isPoint:point inBoundingBox:boundingBox withMaxLongitude:maxLongitude];
                     }else{
                         GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithGeometryEnvelope:envelope];
@@ -2308,7 +2307,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     if(self.editFeaturesMode){
                         GPKGMapPoint *mapPoint = [self addEditableShapeWithFeatureId:featureId andShape:mapShape];
                         if(mapPoint != nil){
-                            GPKGMapShape *mapPointShape = [[GPKGMapShape alloc] initWithGeometryType:WKB_POINT andShapeType:GPKG_MST_POINT andShape:mapPoint];
+                            GPKGMapShape *mapPointShape = [[GPKGMapShape alloc] initWithGeometryType:SF_POINT andShapeType:GPKG_MST_POINT andShape:mapPoint];
                             [self.featureShapes addMapShape:mapPointShape withFeatureId:featureId toDatabase:database withTable:tableName];
                         }
                     }else{
@@ -2711,10 +2710,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self setTitleWithTitle:nil andMapPoint:mapPoint];
 }
 
--(void) setTitleWithGeometryType: (enum WKBGeometryType) type andMapPoint: (GPKGMapPoint *) mapPoint{
+-(void) setTitleWithGeometryType: (enum SFGeometryType) type andMapPoint: (GPKGMapPoint *) mapPoint{
     NSString * title = nil;
-    if(type != WKB_NONE){
-        title = [WKBGeometryTypes name:type];
+    if(type != SF_NONE){
+        title = [SFGeometryTypes name:type];
     }
     [self setTitleWithTitle:title andMapPoint:mapPoint];
 }
