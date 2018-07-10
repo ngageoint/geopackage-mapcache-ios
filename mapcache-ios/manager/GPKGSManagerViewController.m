@@ -964,7 +964,7 @@ const char ConstantKey;
     UINavigationController *navController = [[UINavigationController alloc] init];
     [self.parentViewController presentViewController:navController animated:NO completion:nil];
     
-    GPKGSDownloadCoordinator *downloadCoordinator = [[GPKGSDownloadCoordinator alloc] initWithNavigationController:navController andDelegate:self];
+    MCDownloadCoordinator *downloadCoordinator = [[MCDownloadCoordinator alloc] initWithNavigationController:navController andDelegate:self];
     [downloadCoordinator start];
     [_childCoordinators addObject:downloadCoordinator];
 }

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MCGeoPackageOperationsCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="ZGd-77-LmU">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Feo-qb-1yY">
+                            <rect key="frame" x="0.0" y="0.0" width="94" height="70"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <inset key="titleEdgeInsets" minX="-31" minY="0.0" maxX="0.0" maxY="-38"/>
+                            <inset key="imageEdgeInsets" minX="28" minY="-28" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Rename" image="Edit">
+                                <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="renameButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="BQl-IY-Rkj"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rBQ-Gx-QK3">
+                            <rect key="frame" x="94" y="0.0" width="93.5" height="70"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <inset key="titleEdgeInsets" minX="-31" minY="0.0" maxX="0.0" maxY="-38"/>
+                            <inset key="imageEdgeInsets" minX="30" minY="-28" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Share" image="Share">
+                                <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="shareButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="Bsa-Hl-fR7"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t6U-ZM-VKY">
+                            <rect key="frame" x="187.5" y="0.0" width="94" height="70"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <inset key="titleEdgeInsets" minX="-31" minY="0.0" maxX="0.0" maxY="-38"/>
+                            <inset key="imageEdgeInsets" minX="31" minY="-28" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Duplicate" image="Copy">
+                                <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="duplicateButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="FT2-ee-laA"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jph-2y-YgO">
+                            <rect key="frame" x="281.5" y="0.0" width="93.5" height="70"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <inset key="titleEdgeInsets" minX="-31" minY="0.0" maxX="0.0" maxY="-38"/>
+                            <inset key="imageEdgeInsets" minX="30" minY="-28" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Delete" image="Delete">
+                                <color key="titleColor" red="0.97575825449999998" green="0.38110277059999997" blue="0.28535854820000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="deleteButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="u4B-SK-H6x"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="EZw-ta-Sq7"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="ZGd-77-LmU" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="37I-Og-YLF"/>
+                <constraint firstItem="ZGd-77-LmU" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="C0R-VR-PEs"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="ZGd-77-LmU" secondAttribute="bottom" id="IS2-hb-Riv"/>
+                <constraint firstItem="ZGd-77-LmU" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="MXx-dR-gZd"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="deleteButton" destination="Jph-2y-YgO" id="Q9l-4C-m8S"/>
+                <outlet property="duplicateButton" destination="t6U-ZM-VKY" id="Dwh-BS-Ocb"/>
+                <outlet property="renameButton" destination="Feo-qb-1yY" id="K7F-Hf-upe"/>
+                <outlet property="shareButton" destination="rBQ-Gx-QK3" id="ag1-9F-0qu"/>
+            </connections>
+            <point key="canvasLocation" x="24.5" y="52"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Copy" width="33" height="32"/>
+        <image name="Delete" width="33" height="33"/>
+        <image name="Edit" width="33" height="32"/>
+        <image name="Share" width="33" height="32"/>
+    </resources>
+</document>
