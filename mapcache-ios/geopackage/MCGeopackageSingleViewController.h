@@ -11,12 +11,13 @@
 #import "GPKGSFeatureTable.h"
 #import "GPKGSTileTable.h"
 #import "GPKGSDatabase.h"
-#import "GPKGSHeaderCellTableViewCell.h"
+#import "MCHeaderCellTableViewCell.h"
 #import "GPKGSSectionTitleCell.h"
 #import "GPKGSLayerCell.h"
 #import "GPKGSButtonCell.h"
 #import "GPKGSConstants.h"
 #import "GPKGSProperties.h"
+#import "MCGeoPackageOperationsCell.h"
 #import <GPKGGeoPackageManager.h>
 #import <GPKGGeoPackageFactory.h>
 #import "GPKGSUtils.h"
@@ -28,10 +29,12 @@
 - (void) copyGeoPackage;
 - (void) callCompletionHandler;
 - (void) deleteLayer:(NSString *) layerName;
+- (void) showInfo;
+- (void) showLayerDetails:(NSString *) layerName;
 @end
 
 
-@interface MCGeopackageSingleViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, GPKGSButtonCellDelegate, GPKGSHeaderCellButtonPressedDelegate>
+@interface MCGeopackageSingleViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, GPKGSButtonCellDelegate, GPKGSHeaderCellButtonPressedDelegate, MCGeoPackageButtonsCellDelegate>
 @property (strong, nonatomic) GPKGSDatabase *database;
 @property (weak, nonatomic) id<MCOperationsDelegate> delegate;
 - (void) update;

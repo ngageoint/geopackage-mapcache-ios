@@ -21,6 +21,7 @@
 #import "MCBoundingBoxViewController.h"
 #import "MCZoomAndQualityViewController.h"
 #import "MCManualBoundingBoxViewController.h"
+#import "GPKGSDisplayTextViewController.h"
 
 @protocol MCGeoPackageCoordinatorDelegate <NSObject>
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete;

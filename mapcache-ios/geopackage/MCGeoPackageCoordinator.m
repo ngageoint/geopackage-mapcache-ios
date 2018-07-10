@@ -80,6 +80,14 @@
 }
 
 
+- (void) showInfo {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    GPKGSDisplayTextViewController *textViewController = [storyboard instantiateViewControllerWithIdentifier:@"GPKGSDisplayTextViewController"];
+    textViewController.database = _database;
+    [_navigationController pushViewController: textViewController animated:YES];
+}
+
+
 - (void) deleteLayer:(NSString *) layerName {
     
     GPKGGeoPackage *geoPackage = [_manager open:_database.name];
@@ -96,6 +104,12 @@
     @finally {
         [geoPackage close];
     }
+}
+
+
+- (void) showLayerDetails:(NSString *) layerName {
+    NSLog(@"In showLayerDetails with %@", layerName);
+    // TODO: Create a layer details view and show it
 }
 
 

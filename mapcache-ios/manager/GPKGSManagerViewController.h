@@ -17,7 +17,7 @@
 #import "GPKGSAddTileOverlayViewController.h"
 #import "GPKGSManagerEditTileOverlayViewController.h"
 #import "GPKGSLinkedTablesViewController.h"
-#import "GPKGSDownloadCoordinator.h"
+#import "MCDownloadCoordinator.h"
 #import "MCGeoPackageCoordinator.h"
 #import "GPKGSEditTilesViewController.h"
 
