@@ -493,7 +493,6 @@
 				0401366C1AF94FB200C92AFC /* Frameworks */,
 				0401366D1AF94FB200C92AFC /* Resources */,
 				D51B2B27AB5CBB199555A59F /* [CP] Copy Pods Resources */,
-				77B9225F6CCDAD7855AE57C5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -582,21 +581,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		77B9225F6CCDAD7855AE57C5 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		C8B98BBB41597A0D3F25DE44 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
