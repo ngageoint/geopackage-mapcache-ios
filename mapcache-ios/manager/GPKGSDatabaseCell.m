@@ -11,6 +11,7 @@
 @implementation GPKGSDatabaseCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     // Initialization code
 }
 
