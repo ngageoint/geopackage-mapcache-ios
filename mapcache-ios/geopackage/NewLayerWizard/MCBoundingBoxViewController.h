@@ -16,7 +16,7 @@
 #import "GPKGMapShapePoints.h"
 #import "GPKGMapPoint.h"
 #import "GPKGMapShapeConverter.h"
-#import "GPKGSColorUtil.h"
+#import "MCColorUtil.h"
 #import "GPKGBoundingBox.h"
 
 @protocol MCTileLayerBoundingBoxDelegate

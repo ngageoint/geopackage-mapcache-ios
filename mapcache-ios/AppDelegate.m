@@ -90,16 +90,16 @@ annotation {
 - (void) setupApplicationAppearance {
     UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleLightContent;
     
-    [[UINavigationBar appearance] setBarTintColor:[GPKGSColorUtil getPrimary]];
+    [[UINavigationBar appearance] setBarTintColor:[MCColorUtil getPrimary]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [UILabel appearanceWhenContainedInInstancesOfClasses:@[[UINavigationBar class]]].textColor = [UIColor whiteColor];
     [[UINavigationBar appearance] setTranslucent:NO];
     
-    [[UITabBar appearance] setBarTintColor:[GPKGSColorUtil getPrimary]];
+    [[UITabBar appearance] setBarTintColor:[MCColorUtil getPrimary]];
     [[UITabBar appearance] setTintColor:[UIColor whiteColor]];
     
-    [[UIToolbar appearance] setBarTintColor:[GPKGSColorUtil getPrimary]];
+    [[UIToolbar appearance] setBarTintColor:[MCColorUtil getPrimary]];
     [[UIToolbar appearance] setTintColor:[UIColor whiteColor]];
 }
 

@@ -6,9 +6,9 @@
 //  Copyright © 2018 NGA. All rights reserved.
 //
 
-#import "GPKGSSegmentedControlCell.h"
+#import "MCSegmentedControlCell.h"
 
-@implementation GPKGSSegmentedControlCell
+@implementation MCSegmentedControlCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];

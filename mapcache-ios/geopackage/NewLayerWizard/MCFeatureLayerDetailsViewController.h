@@ -14,14 +14,14 @@
 #import "GPKGSConstants.h"
 #import "SFPProjectionConstants.h"
 #import "GPKGSProperties.h"
-#import "GPKGSButtonCell.h"
+#import "MCButtonCell.h"
 #import "GPKGBoundingBox.h"
 #import "GPKGSDatabase.h"
-#import "GPKGSDesctiptionCell.h"
-#import "GPKGSSectionTitleCell.h"
-#import "GPKGSFieldWithTitleCell.h"
-#import "GPKGSPickerViewCell.h"
-#import "GPKGSColorUtil.h"
+#import "MCDesctiptionCell.h"
+#import "MCSectionTitleCell.h"
+#import "MCFieldWithTitleCell.h"
+#import "MCPickerViewCell.h"
+#import "MCColorUtil.h"
 
 @protocol MCFeatureLayerCreationDelegate <NSObject>
 //- (void) featureLayerCreationComplete:(BOOL)layerCreated withError:(NSString *)error;

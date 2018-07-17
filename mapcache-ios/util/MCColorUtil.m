@@ -6,9 +6,9 @@
 //  Copyright © 2018 NGA. All rights reserved.
 //
 
-#import "GPKGSColorUtil.h"
+#import "MCColorUtil.h"
 
-@implementation GPKGSColorUtil
+@implementation MCColorUtil
 
 + (UIColor *) getPrimary {
     return [UIColor colorWithRed:0.0f green:0.31f blue:0.49f alpha:1];

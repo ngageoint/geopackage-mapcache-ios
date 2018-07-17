@@ -12,12 +12,78 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MCFeatureButtonsCell">
             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AAo-8E-AO0">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hvY-Gl-wzR">
+                            <rect key="frame" x="0.0" y="0.0" width="106" height="70"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <inset key="titleEdgeInsets" minX="-33" minY="0.0" maxX="0.0" maxY="-26"/>
+                            <inset key="imageEdgeInsets" minX="16" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Create Tiles" image="Copy">
+                                <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gci-2b-Fyp">
+                            <rect key="frame" x="106" y="0.0" width="68" height="70"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <inset key="titleEdgeInsets" minX="-26" minY="0.0" maxX="0.0" maxY="-26"/>
+                            <inset key="imageEdgeInsets" minX="18" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Index" image="Index">
+                                <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nFe-43-QTg">
+                            <rect key="frame" x="174" y="0.0" width="57" height="70"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <inset key="titleEdgeInsets" minX="-28" minY="0.0" maxX="0.0" maxY="-26"/>
+                            <inset key="imageEdgeInsets" minX="19" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Edit" image="Edit">
+                                <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oew-pp-F2v">
+                            <rect key="frame" x="231" y="0.0" width="71" height="70"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <inset key="titleEdgeInsets" minX="-26" minY="0.0" maxX="0.0" maxY="-26"/>
+                            <inset key="imageEdgeInsets" minX="18" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Overlay" image="Overlay">
+                                <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U5e-Go-CQ6">
+                            <rect key="frame" x="302" y="0.0" width="73" height="70"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <inset key="titleEdgeInsets" minX="-31" minY="0.0" maxX="0.0" maxY="-26"/>
+                            <inset key="imageEdgeInsets" minX="15" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Delete" image="Delete">
+                                <color key="titleColor" red="0.97575825449999998" green="0.38110277059999997" blue="0.28535854820000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="AAo-8E-AO0" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="EZP-jn-X7X"/>
+                <constraint firstItem="AAo-8E-AO0" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="e7Q-t9-lBO"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="AAo-8E-AO0" secondAttribute="bottom" id="eIx-8V-Rtf"/>
+                <constraint firstAttribute="trailing" secondItem="AAo-8E-AO0" secondAttribute="trailing" id="xWZ-Ui-eDr"/>
+            </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="25.5" y="52"/>
         </view>
     </objects>
+    <resources>
+        <image name="Copy" width="33" height="32"/>
+        <image name="Delete" width="33" height="33"/>
+        <image name="Edit" width="33" height="32"/>
+        <image name="Index" width="33" height="33"/>
+        <image name="Overlay" width="33" height="33"/>
+    </resources>
 </document>

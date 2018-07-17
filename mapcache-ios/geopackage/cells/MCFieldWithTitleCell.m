@@ -1,14 +1,14 @@
 //
-//  GPKGSPickerViewCellTableViewCell.m
+//  GPKGSFieldWithTitleCellTableViewCell.m
 //  mapcache-ios
 //
-//  Created by Tyler Burgett on 1/23/18.
+//  Created by Tyler Burgett on 1/9/18.
 //  Copyright © 2018 NGA. All rights reserved.
 //
 
-#import "GPKGSPickerViewCell.h"
+#import "MCFieldWithTitleCell.h"
 
-@implementation GPKGSPickerViewCell
+@implementation MCFieldWithTitleCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -16,10 +16,10 @@
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 }
 
-
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-}
 
+    // Configure the view for the selected state
+}
 
 @end

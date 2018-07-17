@@ -1,19 +1,18 @@
 //
-//  GPKGSSectionTitleCell.m
+//  GPKGSLayerCell.m
 //  mapcache-ios
 //
 //  Created by Tyler Burgett on 11/21/17.
 //  Copyright © 2017 NGA. All rights reserved.
 //
 
-#import "GPKGSSectionTitleCell.h"
+#import "MCLayerCell.h"
 
-@implementation GPKGSSectionTitleCell
+@implementation MCLayerCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
     [self setBackgroundColor:[UIColor clearColor]];
-    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

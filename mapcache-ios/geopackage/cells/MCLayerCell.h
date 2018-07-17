@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GPKGSLayerCell : UITableViewCell
+@interface MCLayerCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *layerTypeImage;
 @property (weak, nonatomic) IBOutlet UILabel *layerNameLabel;
 @end

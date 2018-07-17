@@ -54,32 +54,31 @@
         }*/
     }
     
-    MCHeaderCellTableViewCell *headerCell = [self.tableView dequeueReusableCellWithIdentifier:@"header"];
+    MCHeaderCell *headerCell = [self.tableView dequeueReusableCellWithIdentifier:@"header"];
     headerCell.nameLabel.text = _database.name;
     
     NSLog(@"GeoPackage Size %@", [self.manager readableSize:_database.name]);
-    headerCell.sizeLabel.text = [self.manager readableSize:_database.name]; // TODO look into threading this 
+    headerCell.detailLabelOne.text = [self.manager readableSize:_database.name]; // TODO look into threading this
     
     NSInteger tileCount = [_database getTileCount];
     NSString *tileText = tileCount == 1 ? @"tile layer" : @"tile layers";
-    headerCell.tileCountLabel.text = [NSString stringWithFormat:@"%ld %@", tileCount, tileText];
+    headerCell.detailLabelTwo.text = [NSString stringWithFormat:@"%ld %@", tileCount, tileText];
     
     NSInteger featureCount = [_database getFeatureCount];
     NSString *featureText = featureCount == 1 ? @"feature layer" : @"feature layers";
-    headerCell.featureCountLabel.text = [NSString stringWithFormat:@"%ld %@", featureCount, featureText];
-    headerCell.delegate = self;
+    headerCell.detailLabelThree.text = [NSString stringWithFormat:@"%ld %@", featureCount, featureText];
     
-    MCGeoPackageOperationsCell *geoPackageButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"operations"];
-    geoPackageButtonsCell.delegate = self;
+    MCGeoPackageOperationsCell *geoPackageOperationsCell = [self.tableView dequeueReusableCellWithIdentifier:@"operations"];
+    geoPackageOperationsCell.delegate = self;
     
-    GPKGSSectionTitleCell *titleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
+    MCSectionTitleCell *titleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
     titleCell.sectionTitleLabel.text = @"Layers";
     
-    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageButtonsCell, titleCell, nil];
+    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, titleCell, nil];
     NSArray *tables = [_database getTables];
     
     for (GPKGSTable *table in tables) {
-        GPKGSLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
+        MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
         NSString *typeImageName = @"";
         
         if ([table isMemberOfClass:[GPKGSFeatureTable class]]) {
@@ -93,7 +92,7 @@
         [_cellArray addObject:layerCell];
     }
     
-    GPKGSButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
+    MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
     [newLayerButtonCell.button setTitle:@"New Layer" forState:UIControlStateNormal];
     newLayerButtonCell.action = GPKGS_ACTION_NEW_LAYER;
     newLayerButtonCell.delegate = self;
@@ -105,11 +104,11 @@
 
 
 - (void) registerCellTypes {
-    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSHeaderCellDisplay" bundle:nil] forCellReuseIdentifier:@"header"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCHeaderCellDisplay" bundle:nil] forCellReuseIdentifier:@"header"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCGeoPackageOperationsCell" bundle:nil] forCellReuseIdentifier:@"operations"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"sectionTitle"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSLayerCell" bundle:nil] forCellReuseIdentifier:@"layerCell"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"buttonCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"sectionTitle"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCLayerCell" bundle:nil] forCellReuseIdentifier:@"layerCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"buttonCell"];
 }
 
 
@@ -192,7 +191,7 @@
     for (int i = 0; i <  _cellArray.count; i++) {
         cell = [_cellArray objectAtIndex:i];
         
-        if ([cell isKindOfClass:[GPKGSLayerCell class]] && [((GPKGSLayerCell *)cell).layerNameLabel.text isEqualToString:layerName]) {
+        if ([cell isKindOfClass:[MCLayerCell class]] && [((MCLayerCell *)cell).layerNameLabel.text isEqualToString:layerName]) {
             [_cellArray removeObject:cell];
             [self update];
         }
@@ -212,7 +211,7 @@
 
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[_cellArray objectAtIndex:indexPath.row] isKindOfClass:[GPKGSLayerCell class]]) {
+    if ([[_cellArray objectAtIndex:indexPath.row] isKindOfClass:[MCLayerCell class]]) {
         return YES;
     } else {
         return NO;
@@ -222,7 +221,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        GPKGSLayerCell *layerCell = [_cellArray objectAtIndex:indexPath.row];
+        MCLayerCell *layerCell = [_cellArray objectAtIndex:indexPath.row];
         NSString *layerName = layerCell.layerNameLabel.text;
         [_delegate deleteLayer:layerName];
     }
@@ -230,12 +229,21 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    GPKGSLayerCell *layerCell;
+    MCLayerCell *layerCell;
     NSObject *cellObject = [_cellArray objectAtIndex:indexPath.row];
     
-    if([cellObject isKindOfClass:[GPKGSLayerCell class]]){
-        layerCell = (GPKGSLayerCell *) cellObject;
-        [_delegate showLayerDetails:layerCell.layerNameLabel.text];
+    if([cellObject isKindOfClass:[MCLayerCell class]]){
+        layerCell = (MCLayerCell *) cellObject;
+        NSString *layerName = layerCell.layerNameLabel.text;
+        GPKGGeoPackage *geoPackage = [_manager open:_database.name];
+        
+        if ([geoPackage isFeatureTable:layerName]) {
+            GPKGFeatureDao *featureDao =  [geoPackage getFeatureDaoWithTableName:layerName];
+            [_delegate showLayerDetails:featureDao];
+        } else if ([geoPackage isTileTable:layerName]) {
+            GPKGTileDao *tileDao =  [geoPackage getTileDaoWithTableName:layerName];
+            [_delegate showLayerDetails:tileDao];
+        }
     }
 }
 

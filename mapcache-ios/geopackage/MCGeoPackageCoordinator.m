@@ -42,7 +42,6 @@
 - (void) start {
     _geoPackageViewController = [[MCGeopackageSingleViewController alloc] init];
     _geoPackageViewController.database = _database;
-    
     _geoPackageViewController.delegate = self;
     
     [_navigationController pushViewController:_geoPackageViewController animated:YES];
@@ -51,7 +50,6 @@
 
 
 #pragma mark - GeoPackage View delegate methods
-
 - (void) newLayer {
     NSLog(@"Coordinator handling new layer");
     
@@ -89,7 +87,6 @@
 
 
 - (void) deleteLayer:(NSString *) layerName {
-    
     GPKGGeoPackage *geoPackage = [_manager open:_database.name];
     
     @try {
@@ -107,9 +104,14 @@
 }
 
 
-- (void) showLayerDetails:(NSString *) layerName {
-    NSLog(@"In showLayerDetails with %@", layerName);
+- (void) showLayerDetails:(GPKGUserDao *) layerDao {
+    NSLog(@"In showLayerDetails with %@", layerDao.tableName);
     // TODO: Create a layer details view and show it
+    
+    MCLayerViewController *layerViewController = [[MCLayerViewController alloc] init];
+    layerViewController.layerDao = layerDao;
+    layerViewController.featureButtonsCellDelegate = self;
+    [_navigationController pushViewController:layerViewController animated:YES];
 }
 
 
@@ -175,6 +177,7 @@
     [_navigationController pushViewController:_zoomAndQualityViewController animated:YES];
 }
 
+
 - (void) showManualBoundingBoxViewWithMinLat:(double)minLat andMaxLat:(double)maxLat andMinLon:(double)minLon andMaxLon:(double) maxLon {
     _manualBoundingBoxViewController = [[MCManualBoundingBoxViewController alloc] initWithLowerLeftLat:minLat andLowerLeftLon:minLon andUpperRightLat:maxLat andUpperRightLon:maxLon];
     _manualBoundingBoxViewController.delegate = self;
@@ -190,13 +193,13 @@
     
 }
 
+
 #pragma mark- MCZoomAndQualityDelegate methods
 - (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
     NSLog(@"In wizard, going to call completion handler");
     
     _tileData.loadTiles.generateTiles.minZoom = minZoom;
     _tileData.loadTiles.generateTiles.maxZoom = maxZoom;
-    
     [self createTileLayer:_tileData];
 }
 
@@ -204,7 +207,6 @@
 #pragma mark - MCNewLayerWizardDelegate methods
 - (void) createTileLayer:(GPKGSCreateTilesData *) tileData {
     NSLog(@"Coordinator attempting to create tiles");
-    
     GPKGTileScaling *scaling = [GPKGSLoadTilesTask tileScaling];
     
     [GPKGSLoadTilesTask loadTilesWithCallback:self
@@ -232,16 +234,44 @@
     NSLog(@"Loading tiles canceled");
 }
 
+
 -(void) onLoadTilesFailure: (NSString *) result withCount: (int) count {
     //TODO: fill in
     NSLog(@"Loading tiles failed");
 }
+
 
 -(void) onLoadTilesCompleted: (int) count {
     //TODO: fill in
     NSLog(@"Loading tiles completed");
     [_navigationController popToViewController:_geoPackageViewController animated:YES];
     [_geoPackageViewController update];
+}
+
+
+#pragma mark - MCFeatureButtonsCellDelegate methods
+- (void) editLayer {
+    NSLog(@"MCFeatureButtonsCellDelegate editLayer");
+}
+
+
+- (void) indexLayer {
+    NSLog(@"MCFeatureButtonsCellDelegate indexLayer");
+}
+
+
+- (void) createOverlay {
+    NSLog(@"MCFeatureButtonsCellDelegate createOverlay");
+}
+
+
+- (void) createTiles {
+    NSLog(@"MCFeatureButtonsCellDelegate createTiles");
+}
+
+
+- (void) deleteLayer {
+    NSLog(@"MCFeatureButtonsCellDelegate deleteLayer");
 }
 
 

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol MCGeoPackageButtonsCellDelegate
+@protocol MCGeoPackageOperationsCellDelegate
 - (void) deleteGeoPackage;
 - (void) shareGeoPackage;
 - (void) renameGeoPackage;
@@ -18,7 +18,7 @@
 
 
 @interface MCGeoPackageOperationsCell : UITableViewCell
-@property (weak, nonatomic) id<MCGeoPackageButtonsCellDelegate> delegate;
+@property (strong, nonatomic) id<MCGeoPackageOperationsCellDelegate> delegate;
 
 @property (weak, nonatomic) IBOutlet UIButton *renameButton;
 @property (weak, nonatomic) IBOutlet UIButton *shareButton;

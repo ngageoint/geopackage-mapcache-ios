@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSSectionTitleCell.h"
-#import "GPKGSFieldWithTitleCell.h"
-#import "GPKGSDesctiptionCell.h"
-#import "GPKGSButtonCell.h"
+#import "MCSectionTitleCell.h"
+#import "MCFieldWithTitleCell.h"
+#import "MCDesctiptionCell.h"
+#import "MCButtonCell.h"
 #import "GPKGBoundingBox.h"
 
 @protocol MCManualBoundingBoxDelegate

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GPKGSSectionTitleCell : UITableViewCell
+@interface MCSectionTitleCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *sectionTitleLabel;
 @end

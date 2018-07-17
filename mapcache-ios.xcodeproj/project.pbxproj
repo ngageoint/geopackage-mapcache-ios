@@ -70,44 +70,45 @@
 		04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8DE1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m */; };
 		04E1D8E21B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8E11B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m */; };
 		CF52A7895D9F544D637D87A3 /* libPods-mapcache-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C949BBDA5ECEE9FFAC05F51 /* libPods-mapcache-ios.a */; };
-		E308FBC11FBE400500348577 /* SingleGeoPackageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E308FBC01FBE400500348577 /* SingleGeoPackageView.xib */; };
-		E308FBC61FBFA7CA00348577 /* MCHeaderCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E308FBC51FBFA7CA00348577 /* MCHeaderCellTableViewCell.m */; };
+		E308FBC11FBE400500348577 /* MCSingleGeoPackageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E308FBC01FBE400500348577 /* MCSingleGeoPackageView.xib */; };
+		E308FBC61FBFA7CA00348577 /* MCHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E308FBC51FBFA7CA00348577 /* MCHeaderCell.m */; };
 		E3100EAF203CAF1E00FFA56E /* MCZoomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */; };
 		E312A3381FAA416500C088FB /* MCDownloadCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E312A3371FAA416500C088FB /* MCDownloadCoordinator.m */; };
-		E33F55721FC4A1C000F252FD /* GPKGSSectionTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F55711FC4A1C000F252FD /* GPKGSSectionTitleCell.xib */; };
-		E33F55751FC4A25500F252FD /* GPKGSSectionTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F55741FC4A25500F252FD /* GPKGSSectionTitleCell.m */; };
-		E33F55771FC4FEBD00F252FD /* GPKGSLayerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F55761FC4FEBD00F252FD /* GPKGSLayerCell.xib */; };
-		E33F557A1FC4FF1E00F252FD /* GPKGSLayerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F55791FC4FF1E00F252FD /* GPKGSLayerCell.m */; };
-		E33F557C1FCC954B00F252FD /* GPKGSButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F557B1FCC954B00F252FD /* GPKGSButtonCell.xib */; };
-		E33F557F1FCC956A00F252FD /* GPKGSButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */; };
+		E331C8ED20FE7645006EFED1 /* MCLayerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E331C8EC20FE7645006EFED1 /* MCLayerCoordinator.m */; };
+		E33F55721FC4A1C000F252FD /* MCSectionTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F55711FC4A1C000F252FD /* MCSectionTitleCell.xib */; };
+		E33F55751FC4A25500F252FD /* MCSectionTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F55741FC4A25500F252FD /* MCSectionTitleCell.m */; };
+		E33F55771FC4FEBD00F252FD /* MCLayerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F55761FC4FEBD00F252FD /* MCLayerCell.xib */; };
+		E33F557A1FC4FF1E00F252FD /* MCLayerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F55791FC4FF1E00F252FD /* MCLayerCell.m */; };
+		E33F557C1FCC954B00F252FD /* MCButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F557B1FCC954B00F252FD /* MCButtonCell.xib */; };
+		E33F557F1FCC956A00F252FD /* MCButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F557E1FCC956A00F252FD /* MCButtonCell.m */; };
 		E33FB474202506B500AF509B /* MCBoundingBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33FB473202506B500AF509B /* MCBoundingBoxView.xib */; };
 		E346590C2025315D001E6E81 /* MCBoundingBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E346590B2025315D001E6E81 /* MCBoundingBoxViewController.m */; };
 		E346590F202BB20B001E6E81 /* MCZoomAndQualityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E346590E202BB20B001E6E81 /* MCZoomAndQualityViewController.m */; };
-		E3470CC72020E67E0098D783 /* GPKGSColorUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CC62020E67D0098D783 /* GPKGSColorUtil.m */; };
-		E3470CC9202126140098D783 /* GPKGSSegmentedControlCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */; };
-		E3470CCC2021962D0098D783 /* GPKGSSegmentedControlCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CCB2021962D0098D783 /* GPKGSSegmentedControlCell.m */; };
+		E3470CC72020E67E0098D783 /* MCColorUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CC62020E67D0098D783 /* MCColorUtil.m */; };
+		E3470CC9202126140098D783 /* MCSegmentedControlCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3470CC8202126140098D783 /* MCSegmentedControlCell.xib */; };
+		E3470CCC2021962D0098D783 /* MCSegmentedControlCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CCB2021962D0098D783 /* MCSegmentedControlCell.m */; };
 		E34C378F203CD8BC00287CF9 /* MCZoomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C378E203CD8BC00287CF9 /* MCZoomCell.m */; };
 		E34C37922040ABA200287CF9 /* MCManualBoundingBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C37912040ABA200287CF9 /* MCManualBoundingBoxViewController.m */; };
-		E354EEDB2006B9B000B062BE /* GPKGSDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354EEDA2006B9B000B062BE /* GPKGSDescriptionCell.xib */; };
-		E354EEDE2006BB9500B062BE /* GPKGSDesctiptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEDD2006BB9500B062BE /* GPKGSDesctiptionCell.m */; };
+		E354EEDB2006B9B000B062BE /* MCDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */; };
+		E354EEDE2006BB9500B062BE /* MCDesctiptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEDD2006BB9500B062BE /* MCDesctiptionCell.m */; };
 		E354EEE320091BCD00B062BE /* MCFeatureLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEE220091BCD00B062BE /* MCFeatureLayerDetailsViewController.m */; };
 		E355935020F3E3EF00FC1288 /* MCFeatureButtonsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E355934F20F3E3EF00FC1288 /* MCFeatureButtonsCell.m */; };
 		E355935220F4170500FC1288 /* MCGeoPackageOperationsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E355935120F4170500FC1288 /* MCGeoPackageOperationsCell.xib */; };
 		E363F53B20EC24B200BBF91A /* MCLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E363F53A20EC24B200BBF91A /* MCLayerViewController.m */; };
 		E363F54320EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E363F54220EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib */; };
 		E363F54520F0177700BBF91A /* MCTileLayerOperationsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E363F54420F0177700BBF91A /* MCTileLayerOperationsCell.xib */; };
-		E36D2DCE2017BFBE0097A8DE /* GPKGSPickerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E36D2DCD2017BFBE0097A8DE /* GPKGSPickerViewCell.xib */; };
-		E36D2DD12017C0A70097A8DE /* GPKGSPickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E36D2DD02017C0A70097A8DE /* GPKGSPickerViewCell.m */; };
+		E36D2DCE2017BFBE0097A8DE /* MCPickerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E36D2DCD2017BFBE0097A8DE /* MCPickerViewCell.xib */; };
+		E36D2DD12017C0A70097A8DE /* MCPickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E36D2DD02017C0A70097A8DE /* MCPickerViewCell.m */; };
 		E3A491FF1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A491FE1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m */; };
 		E3A492051FA952F200FFE613 /* MCGeoPackageCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A492041FA952F200FFE613 /* MCGeoPackageCoordinator.m */; };
 		E3A4920B1FA9538800FFE613 /* MCGeopackageSingleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A4920A1FA9538800FFE613 /* MCGeopackageSingleViewController.m */; };
-		E3A4920D1FA9885B00FFE613 /* DownloadGeopackage.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A4920C1FA9885B00FFE613 /* DownloadGeopackage.xib */; };
+		E3A4920D1FA9885B00FFE613 /* MCDownloadGeopackage.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A4920C1FA9885B00FFE613 /* MCDownloadGeopackage.xib */; };
 		E3A651A82003DDC800B8AB27 /* MCCreateLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651A72003DDC800B8AB27 /* MCCreateLayerViewController.m */; };
-		E3A651AB2003E1B700B8AB27 /* CreateLayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A651AA2003E1B700B8AB27 /* CreateLayerView.xib */; };
-		E3A651AD2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A651AC2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib */; };
+		E3A651AB2003E1B700B8AB27 /* MCCreateLayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A651AA2003E1B700B8AB27 /* MCCreateLayerView.xib */; };
+		E3A651AD2004407600B8AB27 /* MCFieldWithTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A651AC2004407600B8AB27 /* MCFieldWithTitleCell.xib */; };
 		E3A651B0200563AF00B8AB27 /* MCTileLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651AF200563AF00B8AB27 /* MCTileLayerDetailsViewController.m */; };
-		E3A651B32005652400B8AB27 /* GPKGSFieldWithTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651B22005652400B8AB27 /* GPKGSFieldWithTitleCell.m */; };
-		E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */; };
+		E3A651B32005652400B8AB27 /* MCFieldWithTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651B22005652400B8AB27 /* MCFieldWithTitleCell.m */; };
+		E3B9753B1FB3DED400E33E0A /* MCHeaderCellDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3B9753A1FB3DED400E33E0A /* MCHeaderCellDisplay.xib */; };
 		E3FCD6B620F42FE5006D972B /* MCGeoPackageOperationsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FCD6B420F42FE0006D972B /* MCGeoPackageOperationsCell.m */; };
 /* End PBXBuildFile section */
 
@@ -251,38 +252,40 @@
 		5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.debug.xcconfig"; sourceTree = "<group>"; };
-		E308FBC01FBE400500348577 /* SingleGeoPackageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SingleGeoPackageView.xib; sourceTree = "<group>"; };
-		E308FBC41FBFA7CA00348577 /* MCHeaderCellTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCHeaderCellTableViewCell.h; sourceTree = "<group>"; };
-		E308FBC51FBFA7CA00348577 /* MCHeaderCellTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCHeaderCellTableViewCell.m; sourceTree = "<group>"; };
+		E308FBC01FBE400500348577 /* MCSingleGeoPackageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCSingleGeoPackageView.xib; sourceTree = "<group>"; };
+		E308FBC41FBFA7CA00348577 /* MCHeaderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCHeaderCell.h; sourceTree = "<group>"; };
+		E308FBC51FBFA7CA00348577 /* MCHeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCHeaderCell.m; sourceTree = "<group>"; };
 		E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCZoomCell.xib; sourceTree = "<group>"; };
 		E312A3361FAA416500C088FB /* MCDownloadCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDownloadCoordinator.h; sourceTree = "<group>"; };
 		E312A3371FAA416500C088FB /* MCDownloadCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDownloadCoordinator.m; sourceTree = "<group>"; };
-		E33F55711FC4A1C000F252FD /* GPKGSSectionTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSSectionTitleCell.xib; sourceTree = "<group>"; };
-		E33F55731FC4A25500F252FD /* GPKGSSectionTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSSectionTitleCell.h; sourceTree = "<group>"; };
-		E33F55741FC4A25500F252FD /* GPKGSSectionTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSSectionTitleCell.m; sourceTree = "<group>"; };
-		E33F55761FC4FEBD00F252FD /* GPKGSLayerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSLayerCell.xib; sourceTree = "<group>"; };
-		E33F55781FC4FF1E00F252FD /* GPKGSLayerCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSLayerCell.h; sourceTree = "<group>"; };
-		E33F55791FC4FF1E00F252FD /* GPKGSLayerCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSLayerCell.m; sourceTree = "<group>"; };
-		E33F557B1FCC954B00F252FD /* GPKGSButtonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSButtonCell.xib; sourceTree = "<group>"; };
-		E33F557D1FCC956A00F252FD /* GPKGSButtonCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSButtonCell.h; sourceTree = "<group>"; };
-		E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSButtonCell.m; sourceTree = "<group>"; };
+		E331C8EB20FE7645006EFED1 /* MCLayerCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCLayerCoordinator.h; sourceTree = "<group>"; };
+		E331C8EC20FE7645006EFED1 /* MCLayerCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCLayerCoordinator.m; sourceTree = "<group>"; };
+		E33F55711FC4A1C000F252FD /* MCSectionTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCSectionTitleCell.xib; sourceTree = "<group>"; };
+		E33F55731FC4A25500F252FD /* MCSectionTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCSectionTitleCell.h; sourceTree = "<group>"; };
+		E33F55741FC4A25500F252FD /* MCSectionTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCSectionTitleCell.m; sourceTree = "<group>"; };
+		E33F55761FC4FEBD00F252FD /* MCLayerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCLayerCell.xib; sourceTree = "<group>"; };
+		E33F55781FC4FF1E00F252FD /* MCLayerCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCLayerCell.h; sourceTree = "<group>"; };
+		E33F55791FC4FF1E00F252FD /* MCLayerCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCLayerCell.m; sourceTree = "<group>"; };
+		E33F557B1FCC954B00F252FD /* MCButtonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCButtonCell.xib; sourceTree = "<group>"; };
+		E33F557D1FCC956A00F252FD /* MCButtonCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCButtonCell.h; sourceTree = "<group>"; };
+		E33F557E1FCC956A00F252FD /* MCButtonCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCButtonCell.m; sourceTree = "<group>"; };
 		E33FB473202506B500AF509B /* MCBoundingBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCBoundingBoxView.xib; sourceTree = "<group>"; };
 		E346590A2025315D001E6E81 /* MCBoundingBoxViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCBoundingBoxViewController.h; sourceTree = "<group>"; };
 		E346590B2025315D001E6E81 /* MCBoundingBoxViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCBoundingBoxViewController.m; sourceTree = "<group>"; };
 		E346590D202BB20B001E6E81 /* MCZoomAndQualityViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCZoomAndQualityViewController.h; sourceTree = "<group>"; };
 		E346590E202BB20B001E6E81 /* MCZoomAndQualityViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCZoomAndQualityViewController.m; sourceTree = "<group>"; };
-		E3470CC52020E67D0098D783 /* GPKGSColorUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSColorUtil.h; sourceTree = "<group>"; };
-		E3470CC62020E67D0098D783 /* GPKGSColorUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSColorUtil.m; sourceTree = "<group>"; };
-		E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSSegmentedControlCell.xib; sourceTree = "<group>"; };
-		E3470CCA2021962D0098D783 /* GPKGSSegmentedControlCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSSegmentedControlCell.h; sourceTree = "<group>"; };
-		E3470CCB2021962D0098D783 /* GPKGSSegmentedControlCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSSegmentedControlCell.m; sourceTree = "<group>"; };
+		E3470CC52020E67D0098D783 /* MCColorUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCColorUtil.h; sourceTree = "<group>"; };
+		E3470CC62020E67D0098D783 /* MCColorUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCColorUtil.m; sourceTree = "<group>"; };
+		E3470CC8202126140098D783 /* MCSegmentedControlCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCSegmentedControlCell.xib; sourceTree = "<group>"; };
+		E3470CCA2021962D0098D783 /* MCSegmentedControlCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCSegmentedControlCell.h; sourceTree = "<group>"; };
+		E3470CCB2021962D0098D783 /* MCSegmentedControlCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCSegmentedControlCell.m; sourceTree = "<group>"; };
 		E34C378D203CD8BC00287CF9 /* MCZoomCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCZoomCell.h; sourceTree = "<group>"; };
 		E34C378E203CD8BC00287CF9 /* MCZoomCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCZoomCell.m; sourceTree = "<group>"; };
 		E34C37902040ABA200287CF9 /* MCManualBoundingBoxViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCManualBoundingBoxViewController.h; sourceTree = "<group>"; };
 		E34C37912040ABA200287CF9 /* MCManualBoundingBoxViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCManualBoundingBoxViewController.m; sourceTree = "<group>"; };
-		E354EEDA2006B9B000B062BE /* GPKGSDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSDescriptionCell.xib; sourceTree = "<group>"; };
-		E354EEDC2006BB9500B062BE /* GPKGSDesctiptionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSDesctiptionCell.h; sourceTree = "<group>"; };
-		E354EEDD2006BB9500B062BE /* GPKGSDesctiptionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSDesctiptionCell.m; sourceTree = "<group>"; };
+		E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCDescriptionCell.xib; sourceTree = "<group>"; };
+		E354EEDC2006BB9500B062BE /* MCDesctiptionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDesctiptionCell.h; sourceTree = "<group>"; };
+		E354EEDD2006BB9500B062BE /* MCDesctiptionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDesctiptionCell.m; sourceTree = "<group>"; };
 		E354EEE120091BCD00B062BE /* MCFeatureLayerDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCFeatureLayerDetailsViewController.h; sourceTree = "<group>"; };
 		E354EEE220091BCD00B062BE /* MCFeatureLayerDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCFeatureLayerDetailsViewController.m; sourceTree = "<group>"; };
 		E355934E20F3E3EF00FC1288 /* MCFeatureButtonsCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCFeatureButtonsCell.h; sourceTree = "<group>"; };
@@ -292,25 +295,25 @@
 		E363F53A20EC24B200BBF91A /* MCLayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCLayerViewController.m; sourceTree = "<group>"; };
 		E363F54220EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCFeatureLayerOperationsCell.xib; sourceTree = "<group>"; };
 		E363F54420F0177700BBF91A /* MCTileLayerOperationsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCTileLayerOperationsCell.xib; sourceTree = "<group>"; };
-		E36D2DCD2017BFBE0097A8DE /* GPKGSPickerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSPickerViewCell.xib; sourceTree = "<group>"; };
-		E36D2DCF2017C0A70097A8DE /* GPKGSPickerViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSPickerViewCell.h; sourceTree = "<group>"; };
-		E36D2DD02017C0A70097A8DE /* GPKGSPickerViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSPickerViewCell.m; sourceTree = "<group>"; };
+		E36D2DCD2017BFBE0097A8DE /* MCPickerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCPickerViewCell.xib; sourceTree = "<group>"; };
+		E36D2DCF2017C0A70097A8DE /* MCPickerViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCPickerViewCell.h; sourceTree = "<group>"; };
+		E36D2DD02017C0A70097A8DE /* MCPickerViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCPickerViewCell.m; sourceTree = "<group>"; };
 		E3A491FD1FA78A4C00FFE613 /* GPKGSManagerCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSManagerCoordinator.h; sourceTree = "<group>"; };
 		E3A491FE1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSManagerCoordinator.m; sourceTree = "<group>"; };
 		E3A492031FA952F200FFE613 /* MCGeoPackageCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCGeoPackageCoordinator.h; sourceTree = "<group>"; };
 		E3A492041FA952F200FFE613 /* MCGeoPackageCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCGeoPackageCoordinator.m; sourceTree = "<group>"; };
 		E3A492091FA9538800FFE613 /* MCGeopackageSingleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCGeopackageSingleViewController.h; sourceTree = "<group>"; };
 		E3A4920A1FA9538800FFE613 /* MCGeopackageSingleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCGeopackageSingleViewController.m; sourceTree = "<group>"; };
-		E3A4920C1FA9885B00FFE613 /* DownloadGeopackage.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DownloadGeopackage.xib; sourceTree = "<group>"; };
+		E3A4920C1FA9885B00FFE613 /* MCDownloadGeopackage.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCDownloadGeopackage.xib; sourceTree = "<group>"; };
 		E3A651A62003DDC800B8AB27 /* MCCreateLayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCCreateLayerViewController.h; sourceTree = "<group>"; };
 		E3A651A72003DDC800B8AB27 /* MCCreateLayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCCreateLayerViewController.m; sourceTree = "<group>"; };
-		E3A651AA2003E1B700B8AB27 /* CreateLayerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreateLayerView.xib; sourceTree = "<group>"; };
-		E3A651AC2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSFieldWithTitleCell.xib; sourceTree = "<group>"; };
+		E3A651AA2003E1B700B8AB27 /* MCCreateLayerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCCreateLayerView.xib; sourceTree = "<group>"; };
+		E3A651AC2004407600B8AB27 /* MCFieldWithTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCFieldWithTitleCell.xib; sourceTree = "<group>"; };
 		E3A651AE200563AF00B8AB27 /* MCTileLayerDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCTileLayerDetailsViewController.h; sourceTree = "<group>"; };
 		E3A651AF200563AF00B8AB27 /* MCTileLayerDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTileLayerDetailsViewController.m; sourceTree = "<group>"; };
-		E3A651B12005652400B8AB27 /* GPKGSFieldWithTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPKGSFieldWithTitleCell.h; sourceTree = "<group>"; };
-		E3A651B22005652400B8AB27 /* GPKGSFieldWithTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPKGSFieldWithTitleCell.m; sourceTree = "<group>"; };
-		E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GPKGSHeaderCellDisplay.xib; sourceTree = "<group>"; };
+		E3A651B12005652400B8AB27 /* MCFieldWithTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCFieldWithTitleCell.h; sourceTree = "<group>"; };
+		E3A651B22005652400B8AB27 /* MCFieldWithTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCFieldWithTitleCell.m; sourceTree = "<group>"; };
+		E3B9753A1FB3DED400E33E0A /* MCHeaderCellDisplay.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCHeaderCellDisplay.xib; sourceTree = "<group>"; };
 		E3FCD6B420F42FE0006D972B /* MCGeoPackageOperationsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCGeoPackageOperationsCell.m; sourceTree = "<group>"; };
 		E3FCD6B520F42FE4006D972B /* MCGeoPackageOperationsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCGeoPackageOperationsCell.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -481,8 +484,8 @@
 				04082B551B4F18A000D65E6B /* GPKGSUtils.m */,
 				045C94991B5D4C560005CCD0 /* GPKGSDecimalValidator.h */,
 				045C949A1B5D4C560005CCD0 /* GPKGSDecimalValidator.m */,
-				E3470CC52020E67D0098D783 /* GPKGSColorUtil.h */,
-				E3470CC62020E67D0098D783 /* GPKGSColorUtil.m */,
+				E3470CC52020E67D0098D783 /* MCColorUtil.h */,
+				E3470CC62020E67D0098D783 /* MCColorUtil.m */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -581,22 +584,22 @@
 		E308FBC31FBFA77F00348577 /* cells */ = {
 			isa = PBXGroup;
 			children = (
-				E308FBC41FBFA7CA00348577 /* MCHeaderCellTableViewCell.h */,
-				E308FBC51FBFA7CA00348577 /* MCHeaderCellTableViewCell.m */,
-				E33F55731FC4A25500F252FD /* GPKGSSectionTitleCell.h */,
-				E33F55741FC4A25500F252FD /* GPKGSSectionTitleCell.m */,
-				E33F55781FC4FF1E00F252FD /* GPKGSLayerCell.h */,
-				E33F55791FC4FF1E00F252FD /* GPKGSLayerCell.m */,
-				E33F557D1FCC956A00F252FD /* GPKGSButtonCell.h */,
-				E33F557E1FCC956A00F252FD /* GPKGSButtonCell.m */,
-				E3A651B12005652400B8AB27 /* GPKGSFieldWithTitleCell.h */,
-				E3A651B22005652400B8AB27 /* GPKGSFieldWithTitleCell.m */,
-				E354EEDC2006BB9500B062BE /* GPKGSDesctiptionCell.h */,
-				E354EEDD2006BB9500B062BE /* GPKGSDesctiptionCell.m */,
-				E36D2DCF2017C0A70097A8DE /* GPKGSPickerViewCell.h */,
-				E36D2DD02017C0A70097A8DE /* GPKGSPickerViewCell.m */,
-				E3470CCA2021962D0098D783 /* GPKGSSegmentedControlCell.h */,
-				E3470CCB2021962D0098D783 /* GPKGSSegmentedControlCell.m */,
+				E308FBC41FBFA7CA00348577 /* MCHeaderCell.h */,
+				E308FBC51FBFA7CA00348577 /* MCHeaderCell.m */,
+				E33F55731FC4A25500F252FD /* MCSectionTitleCell.h */,
+				E33F55741FC4A25500F252FD /* MCSectionTitleCell.m */,
+				E33F55781FC4FF1E00F252FD /* MCLayerCell.h */,
+				E33F55791FC4FF1E00F252FD /* MCLayerCell.m */,
+				E33F557D1FCC956A00F252FD /* MCButtonCell.h */,
+				E33F557E1FCC956A00F252FD /* MCButtonCell.m */,
+				E3A651B12005652400B8AB27 /* MCFieldWithTitleCell.h */,
+				E3A651B22005652400B8AB27 /* MCFieldWithTitleCell.m */,
+				E354EEDC2006BB9500B062BE /* MCDesctiptionCell.h */,
+				E354EEDD2006BB9500B062BE /* MCDesctiptionCell.m */,
+				E36D2DCF2017C0A70097A8DE /* MCPickerViewCell.h */,
+				E36D2DD02017C0A70097A8DE /* MCPickerViewCell.m */,
+				E3470CCA2021962D0098D783 /* MCSegmentedControlCell.h */,
+				E3470CCB2021962D0098D783 /* MCSegmentedControlCell.m */,
 				E34C378D203CD8BC00287CF9 /* MCZoomCell.h */,
 				E34C378E203CD8BC00287CF9 /* MCZoomCell.m */,
 				E355934E20F3E3EF00FC1288 /* MCFeatureButtonsCell.h */,
@@ -620,6 +623,8 @@
 				E312A3371FAA416500C088FB /* MCDownloadCoordinator.m */,
 				E363F53920EC24B200BBF91A /* MCLayerViewController.h */,
 				E363F53A20EC24B200BBF91A /* MCLayerViewController.m */,
+				E331C8EB20FE7645006EFED1 /* MCLayerCoordinator.h */,
+				E331C8EC20FE7645006EFED1 /* MCLayerCoordinator.m */,
 			);
 			path = geopackage;
 			sourceTree = "<group>";
@@ -630,8 +635,8 @@
 				E3B975381FB3DE8800E33E0A /* DisplayCells */,
 				E3B975391FB3DE8900E33E0A /* EditCells */,
 				E3A651A92003DDE800B8AB27 /* NewLayerWizard */,
-				E3A4920C1FA9885B00FFE613 /* DownloadGeopackage.xib */,
-				E308FBC01FBE400500348577 /* SingleGeoPackageView.xib */,
+				E3A4920C1FA9885B00FFE613 /* MCDownloadGeopackage.xib */,
+				E308FBC01FBE400500348577 /* MCSingleGeoPackageView.xib */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -658,7 +663,7 @@
 		E3A651A92003DDE800B8AB27 /* NewLayerWizard */ = {
 			isa = PBXGroup;
 			children = (
-				E3A651AA2003E1B700B8AB27 /* CreateLayerView.xib */,
+				E3A651AA2003E1B700B8AB27 /* MCCreateLayerView.xib */,
 				E33FB473202506B500AF509B /* MCBoundingBoxView.xib */,
 			);
 			name = NewLayerWizard;
@@ -668,11 +673,11 @@
 		E3B975381FB3DE8800E33E0A /* DisplayCells */ = {
 			isa = PBXGroup;
 			children = (
-				E3B9753A1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib */,
-				E33F55711FC4A1C000F252FD /* GPKGSSectionTitleCell.xib */,
-				E33F55761FC4FEBD00F252FD /* GPKGSLayerCell.xib */,
-				E33F557B1FCC954B00F252FD /* GPKGSButtonCell.xib */,
-				E354EEDA2006B9B000B062BE /* GPKGSDescriptionCell.xib */,
+				E3B9753A1FB3DED400E33E0A /* MCHeaderCellDisplay.xib */,
+				E33F55711FC4A1C000F252FD /* MCSectionTitleCell.xib */,
+				E33F55761FC4FEBD00F252FD /* MCLayerCell.xib */,
+				E33F557B1FCC954B00F252FD /* MCButtonCell.xib */,
+				E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */,
 				E363F54220EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib */,
 				E363F54420F0177700BBF91A /* MCTileLayerOperationsCell.xib */,
 				E355935120F4170500FC1288 /* MCGeoPackageOperationsCell.xib */,
@@ -683,9 +688,9 @@
 		E3B975391FB3DE8900E33E0A /* EditCells */ = {
 			isa = PBXGroup;
 			children = (
-				E3A651AC2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib */,
-				E36D2DCD2017BFBE0097A8DE /* GPKGSPickerViewCell.xib */,
-				E3470CC8202126140098D783 /* GPKGSSegmentedControlCell.xib */,
+				E3A651AC2004407600B8AB27 /* MCFieldWithTitleCell.xib */,
+				E36D2DCD2017BFBE0097A8DE /* MCPickerViewCell.xib */,
+				E3470CC8202126140098D783 /* MCSegmentedControlCell.xib */,
 				E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */,
 			);
 			path = EditCells;
@@ -785,23 +790,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				E33FB474202506B500AF509B /* MCBoundingBoxView.xib in Resources */,
-				E3470CC9202126140098D783 /* GPKGSSegmentedControlCell.xib in Resources */,
+				E3470CC9202126140098D783 /* MCSegmentedControlCell.xib in Resources */,
 				E3100EAF203CAF1E00FFA56E /* MCZoomCell.xib in Resources */,
-				E3B9753B1FB3DED400E33E0A /* GPKGSHeaderCellDisplay.xib in Resources */,
+				E3B9753B1FB3DED400E33E0A /* MCHeaderCellDisplay.xib in Resources */,
 				E363F54520F0177700BBF91A /* MCTileLayerOperationsCell.xib in Resources */,
-				E354EEDB2006B9B000B062BE /* GPKGSDescriptionCell.xib in Resources */,
-				E36D2DCE2017BFBE0097A8DE /* GPKGSPickerViewCell.xib in Resources */,
-				E33F55771FC4FEBD00F252FD /* GPKGSLayerCell.xib in Resources */,
-				E3A651AD2004407600B8AB27 /* GPKGSFieldWithTitleCell.xib in Resources */,
-				E33F557C1FCC954B00F252FD /* GPKGSButtonCell.xib in Resources */,
+				E354EEDB2006B9B000B062BE /* MCDescriptionCell.xib in Resources */,
+				E36D2DCE2017BFBE0097A8DE /* MCPickerViewCell.xib in Resources */,
+				E33F55771FC4FEBD00F252FD /* MCLayerCell.xib in Resources */,
+				E3A651AD2004407600B8AB27 /* MCFieldWithTitleCell.xib in Resources */,
+				E33F557C1FCC954B00F252FD /* MCButtonCell.xib in Resources */,
 				047733C61B4C3E3400E523BD /* mapcache.plist in Resources */,
 				E363F54320EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib in Resources */,
 				040136811AF94FB200C92AFC /* Main.storyboard in Resources */,
-				E3A651AB2003E1B700B8AB27 /* CreateLayerView.xib in Resources */,
-				E308FBC11FBE400500348577 /* SingleGeoPackageView.xib in Resources */,
+				E3A651AB2003E1B700B8AB27 /* MCCreateLayerView.xib in Resources */,
+				E308FBC11FBE400500348577 /* MCSingleGeoPackageView.xib in Resources */,
 				040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */,
-				E33F55721FC4A1C000F252FD /* GPKGSSectionTitleCell.xib in Resources */,
-				E3A4920D1FA9885B00FFE613 /* DownloadGeopackage.xib in Resources */,
+				E33F55721FC4A1C000F252FD /* MCSectionTitleCell.xib in Resources */,
+				E3A4920D1FA9885B00FFE613 /* MCDownloadGeopackage.xib in Resources */,
 				E355935220F4170500FC1288 /* MCGeoPackageOperationsCell.xib in Resources */,
 				040136831AF94FB200C92AFC /* Images.xcassets in Resources */,
 			);
@@ -869,27 +874,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				04E1D8CD1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m in Sources */,
-				E354EEDE2006BB9500B062BE /* GPKGSDesctiptionCell.m in Sources */,
+				E354EEDE2006BB9500B062BE /* MCDesctiptionCell.m in Sources */,
 				043A45851B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m in Sources */,
 				045C94901B53EEB80005CCD0 /* GPKGSMapViewController.m in Sources */,
 				04E0EE0E1B691AD10095E53E /* GPKGSManagerEditTileOverlayViewController.m in Sources */,
-				E36D2DD12017C0A70097A8DE /* GPKGSPickerViewCell.m in Sources */,
-				E308FBC61FBFA7CA00348577 /* MCHeaderCellTableViewCell.m in Sources */,
+				E36D2DD12017C0A70097A8DE /* MCPickerViewCell.m in Sources */,
+				E308FBC61FBFA7CA00348577 /* MCHeaderCell.m in Sources */,
 				043A458B1B7E21E3001B8FC5 /* GPKGSMapPointData.m in Sources */,
 				045C94941B56DF620005CCD0 /* GPKGSIndexerTask.m in Sources */,
 				047733C91B4C496600E523BD /* GPKGSTableOptionsButton.m in Sources */,
 				04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */,
 				E346590F202BB20B001E6E81 /* MCZoomAndQualityViewController.m in Sources */,
 				043A459E1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.m in Sources */,
-				E3470CC72020E67E0098D783 /* GPKGSColorUtil.m in Sources */,
+				E3470CC72020E67E0098D783 /* MCColorUtil.m in Sources */,
 				E3A4920B1FA9538800FFE613 /* MCGeopackageSingleViewController.m in Sources */,
-				E33F55751FC4A25500F252FD /* GPKGSSectionTitleCell.m in Sources */,
+				E33F55751FC4A25500F252FD /* MCSectionTitleCell.m in Sources */,
 				044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */,
 				045C94A91B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m in Sources */,
 				043A45981B83B4AB001B8FC5 /* GPGKSMapPointInitializer.m in Sources */,
 				04E1D8DC1B682CF4002BD947 /* GPKGSFeatureTilesDrawViewController.m in Sources */,
 				0446481A1B4C24AD0052913B /* GPKGSActiveTableSwitch.m in Sources */,
-				E3A651B32005652400B8AB27 /* GPKGSFieldWithTitleCell.m in Sources */,
+				E3A651B32005652400B8AB27 /* MCFieldWithTitleCell.m in Sources */,
 				04E0EE0B1B691A3C0095E53E /* GPKGSEditTileOverlayData.m in Sources */,
 				045C94891B5026E00005CCD0 /* GPKGSDatabases.m in Sources */,
 				044D6B4B1B627B0000527745 /* GPKGSLoadTilesTask.m in Sources */,
@@ -902,7 +907,7 @@
 				044648081B4AF6A70052913B /* GPKGSTileTable.m in Sources */,
 				047733C41B4C3D1200E523BD /* GPKGSProperties.m in Sources */,
 				E354EEE320091BCD00B062BE /* MCFeatureLayerDetailsViewController.m in Sources */,
-				E33F557A1FC4FF1E00F252FD /* GPKGSLayerCell.m in Sources */,
+				E33F557A1FC4FF1E00F252FD /* MCLayerCell.m in Sources */,
 				E3A492051FA952F200FFE613 /* MCGeoPackageCoordinator.m in Sources */,
 				E363F53B20EC24B200BBF91A /* MCLayerViewController.m in Sources */,
 				0446481E1B4C26DF0052913B /* GPKGSConstants.m in Sources */,
@@ -912,10 +917,11 @@
 				04CCC85C1B5FF1830001296D /* GPKGSManagerCreateTilesViewController.m in Sources */,
 				047733BE1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m in Sources */,
 				044647FF1B4AF3870052913B /* GPKGSTable.m in Sources */,
-				E33F557F1FCC956A00F252FD /* GPKGSButtonCell.m in Sources */,
+				E33F557F1FCC956A00F252FD /* MCButtonCell.m in Sources */,
 				04CCC85F1B60225C0001296D /* GPKGSKeyboardConstraint.m in Sources */,
 				040136781AF94FB200C92AFC /* AppDelegate.m in Sources */,
 				04E1D8D01B66D366002BD947 /* GPKGSEditContentsViewController.m in Sources */,
+				E331C8ED20FE7645006EFED1 /* MCLayerCoordinator.m in Sources */,
 				044648021B4AF4250052913B /* GPKGSTableTypes.m in Sources */,
 				045C948D1B50789D0005CCD0 /* GPKGSMapView.m in Sources */,
 				E3A491FF1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m in Sources */,
@@ -942,7 +948,7 @@
 				E346590C2025315D001E6E81 /* MCBoundingBoxViewController.m in Sources */,
 				040136751AF94FB200C92AFC /* main.m in Sources */,
 				E312A3381FAA416500C088FB /* MCDownloadCoordinator.m in Sources */,
-				E3470CCC2021962D0098D783 /* GPKGSSegmentedControlCell.m in Sources */,
+				E3470CCC2021962D0098D783 /* MCSegmentedControlCell.m in Sources */,
 				04E0EE081B6919D80095E53E /* GPKGSEditTileOverlayViewController.m in Sources */,
 				E34C37922040ABA200287CF9 /* MCManualBoundingBoxViewController.m in Sources */,
 				044648141B4B20950052913B /* GPKGSDatabaseCell.m in Sources */,

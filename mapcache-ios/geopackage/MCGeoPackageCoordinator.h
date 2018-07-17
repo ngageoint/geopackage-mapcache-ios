@@ -21,13 +21,16 @@
 #import "MCBoundingBoxViewController.h"
 #import "MCZoomAndQualityViewController.h"
 #import "MCManualBoundingBoxViewController.h"
+#import "MCLayerViewController.h"
 #import "GPKGSDisplayTextViewController.h"
+#import "MCFeatureButtonsCell.h"
+
 
 @protocol MCGeoPackageCoordinatorDelegate <NSObject>
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete;
 @end
 
-@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate, MCZoomAndQualityDelegate, MCCreateLayerDelegate, GPKGSLoadTilesProtocol, MCManualBoundingBoxDelegate>
+@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate, MCZoomAndQualityDelegate, MCCreateLayerDelegate, GPKGSLoadTilesProtocol, MCManualBoundingBoxDelegate, MCFeatureButtonsCellDelegate>
 - (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<MCGeoPackageCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database;
 - (void) start;
 @end

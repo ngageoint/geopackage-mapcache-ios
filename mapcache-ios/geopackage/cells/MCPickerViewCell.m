@@ -1,14 +1,14 @@
 //
-//  GPKGSDesctiptionCell.m
+//  GPKGSPickerViewCellTableViewCell.m
 //  mapcache-ios
 //
-//  Created by Tyler Burgett on 1/10/18.
+//  Created by Tyler Burgett on 1/23/18.
 //  Copyright © 2018 NGA. All rights reserved.
 //
 
-#import "GPKGSDesctiptionCell.h"
+#import "MCPickerViewCell.h"
 
-@implementation GPKGSDesctiptionCell
+@implementation MCPickerViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -20,5 +20,6 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 }
+
 
 @end

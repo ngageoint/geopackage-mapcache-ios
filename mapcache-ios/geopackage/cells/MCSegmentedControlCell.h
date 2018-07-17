@@ -13,7 +13,7 @@
 @end
 
 
-@interface GPKGSSegmentedControlCell : UITableViewCell
+@interface MCSegmentedControlCell : UITableViewCell
 @property (weak, nonatomic) id<GPKGSSegmentedControlCellDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;

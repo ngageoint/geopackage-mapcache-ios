@@ -16,10 +16,10 @@
 @property (strong, nonatomic) NSString *selectedGeometryType;
 
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
-@property (strong, nonatomic) GPKGSSectionTitleCell *titleCell;
-@property (strong, nonatomic) GPKGSFieldWithTitleCell *layerNameCell;
-@property (strong, nonatomic) GPKGSPickerViewCell *geometryTypeCell;
-@property (strong, nonatomic) GPKGSButtonCell *buttonCell;
+@property (strong, nonatomic) MCSectionTitleCell *titleCell;
+@property (strong, nonatomic) MCFieldWithTitleCell *layerNameCell;
+@property (strong, nonatomic) MCPickerViewCell *geometryTypeCell;
+@property (strong, nonatomic) MCButtonCell *buttonCell;
 @end
 
 @implementation MCFeatureLayerDetailsViewController

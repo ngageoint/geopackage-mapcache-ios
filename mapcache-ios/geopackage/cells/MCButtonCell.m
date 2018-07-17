@@ -6,9 +6,9 @@
 //  Copyright © 2017 NGA. All rights reserved.
 //
 
-#import "GPKGSButtonCell.h"
+#import "MCButtonCell.h"
 
-@implementation GPKGSButtonCell
+@implementation MCButtonCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -29,13 +29,13 @@
 
 - (void) enableButton {
     _button.userInteractionEnabled = YES;
-    _button.backgroundColor = [GPKGSColorUtil getAccent];
+    _button.backgroundColor = [MCColorUtil getAccent];
 }
 
 
 - (void) disableButton {
     _button.userInteractionEnabled = NO;
-    _button.backgroundColor = [GPKGSColorUtil getAccentLight];
+    _button.backgroundColor = [MCColorUtil getAccentLight];
 }
 
 @end

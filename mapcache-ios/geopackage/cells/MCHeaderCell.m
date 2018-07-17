@@ -7,9 +7,9 @@
 //
 
 #import "GPKGSConstants.h"
-#import "MCHeaderCellTableViewCell.h"
+#import "MCHeaderCell.h"
 
-@implementation MCHeaderCellTableViewCell
+@implementation MCHeaderCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -25,31 +25,6 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-}
-
-
-- (IBAction)deleteButtonTapped:(id)sender {
-    [_delegate deleteGeoPackage];
-}
-
-
-- (IBAction)shareButtonTapped:(id)sender {
-    [_delegate shareGeoPackage];
-}
-
-
-- (IBAction)renameButtonTapped:(id)sender {
-    [_delegate renameGeoPackage];
-}
-
-
-- (IBAction)copyButtonTapped:(id)sender {
-    [_delegate copyGeoPackage];
-}
-
-
-- (IBAction)infoButtonTapped:(id)sender {
-    [_delegate getInfo];
 }
 
 @end
