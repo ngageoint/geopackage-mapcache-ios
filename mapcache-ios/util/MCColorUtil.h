@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface GPKGSColorUtil : NSObject
+@interface MCColorUtil : NSObject
 + (UIColor *) getPrimary;
 + (UIColor *) getPrimaryLight;
 

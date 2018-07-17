@@ -31,7 +31,7 @@
 
 
 - (void) start {
-    _downloadViewController = [[GPKGSDownloadFileViewController alloc] initWithNibName:@"DownloadGeopackage" bundle:nil];
+    _downloadViewController = [[GPKGSDownloadFileViewController alloc] initWithNibName:@"MCDownloadGeopackage" bundle:nil];
     _downloadViewController.delegate = self;
     
     _backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleDone target:self action:@selector(backButtonPressed)];

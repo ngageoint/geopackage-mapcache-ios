@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSSectionTitleCell.h"
-#import "GPKGSFieldWithTitleCell.h"
-#import "GPKGSSegmentedControlCell.h"
-#import "GPKGSButtonCell.h"
+#import "MCSectionTitleCell.h"
+#import "MCFieldWithTitleCell.h"
+#import "MCSegmentedControlCell.h"
+#import "MCButtonCell.h"
 #import "MCZoomCell.h"
 
 @protocol MCZoomAndQualityDelegate

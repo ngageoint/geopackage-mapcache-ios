@@ -388,13 +388,13 @@
     if ([overlay isKindOfClass:[MKPolygon class]]) {
         MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
         if(self.drawing || (self.boundingBox != nil && self.boundingBox == overlay)){
-            polygonRenderer.strokeColor = [GPKGSColorUtil getPolygonStrokeColor];
+            polygonRenderer.strokeColor = [MCColorUtil getPolygonStrokeColor];
             polygonRenderer.lineWidth = 2.0;
-            polygonRenderer.fillColor = [GPKGSColorUtil getPolygonFillColor];
+            polygonRenderer.fillColor = [MCColorUtil getPolygonFillColor];
         } else {
-            polygonRenderer.strokeColor = [GPKGSColorUtil getPolygonStrokeColor];
+            polygonRenderer.strokeColor = [MCColorUtil getPolygonStrokeColor];
             polygonRenderer.lineWidth = 2.0;
-            polygonRenderer.fillColor = [GPKGSColorUtil getPolygonFillColor];
+            polygonRenderer.fillColor = [MCColorUtil getPolygonFillColor];
         }
         rendered = polygonRenderer;
     }

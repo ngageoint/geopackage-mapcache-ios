@@ -11,8 +11,8 @@
 @interface MCZoomAndQualityViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
 @property (strong, nonatomic) MCZoomCell *zoomCell;
-@property (strong, nonatomic) GPKGSSegmentedControlCell *tileFormatCell;
-@property (strong, nonatomic) GPKGSButtonCell *buttonCell;
+@property (strong, nonatomic) MCSegmentedControlCell *tileFormatCell;
+@property (strong, nonatomic) MCButtonCell *buttonCell;
 @end
 
 @implementation MCZoomAndQualityViewController

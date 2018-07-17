@@ -10,10 +10,10 @@
 
 @interface MCTileLayerDetailsViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
-@property (strong, nonatomic) GPKGSButtonCell *buttonCell;
-@property (strong, nonatomic) GPKGSFieldWithTitleCell *layerNameCell;
-@property (strong, nonatomic) GPKGSFieldWithTitleCell *urlCell;
-@property (strong, nonatomic) GPKGSSegmentedControlCell *referenceSystemSelector;
+@property (strong, nonatomic) MCButtonCell *buttonCell;
+@property (strong, nonatomic) MCFieldWithTitleCell *layerNameCell;
+@property (strong, nonatomic) MCFieldWithTitleCell *urlCell;
+@property (strong, nonatomic) MCSegmentedControlCell *referenceSystemSelector;
 @property (strong, nonatomic) NSDictionary *referenceSystems;
 @end
 
@@ -54,7 +54,7 @@
     [_cellArray addObject:_layerNameCell];
     
     
-    GPKGSDesctiptionCell *tilesDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+    MCDesctiptionCell *tilesDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
     tilesDescription.descriptionLabel.text = @"Tile layers consist of a pyramid of images within a geographic extent and zoom levels.";
     [_cellArray addObject:tilesDescription];
     
@@ -66,7 +66,7 @@
     [_urlCell.field setReturnKeyType:UIReturnKeyDone];
     [_cellArray addObject:_urlCell];
     
-    GPKGSDesctiptionCell *urlDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+    MCDesctiptionCell *urlDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
     urlDescription.descriptionLabel.text = @"Tip: Enter the full URL to the tile server with any of the following template options {x}, {y}, {z}, {minLat}, {minLon}, {maxLat}, {maxLon}.";
     [_cellArray addObject:urlDescription];
     
@@ -81,7 +81,6 @@
     _buttonCell.delegate = self;
     _buttonCell.action = @"BoundingBox";
     [_cellArray addObject:_buttonCell];
-    
 }
 
 

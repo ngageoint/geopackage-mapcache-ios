@@ -14,12 +14,12 @@
 @property (nonatomic) double lowerLeftLon;
 @property (nonatomic) double upperRightLat;
 @property (nonatomic) double upperRightLon;
-@property (nonatomic, strong) GPKGSFieldWithTitleCell *lowerLeftLatitudeCell;
-@property (nonatomic, strong) GPKGSFieldWithTitleCell *lowerLeftLongitudeCell;
-@property (nonatomic, strong) GPKGSFieldWithTitleCell *upperRightLatitudeCell;
-@property (nonatomic, strong) GPKGSFieldWithTitleCell *upperRightLongitudeCell;
-@property (nonatomic, strong) GPKGSButtonCell *buttonCell;
-@property (nonatomic, strong) GPKGSDesctiptionCell *descriptionCell; // TODO spell this right...
+@property (nonatomic, strong) MCFieldWithTitleCell *lowerLeftLatitudeCell;
+@property (nonatomic, strong) MCFieldWithTitleCell *lowerLeftLongitudeCell;
+@property (nonatomic, strong) MCFieldWithTitleCell *upperRightLatitudeCell;
+@property (nonatomic, strong) MCFieldWithTitleCell *upperRightLongitudeCell;
+@property (nonatomic, strong) MCButtonCell *buttonCell;
+@property (nonatomic, strong) MCDesctiptionCell *descriptionCell; // TODO spell this right...
 @property (nonatomic, strong) GPKGBoundingBox *boundingBox;
 @end
 
@@ -56,7 +56,7 @@
 - (void)initCellArray {
     _cellArray = [[NSMutableArray alloc] init];
     
-    GPKGSSectionTitleCell *titleCell = [self.tableView dequeueReusableCellWithIdentifier:@"title"];
+    MCSectionTitleCell *titleCell = [self.tableView dequeueReusableCellWithIdentifier:@"title"];
     titleCell.sectionTitleLabel.text = @"Edit Bounding Box";
     [_cellArray addObject:titleCell];
     
@@ -102,7 +102,7 @@
 
 - (void)registerCellTypes {
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
 }

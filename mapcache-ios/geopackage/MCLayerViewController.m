@@ -10,12 +10,23 @@
 
 @interface MCLayerViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
+@property (strong, nonatomic) GPKGFeatureDao *featureDao;
+@property (strong, nonatomic) GPKGTileDao *tileDao;
 @end
 
 @implementation MCLayerViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if ([_layerDao isKindOfClass:GPKGFeatureDao.class]) {
+        _featureDao = (GPKGFeatureDao *) _layerDao;
+        _tileDao = nil;
+    } else if ([_layerDao isKindOfClass:GPKGTileDao.class]) {
+        _tileDao = (GPKGTileDao *) _layerDao;
+        _featureDao = nil;
+    }
+    
     [self registerCellTypes];
     [self initCellArray];
     
@@ -40,13 +51,27 @@
 
 
 - (void) registerCellTypes {
-    
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCHeaderCellDisplay" bundle:nil] forCellReuseIdentifier:@"header"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCFeatureLayerOperationsCell" bundle:nil] forCellReuseIdentifier:@"featureButtons"];
 }
 
 
 - (void) initCellArray {
     if ([_cellArray count] > 0) {
         [_cellArray removeAllObjects];
+    }
+    
+    MCHeaderCell *headerCell = [self.tableView dequeueReusableCellWithIdentifier:@"header"];
+    headerCell.nameLabel.text = _layerDao.tableName;
+    
+    _cellArray = [[NSMutableArray alloc] initWithObjects:headerCell, nil];
+    
+    if (_featureDao != nil) {
+        MCFeatureButtonsCell *featureButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"featureButtons"];
+        featureButtonsCell.delegate = _featureButtonsCellDelegate;
+        [_cellArray addObject:featureButtonsCell];
+    } else if (_tileDao != nil) {
+        
     }
 }
 
@@ -65,15 +90,11 @@
     return [_cellArray count];
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
-    return cell;
+    return [_cellArray objectAtIndex:indexPath.row];
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.

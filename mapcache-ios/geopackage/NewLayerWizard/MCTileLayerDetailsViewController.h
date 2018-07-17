@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSSectionTitleCell.h"
-#import "GPKGSFieldWithTitleCell.h"
-#import "GPKGSDesctiptionCell.h"
-#import "GPKGSSectionTitleCell.h"
-#import "GPKGSButtonCell.h"
-#import "GPKGSSegmentedControlCell.h"
-#import "GPKGSButtonCell.h"
-#import "GPKGSColorUtil.h"
+#import "MCSectionTitleCell.h"
+#import "MCFieldWithTitleCell.h"
+#import "MCDesctiptionCell.h"
+#import "MCSectionTitleCell.h"
+#import "MCButtonCell.h"
+#import "MCSegmentedControlCell.h"
+#import "MCButtonCell.h"
+#import "MCColorUtil.h"
 
 @protocol MCTileLayerDetailsDelegate
 - (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode;

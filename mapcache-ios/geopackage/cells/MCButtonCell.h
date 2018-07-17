@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
-#import "GPKGSColorUtil.h"
+#import "MCColorUtil.h"
 #import "GPKGSConstants.h"
 
 @protocol GPKGSButtonCellDelegate <NSObject>
@@ -16,7 +16,7 @@
 @end
 
 
-@interface GPKGSButtonCell : UITableViewCell
+@interface MCButtonCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIButton *button;
 @property (weak, nonatomic) id<GPKGSButtonCellDelegate> delegate;
 @property (strong, nonatomic) NSString *action;

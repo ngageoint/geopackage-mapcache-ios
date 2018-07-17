@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GPKGSPickerViewCell : UITableViewCell
+@interface MCPickerViewCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @property (weak, nonatomic) IBOutlet UIPickerView *picker;

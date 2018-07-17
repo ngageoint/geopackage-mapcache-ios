@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GPKGSFieldWithTitleCell : UITableViewCell
+@interface MCFieldWithTitleCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *title;
 @property (weak, nonatomic) IBOutlet UITextField *field;

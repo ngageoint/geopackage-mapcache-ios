@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GPKGSDesctiptionCell : UITableViewCell
+@interface MCDesctiptionCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 @end
