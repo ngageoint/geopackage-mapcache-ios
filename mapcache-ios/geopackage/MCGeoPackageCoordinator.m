@@ -22,6 +22,7 @@
 @property (strong, nonatomic) UIBarButtonItem *backButton;
 @property (strong, nonatomic) GPKGSDatabase *database;
 @property (nonatomic, strong) GPKGSCreateTilesData * tileData;
+@property (strong, nonatomic) NSMutableArray *childCoordinators;
 @end
 
 
@@ -30,6 +31,7 @@
 - (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<MCGeoPackageCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database {
     self = [super init];
     
+    _childCoordinators = [[NSMutableArray alloc] init];
     _manager = [GPKGGeoPackageFactory getManager];
     _navigationController = navigationController;
     _delegate = delegate;
@@ -53,7 +55,7 @@
 - (void) newLayer {
     NSLog(@"Coordinator handling new layer");
     
-    MCCreateLayerViewController *createLayerViewControler = [[MCCreateLayerViewController alloc] initWithNibName:@"CreateLayerView" bundle:nil];
+    MCCreateLayerViewController *createLayerViewControler = [[MCCreateLayerViewController alloc] initWithNibName:@"MCCreateLayerView" bundle:nil];
     createLayerViewControler.delegate = self;
     [_navigationController pushViewController:createLayerViewControler animated:YES];
 }
@@ -108,10 +110,9 @@
     NSLog(@"In showLayerDetails with %@", layerDao.tableName);
     // TODO: Create a layer details view and show it
     
-    MCLayerViewController *layerViewController = [[MCLayerViewController alloc] init];
-    layerViewController.layerDao = layerDao;
-    layerViewController.featureButtonsCellDelegate = self;
-    [_navigationController pushViewController:layerViewController animated:YES];
+    MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithNavigationController:_navigationController andDatabase:_database andDao:layerDao];
+    [_childCoordinators addObject:layerCoordinator];
+    [layerCoordinator start];
 }
 
 
@@ -246,32 +247,6 @@
     NSLog(@"Loading tiles completed");
     [_navigationController popToViewController:_geoPackageViewController animated:YES];
     [_geoPackageViewController update];
-}
-
-
-#pragma mark - MCFeatureButtonsCellDelegate methods
-- (void) editLayer {
-    NSLog(@"MCFeatureButtonsCellDelegate editLayer");
-}
-
-
-- (void) indexLayer {
-    NSLog(@"MCFeatureButtonsCellDelegate indexLayer");
-}
-
-
-- (void) createOverlay {
-    NSLog(@"MCFeatureButtonsCellDelegate createOverlay");
-}
-
-
-- (void) createTiles {
-    NSLog(@"MCFeatureButtonsCellDelegate createTiles");
-}
-
-
-- (void) deleteLayer {
-    NSLog(@"MCFeatureButtonsCellDelegate deleteLayer");
 }
 
 

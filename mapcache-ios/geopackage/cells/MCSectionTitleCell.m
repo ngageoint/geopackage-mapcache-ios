@@ -1,5 +1,5 @@
 //
-//  GPKGSSectionTitleCell.m
+//  MCSectionTitleCell.m
 //  mapcache-ios
 //
 //  Created by Tyler Burgett on 11/21/17.

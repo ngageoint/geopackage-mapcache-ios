@@ -6,9 +6,9 @@
 //  Copyright © 2018 NGA. All rights reserved.
 //
 
-#import "MCFeatureButtonsCell.h"
+#import "MCFeatureLayerOperationsCell.h"
 
-@implementation MCFeatureButtonsCell
+@implementation MCFeatureLayerOperationsCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
