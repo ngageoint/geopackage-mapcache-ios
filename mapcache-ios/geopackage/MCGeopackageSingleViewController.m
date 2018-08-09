@@ -71,10 +71,16 @@
     MCGeoPackageOperationsCell *geoPackageOperationsCell = [self.tableView dequeueReusableCellWithIdentifier:@"operations"];
     geoPackageOperationsCell.delegate = self;
     
-    MCSectionTitleCell *titleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
-    titleCell.sectionTitleLabel.text = @"Layers";
+    MCSectionTitleCell *layersTitleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
+    layersTitleCell.sectionTitleLabel.text = @"Layers";
     
-    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, titleCell, nil];
+    MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
+    [newLayerButtonCell.button setTitle:@"New Layer" forState:UIControlStateNormal];
+    newLayerButtonCell.action = GPKGS_ACTION_NEW_LAYER;
+    newLayerButtonCell.delegate = self;
+    [_cellArray addObject:newLayerButtonCell];
+    
+    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, layersTitleCell, newLayerButtonCell, nil];
     NSArray *tables = [_database getTables];
     
     for (GPKGSTable *table in tables) {
@@ -91,12 +97,6 @@
         [layerCell.layerTypeImage setImage:[UIImage imageNamed:typeImageName]];
         [_cellArray addObject:layerCell];
     }
-    
-    MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
-    [newLayerButtonCell.button setTitle:@"New Layer" forState:UIControlStateNormal];
-    newLayerButtonCell.action = GPKGS_ACTION_NEW_LAYER;
-    newLayerButtonCell.delegate = self;
-    [_cellArray addObject:newLayerButtonCell];
     
     // TODO: add title cell for reference systems
     // loop over geospatial reference systems create cells, push to array
@@ -254,7 +254,7 @@
     
     UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this GeoPackage? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        [_delegate deleteGeoPackage];
+        [self.delegate deleteGeoPackage];
         [self dismissViewControllerAnimated:YES completion:nil];
     }];
     
@@ -291,7 +291,7 @@
     
     UIAlertController *renameAlert = [UIAlertController alertControllerWithTitle:@"Rename" message:@"" preferredStyle:UIAlertControllerStyleAlert];
     [renameAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.text = _database.name;
+        textField.text = self.database.name;
     }];
     
     UIAlertAction *confirmRename = [UIAlertAction actionWithTitle:@"Rename" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
@@ -299,21 +299,21 @@
         
         NSString * newName = renameAlert.textFields[0].text;
         
-        if(newName != nil && [newName length] > 0 && ![newName isEqualToString:_database.name]){
+        if(newName != nil && [newName length] > 0 && ![newName isEqualToString:self.database.name]){
             @try {
-                if([_manager rename:_database.name to:newName]){
-                    _database.name = newName;
+                if([self.manager rename:self.database.name to:newName]){
+                    self.database.name = newName;
                     [self initCellArray];
                     [self.tableView reloadData];
                 }else{
                     [GPKGSUtils showMessageWithDelegate:self
                                                andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
-                                             andMessage:[NSString stringWithFormat:@"Rename from %@ to %@ was not successful", _database.name, newName]];
+                                             andMessage:[NSString stringWithFormat:@"Rename from %@ to %@ was not successful", self.database.name, newName]];
                 }
             }
             @catch (NSException *exception) {
                 [GPKGSUtils showMessageWithDelegate:self
-                                           andTitle:[NSString stringWithFormat:@"Rename %@ to %@", _database.name, newName]
+                                           andTitle:[NSString stringWithFormat:@"Rename %@ to %@", self.database.name, newName]
                                          andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
             }
         }
@@ -333,12 +333,12 @@
 - (void) copyGeoPackage {
     UIAlertController *copyAlert = [UIAlertController alertControllerWithTitle:@"Copy" message:@"" preferredStyle:UIAlertControllerStyleAlert];
     [copyAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.text = [NSString stringWithFormat:@"%@_copy", _database.name];
+        textField.text = [NSString stringWithFormat:@"%@_copy", self.database.name];
     }];
     
     UIAlertAction *confirmCopy = [UIAlertAction actionWithTitle:@"Copy" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSString * newName = [copyAlert.textFields[0] text];
-        NSString *database = _database.name;
+        NSString *database = self.database.name;
         if(newName != nil && [newName length] > 0 && ![newName isEqualToString:database]){
             @try {
                 if([self.manager copy:database to:newName]){
@@ -347,7 +347,7 @@
                     [self presentViewController:confirmation animated:YES completion:nil];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [confirmation dismissViewControllerAnimated:YES completion:nil];
-                        [_delegate copyGeoPackage];
+                        [self.delegate copyGeoPackage];
                     });
                 }else{
                     [GPKGSUtils showMessageWithDelegate:self

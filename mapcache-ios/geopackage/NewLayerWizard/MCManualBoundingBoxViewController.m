@@ -101,10 +101,10 @@
 
 
 - (void)registerCellTypes {
-    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"GPKGSButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCSDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCSButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
 }
 
 

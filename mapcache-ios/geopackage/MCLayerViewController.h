@@ -15,9 +15,24 @@
 #import "MCButtonCell.h"
 #import "MCSectionTitleCell.h"
 #import "MCHeaderCell.h"
-#import "MCFeatureButtonsCell.h"
+#import "GPKGSUtils.h"
+#import "GPKGSProperties.h"
+#import <GPKGGeoPackageManager.h>
+#import "MCFeatureLayerOperationsCell.h"
+#import "MCTileLayerOperationsCell.h"
 
-@interface MCLayerViewController : UITableViewController
+
+@protocol MCLayerOperationsDelegate <NSObject>
+- (void) deleteLayer;
+- (void) createOverlay;
+- (void) indexLayer;
+- (void) createTiles;
+- (void) renameLayer:(NSString *) layerName;
+- (void) showTileScalingOptions;
+@end
+
+
+@interface MCLayerViewController : UITableViewController <MCFeatureLayerOperationsCellDelegate, MCTileLayerOperationsCellDelegate>
 @property (strong, nonatomic) GPKGUserDao *layerDao;
-@property (strong, nonatomic) id<MCFeatureButtonsCellDelegate> featureButtonsCellDelegate;
+@property (weak, nonatomic) id<MCLayerOperationsDelegate> delegate;
 @end

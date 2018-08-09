@@ -12,6 +12,7 @@
 @property (strong, nonatomic) NSMutableArray *cellArray;
 @property (strong, nonatomic) GPKGFeatureDao *featureDao;
 @property (strong, nonatomic) GPKGTileDao *tileDao;
+@property (strong, nonatomic) GPKGGeoPackageManager *manager;
 @end
 
 @implementation MCLayerViewController
@@ -53,6 +54,7 @@
 - (void) registerCellTypes {
     [self.tableView registerNib:[UINib nibWithNibName:@"MCHeaderCellDisplay" bundle:nil] forCellReuseIdentifier:@"header"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCFeatureLayerOperationsCell" bundle:nil] forCellReuseIdentifier:@"featureButtons"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCTileLayerOperationsCell" bundle:nil] forCellReuseIdentifier:@"tileButtons"];
 }
 
 
@@ -63,15 +65,16 @@
     
     MCHeaderCell *headerCell = [self.tableView dequeueReusableCellWithIdentifier:@"header"];
     headerCell.nameLabel.text = _layerDao.tableName;
-    
     _cellArray = [[NSMutableArray alloc] initWithObjects:headerCell, nil];
     
     if (_featureDao != nil) {
-        MCFeatureButtonsCell *featureButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"featureButtons"];
-        featureButtonsCell.delegate = _featureButtonsCellDelegate;
+        MCFeatureLayerOperationsCell *featureButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"featureButtons"];
+        featureButtonsCell.delegate = self;
         [_cellArray addObject:featureButtonsCell];
     } else if (_tileDao != nil) {
-        
+        MCTileLayerOperationsCell *tileButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileButtons"];
+        tileButtonsCell.delegate = self;
+        [_cellArray addObject:tileButtonsCell];
     }
 }
 
@@ -80,11 +83,12 @@
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark - Table view data source
 
+#pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_cellArray count];
@@ -96,48 +100,119 @@
 }
 
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (void) renameLayer:(GPKGUserDao *) dao {
+    NSLog(@"Renaming Layer");
+    
+    UIAlertController *renameAlert = [UIAlertController alertControllerWithTitle:@"Rename Layer" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    [renameAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.text = dao.tableName;
+    }];
+    
+    UIAlertAction *confirmRename = [UIAlertAction actionWithTitle:@"Rename" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"New name is: %@", renameAlert.textFields[0].text);
+        
+        NSString * newName = renameAlert.textFields[0].text;
+        
+        if(newName != nil && [newName length] > 0 && ![newName isEqualToString:dao.tableName]){
+            @try {
+                if(newName != nil && [newName length] > 0 && ![newName isEqualToString:dao.tableName]){
+                    //self.database.name = newName;
+                    [self initCellArray];
+                    [self.tableView reloadData];
+                }else{
+                    [GPKGSUtils showMessageWithDelegate:self
+                                               andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
+                                             andMessage:[NSString stringWithFormat:@"Rename from %@ to %@ was not successful", @"OLDNAME", newName]];
+                }
+            }
+            @catch (NSException *exception) {
+                [GPKGSUtils showMessageWithDelegate:self
+                                           andTitle:[NSString stringWithFormat:@"Rename %@ to %@", @"OLDNAME", newName]
+                                         andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
+            }
+        }
+    }];
+    
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [renameAlert dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
+    [renameAlert addAction:confirmRename];
+    [renameAlert addAction:cancel];
+    
+    [self presentViewController:renameAlert animated:YES completion:nil];
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+
+- (void) deleteLayer {
+    NSLog(@"Deleting layer");
+    
+    UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you wanbt to delete this layer? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self.delegate deleteLayer];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [deleteAlert dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
+    [deleteAlert addAction:confirmDelete];
+    [deleteAlert addAction:cancel];
+    
+    [self presentViewController:deleteAlert animated:YES completion:nil];
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+
+#pragma mark - MCFeatureLayerOperationsCellDelegate methods
+- (void) renameFeatureLayer {
+    NSLog(@"MCLayerOperationsDelegate editLayer");
+    [self renameLayer: _featureDao];
 }
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+
+- (void) indexFeatures {
+    NSLog(@"MCLayerOperationsDelegate indexLayer");
+    [_delegate indexLayer];
 }
-*/
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void) createTiles {
+    NSLog(@"MCLayerOperationsDelegate createTiles");
+    [_delegate createTiles];
 }
-*/
+
+
+- (void) createOverlay {
+    NSLog(@"MCLayerOperationsDelegate createOverlay");
+    [_delegate createOverlay];
+}
+
+
+- (void) deleteFeatureLayer {
+    NSLog(@"MCFeatureButtonsCellDelegate deleteLayer %@", _featureDao.tableName);
+    [self deleteLayer];
+    
+}
+
+
+#pragma mark - MCTileButtonsDelegate methods
+- (void) renameTileLayer {
+    NSLog(@"MCTileButtonsDelegate renameLayer");
+    [self renameLayer: _tileDao];
+}
+
+
+- (void) showScalingOptions {
+    NSLog(@"MCTileButtonsDelegate showScalingOptions");
+    [_delegate showTileScalingOptions];
+}
+
+
+- (void) deleteTileLayer {
+    NSLog(@"MCTileButtonsDelegate deleteTileLayer");
+    [self deleteLayer];
+}
+
 
 @end

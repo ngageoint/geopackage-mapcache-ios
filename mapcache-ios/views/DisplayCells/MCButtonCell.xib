@@ -39,6 +39,7 @@
             <constraints>
                 <constraint firstItem="Gnk-uG-73u" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="6aO-J2-eD7"/>
                 <constraint firstItem="Gnk-uG-73u" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="U9I-CM-AbW"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Gnk-uG-73u" secondAttribute="bottom" constant="16" id="hba-X6-VzS"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Gnk-uG-73u" secondAttribute="trailing" constant="16" id="hhT-aG-nUr"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

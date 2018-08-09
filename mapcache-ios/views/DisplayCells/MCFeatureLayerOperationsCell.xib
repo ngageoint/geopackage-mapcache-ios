@@ -12,7 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MCFeatureButtonsCell">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MCFeatureLayerOperationsCell">
             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -24,11 +24,11 @@
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <inset key="titleEdgeInsets" minX="-31" minY="0.0" maxX="0.0" maxY="-36"/>
                             <inset key="imageEdgeInsets" minX="19" minY="-24" maxX="0.0" maxY="0.0"/>
-                            <state key="normal" title="Edit" image="Edit">
+                            <state key="normal" title="Rename" image="Edit">
                                 <color key="titleColor" red="0.29411764705882354" green="0.6705882352941176" blue="0.68627450980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
-                                <action selector="editButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="JwF-qH-TY2"/>
+                                <action selector="renameLayer:" destination="iN0-l3-epB" eventType="touchUpInside" id="7I8-m8-afC"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R5r-v9-hR0">
@@ -40,7 +40,7 @@
                                 <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
-                                <action selector="indexButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="ntq-ME-DyB"/>
+                                <action selector="indexFeatures:" destination="iN0-l3-epB" eventType="touchUpInside" id="9Fo-Lg-v9B"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rEl-MV-YAY">
@@ -52,7 +52,7 @@
                                 <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
-                                <action selector="createTilesButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="c5C-35-OKe"/>
+                                <action selector="createTiles:" destination="iN0-l3-epB" eventType="touchUpInside" id="feZ-Eb-KGq"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="buZ-Lv-7gz">
@@ -64,7 +64,7 @@
                                 <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
-                                <action selector="overlayButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="tFP-Il-dtk"/>
+                                <action selector="createOverlay:" destination="iN0-l3-epB" eventType="touchUpInside" id="fUd-QC-bk4"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Ij-kH-27S">
@@ -76,7 +76,7 @@
                                 <color key="titleColor" red="0.97575825449999998" green="0.38110277059999997" blue="0.28535854820000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
-                                <action selector="deleteButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="Opp-AX-svI"/>
+                                <action selector="deleteFeatureLayer:" destination="iN0-l3-epB" eventType="touchUpInside" id="LJp-cH-c2v"/>
                             </connections>
                         </button>
                     </subviews>
@@ -91,13 +91,6 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <connections>
-                <outlet property="createTilesButton" destination="rEl-MV-YAY" id="Go0-PP-liy"/>
-                <outlet property="deleteButton" destination="5Ij-kH-27S" id="FmW-TL-gWS"/>
-                <outlet property="editButton" destination="1sE-Wb-EIG" id="a4U-T8-Mvr"/>
-                <outlet property="indexButton" destination="R5r-v9-hR0" id="VFh-lX-Uuy"/>
-                <outlet property="overlayButton" destination="buZ-Lv-7gz" id="7ol-50-D5N"/>
-            </connections>
             <point key="canvasLocation" x="24.5" y="52"/>
         </view>
     </objects>

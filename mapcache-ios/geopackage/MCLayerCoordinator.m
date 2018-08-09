@@ -10,6 +10,7 @@
 
 @interface MCLayerCoordinator()
 @property (strong, nonatomic) MCLayerViewController *layerViewController;
+@property (strong, nonatomic) GPKGGeoPackageManager *manager;
 @property (strong, nonatomic) GPKGUserDao *dao;
 @property (strong, nonatomic) GPKGSDatabase *database;
 @property (strong, nonatomic) UINavigationController *navigationController;
@@ -19,44 +20,69 @@
 @implementation MCLayerCoordinator
 
 - (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDatabase:(GPKGSDatabase *) database
-                                       andDao:(GPKGSUserDao *) dao {
+                                       andDao:(GPKGUserDao *) dao {
     self = [super init];
     _navigationController = navigationController;
+    _manager = [GPKGGeoPackageFactory getManager];
     _database = database;
     _dao = dao;
+    return self;
 }
 
 
 - (void) start {
     _layerViewController = [[MCLayerViewController alloc] init];
+    _layerViewController.layerDao = _dao;
+    _layerViewController.delegate = self;
     [_navigationController pushViewController:_layerViewController animated:YES];
     [_navigationController setNavigationBarHidden:NO animated:NO];
 }
 
 
-#pragma mark - MCFeatureButtonsCellDelegate methods
-- (void) editLayer {
-    NSLog(@"MCFeatureButtonsCellDelegate editLayer");
-}
-
-
-- (void) indexLayer {
-    NSLog(@"MCFeatureButtonsCellDelegate indexLayer");
-}
-
-
-- (void) createOverlay {
-    NSLog(@"MCFeatureButtonsCellDelegate createOverlay");
-}
-
-
-- (void) createTiles {
-    NSLog(@"MCFeatureButtonsCellDelegate createTiles");
+#pragma mark - MCLayerOperationsDelegate methods
+- (void) renameLayer:(NSString *) layerName {
+    NSLog(@"MCLayerCoordinator - renameLayer");
 }
 
 
 - (void) deleteLayer {
-    NSLog(@"MCFeatureButtonsCellDelegate deleteLayer");
+    NSLog(@"MCLayerCoordinator - deleteLayer");
+    
+    GPKGGeoPackage *geoPackage = [_manager open:_database.name];
+    
+    @try {
+        [geoPackage deleteUserTable:_dao.tableName];
+        [_navigationController popViewControllerAnimated:YES];
+    }
+    @catch (NSException *exception) {
+        [GPKGSUtils showMessageWithDelegate:self
+                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], _database.name, _dao.tableName]
+                                 andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
+    }
+    @finally {
+        [geoPackage close];
+        
+    }
+}
+
+
+- (void) createOverlay {
+    NSLog(@"MCLayerCoordinator - createLayer");
+}
+
+
+- (void) createTiles {
+    NSLog(@"MCLayerCoordinator - createTiles");
+}
+
+
+- (void) indexLayer {
+    NSLog(@"MCLayerCoordinator - indexLayer");
+}
+
+
+- (void) showTileScalingOptions {
+    NSLog(@"MCLayerCoordinator - showTileScalingOptions");
 }
 
 @end
