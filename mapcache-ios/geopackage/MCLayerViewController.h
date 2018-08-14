@@ -18,9 +18,11 @@
 #import "GPKGSUtils.h"
 #import "GPKGSProperties.h"
 #import <GPKGGeoPackageManager.h>
+#import <SFPProjectionTransform.h>
 #import "MCFeatureLayerOperationsCell.h"
 #import "MCTileLayerOperationsCell.h"
-
+#import "SFPProjectionConstants.h"
+#import "GPKGOverlayFactory.h"
 
 @protocol MCLayerOperationsDelegate <NSObject>
 - (void) deleteLayer;

@@ -65,16 +65,31 @@
     
     MCHeaderCell *headerCell = [self.tableView dequeueReusableCellWithIdentifier:@"header"];
     headerCell.nameLabel.text = _layerDao.tableName;
-    _cellArray = [[NSMutableArray alloc] initWithObjects:headerCell, nil];
+    
+    GPKGBoundingBox *layerBoundingBox;
+    SFPProjectionTransform *transformToWebMercator;
     
     if (_featureDao != nil) {
         MCFeatureLayerOperationsCell *featureButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"featureButtons"];
         featureButtonsCell.delegate = self;
-        [_cellArray addObject:featureButtonsCell];
+        layerBoundingBox = [_layerDao getBoundingBox];
+        headerCell.featureDao = _featureDao;
+        transformToWebMercator = [[SFPProjectionTransform alloc] initWithFromProjection:_featureDao.projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+        _cellArray = [[NSMutableArray alloc] initWithObjects:headerCell, featureButtonsCell, nil];
     } else if (_tileDao != nil) {
         MCTileLayerOperationsCell *tileButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileButtons"];
         tileButtonsCell.delegate = self;
-        [_cellArray addObject:tileButtonsCell];
+        layerBoundingBox = [_tileDao getBoundingBoxWithZoomLevel:_tileDao.minZoom];
+        transformToWebMercator = [[SFPProjectionTransform alloc] initWithFromProjection:_tileDao.projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+        headerCell.tileOverlay = [GPKGOverlayFactory tileOverlayWithTileDao:_tileDao];
+        _cellArray = [[NSMutableArray alloc] initWithObjects:headerCell, tileButtonsCell, nil];
+    }
+    
+    if (layerBoundingBox != nil) {
+        GPKGBoundingBox *webMercatorBoundingBox = [layerBoundingBox transform:transformToWebMercator];
+        SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+        layerBoundingBox = [webMercatorBoundingBox transform:transform];
+        [headerCell.mapView setRegion:layerBoundingBox.getCoordinateRegion];
     }
 }
 
