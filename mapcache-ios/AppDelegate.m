@@ -31,6 +31,15 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [self setupApplicationAppearance];
+    
+    UIScreen *screen = [UIScreen mainScreen];
+    _window = [[UIWindow alloc] initWithFrame:screen.bounds];
+    [_window makeKeyAndVisible];
+    MCMapViewController *mapViewController = [[MCMapViewController alloc] init];
+    NGADrawerCoordinator *drawerCoordinator = [[NGADrawerCoordinator alloc] initWithBackgroundViewController:mapViewController];
+    [drawerCoordinator start];
+    _window.rootViewController = mapViewController;
+    
     return YES;
 }
 
