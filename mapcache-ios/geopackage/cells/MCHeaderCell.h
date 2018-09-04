@@ -21,7 +21,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *detailLabelOne;
 @property (weak, nonatomic) IBOutlet UILabel *detailLabelTwo;
 @property (weak, nonatomic) IBOutlet UILabel *detailLabelThree;
-@property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (strong, nonatomic) MKTileOverlay *tileOverlay;
 @property (strong, nonatomic) GPKGFeatureDao *featureDao;
 @end

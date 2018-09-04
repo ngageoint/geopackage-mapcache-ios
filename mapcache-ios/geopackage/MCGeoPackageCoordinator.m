@@ -11,9 +11,11 @@
 
 @interface MCGeoPackageCoordinator()
 @property (strong, nonatomic) MCGeopackageSingleViewController *geoPackageViewController;
-@property (strong, nonatomic) id<MCGeoPackageCoordinatorDelegate> delegate;
+@property (strong, nonatomic) id<MCGeoPackageCoordinatorDelegate> geoPackageCoordinatorDelegate;
+@property (strong, nonatomic) id<NGADrawerViewDelegate> drawerDelegate;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
-@property (strong, nonatomic) UINavigationController *navigationController;
+// @property (strong, nonatomic) UINavigationController *navigationController; // TODO replace all of the navigation controller references with drawer
+@property (strong, nonatomic) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (strong, nonatomic) MCFeatureLayerDetailsViewController *featureDetailsController;
 @property (strong, nonatomic) MCTileLayerDetailsViewController *tileDetailsController;
 @property (strong, nonatomic) MCBoundingBoxViewController *boundingBoxViewController;
@@ -28,13 +30,13 @@
 
 @implementation MCGeoPackageCoordinator
 
-- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<MCGeoPackageCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database {
+- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andDatabase:(GPKGSDatabase *) database {
     self = [super init];
     
     _childCoordinators = [[NSMutableArray alloc] init];
     _manager = [GPKGGeoPackageFactory getManager];
-    _navigationController = navigationController;
-    _delegate = delegate;
+    _geoPackageCoordinatorDelegate = geoPackageCoordinatorDelegate;
+    _drawerDelegate = drawerDelegate;
     _database = database;
 
     return self;
@@ -42,12 +44,13 @@
 
 
 - (void) start {
-    _geoPackageViewController = [[MCGeopackageSingleViewController alloc] init];
+    _geoPackageViewController = [[MCGeopackageSingleViewController alloc] initAsFullView:YES];
     _geoPackageViewController.database = _database;
     _geoPackageViewController.delegate = self;
+    _geoPackageViewController.drawerViewDelegate = _drawerDelegate;
+    [_drawerDelegate pushDrawer:_geoPackageViewController];
     
-    [_navigationController pushViewController:_geoPackageViewController animated:YES];
-    [_navigationController setNavigationBarHidden:NO animated:NO];
+    //[_navigationController pushViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
 }
 
 
@@ -57,34 +60,27 @@
     
     MCCreateLayerViewController *createLayerViewControler = [[MCCreateLayerViewController alloc] initWithNibName:@"MCCreateLayerView" bundle:nil];
     createLayerViewControler.delegate = self;
-    [_navigationController pushViewController:createLayerViewControler animated:YES];
+    //[_navigationController pushViewController:createLayerViewControler animated:YES]; // TODO replace with drawer
 }
 
 
 - (void) copyGeoPackage {
-    [_navigationController popViewControllerAnimated:YES];
-    [_delegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
+    //[_navigationController popViewControllerAnimated:YES]; // TODO replace with drawer
+    [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
 }
 
 
 - (void) deleteGeoPackage {
     NSLog(@"Coordinator handling delete");
-    [_navigationController popViewControllerAnimated:YES];
-    [_delegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:YES];
+    //[_navigationController popViewControllerAnimated:YES]; // TODO replace with drawer
+    [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:YES];
 }
 
 
 - (void) callCompletionHandler {
     NSLog(@"Back pressed");
-    [_delegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
-}
-
-
-- (void) showInfo {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    GPKGSDisplayTextViewController *textViewController = [storyboard instantiateViewControllerWithIdentifier:@"GPKGSDisplayTextViewController"];
-    textViewController.database = _database;
-    [_navigationController pushViewController: textViewController animated:YES];
+    [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
+    // TODO Make sure the drawer is being handled properly
 }
 
 
@@ -110,9 +106,9 @@
     NSLog(@"In showLayerDetails with %@", layerDao.tableName);
     // TODO: Create a layer details view and show it
     
-    MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithNavigationController:_navigationController andDatabase:_database andDao:layerDao];
-    [_childCoordinators addObject:layerCoordinator];
-    [layerCoordinator start];
+    //MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithNavigationController:_navigationController andDatabase:_database andDao:layerDao]; // TODO replace with drawer
+    //[_childCoordinators addObject:layerCoordinator];
+    //[layerCoordinator start];
 }
 
 
@@ -122,7 +118,7 @@
     _featureDetailsController = [[MCFeatureLayerDetailsViewController alloc] init];
     _featureDetailsController.database = _database;
     _featureDetailsController.delegate = self;
-    [_navigationController pushViewController:_featureDetailsController animated:YES];
+    //[_navigationController pushViewController:_featureDetailsController animated:YES]; // TODO replace with drawer
 }
 
 
@@ -131,7 +127,7 @@
     _tileData = [[GPKGSCreateTilesData alloc] init];
     _tileDetailsController = [[MCTileLayerDetailsViewController alloc] init];
     _tileDetailsController.delegate = self;
-    [_navigationController pushViewController:_tileDetailsController animated:YES];
+    // [_navigationController pushViewController:_tileDetailsController animated:YES]; // TODO replace with drawer
 }
 
 
@@ -149,7 +145,7 @@
     }
     @finally {
         [geoPackage close];
-        [_navigationController popToViewController:_geoPackageViewController animated:YES];
+        //[_navigationController popToViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
         [_geoPackageViewController update];
     }
     
@@ -165,7 +161,7 @@
     
     _boundingBoxViewController = [[MCBoundingBoxViewController alloc] init];
     _boundingBoxViewController.delegate = self;
-    [_navigationController pushViewController:_boundingBoxViewController animated:YES];
+    //[_navigationController pushViewController:_boundingBoxViewController animated:YES];
 }
 
 
@@ -175,14 +171,14 @@
     
     _zoomAndQualityViewController = [[MCZoomAndQualityViewController alloc] init];
     _zoomAndQualityViewController.delegate = self;
-    [_navigationController pushViewController:_zoomAndQualityViewController animated:YES];
+    //[_navigationController pushViewController:_zoomAndQualityViewController animated:YES]; // TODO replace with drawer
 }
 
 
 - (void) showManualBoundingBoxViewWithMinLat:(double)minLat andMaxLat:(double)maxLat andMinLon:(double)minLon andMaxLon:(double) maxLon {
     _manualBoundingBoxViewController = [[MCManualBoundingBoxViewController alloc] initWithLowerLeftLat:minLat andLowerLeftLon:minLon andUpperRightLat:maxLat andUpperRightLon:maxLon];
     _manualBoundingBoxViewController.delegate = self;
-    [_navigationController pushViewController:_manualBoundingBoxViewController animated:YES];
+    //[_navigationController pushViewController:_manualBoundingBoxViewController animated:YES]; // TODO replace with drawer
     
 }
 
@@ -190,7 +186,7 @@
 #pragma mark- MCManualBoundingBoxDelegate
 - (void) manualBoundingBoxCompletionHandlerWithLowerLeftLat:(double)lowerLeftLat andLowerLeftLon:(double)lowerLeftLon andUpperRightLat:(double)upperRightLat andUpperRightLon:(double)upperRightLon{
     [_boundingBoxViewController setBoundingBoxWithLowerLeftLat:lowerLeftLat andLowerLeftLon:lowerLeftLon andUpperRightLat:upperRightLat andUpperRightLon:upperRightLon];
-    [_navigationController popToViewController:_boundingBoxViewController animated:YES];
+    //[_navigationController popToViewController:_boundingBoxViewController animated:YES]; // TODO replace with drawer
     
 }
 
@@ -245,7 +241,7 @@
 -(void) onLoadTilesCompleted: (int) count {
     //TODO: fill in
     NSLog(@"Loading tiles completed");
-    [_navigationController popToViewController:_geoPackageViewController animated:YES];
+    //[_navigationController popToViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
     [_geoPackageViewController update];
 }
 

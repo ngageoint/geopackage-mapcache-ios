@@ -14,7 +14,7 @@
 #import "MBFingerTipWindow.h"
 
 @interface AppDelegate ()
-
+@property (strong, nonatomic) NSMutableArray *childCoordinators;
 @end
 
 @implementation AppDelegate
@@ -38,6 +38,7 @@
     MCMapViewController *mapViewController = [[MCMapViewController alloc] init];
     NGADrawerCoordinator *drawerCoordinator = [[NGADrawerCoordinator alloc] initWithBackgroundViewController:mapViewController];
     [drawerCoordinator start];
+    [_childCoordinators addObject:drawerCoordinator];
     _window.rootViewController = mapViewController;
     
     return YES;

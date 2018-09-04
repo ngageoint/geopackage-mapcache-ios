@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -9,54 +13,45 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" restorationIdentifier="header" id="iN0-l3-epB" customClass="MCHeaderCell">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="336"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="121"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" text="GeoPackageName" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pZp-3b-V3A">
-                    <rect key="frame" x="16" y="224" width="343" height="33.5"/>
+                    <rect key="frame" x="16" y="16" width="343" height="33.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="28"/>
                     <color key="textColor" red="0.1176470588" green="0.30196078430000001" blue="0.48627450979999998" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Tile Count Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="elG-o6-BX1">
-                    <rect key="frame" x="16" y="280" width="105" height="17"/>
+                    <rect key="frame" x="16" y="72" width="105" height="17"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Size Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C3l-rU-ufI">
-                    <rect key="frame" x="16" y="261" width="66" height="17"/>
+                    <rect key="frame" x="16" y="53" width="66" height="17"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Feature Count Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mj1-1v-y74">
-                    <rect key="frame" x="16" y="299" width="131" height="17"/>
+                    <rect key="frame" x="16" y="91" width="131" height="14"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="9V3-LB-YmQ">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="208"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="208" id="qE9-M8-edh"/>
-                    </constraints>
-                </mapView>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="pZp-3b-V3A" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="8N8-fo-7j9"/>
                 <constraint firstItem="mj1-1v-y74" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="Aut-jQ-4XQ"/>
                 <constraint firstItem="C3l-rU-ufI" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="BmR-Az-vhj"/>
-                <constraint firstItem="pZp-3b-V3A" firstAttribute="top" secondItem="9V3-LB-YmQ" secondAttribute="bottom" constant="16" id="Kbh-80-lzm"/>
-                <constraint firstItem="9V3-LB-YmQ" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="LMg-qV-e7f"/>
-                <constraint firstItem="9V3-LB-YmQ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Mlc-hX-4pG"/>
                 <constraint firstItem="pZp-3b-V3A" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="Mva-zz-AcJ"/>
                 <constraint firstItem="elG-o6-BX1" firstAttribute="top" secondItem="C3l-rU-ufI" secondAttribute="bottom" constant="2" id="Pek-bR-GfV"/>
                 <constraint firstItem="mj1-1v-y74" firstAttribute="top" secondItem="elG-o6-BX1" secondAttribute="bottom" constant="2" id="SFu-no-RAw"/>
-                <constraint firstItem="9V3-LB-YmQ" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="SOc-m6-aAm"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="mj1-1v-y74" secondAttribute="bottom" constant="20" id="SgA-QN-a6G"/>
                 <constraint firstItem="C3l-rU-ufI" firstAttribute="top" secondItem="pZp-3b-V3A" secondAttribute="bottom" constant="4" id="TKa-bx-5Xz"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="pZp-3b-V3A" secondAttribute="trailing" constant="16" id="ZAP-eb-XtQ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="mj1-1v-y74" secondAttribute="bottom" constant="16" id="cBT-Sz-gdL"/>
                 <constraint firstItem="elG-o6-BX1" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="dWW-IL-oNe"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -65,10 +60,9 @@
                 <outlet property="detailLabelOne" destination="C3l-rU-ufI" id="6rp-97-RjU"/>
                 <outlet property="detailLabelThree" destination="mj1-1v-y74" id="pXs-Ss-coa"/>
                 <outlet property="detailLabelTwo" destination="elG-o6-BX1" id="pv0-qv-hNP"/>
-                <outlet property="mapView" destination="9V3-LB-YmQ" id="Tis-Jp-4uz"/>
                 <outlet property="nameLabel" destination="pZp-3b-V3A" id="8tW-tG-fcw"/>
             </connections>
-            <point key="canvasLocation" x="-49.5" y="24"/>
+            <point key="canvasLocation" x="-49.5" y="18.5"/>
         </view>
     </objects>
 </document>
