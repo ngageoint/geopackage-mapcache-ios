@@ -11,6 +11,7 @@
 @interface MCGeopackageSingleViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
+@property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UIDocumentInteractionController *shareDocumentController;
 @end
 
@@ -18,14 +19,20 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    [self registerCellTypes];
-    [self initCellArray];
-    
     self.manager = [GPKGGeoPackageFactory getManager];
+    //self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    CGRect bounds = self.view.bounds;
+    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 20, bounds.size.width, bounds.size.height - 20);
+    self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
     self.tableView.estimatedRowHeight = 390.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    [self registerCellTypes];
+    [self initCellArray];
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
@@ -34,6 +41,9 @@
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
+    [self.view addSubview:self.tableView];
+    [self addDragHandle];
+    [self addCloseButton];
 }
 
 
@@ -95,7 +105,7 @@
         
         layerCell.layerNameLabel.text = table.name;
         [layerCell.layerTypeImage setImage:[UIImage imageNamed:typeImageName]];
-        [_cellArray addObject:layerCell];
+        //[_cellArray addObject:layerCell]; // TODO This is ending up nil, sort out why
     }
     
     // TODO: add title cell for reference systems
@@ -196,6 +206,12 @@
             [self update];
         }
     }
+}
+
+
+- (void) closeDrawer {
+    [super closeDrawer];
+    [self.drawerViewDelegate popDrawer];
 }
 
 
@@ -371,12 +387,6 @@
     [copyAlert addAction:cancel];
     
     [self presentViewController:copyAlert animated:YES completion:nil];
-}
-
-
-- (void) getInfo {
-    NSLog(@"In getInfo");
-    [_delegate showInfo];
 }
 
 

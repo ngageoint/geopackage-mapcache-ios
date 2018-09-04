@@ -21,6 +21,7 @@
 #import <GPKGGeoPackageManager.h>
 #import <GPKGGeoPackageFactory.h>
 #import "GPKGSUtils.h"
+#import "NGADrawerViewController.h"
 
 
 @protocol MCOperationsDelegate <NSObject>
@@ -29,12 +30,11 @@
 - (void) copyGeoPackage;
 - (void) callCompletionHandler;
 - (void) deleteLayer:(NSString *) layerName;
-- (void) showInfo;
 - (void) showLayerDetails:(GPKGUserDao *) layerDao;
 @end
 
 
-@interface MCGeopackageSingleViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, GPKGSButtonCellDelegate, MCGeoPackageOperationsCellDelegate>
+@interface MCGeopackageSingleViewController : NGADrawerViewController <UITableViewDataSource, UITableViewDelegate, GPKGSButtonCellDelegate, MCGeoPackageOperationsCellDelegate>
 @property (strong, nonatomic) GPKGSDatabase *database;
 @property (weak, nonatomic) id<MCOperationsDelegate> delegate;
 - (void) update;

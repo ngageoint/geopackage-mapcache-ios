@@ -12,13 +12,14 @@
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGSDatabase.h"
 
-@protocol MCGeoPackageListDelegate <NSObject>
-- (void) didSelectGeoPackage:(GPKGSDatabase *) geoPackage;
+
+@protocol MCGeoPacakageListViewDelegate <NSObject>
+- (void) didSelectGeoPackage: (GPKGSDatabase*) database;
 @end
 
 @interface MCGeoPackageList: NGADrawerViewController <UITableViewDelegate, UITableViewDataSource>
-- (instancetype) initWithGeoPackages: (NSMutableArray *) geoPackages asFullView: (BOOL) fullView;
-@property (weak, nonatomic) id<MCGeoPackageListDelegate> geoPackageListDelegate;
+@property (strong, nonatomic) id<MCGeoPacakageListViewDelegate> geopackageListViewDelegate;
+- (instancetype) initWithGeoPackages: (NSMutableArray *) geoPackages asFullView: (BOOL) fullView andDelegate:(id<MCGeoPacakageListViewDelegate>) delegate;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *geoPackages;
 @end

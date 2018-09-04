@@ -8,12 +8,17 @@
 
 #import "MCGeoPackageList.h"
 
+@interface MCGeoPackageList()
+@property (strong, nonatomic) NSMutableArray *childCoordinators;
+@end
+
 
 @implementation MCGeoPackageList
 
-- (instancetype) initWithGeoPackages: (NSMutableArray *) geoPackages asFullView: (BOOL) fullView {
+- (instancetype) initWithGeoPackages: (NSMutableArray *) geoPackages asFullView: (BOOL) fullView andDelegate:(id<MCGeoPacakageListViewDelegate>) delegate {
     self = [super initAsFullView:fullView];
     _geoPackages = geoPackages;
+    _geopackageListViewDelegate = delegate;
     
     return self;
 }
@@ -41,11 +46,15 @@
 }
 
 
-- (void)didReceiveMemoryWarning {
+- (void) didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+
+- (void) updateAndReloadData {
+    // TODO add code to do this
+}
 
 #pragma mark - TableView delegate and data souce methods
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -79,10 +88,20 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     GPKGSDatabase *selectedGeoPackage = [_geoPackages objectAtIndex:indexPath.row];
     NSLog(@"didSelectRowAtIndexPath for %@", selectedGeoPackage.name);
-    [_geoPackageListDelegate didSelectGeoPackage:selectedGeoPackage];
+    [_geopackageListViewDelegate didSelectGeoPackage:selectedGeoPackage];
 }
 
 
+#pragma mark - MCGeoPackageCoordinatorDelegate method
+- (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *)database withDelete:(BOOL)didDelete {
+    
+    /*if (didDelete) {
+        [self.manager delete:database];
+        [self.active removeDatabase:database andPreserveOverlays:false];
+    }*/
+    
+    [self updateAndReloadData];
+}
 
 
 @end

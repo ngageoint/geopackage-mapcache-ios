@@ -109,6 +109,30 @@
 }
 
 
+- (void) addDragHandle {
+    // Taking the width of the drag handle into account when adding it.
+    UIImageView *dragHandle = [[UIImageView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 36)/2, 8, 36, 4)];
+    dragHandle.image = [UIImage imageNamed:@"dragHandle"];
+    [self.view addSubview:dragHandle];
+}
+
+
+- (void) addCloseButton {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self
+               action:@selector(closeDrawer)
+     forControlEvents:UIControlEventTouchUpInside];
+    [button setImage:[UIImage imageNamed:@"closeButton"] forState:UIControlStateNormal];
+    button.frame = CGRectMake(self.view.frame.size.width - 36, 8, 32, 32);
+    [self.view addSubview:button];
+}
+
+
+- (void) closeDrawer {
+    NSLog(@"Close button tapped.");
+}
+
+
 - (void) roundViews {
     self.view.layer.cornerRadius = 5;
     self.view.clipsToBounds = YES;
@@ -127,6 +151,7 @@
     visualEfect.frame = UIScreen.mainScreen.bounds;
     bluredView.frame = UIScreen.mainScreen.bounds;
     [self.view insertSubview:bluredView atIndex:0];
+    self.view.backgroundColor = [UIColor whiteColor];
 }
 
 

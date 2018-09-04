@@ -12,11 +12,11 @@
 #import "MCGeoPackageCoordinator.h"
 #import "MCGeoPackageList.h"
 #import "GPKGSFeatureOverlayTable.h"
-#import "NGADrawerCoordinator.h"
+#import "MCGeopackageSingleViewController.h"
+#import "MCGeoPackageCoordinator.h"
 
 
-@interface MCGeoPackageListCoordinator : NSObject <MCGeoPackageListDelegate>
+@interface MCGeoPackageListCoordinator : NSObject <MCGeoPackageCoordinatorDelegate, MCGeoPacakageListViewDelegate>
 @property (weak, nonatomic) id<NGADrawerViewDelegate> drawerViewDelegate;
-
 - (void)start;
 @end

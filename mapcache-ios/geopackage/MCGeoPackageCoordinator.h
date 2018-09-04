@@ -32,6 +32,6 @@
 @end
 
 @interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate, MCZoomAndQualityDelegate, MCCreateLayerDelegate, GPKGSLoadTilesProtocol, MCManualBoundingBoxDelegate>
-- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<MCGeoPackageCoordinatorDelegate>)delegate andDatabase:(GPKGSDatabase *) database;
+- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andDatabase:(GPKGSDatabase *) database;
 - (void) start;
 @end

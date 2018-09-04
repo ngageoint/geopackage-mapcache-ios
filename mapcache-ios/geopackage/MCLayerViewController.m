@@ -89,7 +89,7 @@
         GPKGBoundingBox *webMercatorBoundingBox = [layerBoundingBox transform:transformToWebMercator];
         SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
         layerBoundingBox = [webMercatorBoundingBox transform:transform];
-        [headerCell.mapView setRegion:layerBoundingBox.getCoordinateRegion];
+        // [headerCell.mapView setRegion:layerBoundingBox.getCoordinateRegion]; // TODO sort this out for the new map
     }
 }
 

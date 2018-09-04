@@ -293,9 +293,9 @@ const char ConstantKey;
         GPKGSDatabase * database = (GPKGSDatabase *) cellObject;
         [self expandOrCollapseDatabase:database atIndexPath:indexPath];
         
-        MCGeoPackageCoordinator *coordinator = [[MCGeoPackageCoordinator alloc] initWithNavigationController:self.navigationController andDelegate:self andDatabase:database];
-        [_childCoordinators addObject:coordinator];
-        [coordinator start];
+//        MCGeoPackageCoordinator *coordinator = [[MCGeoPackageCoordinator alloc] initWithDelegate:self andDatabase:database]; 
+//        [_childCoordinators addObject:coordinator];
+//        [coordinator start];
     }
 }
 

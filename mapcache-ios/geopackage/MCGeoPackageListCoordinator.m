@@ -66,8 +66,12 @@
             }
             
             for(GPKGSFeatureOverlayTable * table in [geoPackage getFeatureTables]){
-                [tables addObject:table];
-                //[theDatabase addFeatureOverlay:table]; // TODO check on this, might be grabbing the wrong thing to run through, featureTable vs featureOverlay
+                //GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:table.featureTable];
+                //int count = [featureDao count];
+                //[table setCount:count];
+                
+                //[tables addObject:table];
+                //[theDatabase addFeatureOverlay:table]; // TODO checkout what is going on with this call, getting an object mismatch.
             }
             
         }
@@ -77,7 +81,7 @@
                     [self.manager delete:geoPackage.name];
                 }
                 @catch (NSException *exception) {
-                    NSLog(@"Caught Exception trying to delete");
+                    NSLog(@"Caught Exception trying to delete %@", exception.reason);
                 }
             }else{
                 [geoPackage close];
@@ -85,15 +89,28 @@
         }
     }
     
-    _geoPackageListView = [[MCGeoPackageList alloc] initWithGeoPackages:_geoPackages asFullView:YES];
+    _geoPackageListView = [[MCGeoPackageList alloc] initWithGeoPackages:_geoPackages asFullView:YES andDelegate:self];
     _geoPackageListView.drawerViewDelegate = _drawerViewDelegate;
     [_geoPackageListView.drawerViewDelegate pushDrawer:_geoPackageListView];
 }
 
 
-#pragma mark - MCGeoPackageListDelegate method
-- (void) didSelectGeoPackage:(GPKGSDatabase *) geoPackage {
-    
+#pragma mark - MCGeoPackageListViewDelegate method
+-(void) didSelectGeoPackage:(GPKGSDatabase *)database {
+    MCGeoPackageCoordinator *geoPackageCoordinator = [[MCGeoPackageCoordinator alloc] initWithDelegate:self andDrawerDelegate:_drawerViewDelegate andDatabase:database];
+    [_childCoordinators addObject:geoPackageCoordinator];
+    [geoPackageCoordinator start];
 }
+
+
+#pragma mark - MCGeoPackageCoordinatorDelegate method
+- (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete {
+    if (didDelete) {
+        [self.manager delete:database];
+    }
+    
+    //TODO: Update the geopackage list view
+}
+
 
 @end
