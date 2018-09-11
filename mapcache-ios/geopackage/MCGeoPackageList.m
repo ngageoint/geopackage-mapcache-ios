@@ -56,6 +56,13 @@
     // TODO add code to do this
 }
 
+
+- (IBAction)downloadGeopackage:(id)sender {
+    [_geopackageListViewDelegate downloadGeopackage];
+}
+
+
+
 #pragma mark - TableView delegate and data souce methods
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     MCGeoPackageCell *cell = (MCGeoPackageCell *)[self.tableView dequeueReusableCellWithIdentifier:@"geopackage"];
@@ -67,7 +74,7 @@
     GPKGSDatabase *gpkg = [_geoPackages objectAtIndex:indexPath.row];
     
     cell.geoPackageNameLabel.text = gpkg.name;
-    cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layers", (long)[gpkg getFeatureOverlayCount]];
+    cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layers", (long)[gpkg getFeatures].count];
     cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layers", (long)[gpkg getTileCount]];
     
     return cell;

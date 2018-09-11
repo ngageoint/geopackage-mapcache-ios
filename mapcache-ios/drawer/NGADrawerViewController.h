@@ -15,7 +15,7 @@
 @end
 
 @interface NGADrawerViewController : UIViewController
-@property (strong, nonatomic) id<NGADrawerViewDelegate> drawerViewDelegate;
+@property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 - (instancetype) initAsFullView: (BOOL) isFullView;
 - (void) makeFullView;
 - (void) removeDrawerFromSuperview;

@@ -23,8 +23,7 @@
 
 
 @interface MCDownloadCoordinator : NSObject <GPKGSDownloadFileDelegate>
-
-- (instancetype)initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<GPKGSDownloadCoordinatorDelegate>) delegate;
+- (instancetype)initWithDownlaodDelegate:(id<GPKGSDownloadCoordinatorDelegate>) delegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate;
 - (void)start;
 
 @end

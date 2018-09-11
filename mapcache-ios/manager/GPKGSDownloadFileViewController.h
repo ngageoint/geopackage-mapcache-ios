@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GPKGProgress.h"
+#import "NGADrawerViewController.h"
 
 @class GPKGSDownloadFileViewController;
 
@@ -15,9 +16,10 @@
 - (void)downloadFileViewController:(GPKGSDownloadFileViewController *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error;
 @end
 
-@interface GPKGSDownloadFileViewController : UIViewController <GPKGProgress>
+@interface GPKGSDownloadFileViewController : NGADrawerViewController <GPKGProgress>
 
-@property (nonatomic, weak) id <GPKGSDownloadFileDelegate> delegate;
+@property (nonatomic, strong) id <GPKGSDownloadFileDelegate> delegate;
+@property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *preloadedButton;
 @property (weak, nonatomic) IBOutlet UIButton *importButton;

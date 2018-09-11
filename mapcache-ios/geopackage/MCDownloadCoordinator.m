@@ -9,41 +9,32 @@
 #import "MCDownloadCoordinator.h"
 
 @interface MCDownloadCoordinator()
-@property (strong, nonatomic) GPKGSDownloadFileViewController *downloadViewController;
-@property (strong, nonatomic) UINavigationController *navigationController;
-@property (strong, nonatomic) UIBarButtonItem *backButton;
-@property (strong, nonatomic) UIBarButtonItem *exampleButton;
-@property (strong, nonatomic) id<GPKGSDownloadCoordinatorDelegate> delegate;
+@property (nonatomic, strong) GPKGSDownloadFileViewController *downloadViewController;
+@property (nonatomic, strong) UIBarButtonItem *backButton;
+@property (nonatomic, strong) UIBarButtonItem *exampleButton;
+@property (nonatomic, strong) id<GPKGSDownloadCoordinatorDelegate> downloadDelegate;
+@property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (nonatomic) bool didDownload;
 @end
 
 
 @implementation MCDownloadCoordinator
 
-- (instancetype)initWithNavigationController:(UINavigationController *) navigationController andDelegate:(id<GPKGSDownloadCoordinatorDelegate>) delegate {
+- (instancetype)initWithDownlaodDelegate:(id<GPKGSDownloadCoordinatorDelegate>) delegate andDrawerDelegate:(id<NGADrawerViewDelegate>)drawerDelegate {
     self = [super init];
-    _navigationController = navigationController;
-    
-    _delegate = delegate;
+    _downloadDelegate = delegate;
+    _drawerViewDelegate = drawerDelegate;
     _didDownload = false;
     return self;
 }
 
 
 - (void) start {
-    _downloadViewController = [[GPKGSDownloadFileViewController alloc] initWithNibName:@"MCDownloadGeopackage" bundle:nil];
+    //_downloadViewController = [[GPKGSDownloadFileViewController alloc] initWithNibName:@"MCDownloadGeopackage" bundle:nil];
+    _downloadViewController = [[GPKGSDownloadFileViewController alloc] initAsFullView:YES];
     _downloadViewController.delegate = self;
-    
-    _backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleDone target:self action:@selector(backButtonPressed)];
-    [_downloadViewController.navigationItem setLeftBarButtonItem:_backButton];
-    
-    CATransition *transition = [CATransition animation];
-    transition.duration = .5f;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionFade;
-    [self.navigationController.view.layer addAnimation:transition forKey:nil];
-    [self.navigationController pushViewController:_downloadViewController animated:NO];
-    [self.navigationController setNavigationBarHidden:NO animated:NO];
+    _downloadViewController.drawerViewDelegate = _drawerViewDelegate;
+    [_drawerViewDelegate pushDrawer:_downloadViewController];
 }
 
 
@@ -51,7 +42,7 @@
 - (void)downloadFileViewController:(GPKGSDownloadFileViewController *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error{
     if(downloaded){
         [_downloadViewController dismissViewControllerAnimated:YES completion:nil];
-        [_delegate downloadCoordinatorCompletitonHandler:YES];
+        [_downloadDelegate downloadCoordinatorCompletitonHandler:YES];
     }
     if(error != nil){
         [GPKGSUtils showMessageWithDelegate:self
@@ -63,7 +54,7 @@
 
 - (void) backButtonPressed {
     NSLog(@"Back pressed");
-    [_delegate downloadCoordinatorCompletitonHandler:_didDownload];
+    [_downloadDelegate downloadCoordinatorCompletitonHandler:_didDownload];
 }
 
 @end

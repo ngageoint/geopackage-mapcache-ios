@@ -963,10 +963,6 @@ const char ConstantKey;
     
     UINavigationController *navController = [[UINavigationController alloc] init];
     [self.parentViewController presentViewController:navController animated:NO completion:nil];
-    
-    MCDownloadCoordinator *downloadCoordinator = [[MCDownloadCoordinator alloc] initWithNavigationController:navController andDelegate:self];
-    [downloadCoordinator start];
-    [_childCoordinators addObject:downloadCoordinator];
 }
 
 - (IBAction)create:(id)sender {
