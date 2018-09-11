@@ -25,11 +25,13 @@
 
 #define TAG_PRELOADED 1
 
+
+
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [GPKGSUtils disableButton:self.importButton];
-    
-    
     UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.nameTextField.inputAccessoryView = keyboardToolbar;
@@ -41,10 +43,23 @@
     [self.importButton setTitle:@"Import" forState:UIControlStateNormal];
 }
 
+
+//- (void) viewDidAppear:(BOOL)animated {
+//    [super viewDidAppear:animated];
+//    [self makeFullView];
+//}
+
+
 - (void) doneButtonPressed {
     [self.nameTextField resignFirstResponder];
     [self.urlTextField resignFirstResponder];
 }
+
+
+- (IBAction)closeDownload:(id)sender {
+    [self.drawerViewDelegate popDrawer];
+}
+
 
 - (IBAction)cancel:(id)sender {
     if(self.active){

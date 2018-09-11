@@ -105,7 +105,7 @@
         
         layerCell.layerNameLabel.text = table.name;
         [layerCell.layerTypeImage setImage:[UIImage imageNamed:typeImageName]];
-        //[_cellArray addObject:layerCell]; // TODO This is ending up nil, sort out why
+        [_cellArray addObject:layerCell];
     }
     
     // TODO: add title cell for reference systems

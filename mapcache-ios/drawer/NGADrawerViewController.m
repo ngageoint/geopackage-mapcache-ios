@@ -94,7 +94,17 @@
 
 
 - (void) makeFullView {
-    self.view.frame = CGRectMake(0, self.fullView, self.view.frame.size.width, self.view.frame.size.height);
+    self.view.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height, self.view.frame.size.width, self.view.frame.size.height);
+    self.view.alpha = 0;
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.view.frame = CGRectMake(0, self.fullView, self.view.frame.size.width, self.view.frame.size.height);
+        self.view.alpha = 1;
+    } completion:^(BOOL finished) {
+        [self.drawerViewDelegate drawerAddAnimationComplete:self];
+    }];
+    
+    [_drawerViewDelegate drawerAddAnimationComplete:self];
 }
 
 
@@ -111,7 +121,7 @@
 
 - (void) addDragHandle {
     // Taking the width of the drag handle into account when adding it.
-    UIImageView *dragHandle = [[UIImageView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 36)/2, 8, 36, 4)];
+    UIImageView *dragHandle = [[UIImageView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 36)/2, 16, 36, 4)];
     dragHandle.image = [UIImage imageNamed:@"dragHandle"];
     [self.view addSubview:dragHandle];
 }
