@@ -1043,7 +1043,7 @@ const char ConstantKey;
     }
 }
 
-- (void)downloadFileViewController:(GPKGSDownloadFileViewController *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error{
+- (void)downloadFileViewController:(MCDownloadGeopackage *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error{
     if(downloaded){
         [self updateAndReloadData];
     }
@@ -1153,7 +1153,7 @@ const char ConstantKey;
     
     if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DOWNLOAD_FILE])
     {
-        GPKGSDownloadFileViewController *downloadFileViewController = segue.destinationViewController;
+        MCDownloadGeopackage *downloadFileViewController = segue.destinationViewController;
         downloadFileViewController.delegate = self;
         
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DISPLAY_TEXT]){

@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GPKGSDownloadFileViewController">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MCDownloadGeopackage">
             <connections>
                 <outlet property="cancelButton" destination="8y7-H6-DOH" id="TVl-M9-1mN"/>
                 <outlet property="downloadedLabel" destination="c9d-aC-hov" id="4Kf-Y3-cUt"/>
@@ -27,25 +27,25 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Download from URL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b95-gl-eU7">
-                    <rect key="frame" x="16" y="52" width="153" height="20.5"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <rect key="frame" x="16" y="52" width="343" height="24"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                     <color key="textColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GeoPackage Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QZB-QV-48k">
-                    <rect key="frame" x="16" y="80.5" width="130.5" height="18"/>
+                    <rect key="frame" x="16" y="92" width="130.5" height="18"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="URL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="53x-2Z-rHG">
-                    <rect key="frame" x="16" y="152.5" width="343" height="18"/>
+                    <rect key="frame" x="16" y="164" width="343" height="18"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ebQ-hJ-fK4">
-                    <rect key="frame" x="16" y="106.5" width="343" height="30"/>
+                    <rect key="frame" x="16" y="118" width="343" height="30"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
@@ -54,7 +54,7 @@
                     </connections>
                 </textField>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="o1o-mI-eXD">
-                    <rect key="frame" x="16" y="178.5" width="343" height="30"/>
+                    <rect key="frame" x="16" y="190" width="343" height="30"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
@@ -63,7 +63,7 @@
                     </connections>
                 </textField>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="oy5-Ds-QpE">
-                    <rect key="frame" x="16" y="270.5" width="343" height="170.5"/>
+                    <rect key="frame" x="16" y="282" width="343" height="170.5"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eOB-1j-chc">
                             <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
@@ -125,7 +125,7 @@
                     </constraints>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dNP-nl-O1p">
-                    <rect key="frame" x="16" y="224" width="156" height="30"/>
+                    <rect key="frame" x="16" y="235.5" width="156" height="30"/>
                     <state key="normal" title="Example GeoPackages">
                         <color key="titleColor" red="0.22745098039215686" green="0.65098039215686276" blue="0.67450980392156867" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
@@ -134,13 +134,13 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="More exmaples are available on Github from:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWg-bE-Lk9">
-                    <rect key="frame" x="16" y="457" width="304.5" height="18"/>
+                    <rect key="frame" x="16" y="468.5" width="304.5" height="18"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6mJ-nd-yio">
-                    <rect key="frame" x="16" y="483" width="32" height="30"/>
+                    <rect key="frame" x="16" y="494.5" width="32" height="30"/>
                     <state key="normal" title="NGA">
                         <color key="titleColor" red="0.22745098039215686" green="0.65098039215686276" blue="0.67450980392156867" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
@@ -149,7 +149,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qfS-Lk-ird">
-                    <rect key="frame" x="16" y="521" width="33" height="30"/>
+                    <rect key="frame" x="16" y="532.5" width="33" height="30"/>
                     <state key="normal" title="OGC">
                         <color key="titleColor" red="0.22745098039215686" green="0.65098039215686276" blue="0.67450980392156867" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
@@ -173,7 +173,6 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="b95-gl-eU7" secondAttribute="trailing" constant="206" id="2Hm-g1-zlp"/>
                 <constraint firstAttribute="trailing" secondItem="ebQ-hJ-fK4" secondAttribute="trailing" constant="16" id="2gN-SY-Wch"/>
                 <constraint firstAttribute="trailing" secondItem="53x-2Z-rHG" secondAttribute="trailing" constant="16" id="32e-Fz-ZH0"/>
                 <constraint firstItem="dNP-nl-O1p" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="37h-VV-EXg"/>
@@ -181,12 +180,13 @@
                 <constraint firstItem="tZk-lt-UTS" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="4Il-0F-nmD"/>
                 <constraint firstItem="b95-gl-eU7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="6bU-s1-CoZ"/>
                 <constraint firstAttribute="trailing" secondItem="YnB-Na-92a" secondAttribute="trailing" constant="8" id="9SL-pC-hwC"/>
+                <constraint firstAttribute="trailing" secondItem="b95-gl-eU7" secondAttribute="trailing" constant="16" id="FnG-0I-mEk"/>
                 <constraint firstItem="o1o-mI-eXD" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="HJg-mC-KXd"/>
                 <constraint firstItem="oy5-Ds-QpE" firstAttribute="top" secondItem="dNP-nl-O1p" secondAttribute="bottom" constant="16" id="Hsg-gp-x1a"/>
                 <constraint firstItem="ebQ-hJ-fK4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="LRx-hY-SEu"/>
                 <constraint firstItem="o1o-mI-eXD" firstAttribute="top" secondItem="53x-2Z-rHG" secondAttribute="bottom" constant="8" id="OGh-Oi-Zdw"/>
                 <constraint firstItem="dNP-nl-O1p" firstAttribute="top" secondItem="o1o-mI-eXD" secondAttribute="bottom" constant="16" id="QFb-bY-eLd"/>
-                <constraint firstItem="QZB-QV-48k" firstAttribute="top" secondItem="b95-gl-eU7" secondAttribute="bottom" constant="8" id="SYZ-5x-kQ8"/>
+                <constraint firstItem="QZB-QV-48k" firstAttribute="top" secondItem="b95-gl-eU7" secondAttribute="bottom" constant="16" id="SYZ-5x-kQ8"/>
                 <constraint firstAttribute="trailing" secondItem="o1o-mI-eXD" secondAttribute="trailing" constant="16" id="T6D-2y-WwK"/>
                 <constraint firstAttribute="trailing" secondItem="dNP-nl-O1p" secondAttribute="trailing" constant="203" id="UXU-Wl-TDz"/>
                 <constraint firstItem="6mJ-nd-yio" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="Utl-2n-x81"/>

@@ -9,18 +9,19 @@
 #import "NGADrawerCoordinator.h"
 
 @interface NGADrawerCoordinator ()
-@property (strong, nonatomic) NSMutableArray *childCoordinators;
-@property (strong, nonatomic) NSMutableArray<NGADrawerViewController *> *drawerStack;
-@property (strong, nonatomic) UIViewController *backgroundViewController;
+@property (nonatomic, strong) NSMutableArray *childCoordinators;
+@property (nonatomic, strong) NSMutableArray<NGADrawerViewController *> *drawerStack;
+@property (nonatomic, strong) UIViewController *backgroundViewController;
 @property (nonatomic) CGFloat height;
 @property (nonatomic) CGFloat width;
 @end
 
 @implementation NGADrawerCoordinator
 
-- (instancetype) initWithBackgroundViewController:(UIViewController *) viewController {
+- (instancetype) initWithBackgroundViewController:(UIViewController *) viewController andMCMapDelegate:(id<MCMapDelegate>) mcMapDelegate {
     self = [super init];
     _backgroundViewController = viewController;
+    _mcMapDelegate = mcMapDelegate;
     _childCoordinators = [[NSMutableArray alloc] init];
     _drawerStack = [[NSMutableArray alloc] init];
     
@@ -34,6 +35,7 @@
 - (void) start {
     if (_drawerStack.count == 0) {
         MCGeoPackageListCoordinator *geoPackageListCoordinator = [[MCGeoPackageListCoordinator alloc] init];
+        geoPackageListCoordinator.mcMapDelegate = self.mcMapDelegate;
         [_childCoordinators addObject:geoPackageListCoordinator];
         geoPackageListCoordinator.drawerViewDelegate = self;
         [geoPackageListCoordinator start];

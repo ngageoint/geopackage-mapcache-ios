@@ -10,11 +10,11 @@
 
 
 @interface MCGeoPackageListCoordinator()
-@property (strong, nonatomic) NSMutableArray *childCoordinators;
-@property (strong, nonatomic) NSMutableArray *geoPackages;
-@property (strong, nonatomic) MCGeoPackageList *geoPackageListView;
-@property (strong, nonatomic) GPKGGeoPackageManager *manager;
-@property (strong, nonatomic) GPKGSDatabases *active;
+@property (nonatomic, strong) NSMutableArray *childCoordinators;
+@property (nonatomic, strong) NSMutableArray *geoPackages;
+@property (nonatomic, strong) MCGeoPackageList *geoPackageListView;
+@property (nonatomic, strong) GPKGGeoPackageManager *manager;
+@property (nonatomic, strong) GPKGSDatabases *active;
 @end
 
 
@@ -32,6 +32,15 @@
 }
 
 - (void) start {
+    [self update];
+    _geoPackageListView = [[MCGeoPackageList alloc] initWithGeoPackages:_geoPackages asFullView:YES andDelegate:self];
+    _geoPackageListView.drawerViewDelegate = _drawerViewDelegate;
+    [_geoPackageListView.drawerViewDelegate pushDrawer:_geoPackageListView];
+}
+
+
+- (void) update {
+    _geoPackages = [[NSMutableArray alloc] init];
     NSArray *databases = [_manager databases];
     
     for(NSString * databaseName in databases){
@@ -63,6 +72,8 @@
                 int count = [tileDao count];
                 GPKGSTileTable * table = [[GPKGSTileTable alloc] initWithDatabase:databaseName andName:tableName andCount:count];
                 
+                [self.active removeTable:table];
+                
                 [tables addObject:table];
                 [theDatabase addTile:table];
             }
@@ -89,10 +100,6 @@
             }
         }
     }
-    
-    _geoPackageListView = [[MCGeoPackageList alloc] initWithGeoPackages:_geoPackages asFullView:YES andDelegate:self];
-    _geoPackageListView.drawerViewDelegate = _drawerViewDelegate;
-    [_geoPackageListView.drawerViewDelegate pushDrawer:_geoPackageListView];
 }
 
 
@@ -110,10 +117,69 @@
 }
 
 
+-(void) toggleActive:(GPKGSDatabase *)database {
+    NSLog(@"Toggling layers for GeoPackage: %@", database.name);
+    
+    // iterate through the geopackage, and set all of the layers to active.
+    GPKGGeoPackage * geoPackage = nil;
+    @try {
+        geoPackage = [self.manager open:database.name];
+        
+        GPKGSDatabase * theDatabase = [[GPKGSDatabase alloc] initWithName:database.name andExpanded:NO];
+        [_geoPackages addObject: theDatabase];
+        NSMutableArray * tables = [[NSMutableArray alloc] init];
+        
+        GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
+        for(NSString * tableName in [geoPackage getFeatureTables]){
+            GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
+            int count = [featureDao count];
+            GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
+            GPKGGeometryColumns * geometryColumns = [contentsDao getGeometryColumns:contents];
+            enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
+            
+            GPKGSFeatureTable * table = [[GPKGSFeatureTable alloc] initWithDatabase:database.name andName:tableName andGeometryType:geometryType andCount:count];
+            [self.active addTable:table];
+        }
+        
+        for(NSString * tableName in [geoPackage getTileTables]){
+            GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName: tableName];
+            int count = [tileDao count];
+            GPKGSTileTable * table = [[GPKGSTileTable alloc] initWithDatabase:database.name andName:tableName andCount:count];
+            [self.active addTable:table];
+        }
+        
+        for(GPKGSFeatureOverlayTable * table in [self.active featureOverlays:database.name]){
+            [self.active addTable:table];
+        }
+    }
+    @finally {
+        if(geoPackage == nil){
+            @try {
+                [self.manager delete:geoPackage.name];
+            }
+            @catch (NSException *exception) {
+                NSLog(@"Caught Exception trying to delete %@", exception.reason);
+            }
+        }else{
+            [geoPackage close];
+        }
+    }
+    
+    // make the call to the map view to update the view
+    [self.mcMapDelegate updateMapLayers];
+}
+
+
+
+
+
 #pragma mark - DownloadCoordinatorDelegate
 - (void) downloadCoordinatorCompletitonHandler:(bool) didDownload {
-    // TODO Update the geopackage list and reload
     NSLog(@"Downloaded geopakcage");
+    [self update];
+    _geoPackageListView.geoPackages = _geoPackages;
+    [_geoPackageListView.tableView reloadData];
+    [_childCoordinators removeLastObject];
 }
 
 
@@ -123,7 +189,9 @@
         [self.manager delete:database];
     }
     
-    //TODO: Update the geopackage list view
+    [self update];
+    _geoPackageListView.geoPackages = _geoPackages;
+    [_geoPackageListView.tableView reloadData];
 }
 
 
