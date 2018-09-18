@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GPKGSDownloadFileViewController.h"
+#import "MCDownloadGeopackage.h"
 #import "GPKGSUtils.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
@@ -22,7 +22,7 @@
 @end
 
 
-@interface MCDownloadCoordinator : NSObject <GPKGSDownloadFileDelegate>
+@interface MCDownloadCoordinator : NSObject <MCDownloadDelegate>
 - (instancetype)initWithDownlaodDelegate:(id<GPKGSDownloadCoordinatorDelegate>) delegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate;
 - (void)start;
 

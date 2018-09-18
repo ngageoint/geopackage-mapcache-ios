@@ -10,6 +10,8 @@
 #import "MCColorUtil.h"
 #import "MCMapViewController.h"
 #import "NGADrawerCoordinator.h"
+#import "MCMapCoordinator.h"
+
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 @property (strong, nonatomic) UIWindow *window;

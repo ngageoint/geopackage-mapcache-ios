@@ -16,6 +16,7 @@
 @protocol MCGeoPacakageListViewDelegate <NSObject>
 - (void) didSelectGeoPackage: (GPKGSDatabase*) database;
 - (void) downloadGeopackage;
+- (void) toggleActive:(GPKGSDatabase *) database;
 @end
 
 @interface MCGeoPackageList: NGADrawerViewController <UITableViewDelegate, UITableViewDataSource>

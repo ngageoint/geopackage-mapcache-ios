@@ -15,10 +15,22 @@
     // Initialization code
 }
 
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+
+- (void)activeLayersIndicatorOn {
+    self.visibilityStatusIndicator.image = [UIImage imageNamed:@"allLayersOn"];
+    [self.visibilityStatusIndicator setHidden:NO];
+}
+
+
+- (void)activeLayersIndicatorOff {
+    [self.visibilityStatusIndicator setHidden:YES];
 }
 
 @end

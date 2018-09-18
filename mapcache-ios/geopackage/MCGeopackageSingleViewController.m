@@ -22,7 +22,7 @@
     self.manager = [GPKGGeoPackageFactory getManager];
     //self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     CGRect bounds = self.view.bounds;
-    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 20, bounds.size.width, bounds.size.height - 20);
+    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
     self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
@@ -83,14 +83,15 @@
     
     MCSectionTitleCell *layersTitleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
     layersTitleCell.sectionTitleLabel.text = @"Layers";
+
+    // TODO: Convert new layer wizard to work with drawer system for a future release
+//    MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
+//    [newLayerButtonCell.button setTitle:@"New Layer" forState:UIControlStateNormal];
+//    newLayerButtonCell.action = GPKGS_ACTION_NEW_LAYER;
+//    newLayerButtonCell.delegate = self;
+//    [_cellArray addObject:newLayerButtonCell];
     
-    MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
-    [newLayerButtonCell.button setTitle:@"New Layer" forState:UIControlStateNormal];
-    newLayerButtonCell.action = GPKGS_ACTION_NEW_LAYER;
-    newLayerButtonCell.delegate = self;
-    [_cellArray addObject:newLayerButtonCell];
-    
-    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, layersTitleCell, newLayerButtonCell, nil];
+    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, layersTitleCell, nil];
     NSArray *tables = [_database getTables];
     
     for (GPKGSTable *table in tables) {
@@ -271,7 +272,7 @@
     UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this GeoPackage? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         [self.delegate deleteGeoPackage];
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self.drawerViewDelegate popDrawer];
     }];
     
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {

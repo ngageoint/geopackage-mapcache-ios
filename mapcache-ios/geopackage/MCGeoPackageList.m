@@ -31,8 +31,12 @@
     self.tableView.delegate = self;
     self.tableView.estimatedRowHeight = 126.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
-     
     [self.tableView registerNib:[UINib nibWithNibName:@"MCGeoPackageCell" bundle:nil] forCellReuseIdentifier:@"geopackage"];
+    
+    UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(toggleActive:)];
+    longPressRecognizer.minimumPressDuration = 1.5;
+    longPressRecognizer.delegate = self;
+    [self.tableView addGestureRecognizer:longPressRecognizer];
 }
 
 
@@ -54,6 +58,23 @@
 
 - (void) updateAndReloadData {
     // TODO add code to do this
+}
+
+
+- (void) toggleActive:(UILongPressGestureRecognizer *) gestureRecognizer {
+    CGPoint point = [gestureRecognizer locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+    
+    if (indexPath == nil) {
+        NSLog(@"Long press detected, but not on a cell");
+    } else if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        NSLog(@"Long press on row: %ld", indexPath.row);
+        MCGeoPackageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        [cell activeLayersIndicatorOn];
+        [self.geopackageListViewDelegate toggleActive:[_geoPackages objectAtIndex:indexPath.row]];
+    } else {
+        NSLog(@"Gesture recognizer state %ld", gestureRecognizer.state);
+    }
 }
 
 

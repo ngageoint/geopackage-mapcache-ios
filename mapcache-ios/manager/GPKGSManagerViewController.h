@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSDownloadFileViewController.h"
+#import "MCDownloadGeopackage.h"
 #import "GPKGSIndexerProtocol.h"
 #import "GPKGSCreateFeaturesViewController.h"
 #import "GPKGSManagerCreateTilesViewController.h"

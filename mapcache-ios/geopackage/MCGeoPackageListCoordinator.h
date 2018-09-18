@@ -17,7 +17,14 @@
 #import "GPKGSDatabases.h"
 #import "MCDownloadCoordinator.h"
 
+@protocol MCMapDelegate <NSObject>
+- (void) updateMapLayers;
+- (void) toggleGeoPackage:(GPKGSDatabase *) geoPackage;
+@end
+
+
 @interface MCGeoPackageListCoordinator : NSObject <MCGeoPackageCoordinatorDelegate, MCGeoPacakageListViewDelegate, GPKGSDownloadCoordinatorDelegate>
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
+@property (nonatomic, strong) id<MCMapDelegate> mcMapDelegate;
 - (void)start;
 @end

@@ -36,9 +36,11 @@
     _window = [[UIWindow alloc] initWithFrame:screen.bounds];
     [_window makeKeyAndVisible];
     MCMapViewController *mapViewController = [[MCMapViewController alloc] init];
-    NGADrawerCoordinator *drawerCoordinator = [[NGADrawerCoordinator alloc] initWithBackgroundViewController:mapViewController];
+    MCMapCoordinator *mapCoordinator = [[MCMapCoordinator alloc] initWithMapViewController:mapViewController];
+    NGADrawerCoordinator *drawerCoordinator = [[NGADrawerCoordinator alloc] initWithBackgroundViewController:mapViewController andMCMapDelegate:mapCoordinator];
     [drawerCoordinator start];
     [_childCoordinators addObject:drawerCoordinator];
+    [_childCoordinators addObject:mapCoordinator];
     _window.rootViewController = mapViewController;
     
     return YES;

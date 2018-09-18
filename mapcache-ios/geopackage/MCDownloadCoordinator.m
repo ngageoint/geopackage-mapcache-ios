@@ -9,7 +9,7 @@
 #import "MCDownloadCoordinator.h"
 
 @interface MCDownloadCoordinator()
-@property (nonatomic, strong) GPKGSDownloadFileViewController *downloadViewController;
+@property (nonatomic, strong) MCDownloadGeopackage *downloadViewController;
 @property (nonatomic, strong) UIBarButtonItem *backButton;
 @property (nonatomic, strong) UIBarButtonItem *exampleButton;
 @property (nonatomic, strong) id<GPKGSDownloadCoordinatorDelegate> downloadDelegate;
@@ -31,7 +31,7 @@
 
 - (void) start {
     //_downloadViewController = [[GPKGSDownloadFileViewController alloc] initWithNibName:@"MCDownloadGeopackage" bundle:nil];
-    _downloadViewController = [[GPKGSDownloadFileViewController alloc] initAsFullView:YES];
+    _downloadViewController = [[MCDownloadGeopackage alloc] initAsFullView:YES];
     _downloadViewController.delegate = self;
     _downloadViewController.drawerViewDelegate = _drawerViewDelegate;
     [_drawerViewDelegate pushDrawer:_downloadViewController];
@@ -39,9 +39,9 @@
 
 
 /* Delegate methods */
-- (void)downloadFileViewController:(GPKGSDownloadFileViewController *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error{
+- (void)downloadFileViewController:(MCDownloadGeopackage *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error{
     if(downloaded){
-        [_downloadViewController dismissViewControllerAnimated:YES completion:nil];
+        [_downloadViewController.drawerViewDelegate popDrawer];
         [_downloadDelegate downloadCoordinatorCompletitonHandler:YES];
     }
     if(error != nil){

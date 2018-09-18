@@ -121,7 +121,7 @@
 
 - (void) addDragHandle {
     // Taking the width of the drag handle into account when adding it.
-    UIImageView *dragHandle = [[UIImageView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 36)/2, 16, 36, 4)];
+    UIImageView *dragHandle = [[UIImageView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 36)/2, 8, 36, 4)];
     dragHandle.image = [UIImage imageNamed:@"dragHandle"];
     [self.view addSubview:dragHandle];
 }

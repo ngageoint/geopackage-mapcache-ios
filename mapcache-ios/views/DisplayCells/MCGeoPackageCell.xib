@@ -22,20 +22,20 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 Feature layers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E3u-hY-SOA">
-                    <rect key="frame" x="32" y="54" width="327" height="19.5"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 Tile layers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E3u-hY-SOA">
+                    <rect key="frame" x="32" y="54" width="327" height="20"/>
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 Tile layers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2bc-7W-T5e">
-                    <rect key="frame" x="32" y="83.5" width="327" height="19.5"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 Feature layers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2bc-7W-T5e">
+                    <rect key="frame" x="32" y="83.5" width="327" height="20"/>
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Gar-ae-7cx">
-                    <rect key="frame" x="0.0" y="0.0" width="16" height="126"/>
+                    <rect key="frame" x="0.0" y="0.0" width="16" height="125"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="16" id="lHW-dc-qrG"/>
                     </constraints>
@@ -50,7 +50,7 @@
                 <constraint firstItem="2bc-7W-T5e" firstAttribute="top" secondItem="E3u-hY-SOA" secondAttribute="bottom" constant="10" id="PJG-Xc-ahU"/>
                 <constraint firstItem="Gar-ae-7cx" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="XJy-aa-w8V"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="2bc-7W-T5e" secondAttribute="trailing" constant="16" id="f2G-0I-EIM"/>
-                <constraint firstItem="Gar-ae-7cx" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="hor-AC-90n"/>
+                <constraint firstItem="Gar-ae-7cx" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" constant="-1" id="hor-AC-90n"/>
                 <constraint firstItem="SlT-s1-hbr" firstAttribute="leading" secondItem="Gar-ae-7cx" secondAttribute="trailing" constant="16" id="qEt-f2-alL"/>
                 <constraint firstItem="E3u-hY-SOA" firstAttribute="leading" secondItem="Gar-ae-7cx" secondAttribute="trailing" constant="16" id="qcE-Xr-sOv"/>
                 <constraint firstItem="E3u-hY-SOA" firstAttribute="top" secondItem="SlT-s1-hbr" secondAttribute="bottom" constant="10" id="qlD-ar-gBp"/>
@@ -60,9 +60,9 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
-                <outlet property="featureLayerDetailsLabel" destination="E3u-hY-SOA" id="MyB-zT-g2H"/>
+                <outlet property="featureLayerDetailsLabel" destination="2bc-7W-T5e" id="TSK-0E-cXf"/>
                 <outlet property="geoPackageNameLabel" destination="SlT-s1-hbr" id="UTN-2E-zgS"/>
-                <outlet property="tileLayerDetailsLabel" destination="2bc-7W-T5e" id="fgi-K1-B2J"/>
+                <outlet property="tileLayerDetailsLabel" destination="E3u-hY-SOA" id="bi9-8f-HqB"/>
                 <outlet property="visibilityStatusIndicator" destination="Gar-ae-7cx" id="deK-Zt-NYz"/>
             </connections>
             <point key="canvasLocation" x="24.5" y="-219"/>
