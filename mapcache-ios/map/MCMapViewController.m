@@ -46,6 +46,9 @@
 
 @implementation MCMapViewController
 
+static NSString *mapPointImageReuseIdentifier = @"mapPointImageReuseIdentifier";
+static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     _childCoordinators = [[NSMutableArray alloc] init];
@@ -55,6 +58,7 @@
     self.settings = [NSUserDefaults standardUserDefaults];
     self.geoPackages = [[NSMutableDictionary alloc] init];
     self.featureShapes = [[GPKGFeatureShapes alloc] init];
+    self.featureDaos = [[NSMutableDictionary alloc] init];
     self.manager = [GPKGGeoPackageFactory getManager];
     self.active = [GPKGSDatabases getInstance];
     self.needsInitialZoom = true;
@@ -115,30 +119,103 @@
 //    }
 //}
 //
+
+
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
-    MKOverlayRenderer *renderer = [[MKOverlayRenderer alloc] init];
-
+    MKOverlayRenderer * rendered = nil;
     if ([overlay isKindOfClass:[MKPolygon class]]) {
-        MKPolygonRenderer *polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:(MKPolygon *)overlay];
-        polygonRenderer.fillColor = [[UIColor alloc] initWithRed:0.0 green:1.0 blue:0.6 alpha:0.5];
-        polygonRenderer.lineWidth = 1;
-        polygonRenderer.strokeColor = UIColor.blackColor;
-        renderer = polygonRenderer;
-    } else if ([overlay isKindOfClass:[MKTileOverlay class]]) {
-        renderer = [[MKTileOverlayRenderer alloc] initWithTileOverlay:overlay];
+        MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
+        /*if(self.drawing || (self.boundingBox != nil && self.boundingBox == overlay)){
+            polygonRenderer.strokeColor = self.boundingBoxColor;
+            polygonRenderer.lineWidth = self.boundingBoxLineWidth;
+            if(self.boundingBoxFillColor != nil){
+                polygonRenderer.fillColor = self.boundingBoxFillColor;
+            }
+        } else if(self.editFeaturesMode){
+            if(self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
+                polygonRenderer.strokeColor = self.editPolygonColor;
+                polygonRenderer.lineWidth = self.editPolygonLineWidth;
+                if(self.editPolygonFillColor != nil){
+                    polygonRenderer.fillColor = self.editPolygonFillColor;
+                }
+            }else{
+                polygonRenderer.strokeColor = self.drawPolygonColor;
+                polygonRenderer.lineWidth = self.drawPolygonLineWidth;
+                if(self.drawPolygonFillColor != nil){
+                    polygonRenderer.fillColor = self.drawPolygonFillColor;
+                }
+            }
+        } else {*/
+            polygonRenderer.strokeColor = self.defaultPolygonColor;
+            polygonRenderer.lineWidth = self.defaultPolygonLineWidth;
+            if(self.defaultPolygonFillColor != nil){
+                polygonRenderer.fillColor = self.defaultPolygonFillColor;
+            }
+        //}
+        rendered = polygonRenderer;
+    }else if ([overlay isKindOfClass:[MKPolyline class]]) {
+        MKPolylineRenderer * polylineRenderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
+        /*if(self.editFeaturesMode){
+            if(self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
+                polylineRenderer.strokeColor = self.editPolylineColor;
+                polylineRenderer.lineWidth = self.editPolylineLineWidth;
+            }else{
+                polylineRenderer.strokeColor = self.drawPolylineColor;
+                polylineRenderer.lineWidth = self.drawPolylineLineWidth;
+            }
+        }else{*/
+            polylineRenderer.strokeColor = self.defaultPolylineColor;
+            polylineRenderer.lineWidth = self.defaultPolylineLineWidth;
+        //}
+        rendered = polylineRenderer;
+    }else if ([overlay isKindOfClass:[MKTileOverlay class]]) {
+        rendered = [[MKTileOverlayRenderer alloc] initWithTileOverlay:overlay];
     }
-
-    return renderer;
+    return rendered;
 }
-//
-//
-//- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
-//    MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"annotation"];
-//
-//
-//
-//    return annotationView;
-//}
+
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    MKAnnotationView * view = nil;
+    
+    if ([annotation isKindOfClass:[GPKGMapPoint class]]){
+        
+        GPKGMapPoint * mapPoint = (GPKGMapPoint *) annotation;
+        
+        if(mapPoint.options.image != nil){
+            
+            MKAnnotationView *mapPointImageView = (MKAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointImageReuseIdentifier];
+            if (mapPointImageView == nil)
+            {
+                mapPointImageView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:mapPointImageReuseIdentifier];
+            }
+            mapPointImageView.image = mapPoint.options.image;
+            mapPointImageView.centerOffset = mapPoint.options.imageCenterOffset;
+            
+            view = mapPointImageView;
+            
+        }else{
+            MKPinAnnotationView *mapPointPinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointPinReuseIdentifier];
+            if(mapPointPinView == nil){
+                mapPointPinView = [[MKPinAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:mapPointPinReuseIdentifier];
+            }
+            mapPointPinView.pinTintColor = mapPoint.options.pinTintColor;
+            view = mapPointPinView;
+        }
+        
+        /*if(mapPoint.title == nil){
+            [self setTitleWithMapPoint:mapPoint];
+        }
+        
+        UIButton *optionsButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+        [optionsButton addTarget:self action:@selector(selectedMapPointOptions:) forControlEvents:UIControlEventTouchUpInside];
+        
+        view.rightCalloutAccessoryView = optionsButton;
+        view.canShowCallout = YES;*/
+        
+        view.draggable = mapPoint.options.draggable;
+    }
+    return view;}
 
 
 -(int) updateInBackgroundWithZoom: (BOOL) zoom{
@@ -290,14 +367,10 @@
 
 
 -(void) displayTiles: (GPKGSTileTable *) tiles{
-    
     GPKGGeoPackage * geoPackage = [self.geoPackages objectForKey:tiles.database];
-    
     GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName:tiles.name];
-    
     GPKGTileTableScaling *tileTableScaling = [[GPKGTileTableScaling alloc] initWithGeoPackage:geoPackage andTileDao:tileDao];
     GPKGTileScaling *tileScaling = [tileTableScaling get];
-    
     GPKGBoundedOverlay * overlay = [GPKGOverlayFactory boundedOverlay:tileDao andScaling:tileScaling];
     overlay.canReplaceMapContent = false;
     
