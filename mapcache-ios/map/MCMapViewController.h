@@ -22,9 +22,17 @@
 #import "GPKGFeatureShapes.h"
 #import "SFPProjectionFactory.h"
 #import "SFGeometryEnvelopeBuilder.h"
+#import "MCTileHelper.h"
+
+
+@protocol MCMapActionDelegate <NSObject>
+- (void) showMapInfoDrawer;
+@end
 
 
 @interface MCMapViewController : UIViewController <MKMapViewDelegate>
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 -(int) updateInBackgroundWithZoom: (BOOL) zoom;
+@property (weak, nonatomic) IBOutlet UIButton *infoButton;
+@property (weak, nonatomic) IBOutlet UIButton *locationButton;
 @end
