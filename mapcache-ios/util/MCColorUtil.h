@@ -9,13 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+
 @interface MCColorUtil : NSObject
 + (UIColor *) getPrimary;
 + (UIColor *) getPrimaryLight;
 
 + (UIColor *) getPolygonFillColor;
 + (UIColor *) getPolygonStrokeColor;
-
 
 + (UIColor *) getAccent;
 + (UIColor *) getAccentLight;
@@ -28,4 +28,13 @@
 //- (UIColor *) getSuccess;
 //- (UIColor *) getInfo;
 
+@property (nonatomic, strong) UIColor *primaryColor;
+@property (nonatomic, strong) UIColor *primaryLightColor;
+@property (nonatomic, strong) UIColor *accentColor;
+@property (nonatomic, strong) UIColor *accentLightColor;
+@property (nonatomic, strong) UIColor *mediumGreyColorColor;
+@property (nonatomic, strong) UIColor *polygonFillColor;
+@property (nonatomic, strong) UIColor *polygonStrokeColor;
+@property (nonatomic, strong) UIColor *boundingBoxColor;
+@property (nonatomic, strong) UIColor *polylineColor;
 @end

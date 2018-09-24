@@ -10,6 +10,12 @@
 
 @implementation MCColorUtil
 
+- (instancetype) init {
+    self = [super init];
+    
+    return self;
+}
+
 + (UIColor *) getPrimary {
     return [UIColor colorWithRed:0.0f green:0.31f blue:0.49f alpha:1];
 }

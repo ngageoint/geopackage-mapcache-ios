@@ -11,9 +11,10 @@
 @interface MCMapViewController ()
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
 @property (nonatomic, strong) GPKGSDatabases *active;
-@property (nonatomic, strong) NSUserDefaults * settings;
+@property (nonatomic, strong) NSUserDefaults *settings;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) NSMutableDictionary * geoPackages;
+@property (nonatomic, strong) NSMutableDictionary *geoPackages;
+@property (nonatomic, strong) MCTileHelper *tileHelper;
 @property (nonatomic, strong) NSMutableDictionary * featureDaos;
 @property (nonatomic, strong) GPKGBoundingBox * featuresBoundingBox;
 @property (nonatomic, strong) GPKGBoundingBox * tilesBoundingBox;
@@ -62,11 +63,16 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.manager = [GPKGGeoPackageFactory getManager];
     self.active = [GPKGSDatabases getInstance];
     self.needsInitialZoom = true;
+    self.updateCountId = 0;
+    self.featureUpdateCountId = 0;
     [self.active setModified:YES];
+    self.tileHelper = [[MCTileHelper alloc] init];
     
     self.locationDecimalFormatter = [[NSNumberFormatter alloc] init];
     self.locationDecimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     self.locationDecimalFormatter.maximumFractionDigits = 4;
+    
+    [self.view setNeedsLayout];
 }
 
 
@@ -77,6 +83,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self.active setModified:NO];
         [self updateInBackgroundWithZoom:YES];
     }
+}
+
+
+- (void)layoutSubviews {
+    CAShapeLayer * topCornersMaskLayer = [CAShapeLayer layer];
+    topCornersMaskLayer.path = [UIBezierPath bezierPathWithRoundedRect: self.infoButton.bounds byRoundingCorners: UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii: (CGSize){8.0, 8.0}].CGPath;
+    
+    self.infoButton.layer.mask = topCornersMaskLayer;
 }
 
 
@@ -93,6 +107,16 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
+#pragma mark - Button actions
+- (IBAction)showInfo:(id)sender {
+}
+
+
+- (IBAction)changeLocationState:(id)sender {
+}
+
+
+#pragma mark - Updaing the data on the map
 - (void) updateMapLayers {
     [self updateInBackgroundWithZoom:YES];
 }
@@ -125,52 +149,23 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     MKOverlayRenderer * rendered = nil;
     if ([overlay isKindOfClass:[MKPolygon class]]) {
         MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
-        /*if(self.drawing || (self.boundingBox != nil && self.boundingBox == overlay)){
-            polygonRenderer.strokeColor = self.boundingBoxColor;
-            polygonRenderer.lineWidth = self.boundingBoxLineWidth;
-            if(self.boundingBoxFillColor != nil){
-                polygonRenderer.fillColor = self.boundingBoxFillColor;
-            }
-        } else if(self.editFeaturesMode){
-            if(self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
-                polygonRenderer.strokeColor = self.editPolygonColor;
-                polygonRenderer.lineWidth = self.editPolygonLineWidth;
-                if(self.editPolygonFillColor != nil){
-                    polygonRenderer.fillColor = self.editPolygonFillColor;
-                }
-            }else{
-                polygonRenderer.strokeColor = self.drawPolygonColor;
-                polygonRenderer.lineWidth = self.drawPolygonLineWidth;
-                if(self.drawPolygonFillColor != nil){
-                    polygonRenderer.fillColor = self.drawPolygonFillColor;
-                }
-            }
-        } else {*/
-            polygonRenderer.strokeColor = self.defaultPolygonColor;
-            polygonRenderer.lineWidth = self.defaultPolygonLineWidth;
-            if(self.defaultPolygonFillColor != nil){
-                polygonRenderer.fillColor = self.defaultPolygonFillColor;
-            }
-        //}
+        polygonRenderer.strokeColor = self.defaultPolygonColor;
+        polygonRenderer.lineWidth = self.defaultPolygonLineWidth;
+        
+        if(self.defaultPolygonFillColor != nil){
+            polygonRenderer.fillColor = self.defaultPolygonFillColor;
+        }
+        
         rendered = polygonRenderer;
-    }else if ([overlay isKindOfClass:[MKPolyline class]]) {
+    } else if ([overlay isKindOfClass:[MKPolyline class]]) {
         MKPolylineRenderer * polylineRenderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
-        /*if(self.editFeaturesMode){
-            if(self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
-                polylineRenderer.strokeColor = self.editPolylineColor;
-                polylineRenderer.lineWidth = self.editPolylineLineWidth;
-            }else{
-                polylineRenderer.strokeColor = self.drawPolylineColor;
-                polylineRenderer.lineWidth = self.drawPolylineLineWidth;
-            }
-        }else{*/
-            polylineRenderer.strokeColor = self.defaultPolylineColor;
-            polylineRenderer.lineWidth = self.defaultPolylineLineWidth;
-        //}
+        polylineRenderer.strokeColor = self.defaultPolylineColor;
+        polylineRenderer.lineWidth = self.defaultPolylineLineWidth;
         rendered = polylineRenderer;
-    }else if ([overlay isKindOfClass:[MKTileOverlay class]]) {
+    } else if ([overlay isKindOfClass:[MKTileOverlay class]]) {
         rendered = [[MKTileOverlayRenderer alloc] initWithTileOverlay:overlay];
     }
+    
     return rendered;
 }
 
@@ -203,25 +198,56 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             view = mapPointPinView;
         }
         
-        /*if(mapPoint.title == nil){
+        if(mapPoint.title == nil){
             [self setTitleWithMapPoint:mapPoint];
         }
         
-        UIButton *optionsButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
-        [optionsButton addTarget:self action:@selector(selectedMapPointOptions:) forControlEvents:UIControlEventTouchUpInside];
+        //UIButton *optionsButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+        //[optionsButton addTarget:self action:@selector(selectedMapPointOptions:) forControlEvents:UIControlEventTouchUpInside];
         
-        view.rightCalloutAccessoryView = optionsButton;
-        view.canShowCallout = YES;*/
+        //view.rightCalloutAccessoryView = optionsButton;
+        view.canShowCallout = YES;
         
         view.draggable = mapPoint.options.draggable;
     }
-    return view;}
+    
+    return view;
+}
+
+
+-(void) setTitleWithMapPoint: (GPKGMapPoint *) mapPoint{
+    [self setTitleWithTitle:nil andMapPoint:mapPoint];
+}
+
+
+-(void) setTitleWithGeometryType: (enum SFGeometryType) type andMapPoint: (GPKGMapPoint *) mapPoint{
+    NSString * title = nil;
+    if(type != SF_NONE){
+        title = [SFGeometryTypes name:type];
+    }
+    [self setTitleWithTitle:title andMapPoint:mapPoint];
+}
+
+
+-(void) setTitleWithTitle: (NSString *) title andMapPoint: (GPKGMapPoint *) mapPoint{
+    
+    NSString * locationTitle = [self buildLocationTitleWithMapPoint:mapPoint];
+    
+    if(title == nil){
+        [mapPoint setTitle:locationTitle];
+    }else{
+        [mapPoint setTitle:title];
+        [mapPoint setSubtitle:locationTitle];
+    }
+}
 
 
 -(int) updateInBackgroundWithZoom: (BOOL) zoom{
     return [self updateInBackgroundWithZoom:zoom andFilter:false];
 }
 
+
+// Lots of mapview stuff in here, most of this can stay
 -(int) updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter{
     int updateId = ++self.updateCountId;
     int featureUpdateId = ++self.featureUpdateCountId;
@@ -258,6 +284,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
+// Much data manipulation and transformation, look at moving into utility class
 -(int) updateWithId: (int) updateId andFeatureUpdateId: (int) featureUpdateId andZoom: (BOOL) zoom andMaxFeatures: (int) maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance: (double) toleranceDistance andFilter: (BOOL) filter{
     
     int count = 0;
@@ -754,27 +781,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [shape expandBoundingBox:self.featuresBoundingBox];
     }else{
         self.featuresBoundingBox = [shape boundingBox];
-    }
-}
-
-
--(void) setTitleWithGeometryType: (enum SFGeometryType) type andMapPoint: (GPKGMapPoint *) mapPoint{
-    NSString * title = nil;
-    if(type != SF_NONE){
-        title = [SFGeometryTypes name:type];
-    }
-    [self setTitleWithTitle:title andMapPoint:mapPoint];
-}
-
--(void) setTitleWithTitle: (NSString *) title andMapPoint: (GPKGMapPoint *) mapPoint{
-    
-    NSString * locationTitle = [self buildLocationTitleWithMapPoint:mapPoint];
-    
-    if(title == nil){
-        [mapPoint setTitle:locationTitle];
-    }else{
-        [mapPoint setTitle:title];
-        [mapPoint setSubtitle:locationTitle];
     }
 }
 
