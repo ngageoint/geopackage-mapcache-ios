@@ -169,7 +169,7 @@
     NSCharacterSet *characterSet = [[NSCharacterSet characterSetWithCharactersInString:@"01234567890-."] invertedSet];
     NSString *filtered = [[string componentsSeparatedByCharactersInSet:characterSet] componentsJoinedByString:@""];
 
-    int numberOfDecimals = [[textField.text componentsSeparatedByString:@"."] count] - 1;
+    int numberOfDecimals = (int)[[textField.text componentsSeparatedByString:@"."] count] - 1;
     if (numberOfDecimals == 1 && [filtered isEqualToString:@"."]) {
         return false;
     }
