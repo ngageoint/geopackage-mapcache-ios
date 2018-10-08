@@ -774,8 +774,12 @@ const char ConstantKey;
         GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:table.name];
     
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
-        geoPackageIndexed = [indexer isIndexedWithFeatureIndexType:GPKG_FIT_GEOPACKAGE];
-        metadataIndexed = [indexer isIndexedWithFeatureIndexType:GPKG_FIT_METADATA];
+        @try{
+            geoPackageIndexed = [indexer isIndexedWithFeatureIndexType:GPKG_FIT_GEOPACKAGE];
+            metadataIndexed = [indexer isIndexedWithFeatureIndexType:GPKG_FIT_METADATA];
+        }@finally{
+            [indexer close];
+        }
     }
     @finally {
         [geoPackage close];
@@ -835,7 +839,11 @@ const char ConstantKey;
     @try {
         GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableIndex.table.name];
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
-        indexed = [indexer isIndexedWithFeatureIndexType:tableIndex.indexLocation];
+        @try{
+            indexed = [indexer isIndexedWithFeatureIndexType:tableIndex.indexLocation];
+        }@finally{
+            [indexer close];
+        }
     }
     @finally {
         [geoPackage close];
@@ -886,8 +894,12 @@ const char ConstantKey;
         @try {
             GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableIndex.table.name];
             GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
-            [indexer setIndexLocation:tableIndex.indexLocation];
-            [indexer deleteIndex];
+            @try{
+                [indexer setIndexLocation:tableIndex.indexLocation];
+                [indexer deleteIndex];
+            }@finally{
+                [indexer close];
+            }
         }
         @finally {
             [geoPackage close];
