@@ -525,17 +525,9 @@
 			<key>label</key>
 			<string>Washington DC</string>
 			<key>url</key>
-			<string>http://portal.opengeospatial.org/files/74983</string>
-			<key>name</key>
-			<string>washington_dc</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>Washington DC Vector</string>
-			<key>url</key>
 			<string>http://portal.opengeospatial.org/files/74984</string>
 			<key>name</key>
-			<string>washington_dc_vector</string>
+			<string>washington_dc</string>
 		</dict>
 		<dict>
 			<key>label</key>

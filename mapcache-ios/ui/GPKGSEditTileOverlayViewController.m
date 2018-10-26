@@ -42,12 +42,16 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
     @try {
         GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.featureTable];
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
-        self.data.indexed = [indexer isIndexed];
-        if(self.data.indexed){
-            [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURE_OVERLAY_INDEX_VALIDATION]];
-            [self.warningLabel setTextColor:[UIColor greenColor]];
-        }else{
-            [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURE_OVERLAY_INDEX_WARNING]];
+        @try{
+            self.data.indexed = [indexer isIndexed];
+            if(self.data.indexed){
+                [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURE_OVERLAY_INDEX_VALIDATION]];
+                [self.warningLabel setTextColor:[UIColor greenColor]];
+            }else{
+                [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURE_OVERLAY_INDEX_WARNING]];
+            }
+        }@finally{
+            [indexer close];
         }
     }
     @finally {
