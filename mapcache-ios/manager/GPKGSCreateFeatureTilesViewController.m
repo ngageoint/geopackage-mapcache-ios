@@ -40,12 +40,16 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
     @try {
         GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.name];
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
-        self.indexed = [indexer isIndexed];
-        if(self.indexed){
-            [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_INDEX_VALIDATION]];
-            [self.warningLabel setTextColor:[UIColor greenColor]];
-        }else{
-            [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_INDEX_WARNING]];
+        @try{
+            self.indexed = [indexer isIndexed];
+            if(self.indexed){
+                [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_INDEX_VALIDATION]];
+                [self.warningLabel setTextColor:[UIColor greenColor]];
+            }else{
+                [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_INDEX_WARNING]];
+            }
+        }@finally{
+            [indexer close];
         }
     }
     @finally {
@@ -112,6 +116,8 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         if([indexer isIndexed]){
             [featureTiles setIndexManager:indexer];
+        }else{
+            [indexer close];
         }
         
         double pointRadius = [self.featureTilesDrawData.pointRadius doubleValue];
@@ -208,13 +214,17 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
             // Check if indexed and set max features
             GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.name];
             GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
-            BOOL indexed = [indexer isIndexed];
-            self.generateTilesData.supportsMaxFeatures = true;
-            if(indexed){
-                NSNumber * maxFeaturesPerTile = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_LOAD_MAX_FEATURES_PER_TILE_DEFAULT];
-                if([maxFeaturesPerTile intValue] >= 0){
-                    self.generateTilesData.maxFeaturesPerTile = maxFeaturesPerTile;
+            @try{
+                BOOL indexed = [indexer isIndexed];
+                self.generateTilesData.supportsMaxFeatures = true;
+                if(indexed){
+                    NSNumber * maxFeaturesPerTile = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_LOAD_MAX_FEATURES_PER_TILE_DEFAULT];
+                    if([maxFeaturesPerTile intValue] >= 0){
+                        self.generateTilesData.maxFeaturesPerTile = maxFeaturesPerTile;
+                    }
                 }
+            }@finally{
+                [indexer close];
             }
             
             if(self.generateTilesData.boundingBox == nil){

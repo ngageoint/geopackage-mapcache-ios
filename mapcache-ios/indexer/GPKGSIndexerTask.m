@@ -114,6 +114,7 @@
             self.error = [e description];
         }
         @finally{
+            [self.indexer close];
             [self.geoPackage close];
         }
         
