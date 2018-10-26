@@ -12,12 +12,52 @@
 @interface MCTileHelper()
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) GPKGBoundingBox * tilesBoundingBox;
+@property (nonatomic, strong) GPKGSDatabases *active;
 @end
 
 
 @implementation MCTileHelper
 
-//-(void) displayTiles: (GPKGSTileTable *)
+- (instancetype) init {
+    self = [super init];
+    self.active = [GPKGSDatabases getInstance];
+    self.manager = [GPKGGeoPackageFactory getManager];
+    
+    return self;
+}
+
+
+- (instancetype) initWithTileHelperDelegate: (id<MCTileHelperDelegate>) delegate {
+    self = [super init];
+    self.tileHelperDelegate = delegate;
+    self.active = [GPKGSDatabases getInstance];
+    self.manager = [GPKGGeoPackageFactory getManager];
+    
+    return self;
+}
+
+
+- (void) prepareTiles {
+    NSArray *activeDatabases = [[NSArray alloc] initWithArray: [self.active getDatabases]];
+
+    for (GPKGSDatabase *database in activeDatabases) {
+        GPKGGeoPackage *geoPackage = [self.manager open:database.name];
+        
+        if (geoPackage != nil) {
+            for (GPKGSTileTable *tiles in [database getTiles]) {
+                @try {
+                    MKTileOverlay *tileOverlay = [self createOverlayForTiles:tiles fromGeoPacakge:geoPackage];
+                    [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay];
+                } @catch (NSException *e) {
+                    NSLog(@"%@", [e description]);
+                }
+            }
+        }
+    }
+}
+
+
+// MCTileHelper version of -(void) displayTiles: (GPKGSTileTable *)
 -(MKTileOverlay *) createOverlayForTiles: (GPKGSTileTable *) tiles fromGeoPacakge:(GPKGGeoPackage *) geoPackage {
     GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName:tiles.name];
     GPKGTileTableScaling *tileTableScaling = [[GPKGTileTableScaling alloc] initWithGeoPackage:geoPackage andTileDao:tileDao];
@@ -27,6 +67,7 @@
     
     GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
     
+    // TODO: handle feature tiles.
     //    GPKGFeatureTileTableLinker * linker = [[GPKGFeatureTileTableLinker alloc] initWithGeoPackage:geoPackage];
     //    NSArray<GPKGFeatureDao *> * featureDaos = [linker getFeatureDaosForTileTable:tileDao.tableName];
     //    for(GPKGFeatureDao * featureDao in featureDaos){
@@ -60,14 +101,12 @@
         displayBoundingBox = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:displayBoundingBox andBoundingBox:transformedContentsBoundingBox];
     }
     
-//    [self displayTilesWithOverlay:overlay andBoundingBox:displayBoundingBox andSrs:tileMatrixSetSrs andSpecifiedBoundingBox:nil];
-    
-    return [self getTileOverlayWith:overlay andBoundingBox:displayBoundingBox andSrs:tileMatrixSetSrs andSpecifiedBoundingBox:nil];
+    [self updateTileBoundingBox:displayBoundingBox withSrs:tileMatrixSetSrs andSpecifiedBoundingBox:nil];
+    return overlay;
 }
 
 
-//-(void) displayTilesWithOverlay: (MKTileOverlay *) overlay andBoundingBox: (GPKGBoundingBox *) dataBoundingBox andSrs: (GPKGSpatialReferenceSystem *) srs andSpecifiedBoundingBox: (GPKGBoundingBox *) specifiedBoundingBox{
--(MKTileOverlay* ) getTileOverlayWith: (MKTileOverlay *) overlay andBoundingBox: (GPKGBoundingBox *) dataBoundingBox andSrs: (GPKGSpatialReferenceSystem *) srs andSpecifiedBoundingBox: (GPKGBoundingBox *) specifiedBoundingBox{
+-(void) updateTileBoundingBox: (GPKGBoundingBox *) dataBoundingBox withSrs: (GPKGSpatialReferenceSystem *) srs andSpecifiedBoundingBox: (GPKGBoundingBox *) specifiedBoundingBox{
 
     GPKGBoundingBox * boundingBox = dataBoundingBox;
     if(boundingBox != nil){
@@ -85,13 +124,6 @@
     }else{
         self.tilesBoundingBox = [GPKGTileBoundingBoxUtils unionWithBoundingBox:self.tilesBoundingBox andBoundingBox:boundingBox];
     }
-    
-    // TODO replace with a return and have the map view
-//    dispatch_sync(dispatch_get_main_queue(), ^{
-//        [self.mapView addOverlay:overlay];
-//    });
-    
-    return overlay;
 }
 
 
@@ -106,6 +138,11 @@
     SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
     boundingBox = [webMercatorBoundingBox transform:transform];
     return boundingBox;
+}
+
+
+-(GPKGBoundingBox *) tilesBoundingBox; {
+    return _tilesBoundingBox;
 }
 
 @end
