@@ -91,6 +91,7 @@
 		E3470CCC2021962D0098D783 /* MCSegmentedControlCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CCB2021962D0098D783 /* MCSegmentedControlCell.m */; };
 		E34C378F203CD8BC00287CF9 /* MCZoomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C378E203CD8BC00287CF9 /* MCZoomCell.m */; };
 		E34C37922040ABA200287CF9 /* MCManualBoundingBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C37912040ABA200287CF9 /* MCManualBoundingBoxViewController.m */; };
+		E34CDC84217A38D0003CABA8 /* MCFeatureHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E34CDC83217A38D0003CABA8 /* MCFeatureHelper.m */; };
 		E354EEDB2006B9B000B062BE /* MCDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */; };
 		E354EEDE2006BB9500B062BE /* MCDesctiptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEDD2006BB9500B062BE /* MCDesctiptionCell.m */; };
 		E354EEE320091BCD00B062BE /* MCFeatureLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEE220091BCD00B062BE /* MCFeatureLayerDetailsViewController.m */; };
@@ -299,6 +300,8 @@
 		E34C378E203CD8BC00287CF9 /* MCZoomCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCZoomCell.m; sourceTree = "<group>"; };
 		E34C37902040ABA200287CF9 /* MCManualBoundingBoxViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCManualBoundingBoxViewController.h; sourceTree = "<group>"; };
 		E34C37912040ABA200287CF9 /* MCManualBoundingBoxViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCManualBoundingBoxViewController.m; sourceTree = "<group>"; };
+		E34CDC82217A38D0003CABA8 /* MCFeatureHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCFeatureHelper.h; sourceTree = "<group>"; };
+		E34CDC83217A38D0003CABA8 /* MCFeatureHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCFeatureHelper.m; sourceTree = "<group>"; };
 		E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCDescriptionCell.xib; sourceTree = "<group>"; };
 		E354EEDC2006BB9500B062BE /* MCDesctiptionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDesctiptionCell.h; sourceTree = "<group>"; };
 		E354EEDD2006BB9500B062BE /* MCDesctiptionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDesctiptionCell.m; sourceTree = "<group>"; };
@@ -541,6 +544,10 @@
 				E3FB856E21349B5E002F012E /* MCMapViewController.m */,
 				E3568DC921498387005FC49C /* MCMapCoordinator.h */,
 				E3568DCA21498387005FC49C /* MCMapCoordinator.m */,
+				E3463DE721545F4B00D64FFC /* MCTileHelper.h */,
+				E3463DE821545F4B00D64FFC /* MCTileHelper.m */,
+				E34CDC82217A38D0003CABA8 /* MCFeatureHelper.h */,
+				E34CDC83217A38D0003CABA8 /* MCFeatureHelper.m */,
 				045C948B1B50789D0005CCD0 /* GPKGSMapView.h */,
 				045C948C1B50789D0005CCD0 /* GPKGSMapView.m */,
 				045C948E1B53EEB80005CCD0 /* GPKGSMapViewController.h */,
@@ -557,8 +564,6 @@
 				043A45971B83B4AB001B8FC5 /* GPGKSMapPointInitializer.m */,
 				043A459C1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.h */,
 				043A459D1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.m */,
-				E3463DE721545F4B00D64FFC /* MCTileHelper.h */,
-				E3463DE821545F4B00D64FFC /* MCTileHelper.m */,
 			);
 			path = map;
 			sourceTree = "<group>";
@@ -954,6 +959,7 @@
 				04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */,
 				E346590F202BB20B001E6E81 /* MCZoomAndQualityViewController.m in Sources */,
 				043A459E1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.m in Sources */,
+				E34CDC84217A38D0003CABA8 /* MCFeatureHelper.m in Sources */,
 				E3470CC72020E67E0098D783 /* MCColorUtil.m in Sources */,
 				E3A4920B1FA9538800FFE613 /* MCGeopackageSingleViewController.m in Sources */,
 				E33F55751FC4A25500F252FD /* MCSectionTitleCell.m in Sources */,

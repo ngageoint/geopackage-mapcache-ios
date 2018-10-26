@@ -127,7 +127,6 @@
         
         GPKGSDatabase * theDatabase = [[GPKGSDatabase alloc] initWithName:database.name andExpanded:NO];
         [_geoPackages addObject: theDatabase];
-        NSMutableArray * tables = [[NSMutableArray alloc] init];
         
         GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
         for(NSString * tableName in [geoPackage getFeatureTables]){
