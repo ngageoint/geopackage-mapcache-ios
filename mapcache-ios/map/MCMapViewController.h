@@ -31,7 +31,7 @@
 @end
 
 
-@interface MCMapViewController : UIViewController <MKMapViewDelegate, MCTileHelperDelegate>
+@interface MCMapViewController : UIViewController <MKMapViewDelegate, MCTileHelperDelegate, MCFeatureHelperDelegate>
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 -(int) updateInBackgroundWithZoom: (BOOL) zoom;
 @property (weak, nonatomic) IBOutlet UIButton *infoButton;
