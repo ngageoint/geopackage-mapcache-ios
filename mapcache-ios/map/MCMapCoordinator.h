@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "MCGeoPackageListCoordinator.h"
+#import "GPKGGeoPackageFactory.h"
+#import "GPKGGeoPackageManager.h"
+
 
 @class MCMapViewController;
 

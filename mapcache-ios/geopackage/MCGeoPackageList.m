@@ -32,11 +32,6 @@
     self.tableView.estimatedRowHeight = 126.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     [self.tableView registerNib:[UINib nibWithNibName:@"MCGeoPackageCell" bundle:nil] forCellReuseIdentifier:@"geopackage"];
-    
-    UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(toggleActive:)];
-    longPressRecognizer.minimumPressDuration = 1.5;
-    longPressRecognizer.delegate = self;
-    [self.tableView addGestureRecognizer:longPressRecognizer];
 }
 
 
@@ -56,25 +51,19 @@
 }
 
 
-- (void) updateAndReloadData {
-    // TODO add code to do this
+- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
+    CGPoint point = [recognizer locationInView:self.view];
+    
+    if (CGRectContainsPoint(self.tableView.frame, point)) {
+        return true;
+    }
+    
+    return false;
 }
 
 
-- (void) toggleActive:(UILongPressGestureRecognizer *) gestureRecognizer {
-    CGPoint point = [gestureRecognizer locationInView:self.tableView];
-    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
-    
-    if (indexPath == nil) {
-        NSLog(@"Long press detected, but not on a cell");
-    } else if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        NSLog(@"Long press on row: %ld", indexPath.row);
-        MCGeoPackageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        [cell activeLayersIndicatorOn];
-        [self.geopackageListViewDelegate toggleActive:[_geoPackages objectAtIndex:indexPath.row]];
-    } else {
-        NSLog(@"Gesture recognizer state %ld", gestureRecognizer.state);
-    }
+- (void) updateAndReloadData {
+    // TODO add code to do this
 }
 
 
@@ -82,6 +71,12 @@
     [_geopackageListViewDelegate downloadGeopackage];
 }
 
+
+- (void)toggleGeoPacakge:(NSIndexPath *) indexPath {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self.geopackageListViewDelegate toggleActive:[self.geoPackages objectAtIndex:indexPath.row]];
+    });
+}
 
 
 #pragma mark - TableView delegate and data souce methods
@@ -117,6 +112,35 @@
     GPKGSDatabase *selectedGeoPackage = [_geoPackages objectAtIndex:indexPath.row];
     NSLog(@"didSelectRowAtIndexPath for %@", selectedGeoPackage.name);
     [_geopackageListViewDelegate didSelectGeoPackage:selectedGeoPackage];
+}
+
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UIContextualAction *toggleGeoPackageAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"Toggle" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        [self toggleGeoPacakge:indexPath];
+        completionHandler(YES);
+    }];
+    
+    // TODO: add check for state of the geopackage data, if it is on or off set this button accordingly
+    
+    toggleGeoPackageAction.backgroundColor = [UIColor blueColor];
+    UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[toggleGeoPackageAction]];
+    configuration.performsFirstActionWithFullSwipe = YES;
+    return configuration;
+}
+
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        // TODO: make call to delete GeoPackage
+        completionHandler(YES);
+    }];
+    delete.backgroundColor = [UIColor redColor];
+    
+    UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[delete]];
+    configuration.performsFirstActionWithFullSwipe = YES;
+    return configuration;
+    
 }
 
 

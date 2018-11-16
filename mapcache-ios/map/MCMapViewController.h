@@ -33,7 +33,8 @@
 
 @interface MCMapViewController : UIViewController <MKMapViewDelegate, MCTileHelperDelegate, MCFeatureHelperDelegate>
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
--(int) updateInBackgroundWithZoom: (BOOL) zoom;
 @property (weak, nonatomic) IBOutlet UIButton *infoButton;
 @property (weak, nonatomic) IBOutlet UIButton *locationButton;
+-(int) updateInBackgroundWithZoom: (BOOL) zoom;
+- (void) zoomToPointWithOffset:(CLLocationCoordinate2D) point;
 @end

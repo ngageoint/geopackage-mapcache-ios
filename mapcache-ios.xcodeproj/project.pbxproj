@@ -113,6 +113,8 @@
 		E3A651B0200563AF00B8AB27 /* MCTileLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651AF200563AF00B8AB27 /* MCTileLayerDetailsViewController.m */; };
 		E3A651B32005652400B8AB27 /* MCFieldWithTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651B22005652400B8AB27 /* MCFieldWithTitleCell.m */; };
 		E3B9753B1FB3DED400E33E0A /* MCHeaderCellDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3B9753A1FB3DED400E33E0A /* MCHeaderCellDisplay.xib */; };
+		E3BED1E0219116FA001AF654 /* MCSettingsCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3BED1DF219116FA001AF654 /* MCSettingsCoordinator.m */; };
+		E3BED1E321911712001AF654 /* MCSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3BED1E221911712001AF654 /* MCSettingsViewController.m */; };
 		E3FB856B2134955F002F012E /* NGADrawerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB85682134955D002F012E /* NGADrawerCoordinator.m */; };
 		E3FB856C2134955F002F012E /* NGADrawerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB85692134955D002F012E /* NGADrawerViewController.m */; };
 		E3FB856F21349B5E002F012E /* MCMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB856E21349B5E002F012E /* MCMapViewController.m */; };
@@ -335,6 +337,10 @@
 		E3A651B12005652400B8AB27 /* MCFieldWithTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCFieldWithTitleCell.h; sourceTree = "<group>"; };
 		E3A651B22005652400B8AB27 /* MCFieldWithTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCFieldWithTitleCell.m; sourceTree = "<group>"; };
 		E3B9753A1FB3DED400E33E0A /* MCHeaderCellDisplay.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCHeaderCellDisplay.xib; sourceTree = "<group>"; };
+		E3BED1DE219116FA001AF654 /* MCSettingsCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCSettingsCoordinator.h; sourceTree = "<group>"; };
+		E3BED1DF219116FA001AF654 /* MCSettingsCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCSettingsCoordinator.m; sourceTree = "<group>"; };
+		E3BED1E121911712001AF654 /* MCSettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCSettingsViewController.h; sourceTree = "<group>"; };
+		E3BED1E221911712001AF654 /* MCSettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCSettingsViewController.m; sourceTree = "<group>"; };
 		E3FB85672134955C002F012E /* NGADrawerCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NGADrawerCoordinator.h; sourceTree = "<group>"; };
 		E3FB85682134955D002F012E /* NGADrawerCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NGADrawerCoordinator.m; sourceTree = "<group>"; };
 		E3FB85692134955D002F012E /* NGADrawerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NGADrawerViewController.m; sourceTree = "<group>"; };
@@ -414,6 +420,7 @@
 				040136841AF94FB200C92AFC /* LaunchScreen.xib */,
 				040136721AF94FB200C92AFC /* Supporting Files */,
 				047733C51B4C3E3400E523BD /* mapcache.plist */,
+				E3BED1DD219116C3001AF654 /* settings */,
 			);
 			path = "mapcache-ios";
 			sourceTree = "<group>";
@@ -752,6 +759,17 @@
 			path = EditCells;
 			sourceTree = "<group>";
 		};
+		E3BED1DD219116C3001AF654 /* settings */ = {
+			isa = PBXGroup;
+			children = (
+				E3BED1DE219116FA001AF654 /* MCSettingsCoordinator.h */,
+				E3BED1DF219116FA001AF654 /* MCSettingsCoordinator.m */,
+				E3BED1E121911712001AF654 /* MCSettingsViewController.h */,
+				E3BED1E221911712001AF654 /* MCSettingsViewController.m */,
+			);
+			path = settings;
+			sourceTree = "<group>";
+		};
 		E3FB8566213490B0002F012E /* drawer */ = {
 			isa = PBXGroup;
 			children = (
@@ -997,6 +1015,7 @@
 				E3A491FF1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m in Sources */,
 				045C949B1B5D4C560005CCD0 /* GPKGSDecimalValidator.m in Sources */,
 				04CCC86B1B6121E90001296D /* GPKGSLoadTilesViewController.m in Sources */,
+				E3BED1E0219116FA001AF654 /* MCSettingsCoordinator.m in Sources */,
 				04CCC8621B60232A0001296D /* GPKGSUIResponder+FirstResponder.m in Sources */,
 				044648111B4B1D960052913B /* GPKGSTableCell.m in Sources */,
 				04CCC86E1B6122040001296D /* GPKGSLoadTilesData.m in Sources */,
@@ -1005,6 +1024,7 @@
 				045C94831B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m in Sources */,
 				043A45821B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m in Sources */,
 				04E1D8D31B66D41E002BD947 /* GPKGSEditFeaturesViewController.m in Sources */,
+				E3BED1E321911712001AF654 /* MCSettingsViewController.m in Sources */,
 				04E0EE051B69112B0095E53E /* GPKGSAddTileOverlayViewController.m in Sources */,
 				045C94861B50226D0005CCD0 /* GPKGSFeatureOverlayTable.m in Sources */,
 				E3FB857E2134C533002F012E /* MCGeoPackageListCoordinator.m in Sources */,
@@ -1182,7 +1202,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = KBKX8X5SZ7;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1199,7 +1219,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = KBKX8X5SZ7;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga;
 				PRODUCT_NAME = "$(TARGET_NAME)";

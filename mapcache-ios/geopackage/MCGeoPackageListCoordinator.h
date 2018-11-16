@@ -20,6 +20,7 @@
 @protocol MCMapDelegate <NSObject>
 - (void) updateMapLayers;
 - (void) toggleGeoPackage:(GPKGSDatabase *) geoPackage;
+- (void) zoomToSelectedGeoPackage:(NSString *) geoPackageName;
 @end
 
 

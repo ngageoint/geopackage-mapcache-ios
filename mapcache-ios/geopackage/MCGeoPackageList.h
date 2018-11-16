@@ -17,6 +17,7 @@
 - (void) didSelectGeoPackage: (GPKGSDatabase*) database;
 - (void) downloadGeopackage;
 - (void) toggleActive:(GPKGSDatabase *) database;
+- (void) deleteGeoPackage:(GPKGSDatabase *) database;
 @end
 
 @interface MCGeoPackageList: NGADrawerViewController <UITableViewDelegate, UITableViewDataSource>
@@ -24,4 +25,5 @@
 - (instancetype) initWithGeoPackages: (NSMutableArray *) geoPackages asFullView: (BOOL) fullView andDelegate:(id<MCGeoPacakageListViewDelegate>) delegate;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *geoPackages;
+- (void)toggleGeoPacakge:(NSIndexPath *) indexPath;
 @end
