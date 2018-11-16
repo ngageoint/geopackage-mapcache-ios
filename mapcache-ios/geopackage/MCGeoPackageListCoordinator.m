@@ -108,6 +108,8 @@
     MCGeoPackageCoordinator *geoPackageCoordinator = [[MCGeoPackageCoordinator alloc] initWithDelegate:self andDrawerDelegate:_drawerViewDelegate andDatabase:database];
     [_childCoordinators addObject:geoPackageCoordinator];
     [geoPackageCoordinator start];
+    // TODO: make a call here to move the map to where the data is, and maybe switch on the layers
+    [self.mcMapDelegate zoomToSelectedGeoPackage:database.name];
 }
 
 
@@ -169,6 +171,9 @@
 }
 
 
+- (void)deleteGeoPackage:(GPKGSDatabase *)database {
+    //TODO: fill this in
+}
 
 
 

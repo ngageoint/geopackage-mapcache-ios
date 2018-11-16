@@ -239,10 +239,10 @@
                         if (shape != nil && count++ < maxFeatures) {
                             [self.featureHelperDelegate addShapeToMapView:shape withCount:count];
                         }
-                        
-                        
                     } @catch (NSException *exception) {
                         NSLog(@"Failed to display feature. database: %@, feature table: %@, error: %@", database, features, [exception description]);
+                    } @finally {
+                        [geoPackage close];
                     }
                 }
             }

@@ -9,15 +9,19 @@
 #import "MCMapCoordinator.h"
 #import "MCMapViewController.h"
 
+
 @interface MCMapCoordinator ()
 @property (nonatomic, strong) MCMapViewController *mcMapViewController;
+@property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @end
+
 
 @implementation MCMapCoordinator
 
 - (instancetype) initWithMapViewController:(MCMapViewController *) mapViewController {
     self = [super init];
     self.mcMapViewController = mapViewController;
+    self.manager = [GPKGGeoPackageFactory getManager];
     
     return self;
 }
@@ -32,6 +36,16 @@
 
 - (void) toggleGeoPackage:(GPKGSDatabase *) geoPackage {
     NSLog(@"In MCMapCoordinator, going to toggle %@", geoPackage.name);
+}
+
+
+- (void)zoomToSelectedGeoPackage:(NSString *)geoPackageName {
+    GPKGGeoPackage *geoPackage = [self.manager open:geoPackageName];
+    GPKGBoundingBox *boundingBox = [geoPackage contentsBoundingBoxInProjection:[SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
+    CLLocationCoordinate2D center = [boundingBox getCenter];
+    
+    [self.mcMapViewController zoomToPointWithOffset:center];
+    [geoPackage close];
 }
 
 @end

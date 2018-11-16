@@ -50,6 +50,8 @@
                     [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay];
                 } @catch (NSException *e) {
                     NSLog(@"%@", [e description]);
+                } @finally {
+                    [geoPackage close];
                 }
             }
         }
@@ -106,6 +108,7 @@
 }
 
 
+
 -(void) updateTileBoundingBox: (GPKGBoundingBox *) dataBoundingBox withSrs: (GPKGSpatialReferenceSystem *) srs andSpecifiedBoundingBox: (GPKGBoundingBox *) specifiedBoundingBox{
 
     GPKGBoundingBox * boundingBox = dataBoundingBox;
@@ -127,7 +130,7 @@
 }
 
 
--(GPKGBoundingBox *) transformBoundingBoxToWgs84: (GPKGBoundingBox *) boundingBox withSrs: (GPKGSpatialReferenceSystem *) srs{
+- (GPKGBoundingBox *)transformBoundingBoxToWgs84: (GPKGBoundingBox *)boundingBox withSrs: (GPKGSpatialReferenceSystem *)srs {
     
     SFPProjection *projection = [srs projection];
     if([projection getUnit] == SFP_UNIT_DEGREES){

@@ -14,7 +14,7 @@
 - (void) popDrawer;
 @end
 
-@interface NGADrawerViewController : UIViewController
+@interface NGADrawerViewController : UIViewController <UIGestureRecognizerDelegate>
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 - (instancetype) initAsFullView: (BOOL) isFullView;
 - (void) makeFullView;
@@ -22,4 +22,5 @@
 - (void) addDragHandle;
 - (void) addCloseButton;
 - (void) closeDrawer;
+- (BOOL)gestureIsInConflict;
 @end

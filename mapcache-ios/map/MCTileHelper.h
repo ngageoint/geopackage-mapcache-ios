@@ -35,5 +35,5 @@
 - (void)prepareTiles;
 - (MKTileOverlay *)createOverlayForTiles: (GPKGSTileTable *) tiles fromGeoPacakge:(GPKGGeoPackage *) geoPackage;
 - (GPKGBoundingBox *)tilesBoundingBox;
-
+- (GPKGBoundingBox *)transformBoundingBoxToWgs84: (GPKGBoundingBox *)boundingBox withSrs: (GPKGSpatialReferenceSystem *)srs;
 @end

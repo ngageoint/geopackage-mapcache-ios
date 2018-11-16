@@ -57,7 +57,6 @@ NSString * const GPKGS_MAP_SEG_DISPLAY_TEXT = @"displayText";
 const char MapConstantKey;
 
 @interface GPKGSMapViewController ()
-
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) GPKGSDatabases *active;
 @property (nonatomic, strong) GPKGGeoPackageCache * geoPackages;

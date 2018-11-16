@@ -12,6 +12,7 @@
 @property (nonatomic) CGFloat fullView;
 @property (nonatomic) CGFloat partialView;
 @property (nonatomic) BOOL startedAsFullView;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
 @end
 
 
@@ -29,8 +30,9 @@
     _fullView = 240;
     _partialView = [UIScreen mainScreen].bounds.size.height - UIApplication.sharedApplication.statusBarFrame.size.height * 3;
     
-    UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
-    [self.view addGestureRecognizer:gesture];
+    _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
+    _panGestureRecognizer.delegate = self;
+    [self.view addGestureRecognizer:_panGestureRecognizer];
     [self roundViews];
 }
 
@@ -69,28 +71,50 @@
 
 
 - (void) panGesture:(UIPanGestureRecognizer *) recognizer {
-    CGPoint translation = [recognizer translationInView:self.view];
-    CGPoint velocity = [recognizer velocityInView:self.view];
-    CGFloat y = CGRectGetMinY(self.view.frame);
-    
-    if (y + translation.y > _fullView && y + translation.y <= _partialView) {
-        self.view.frame = CGRectMake(0, y + translation.y, self.view.frame.size.width, self.view.frame.size.height);
-        [recognizer setTranslation:CGPointZero inView:self.view];
-    }
-    
-    if (recognizer.state == UIGestureRecognizerStateEnded) {
-        double duration = velocity.y < 0 ? ((y - _fullView) / -velocity.y) : ((_partialView - y) / velocity.y);
-        duration = duration > 1.3 ? 1 : duration;
+    if (![self gestureIsInConflict:recognizer]) {
+        CGPoint translation = [recognizer translationInView:self.view];
+        CGPoint velocity = [recognizer velocityInView:self.view];
+        CGFloat y = CGRectGetMinY(self.view.frame);
         
-        [UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
-            if (velocity.y >= 0) {
-                self.view.frame = CGRectMake(0, self.partialView, self.view.frame.size.width, self.view.frame.size.height);
-            } else {
-                self.view.frame = CGRectMake(0, self.fullView, self.view.frame.size.width, self.view.frame.size.height);
-            }
-        } completion:nil];
+        if (y + translation.y > _fullView && y + translation.y <= _partialView) {
+            self.view.frame = CGRectMake(0, y + translation.y, self.view.frame.size.width, self.view.frame.size.height);
+            [recognizer setTranslation:CGPointZero inView:self.view];
+        }
+        
+        if (recognizer.state == UIGestureRecognizerStateEnded) {
+            double duration = velocity.y < 0 ? ((y - _fullView) / -velocity.y) : ((_partialView - y) / velocity.y);
+            duration = duration > 1.3 ? 1 : duration;
+            
+            [UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+                if (velocity.y >= 0) {
+                    self.view.frame = CGRectMake(0, self.partialView, self.view.frame.size.width, self.view.frame.size.height);
+                } else {
+                    self.view.frame = CGRectMake(0, self.fullView, self.view.frame.size.width, self.view.frame.size.height);
+                }
+            } completion:nil];
+        }
     }
 }
+
+
+- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
+    return false;
+}
+
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
+//
+//- (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer {
+//    if (otherGestureRecognizer != _panGestureRecognizer) {
+//        return true; //UIScrollViewPanGestureRecognizer _UISwipeActionPanGestureRecognizer
+//    }
+//
+//    return true;
+//}
 
 
 - (void) makeFullView {

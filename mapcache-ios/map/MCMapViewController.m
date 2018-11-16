@@ -109,6 +109,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
+- (void) zoomToPointWithOffset:(CLLocationCoordinate2D) point {
+    point.latitude -= self.mapView.region.span.latitudeDelta * (1.0/3.0);
+    [self.mapView setCenterCoordinate:point animated:YES];
+}
+
+
+
 #pragma mark - Button actions
 - (IBAction)showInfo:(id)sender {
 }
@@ -123,28 +130,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self updateInBackgroundWithZoom:YES];
 }
 
-// TODO: update code from the old header view to work with new map
-//- (void)willMoveToSuperview:(UIView *)newSuperview {
-//    if (self.tileOverlay != nil) {
-//        //dispatch_sync(dispatch_get_main_queue(), ^{
-//        [self.mapView addOverlay:self.tileOverlay];
-//        //});
-//    } else if (self.featureDao != nil) {
-//        GPKGResultSet *featureResultSet = [self.featureDao queryForAll];
-//        GPKGMapShapeConverter *converter = [[GPKGMapShapeConverter alloc] initWithProjection: self.featureDao.projection];
-//
-//        while ([featureResultSet moveToNext]) {
-//            GPKGFeatureRow *featureRow = [self.featureDao getFeatureRow:featureResultSet];
-//            GPKGGeometryData *geometryData = [featureRow getGeometry];
-//            GPKGMapShape *shape = [converter toShapeWithGeometry:geometryData.geometry];
-//
-//            //dispatch_sync(dispatch_get_main_queue(), ^{
-//            [GPKGMapShapeConverter addMapShape:shape toMapView:self.mapView];
-//            //});
-//        }
-//    }
-//}
-//
 
 #pragma mark - MCTileHelperDelegate methods
 - (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay {
@@ -254,9 +239,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.geoPackages removeAllObjects];
     [self.featureDaos removeAllObjects];
     
-//    if(zoom){
-//        [self zoomToActiveBounds];
-//    }
+    if(zoom){
+        [self zoomToActiveBounds];
+    }
     
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
@@ -372,6 +357,93 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             [self.mapView setRegion:expandedRegion animated:true];
         }
     }
+}
+
+
+-(void) zoomToActiveBounds{
+    
+    self.featuresBoundingBox = nil;
+    self.tilesBoundingBox = nil;
+    
+    // Pre zoom
+    NSMutableArray *activeDatabase = [[NSMutableArray alloc] init];
+    [activeDatabase addObjectsFromArray:[self.active getDatabases]];
+    for(GPKGSDatabase *database in activeDatabase){
+        GPKGGeoPackage *geoPackage = [self.manager open:database.name];
+        if (geoPackage != nil) {
+            
+            NSMutableSet<NSString *> *featureTableDaos = [[NSMutableSet alloc] init];
+            NSArray *features = [database getFeatures];
+            if(features.count > 0){
+                for(GPKGSTable *featureTable in features){
+                    [featureTableDaos addObject:featureTable.name];
+                }
+            }
+            
+            for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
+                if(featureOverlay.active){
+                    [featureTableDaos addObject:featureOverlay.featureTable];
+                }
+            }
+            
+            if(featureTableDaos.count > 0){
+                
+                GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
+                
+                for (NSString *featureTable in featureTableDaos) {
+                    
+                    @try {
+                        GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:featureTable];
+                        GPKGBoundingBox *contentsBoundingBox = [contents getBoundingBox];
+                        
+                        if (contentsBoundingBox != nil) {
+                            
+                            contentsBoundingBox = [self.tileHelper transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao getSrs:contents]];
+                            
+                            if (self.featuresBoundingBox != nil) {
+                                self.featuresBoundingBox = [self.featuresBoundingBox union:contentsBoundingBox];
+                            } else {
+                                self.featuresBoundingBox = contentsBoundingBox;
+                            }
+                        }
+                    } @catch (NSException *e) {
+                        NSLog(@"%@", [e description]);
+                    } @finally {
+                        [geoPackage close];
+                    }
+                }
+            }
+            
+            NSArray *tileTables = [database getTiles];
+            if(tileTables.count > 0){
+                
+                GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
+                
+                for(GPKGSTileTable *tileTable in tileTables){
+                    
+                    @try {
+                        GPKGTileMatrixSet *tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:tileTable.name];
+                        GPKGBoundingBox *tileMatrixSetBoundingBox = [tileMatrixSet getBoundingBox];
+                        
+                        tileMatrixSetBoundingBox = [self.tileHelper transformBoundingBoxToWgs84:tileMatrixSetBoundingBox withSrs:[tileMatrixSetDao getSrs:tileMatrixSet]];
+                        
+                        if (self.tilesBoundingBox != nil) {
+                            self.tilesBoundingBox = [self.tilesBoundingBox union:tileMatrixSetBoundingBox];
+                        } else {
+                            self.tilesBoundingBox = tileMatrixSetBoundingBox;
+                        }
+                    } @catch (NSException *e) {
+                        NSLog(@"%@", [e description]);
+                    } @finally {
+                        [geoPackage close];
+                    }
+                }
+            }
+            
+            [geoPackage close];
+        }
+    }
+    [self zoomToActiveAndIgnoreRegionChange:YES];
 }
 
 
