@@ -102,13 +102,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
-- (void) addBottomSheetView {
-    NGADrawerCoordinator *drawerCoordinator = [[NGADrawerCoordinator alloc] init];
-    [drawerCoordinator start];
-    [_childCoordinators addObject: drawerCoordinator];
-}
-
-
 - (void) zoomToPointWithOffset:(CLLocationCoordinate2D) point {
     point.latitude -= self.mapView.region.span.latitudeDelta * (1.0/3.0);
     [self.mapView setCenterCoordinate:point animated:YES];
@@ -118,6 +111,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 #pragma mark - Button actions
 - (IBAction)showInfo:(id)sender {
+    NSLog(@"Showing info drawer.");
+    [self.mapActionDelegate showMapInfoDrawer];
 }
 
 

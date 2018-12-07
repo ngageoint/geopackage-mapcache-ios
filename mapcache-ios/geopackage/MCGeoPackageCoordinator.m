@@ -45,6 +45,7 @@
 
 - (void) start {
     _geoPackageViewController = [[MCGeopackageSingleViewController alloc] initAsFullView:YES];
+    
     _geoPackageViewController.database = _database;
     _geoPackageViewController.delegate = self;
     _geoPackageViewController.drawerViewDelegate = _drawerDelegate;
@@ -57,7 +58,7 @@
 #pragma mark - GeoPackage View delegate methods
 - (void) newLayer {
     NSLog(@"Coordinator handling new layer");
-    
+     
     MCCreateLayerViewController *createLayerViewControler = [[MCCreateLayerViewController alloc] initWithNibName:@"MCCreateLayerView" bundle:nil];
     createLayerViewControler.delegate = self;
     //[_navigationController pushViewController:createLayerViewControler animated:YES]; // TODO replace with drawer

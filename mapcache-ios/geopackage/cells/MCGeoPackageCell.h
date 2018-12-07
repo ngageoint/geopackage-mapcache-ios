@@ -14,4 +14,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *tileLayerDetailsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *featureLayerDetailsLabel;
 - (void)activeLayersIndicatorOn;
+- (void)activeLayersIndicatorOff;
+- (void)toggleActiveIndicator;
 @end

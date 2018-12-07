@@ -39,6 +39,7 @@
     MCMapCoordinator *mapCoordinator = [[MCMapCoordinator alloc] initWithMapViewController:mapViewController];
     NGADrawerCoordinator *drawerCoordinator = [[NGADrawerCoordinator alloc] initWithBackgroundViewController:mapViewController andMCMapDelegate:mapCoordinator];
     [drawerCoordinator start];
+    mapCoordinator.drawerViewDelegate = drawerCoordinator;
     [_childCoordinators addObject:drawerCoordinator];
     [_childCoordinators addObject:mapCoordinator];
     _window.rootViewController = mapViewController;

@@ -10,10 +10,14 @@
 #import "MCGeoPackageListCoordinator.h"
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGGeoPackageManager.h"
+#import "MCSettingsCoordinator.h"
 
 
 @class MCMapViewController;
+@protocol MCMapActionDelegate;
 
-@interface MCMapCoordinator : NSObject <MCMapDelegate>
+@interface MCMapCoordinator : NSObject <MCMapDelegate, MCMapActionDelegate>
 - (instancetype) initWithMapViewController:(MCMapViewController *) mapViewController;
+
+@property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @end

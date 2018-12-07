@@ -25,5 +25,9 @@
 - (instancetype) initWithGeoPackages: (NSMutableArray *) geoPackages asFullView: (BOOL) fullView andDelegate:(id<MCGeoPacakageListViewDelegate>) delegate;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *geoPackages;
+
+
 - (void)toggleGeoPacakge:(NSIndexPath *) indexPath;
+- (void)deleteGeoPackageAtIndexPath:(NSIndexPath *) indexPath;
+- (void)refreshWithGeoPackages:(NSMutableArray *) geoPackages;
 @end

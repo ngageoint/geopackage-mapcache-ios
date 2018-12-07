@@ -413,6 +413,7 @@
 				E3A492061FA9531E00FFE613 /* views */,
 				044648161B4C20360052913B /* manager */,
 				044648151B4C1A8D0052913B /* data */,
+				E3BED1DD219116C3001AF654 /* settings */,
 				040136761AF94FB200C92AFC /* AppDelegate.h */,
 				040136771AF94FB200C92AFC /* AppDelegate.m */,
 				0401367F1AF94FB200C92AFC /* Main.storyboard */,
@@ -420,7 +421,6 @@
 				040136841AF94FB200C92AFC /* LaunchScreen.xib */,
 				040136721AF94FB200C92AFC /* Supporting Files */,
 				047733C51B4C3E3400E523BD /* mapcache.plist */,
-				E3BED1DD219116C3001AF654 /* settings */,
 			);
 			path = "mapcache-ios";
 			sourceTree = "<group>";

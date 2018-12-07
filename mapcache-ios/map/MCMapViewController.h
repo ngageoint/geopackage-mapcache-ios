@@ -27,14 +27,16 @@
 
 
 @protocol MCMapActionDelegate <NSObject>
-- (void) showMapInfoDrawer;
+- (void)showMapInfoDrawer;
 @end
 
 
 @interface MCMapViewController : UIViewController <MKMapViewDelegate, MCTileHelperDelegate, MCFeatureHelperDelegate>
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
-@property (weak, nonatomic) IBOutlet UIButton *infoButton;
-@property (weak, nonatomic) IBOutlet UIButton *locationButton;
--(int) updateInBackgroundWithZoom: (BOOL) zoom;
-- (void) zoomToPointWithOffset:(CLLocationCoordinate2D) point;
+@property (nonatomic, weak) IBOutlet UIButton *infoButton;
+@property (nonatomic, weak) IBOutlet UIButton *locationButton;
+@property (nonatomic, strong) id<MCMapActionDelegate> mapActionDelegate;
+
+- (int)updateInBackgroundWithZoom: (BOOL) zoom;
+- (void)zoomToPointWithOffset:(CLLocationCoordinate2D) point;
 @end
