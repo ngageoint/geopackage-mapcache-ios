@@ -122,65 +122,15 @@
 
 -(void) toggleActive:(GPKGSDatabase *)database {
     NSLog(@"Toggling layers for GeoPackage: %@", database.name);
-    
-    //TODO: if the layers are on, switch them off
-    
-    
-    
-    // iterate through the geopackage, and set all of the layers to active.
-    GPKGGeoPackage * geoPackage = nil;
-    @try {
-        geoPackage = [self.manager open:database.name];
-        NSLog(@"How many active layers? %d", [database getActiveTableCount]);
-        BOOL switchOn = [database getActiveTableCount] == 0;
-        
-        GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
-        for(NSString * tableName in [geoPackage getFeatureTables]){
-            GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
-            int count = [featureDao count];
-            GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
-            GPKGGeometryColumns * geometryColumns = [contentsDao getGeometryColumns:contents];
-            enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
-            
-            GPKGSFeatureTable * table = [[GPKGSFeatureTable alloc] initWithDatabase:database.name andName:tableName andGeometryType:geometryType andCount:count];
-            if (switchOn) {
-                [self.active addTable:table];
-            } else {
-                [self.active removeTable:table];
-            }
-        }
-        
-        for(NSString * tableName in [geoPackage getTileTables]){
-            GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName: tableName];
-            int count = [tileDao count];
-            GPKGSTileTable * table = [[GPKGSTileTable alloc] initWithDatabase:database.name andName:tableName andCount:count];
 
-            if (switchOn) {
-                [self.active addTable:table];
-            } else {
-                [self.active removeTable:table];
-            }
-            
-        }
-        
-        for(GPKGSFeatureOverlayTable * table in [self.active featureOverlays:database.name]){
-            if (switchOn) {
-                [self.active addTable:table];
-            } else {
-                [self.active removeTable:table];
-            }
-        }
-    }
-    @finally {
-        if(geoPackage == nil){
-            @try {
-                [self.manager delete:geoPackage.name];
-            }
-            @catch (NSException *exception) {
-                NSLog(@"Caught Exception trying to delete %@", exception.reason);
-            }
-        }else{
-            [geoPackage close];
+    BOOL switchOn = ![_active isActive:database];
+    NSArray *tables = [database getTables];
+    
+    for (GPKGSTable *table in tables) {
+        if (switchOn){
+            [_active addTable:table];
+        } else {
+            [_active removeTable:table];
         }
     }
     
