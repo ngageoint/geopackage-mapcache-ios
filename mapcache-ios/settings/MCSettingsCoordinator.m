@@ -10,4 +10,10 @@
 
 @implementation MCSettingsCoordinator
 
+- (void)start {
+    MCSettingsViewController *settingsViewController = [[MCSettingsViewController alloc] initAsFullView:YES];
+    settingsViewController.drawerViewDelegate = _drawerViewDelegate;
+    [settingsViewController.drawerViewDelegate pushDrawer:settingsViewController];
+}
+
 @end

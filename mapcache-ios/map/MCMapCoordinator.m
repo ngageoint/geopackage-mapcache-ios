@@ -13,6 +13,7 @@
 @interface MCMapCoordinator ()
 @property (nonatomic, strong) MCMapViewController *mcMapViewController;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
+@property (nonatomic, strong) NSMutableArray *childCoordinators;
 @end
 
 
@@ -21,7 +22,9 @@
 - (instancetype) initWithMapViewController:(MCMapViewController *) mapViewController {
     self = [super init];
     self.mcMapViewController = mapViewController;
+    self.mcMapViewController.mapActionDelegate = self;
     self.manager = [GPKGGeoPackageFactory getManager];
+    self.childCoordinators = [[NSMutableArray alloc] init];
     
     return self;
 }
@@ -46,6 +49,15 @@
     
     [self.mcMapViewController zoomToPointWithOffset:center];
     [geoPackage close];
+}
+
+
+#pragma mark - MCMapActionDelegate
+- (void)showMapInfoDrawer {
+    MCSettingsCoordinator *settingsCoordinator = [[MCSettingsCoordinator alloc] init];
+    [self.childCoordinators addObject:settingsCoordinator];
+    settingsCoordinator.drawerViewDelegate = _drawerViewDelegate;
+    [settingsCoordinator start];
 }
 
 @end

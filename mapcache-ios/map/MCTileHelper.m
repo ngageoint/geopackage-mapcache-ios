@@ -104,6 +104,7 @@
     }
     
     [self updateTileBoundingBox:displayBoundingBox withSrs:tileMatrixSetSrs andSpecifiedBoundingBox:nil];
+    [geoPackage close];
     return overlay;
 }
 

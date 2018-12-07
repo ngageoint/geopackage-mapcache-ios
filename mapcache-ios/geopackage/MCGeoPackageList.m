@@ -62,8 +62,14 @@
 }
 
 
+- (void)refreshWithGeoPackages:(NSMutableArray *) geoPackages {
+    _geoPackages = geoPackages;
+    [self.tableView reloadData];
+}
+
+
 - (void) updateAndReloadData {
-    // TODO add code to do this
+    [self.tableView reloadData];
 }
 
 
@@ -74,7 +80,16 @@
 
 - (void)toggleGeoPacakge:(NSIndexPath *) indexPath {
     dispatch_async(dispatch_get_main_queue(), ^{
-      [self.geopackageListViewDelegate toggleActive:[self.geoPackages objectAtIndex:indexPath.row]];
+        [self.geopackageListViewDelegate toggleActive:[_geoPackages objectAtIndex:indexPath.row]];
+        MCGeoPackageCell *cell = [_tableView cellForRowAtIndexPath:indexPath];
+        [cell toggleActiveIndicator];
+    });
+}
+
+
+- (void)deleteGeoPackageAtIndexPath:(NSIndexPath *) indexPath {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.geopackageListViewDelegate deleteGeoPackage:[_geoPackages objectAtIndex:indexPath.row]];
     });
 }
 
@@ -92,6 +107,13 @@
     cell.geoPackageNameLabel.text = gpkg.name;
     cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layers", (long)[gpkg getFeatures].count];
     cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layers", (long)[gpkg getTileCount]];
+    
+    NSLog(@"active layers %d", [gpkg getActiveTableCount]);
+    if ([gpkg getActiveTableCount] > 0) {
+        [cell activeLayersIndicatorOn];
+    } else {
+        [cell activeLayersIndicatorOff];
+    }
     
     return cell;
 }
@@ -123,7 +145,7 @@
     
     // TODO: add check for state of the geopackage data, if it is on or off set this button accordingly
     
-    toggleGeoPackageAction.backgroundColor = [UIColor blueColor];
+    toggleGeoPackageAction.backgroundColor = [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0];
     UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[toggleGeoPackageAction]];
     configuration.performsFirstActionWithFullSwipe = YES;
     return configuration;
@@ -132,7 +154,7 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        // TODO: make call to delete GeoPackage
+        [self deleteGeoPackageAtIndexPath:indexPath];
         completionHandler(YES);
     }];
     delete.backgroundColor = [UIColor redColor];

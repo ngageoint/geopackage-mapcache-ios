@@ -105,6 +105,9 @@ static GPKGSDatabases * instance;
         database = [[GPKGSDatabase alloc] initWithName:table.database andExpanded:false];
         [self.databases setObject:database forKey:table.database];
     }
+    
+    table.active = YES;
+    
     [database add:table];
     if(updatePreferences){
         [self addTableToPreferences: table];

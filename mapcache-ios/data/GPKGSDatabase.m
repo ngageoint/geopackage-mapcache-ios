@@ -70,6 +70,32 @@
     return [self.tilesSet count];
 }
 
+- (NSInteger) activeTileTableCount {
+    NSInteger activeCount = 0;
+    if ([self.tilesSet count] > 0) {
+        for (GPKGSTable *table in self.tilesSet.array) {
+            if (table.active) {
+                activeCount++;
+            }
+        }
+    }
+    
+    return activeCount;
+}
+
+- (NSInteger) activeFeatureTableCount {
+    NSInteger activeCount = 0;
+    if ([self.featuresSet count] > 0) {
+        for (GPKGSTable *table in self.tilesSet.array) {
+            if (table.active) {
+                activeCount++;
+            }
+        }
+    }
+    
+    return activeCount;
+}
+
 -(NSArray *) getTables{
     NSMutableArray * tables = [[NSMutableArray alloc] init];
     [tables addObjectsFromArray:[self getFeatures]];
@@ -82,8 +108,8 @@
     return [self getFeatureCount] + [self getTileCount] + [self getFeatureOverlayCount];
 }
 
--(NSInteger) getActiveTableCount{
-    return [self getFeatureCount] + [self getTileCount] + [self getActiveFeatureOverlayCount];
+-(NSInteger) getActiveTableCount{ 
+    return [self activeFeatureTableCount] + [self activeTileTableCount] + [self getActiveFeatureOverlayCount];
 }
 
 -(void) addFeature: (GPKGSTable *) table{

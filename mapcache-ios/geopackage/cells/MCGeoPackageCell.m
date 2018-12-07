@@ -12,7 +12,7 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code
+    self.visibilityStatusIndicator.image = [UIImage imageNamed:@"allLayersOn"];
 }
 
 
@@ -24,13 +24,21 @@
 
 
 - (void)activeLayersIndicatorOn {
-    self.visibilityStatusIndicator.image = [UIImage imageNamed:@"allLayersOn"];
     [self.visibilityStatusIndicator setHidden:NO];
 }
 
 
 - (void)activeLayersIndicatorOff {
     [self.visibilityStatusIndicator setHidden:YES];
+}
+
+
+- (void)toggleActiveIndicator {
+    if (self.visibilityStatusIndicator.isHidden) {
+        [self.visibilityStatusIndicator setHidden:NO];
+    } else {
+        [self.visibilityStatusIndicator setHidden:YES];
+    }
 }
 
 @end

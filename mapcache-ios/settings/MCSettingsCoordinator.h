@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MCSettingsViewController.h"
 
-NS_ASSUME_NONNULL_BEGIN
 
 @interface MCSettingsCoordinator : NSObject
+@property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 
+- (void)start;
 @end
-
-NS_ASSUME_NONNULL_END
