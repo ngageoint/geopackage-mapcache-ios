@@ -67,6 +67,14 @@ static GPKGSDatabases * instance;
     return exists;
 }
 
+- (BOOL)isActive:(GPKGSDatabase *) database {
+    if ([self.databases objectForKey:database.name] != nil) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 -(NSArray *) featureOverlays: (NSString *) database{
     
     NSMutableArray * response = [[NSMutableArray alloc] init];

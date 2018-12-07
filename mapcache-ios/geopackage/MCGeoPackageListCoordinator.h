@@ -16,6 +16,8 @@
 #import "MCGeoPackageCoordinator.h"
 #import "GPKGSDatabases.h"
 #import "MCDownloadCoordinator.h"
+#import "GPKGSTable.h"
+
 
 @protocol MCMapDelegate <NSObject>
 - (void) updateMapLayers;

@@ -10,6 +10,7 @@
 
 @interface MCGeoPackageList()
 @property (strong, nonatomic) NSMutableArray *childCoordinators;
+@property (nonatomic, strong) GPKGSDatabases *active;
 @end
 
 
@@ -19,6 +20,7 @@
     self = [super initAsFullView:fullView];
     _geoPackages = geoPackages;
     _geopackageListViewDelegate = delegate;
+    _active = [GPKGSDatabases getInstance];
     
     return self;
 }
@@ -102,14 +104,13 @@
         cell = [[MCGeoPackageCell alloc] init];
     }
     
-    GPKGSDatabase *gpkg = [_geoPackages objectAtIndex:indexPath.row];
+    GPKGSDatabase *database = [_geoPackages objectAtIndex:indexPath.row];
     
-    cell.geoPackageNameLabel.text = gpkg.name;
-    cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layers", (long)[gpkg getFeatures].count];
-    cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layers", (long)[gpkg getTileCount]];
+    cell.geoPackageNameLabel.text = database.name;
+    cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layers", (long)[database getFeatures].count];
+    cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layers", (long)[database getTileCount]];
     
-    NSLog(@"active layers %d", [gpkg getActiveTableCount]);
-    if ([gpkg getActiveTableCount] > 0) {
+    if ([_active isActive:database]) {
         [cell activeLayersIndicatorOn];
     } else {
         [cell activeLayersIndicatorOff];

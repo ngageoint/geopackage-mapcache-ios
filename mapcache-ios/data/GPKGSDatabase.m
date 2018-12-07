@@ -109,7 +109,7 @@
 }
 
 -(NSInteger) getActiveTableCount{ 
-    return [self activeFeatureTableCount] + [self activeTileTableCount] + [self getActiveFeatureOverlayCount];
+    return [self getFeatureCount] + [self getTileCount] + [self getActiveFeatureOverlayCount];
 }
 
 -(void) addFeature: (GPKGSTable *) table{

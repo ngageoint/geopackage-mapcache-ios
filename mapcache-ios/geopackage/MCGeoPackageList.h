@@ -11,6 +11,7 @@
 #import "NGADrawerViewController.h"
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGSDatabase.h"
+#import "GPKGSDatabases.h"
 
 
 @protocol MCGeoPacakageListViewDelegate <NSObject>
