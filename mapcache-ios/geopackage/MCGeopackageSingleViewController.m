@@ -52,6 +52,17 @@
 }
 
 
+- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
+    CGPoint point = [recognizer locationInView:self.view];
+    
+    if (CGRectContainsPoint(self.tableView.frame, point)) {
+        return true;
+    }
+    
+    return false;
+}
+
+
 - (void) initCellArray {
     if ([_cellArray count] > 0) {
         [_cellArray removeAllObjects];

@@ -38,7 +38,7 @@
 
 
 - (IBAction)selectionChanged:(id)sender {
-    
+    [self.delegate selectionChanged:[self.segmentedControl titleForSegmentAtIndex:self.segmentedControl.selectedSegmentIndex]];
 }
 
 
