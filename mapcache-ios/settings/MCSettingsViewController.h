@@ -7,11 +7,17 @@
 //
 
 #import "NGADrawerViewController.h"
+#import "MCTitleCell.h"
+#import "MCSectionTitleCell.h"
+#import "MCSegmentedControlCell.h"
+#import "MCButtonCell.h"
+#import <MapKit/MapKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface MCSettingsViewController : NGADrawerViewController
-
+@protocol MCSettingsViewDelegate <NSObject>
+- (void)setMapType:(NSString *) mapType;
 @end
 
-NS_ASSUME_NONNULL_END
+
+@interface MCSettingsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, MCSegmentedControlCellDelegate>
+@property (nonatomic, strong) id<MCSettingsViewDelegate> settingsDelegate;
+@end

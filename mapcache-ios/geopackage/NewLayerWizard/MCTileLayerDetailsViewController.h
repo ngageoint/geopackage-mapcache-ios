@@ -20,6 +20,6 @@
 - (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode;
 @end
 
-@interface MCTileLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GPKGSSegmentedControlCellDelegate, GPKGSButtonCellDelegate>
+@interface MCTileLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCSegmentedControlCellDelegate, GPKGSButtonCellDelegate>
 @property (weak, nonatomic) id<MCTileLayerDetailsDelegate> delegate;
 @end

@@ -8,12 +8,14 @@
 
 #import "MCSettingsCoordinator.h"
 
-@implementation MCSettingsCoordinator
+@implementation MCSettingsCoordinator 
 
 - (void)start {
     MCSettingsViewController *settingsViewController = [[MCSettingsViewController alloc] initAsFullView:YES];
+    settingsViewController.settingsDelegate = _settingsDelegate;
     settingsViewController.drawerViewDelegate = _drawerViewDelegate;
     [settingsViewController.drawerViewDelegate pushDrawer:settingsViewController];
 }
+
 
 @end

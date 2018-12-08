@@ -31,7 +31,7 @@
 @end
 
 
-@interface MCMapViewController : UIViewController <MKMapViewDelegate, MCTileHelperDelegate, MCFeatureHelperDelegate>
+@interface MCMapViewController : UIViewController <MKMapViewDelegate, MCTileHelperDelegate, MCFeatureHelperDelegate, MCSettingsViewDelegate>
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet UIButton *infoButton;
 @property (nonatomic, weak) IBOutlet UIButton *locationButton;

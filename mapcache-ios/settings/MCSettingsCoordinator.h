@@ -10,8 +10,8 @@
 #import "MCSettingsViewController.h"
 
 
-@interface MCSettingsCoordinator : NSObject
+@interface MCSettingsCoordinator : NSObject 
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
-
+@property (nonatomic, strong) id<MCSettingsViewDelegate> settingsDelegate;
 - (void)start;
 @end

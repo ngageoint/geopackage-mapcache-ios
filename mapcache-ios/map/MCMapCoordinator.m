@@ -57,6 +57,7 @@
     MCSettingsCoordinator *settingsCoordinator = [[MCSettingsCoordinator alloc] init];
     [self.childCoordinators addObject:settingsCoordinator];
     settingsCoordinator.drawerViewDelegate = _drawerViewDelegate;
+    settingsCoordinator.settingsDelegate = _mcMapViewController;
     [settingsCoordinator start];
 }
 

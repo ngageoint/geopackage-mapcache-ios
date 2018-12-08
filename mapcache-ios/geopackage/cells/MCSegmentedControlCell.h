@@ -9,12 +9,13 @@
 #import <UIKit/UIKit.h>
 
 
-@protocol GPKGSSegmentedControlCellDelegate <NSObject>
+@protocol MCSegmentedControlCellDelegate <NSObject>
+- (void)selectionChanged:(NSString *)selection;
 @end
 
 
 @interface MCSegmentedControlCell : UITableViewCell
-@property (weak, nonatomic) id<GPKGSSegmentedControlCellDelegate> delegate;
+@property (weak, nonatomic) id<MCSegmentedControlCellDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (strong, nonatomic) NSArray *items;

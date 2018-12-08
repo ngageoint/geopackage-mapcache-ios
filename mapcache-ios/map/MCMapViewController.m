@@ -126,6 +126,20 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
+#pragma mark - MCSettingsDelegate
+- (void)setMapType:(NSString *)mapType {
+    NSLog(@"In MCMapViewController handing setting map change");
+    
+    // TODO this is a bit brittle, enum it up
+    if ([mapType isEqualToString:@"Standard"]) {
+        [self.mapView setMapType:MKMapTypeStandard];
+    } else if ([mapType isEqualToString:@"Satellite"]) {
+        [self.mapView setMapType:MKMapTypeSatellite];
+    } else {
+        [self.mapView setMapType:MKMapTypeHybrid];
+    }
+}
+
 #pragma mark - MCTileHelperDelegate methods
 - (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay {
     dispatch_sync(dispatch_get_main_queue(), ^{
