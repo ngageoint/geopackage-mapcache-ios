@@ -12,11 +12,13 @@
 #import "MCSegmentedControlCell.h"
 #import "MCButtonCell.h"
 #import "MCZoomCell.h"
+#import "NGADrawerViewController.h"
+
 
 @protocol MCZoomAndQualityDelegate
 - (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom;
 @end
 
-@interface MCZoomAndQualityViewController : UITableViewController <GPKGSButtonCellDelegate>
-@property (weak, nonatomic) id<MCZoomAndQualityDelegate> delegate;
+@interface MCZoomAndQualityViewController : NGADrawerViewController <GPKGSButtonCellDelegate>
+@property (weak, nonatomic) id<MCZoomAndQualityDelegate> zoomAndQualityDelegate;
 @end

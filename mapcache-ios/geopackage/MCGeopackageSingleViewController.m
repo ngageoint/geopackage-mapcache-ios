@@ -96,13 +96,12 @@
     layersTitleCell.sectionTitleLabel.text = @"Layers";
 
     // TODO: Convert new layer wizard to work with drawer system for a future release
-//    MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
-//    [newLayerButtonCell.button setTitle:@"New Layer" forState:UIControlStateNormal];
-//    newLayerButtonCell.action = GPKGS_ACTION_NEW_LAYER;
-//    newLayerButtonCell.delegate = self;
-//    [_cellArray addObject:newLayerButtonCell];
+    MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
+    [newLayerButtonCell.button setTitle:@"New Layer" forState:UIControlStateNormal];
+    newLayerButtonCell.action = GPKGS_ACTION_NEW_LAYER;
+    newLayerButtonCell.delegate = self;
     
-    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, layersTitleCell, nil];
+    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, layersTitleCell, newLayerButtonCell, nil];
     NSArray *tables = [_database getTables];
     
     for (GPKGSTable *table in tables) {
@@ -223,6 +222,7 @@
 
 - (void) closeDrawer {
     [super closeDrawer];
+    [self.delegate callCompletionHandler];
     [self.drawerViewDelegate popDrawer];
 }
 

@@ -11,6 +11,7 @@
 
 @interface MCGeoPackageListCoordinator()
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
+@property (nonatomic, strong) MCGeoPackageCoordinator *geoPackageCoordinator;
 @property (nonatomic, strong) MCGeoPackageList *geoPackageListView;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) GPKGSDatabases *active;
@@ -106,9 +107,9 @@
 
 #pragma mark - MCGeoPackageListViewDelegate method
 -(void) didSelectGeoPackage:(GPKGSDatabase *)database {
-    MCGeoPackageCoordinator *geoPackageCoordinator = [[MCGeoPackageCoordinator alloc] initWithDelegate:self andDrawerDelegate:_drawerViewDelegate andDatabase:database];
-    [_childCoordinators addObject:geoPackageCoordinator];
-    [geoPackageCoordinator start];
+    _geoPackageCoordinator = [[MCGeoPackageCoordinator alloc] initWithDelegate:self andDrawerDelegate:_drawerViewDelegate andDatabase:database];
+    [_childCoordinators addObject:_geoPackageCoordinator];
+    [_geoPackageCoordinator start];
     // TODO: make a call here to move the map to where the data is, and maybe switch on the layers
     [self.mcMapDelegate zoomToSelectedGeoPackage:database.name];
 }
@@ -117,6 +118,14 @@
 - (void) downloadGeopackage {
     MCDownloadCoordinator *downloadCoordinator = [[MCDownloadCoordinator alloc] initWithDownlaodDelegate:self andDrawerDelegate:_drawerViewDelegate];
     [downloadCoordinator start];
+}
+
+
+- (void) createGeoPackage:(NSString *) geoPackageName {
+    NSLog(@"Creating GeoPackage %@", geoPackageName);
+    [_manager create:geoPackageName];
+    [self update];
+    [_geoPackageListView refreshWithGeoPackages:_databases];
 }
 
 
@@ -145,6 +154,7 @@
     [_databases removeObjectIdenticalTo:database];
     
     [_geoPackageListView refreshWithGeoPackages:_databases];
+    [self.mcMapDelegate updateMapLayers];
 }
 
 

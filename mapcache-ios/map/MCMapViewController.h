@@ -24,6 +24,7 @@
 #import "SFGeometryEnvelopeBuilder.h"
 #import "MCTileHelper.h"
 #import "MCFeatureHelper.h"
+#import "GPKGBoundingBox.h"
 
 
 @protocol MCMapActionDelegate <NSObject>

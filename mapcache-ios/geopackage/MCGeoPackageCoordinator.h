@@ -19,6 +19,7 @@
 #import "MCFeatureLayerDetailsViewController.h"
 #import "MCTileLayerDetailsViewController.h"
 #import "MCBoundingBoxViewController.h"
+#import "MCBoundingBoxDetailsViewController.h"
 #import "MCZoomAndQualityViewController.h"
 #import "MCManualBoundingBoxViewController.h"
 #import "MCLayerViewController.h"
@@ -31,7 +32,7 @@
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete;
 @end
 
-@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate, MCZoomAndQualityDelegate, MCCreateLayerDelegate, GPKGSLoadTilesProtocol, MCManualBoundingBoxDelegate>
+@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate, MCZoomAndQualityDelegate, MCCreateLayerDelegate, GPKGSLoadTilesProtocol, MCManualBoundingBoxDelegate, MCBoundingBoxDetailsViewDelegate>
 - (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andDatabase:(GPKGSDatabase *) database;
 - (void) start;
 @end

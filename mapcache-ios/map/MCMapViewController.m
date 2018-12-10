@@ -43,6 +43,15 @@
 @property (nonatomic) double drawPolygonLineWidth;
 @property (nonatomic, strong) UIColor * drawPolygonFillColor;
 @property (nonatomic, strong) NSNumberFormatter *locationDecimalFormatter;
+@property (nonatomic) BOOL boundingBoxMode;
+@property (nonatomic) BOOL drawing;
+@property (nonatomic, strong) MKPolygon * boundingBox;
+@property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
+@property (nonatomic) CLLocationCoordinate2D boundingBoxEndCorner;
+@property (nonatomic) double minLat;
+@property (nonatomic) double maxLat;
+@property (nonatomic) double minLon;
+@property (nonatomic) double maxLon;
 @end
 
 
@@ -75,6 +84,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.locationDecimalFormatter.maximumFractionDigits = 4;
     
     [self.view setNeedsLayout];
+    
+    self.boundingBoxMode = NO;
+    [_mapView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget: self action:@selector(longPressGesture:)]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableBoundingBoxMode) name:@"drawBoundingBox" object:nil];
 }
 
 
@@ -499,5 +512,180 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         self.drawPolygonFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
     }
 }
+
+
+#pragma mark - Bounding Box methods for creating new tile layers
+- (void) enableBoundingBoxMode {
+    NSLog(@"MCMapController - going into bounding box mode");
+    
+    self.boundingBoxMode = YES;
+    
+}
+
+
+-(void) longPressGesture:(UILongPressGestureRecognizer *) longPressGestureRecognizer {
+    NSLog(@"Getting a long press gesture.");
+    
+    CGPoint cgPoint = [longPressGestureRecognizer locationInView:self.mapView];
+    CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
+    
+    if(self.boundingBoxMode){
+        NSLog(@"Bounding Box mode");
+        if(longPressGestureRecognizer.state == UIGestureRecognizerStateBegan){
+            //[_editBoundingBoxButton setTitle:@"Edit Bounding Box" forState:UIControlStateNormal];
+            
+            // Check to see if editing any of the bounding box corners
+            if (self.boundingBox != nil && CLLocationCoordinate2DIsValid(self.boundingBoxEndCorner)) {
+                
+                double allowableScreenPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_LONG_CLICK_SCREEN_PERCENTAGE] intValue] / 100.0;
+                if([self isWithinDistanceWithPoint:cgPoint andLocation:self.boundingBoxEndCorner andAllowableScreenPercentage:allowableScreenPercentage]){
+                    [self setDrawing:true];
+                }else if([self isWithinDistanceWithPoint:cgPoint andLocation:self.boundingBoxStartCorner andAllowableScreenPercentage:allowableScreenPercentage]){
+                    CLLocationCoordinate2D temp = self.boundingBoxStartCorner;
+                    self.boundingBoxStartCorner = self.boundingBoxEndCorner;
+                    self.boundingBoxEndCorner = temp;
+                    [self setDrawing:true];
+                }else{
+                    CLLocationCoordinate2D corner1 = CLLocationCoordinate2DMake(self.boundingBoxStartCorner.latitude, self.boundingBoxEndCorner.longitude);
+                    CLLocationCoordinate2D corner2 = CLLocationCoordinate2DMake(self.boundingBoxEndCorner.latitude, self.boundingBoxStartCorner.longitude);
+                    if([self isWithinDistanceWithPoint:cgPoint andLocation:corner1 andAllowableScreenPercentage:allowableScreenPercentage]){
+                        self.boundingBoxStartCorner = corner2;
+                        self.boundingBoxEndCorner = corner1;
+                        [self setDrawing:true];
+                    }else if([self isWithinDistanceWithPoint:cgPoint andLocation:corner2 andAllowableScreenPercentage:allowableScreenPercentage]){
+                        self.boundingBoxStartCorner = corner1;
+                        self.boundingBoxEndCorner = corner2;
+                        [self setDrawing:true];
+                    }
+                }
+            }
+            
+            // Start drawing a new polygon
+            if(!self.drawing){
+                if(self.boundingBox != nil){
+                    [self.mapView removeOverlay:self.boundingBox];
+                }
+                self.boundingBoxStartCorner = point;
+                self.boundingBoxEndCorner = point;
+                CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
+                self.boundingBox = [MKPolygon polygonWithCoordinates:points count:4];
+                
+                [self.mapView addOverlay:self.boundingBox];
+                [self setDrawing:true];
+            }
+            
+        }else{
+            switch(longPressGestureRecognizer.state){
+                case UIGestureRecognizerStateChanged:
+                case UIGestureRecognizerStateEnded:
+                    if(self.boundingBoxMode){
+                        if(self.drawing && self.boundingBox != nil){
+                            self.boundingBoxEndCorner = point;
+                            CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
+                            MKPolygon * newBoundingBox = [MKPolygon polygonWithCoordinates:points count:4];
+                            [self.mapView removeOverlay:self.boundingBox];
+                            [self.mapView addOverlay:newBoundingBox];
+                            self.boundingBox = newBoundingBox;
+                            //_nextButton.enabled = YES;
+                            self.navigationItem.prompt = @"You can drag the corners of the bounding box to adjust it.";
+                            
+                            if (_boundingBoxStartCorner.latitude > _boundingBoxEndCorner.latitude) {
+                                _minLat = _boundingBoxEndCorner.latitude;
+                                _maxLat = _boundingBoxStartCorner.latitude;
+                                
+                                //_upperRightLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxStartCorner.latitude];
+                                //_lowerLeftLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxEndCorner.latitude];
+                            } else {
+                                _minLat = _boundingBoxStartCorner.latitude;
+                                _maxLat = _boundingBoxEndCorner.latitude;
+                                
+                                //_upperRightLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxEndCorner.latitude];
+                                //_lowerLeftLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxStartCorner.latitude];
+                            }
+                            
+                            if (_boundingBoxStartCorner.longitude < _boundingBoxEndCorner.longitude) {
+                                _minLon = _boundingBoxStartCorner.longitude;
+                                _maxLon = _boundingBoxEndCorner.longitude;
+                                
+                                //_lowerLeftLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxStartCorner.longitude];
+                                //_upperRightLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxEndCorner.longitude];
+                            } else {
+                                _minLon = _boundingBoxEndCorner.longitude;
+                                _maxLon = _boundingBoxStartCorner.longitude;
+                                
+                                //_lowerLeftLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxEndCorner.longitude];
+                                //_upperRightLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxStartCorner.longitude];
+                            }
+                            
+                            
+//                            [self animateShowHide:_lowerLeftLabel :NO];
+//                            [self animateShowHide:_upperRightLabel :NO];
+//                            [self animateShowHide:_lowerLeftLatitudeLabel :NO];
+//                            [self animateShowHide:_lowerLeftLongitudeLabel :NO];
+//                            [self animateShowHide:_upperRightLatitudeLabel :NO];
+//                            [self animateShowHide:_upperRightLongitudeLabel :NO];
+                        }
+                        if(longPressGestureRecognizer.state == UIGestureRecognizerStateEnded){
+                            [self setDrawing:false];
+                            
+                            GPKGBoundingBox *boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitude:[[NSDecimalNumber alloc] initWithDouble:_minLon]
+                                                                                          andMinLatitude:[[NSDecimalNumber alloc] initWithDouble:_minLat]
+                                                                                         andMaxLongitude:[[NSDecimalNumber alloc] initWithDouble:_maxLon]
+                                                                                          andMaxLatitude:[[NSDecimalNumber alloc] initWithDouble:_maxLat]];
+                            
+                            NSDictionary *boundingBoxResults = @{@"boundingBox": boundingBox};
+                            
+                            // MCBoundingBoxDetailsViewController is on the recieving end
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"boundingBoxResults" object:self userInfo:boundingBoxResults];
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    /*else if(self.editFeatureType != GPKGS_ET_NONE){
+        
+        if(longPressGestureRecognizer.state == UIGestureRecognizerStateBegan){
+            if(self.editFeatureType == GPKGS_ET_EDIT_FEATURE){
+                if(self.editFeatureShapePoints != nil){
+                    GPKGMapPoint * mapPoint = [self addEditPoint:point];
+                    [self.editFeatureShapePoints addNewPoint:mapPoint];
+                    [self.editFeatureShape addPoint:mapPoint withShape:self.editFeatureShapePoints];
+                    GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
+                    data.type = GPKGS_MPDT_EDIT_FEATURE_POINT;
+                    [self setTitleWithGeometryType:self.editFeatureShape.shape.geometryType andMapPoint:mapPoint];
+                    [self updateEditState:true]; // TODO figure out if I need all of this method
+                }
+            }else{
+                GPKGMapPoint * mapPoint = [self addEditPoint:point];
+                [self setTitleWithTitle:[GPKGSEditTypes pointName:self.editFeatureType] andMapPoint:mapPoint];
+                [self updateEditState:true]; // TODO figure out if I need all of this method
+            }
+        }
+    }*/
+}
+
+
+-(BOOL) isWithinDistanceWithPoint: (CGPoint) point andLocation: (CLLocationCoordinate2D) location andAllowableScreenPercentage: (double) allowableScreenPercentage{
+    
+    CGPoint locationPoint = [self.mapView convertCoordinate:location toPointToView:self.mapView];
+    double distance = sqrt(pow(point.x - locationPoint.x, 2) + pow(point.y - locationPoint.y, 2));
+    
+    BOOL withinDistance = distance / MIN(self.mapView.frame.size.width, self.mapView.frame.size.height) <= allowableScreenPercentage;
+    return withinDistance;
+}
+
+
+-(CLLocationCoordinate2D *) getPolygonPointsWithPoint1: (CLLocationCoordinate2D) point1 andPoint2: (CLLocationCoordinate2D) point2{
+    CLLocationCoordinate2D *coordinates = calloc(4, sizeof(CLLocationCoordinate2D));
+    coordinates[0] = CLLocationCoordinate2DMake(point1.latitude, point1.longitude);
+    coordinates[1] = CLLocationCoordinate2DMake(point1.latitude, point2.longitude);
+    coordinates[2] = CLLocationCoordinate2DMake(point2.latitude, point2.longitude);
+    coordinates[3] = CLLocationCoordinate2DMake(point2.latitude, point1.longitude);
+    return coordinates;
+}
+
 
 @end
