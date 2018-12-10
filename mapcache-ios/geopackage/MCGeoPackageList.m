@@ -75,6 +75,31 @@
 }
 
 
+- (IBAction)createGeoPackage:(id)sender {
+    UIAlertController *newGeoPackageAlert = [UIAlertController alertControllerWithTitle:@"New GeoPackage" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    [newGeoPackageAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.text = @"new-geopackage";
+    }];
+    
+    UIAlertAction *confirmCreate = [UIAlertAction actionWithTitle:@"Create" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"Name: %@", newGeoPackageAlert.textFields[0].text);
+        
+        NSString * newName = newGeoPackageAlert.textFields[0].text;
+        [_geopackageListViewDelegate createGeoPackage:newName];
+    }];
+    
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [newGeoPackageAlert dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
+    [newGeoPackageAlert addAction:confirmCreate];
+    [newGeoPackageAlert addAction:cancel];
+    
+    [self presentViewController:newGeoPackageAlert animated:YES completion:nil];
+}
+
+
+
 - (IBAction)downloadGeopackage:(id)sender {
     [_geopackageListViewDelegate downloadGeopackage];
 }

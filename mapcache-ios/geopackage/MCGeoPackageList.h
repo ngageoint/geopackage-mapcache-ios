@@ -19,6 +19,7 @@
 - (void) downloadGeopackage;
 - (void) toggleActive:(GPKGSDatabase *) database;
 - (void) deleteGeoPackage:(GPKGSDatabase *) database;
+- (void) createGeoPackage:(NSString *) geoPackageName;
 @end
 
 @interface MCGeoPackageList: NGADrawerViewController <UITableViewDelegate, UITableViewDataSource>

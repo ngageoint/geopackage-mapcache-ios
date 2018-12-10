@@ -53,6 +53,11 @@
 
 
 - (void) pushDrawer:(NGADrawerViewController *) childViewController {
+    if ([_drawerStack count] > 0) {
+        NGADrawerViewController *drawer = [_drawerStack lastObject];
+        [drawer.view setHidden:YES];
+    }
+    
     [_drawerStack addObject:childViewController];
     
     [self.backgroundViewController addChildViewController:childViewController];

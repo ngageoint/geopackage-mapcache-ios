@@ -15,11 +15,14 @@
 #import "MCSegmentedControlCell.h"
 #import "MCButtonCell.h"
 #import "MCColorUtil.h"
+#import "MCTitleCell.h"
+#import "NGADrawerViewController.h"
+
 
 @protocol MCTileLayerDetailsDelegate
 - (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode;
 @end
 
-@interface MCTileLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCSegmentedControlCellDelegate, GPKGSButtonCellDelegate>
+@interface MCTileLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCSegmentedControlCellDelegate, GPKGSButtonCellDelegate>
 @property (weak, nonatomic) id<MCTileLayerDetailsDelegate> delegate;
 @end

@@ -10,21 +10,22 @@
 
 
 @interface MCGeoPackageCoordinator()
-@property (strong, nonatomic) MCGeopackageSingleViewController *geoPackageViewController;
-@property (strong, nonatomic) id<MCGeoPackageCoordinatorDelegate> geoPackageCoordinatorDelegate;
-@property (strong, nonatomic) id<NGADrawerViewDelegate> drawerDelegate;
-@property (strong, nonatomic) GPKGGeoPackageManager *manager;
+@property (nonatomic, strong) MCGeopackageSingleViewController *geoPackageViewController;
+@property (nonatomic, strong) id<MCGeoPackageCoordinatorDelegate> geoPackageCoordinatorDelegate;
+@property (nonatomic, strong) id<NGADrawerViewDelegate> drawerDelegate;
+@property (nonatomic, strong) GPKGGeoPackageManager *manager;
 // @property (strong, nonatomic) UINavigationController *navigationController; // TODO replace all of the navigation controller references with drawer
-@property (strong, nonatomic) id<NGADrawerViewDelegate> drawerViewDelegate;
-@property (strong, nonatomic) MCFeatureLayerDetailsViewController *featureDetailsController;
-@property (strong, nonatomic) MCTileLayerDetailsViewController *tileDetailsController;
-@property (strong, nonatomic) MCBoundingBoxViewController *boundingBoxViewController;
-@property (strong, nonatomic) MCZoomAndQualityViewController *zoomAndQualityViewController;
-@property (strong, nonatomic) MCManualBoundingBoxViewController *manualBoundingBoxViewController;
-@property (strong, nonatomic) UIBarButtonItem *backButton;
-@property (strong, nonatomic) GPKGSDatabase *database;
+@property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
+@property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureDetailsController;
+@property (nonatomic, strong) MCTileLayerDetailsViewController *tileDetailsController;
+@property (nonatomic, strong) MCBoundingBoxViewController *boundingBoxViewController;
+@property (nonatomic, strong) MCBoundingBoxDetailsViewController *boundingBoxDetailsViewController;
+@property (nonatomic, strong) MCZoomAndQualityViewController *zoomAndQualityViewController;
+@property (nonatomic, strong) MCManualBoundingBoxViewController *manualBoundingBoxViewController;
+@property (nonatomic, strong) UIBarButtonItem *backButton;
+@property (nonatomic, strong) GPKGSDatabase *database;
 @property (nonatomic, strong) GPKGSCreateTilesData * tileData;
-@property (strong, nonatomic) NSMutableArray *childCoordinators;
+@property (nonatomic, strong) NSMutableArray *childCoordinators;
 @end
 
 
@@ -59,9 +60,17 @@
 - (void) newLayer {
     NSLog(@"Coordinator handling new layer");
      
-    MCCreateLayerViewController *createLayerViewControler = [[MCCreateLayerViewController alloc] initWithNibName:@"MCCreateLayerView" bundle:nil];
-    createLayerViewControler.delegate = self;
-    //[_navigationController pushViewController:createLayerViewControler animated:YES]; // TODO replace with drawer
+//    MCCreateLayerViewController *createLayerViewControler = [[MCCreateLayerViewController alloc] initWithNibName:@"MCCreateLayerView" bundle:nil];
+//    createLayerViewControler.delegate = self;
+//    createLayerViewControler.drawerViewDelegate = _drawerDelegate;
+//    [createLayerViewControler.drawerViewDelegate pushDrawer:createLayerViewControler];
+    
+    NSLog(@"Adding new tile layer");
+    _tileData = [[GPKGSCreateTilesData alloc] init];
+    _tileDetailsController = [[MCTileLayerDetailsViewController alloc] initAsFullView:YES];
+    _tileDetailsController.delegate = self;
+    _tileDetailsController.drawerViewDelegate = _drawerDelegate;
+    [_tileDetailsController.drawerViewDelegate pushDrawer:_tileDetailsController];
 }
 
 
@@ -123,6 +132,7 @@
 }
 
 
+// Temporarily moving this to new layer since initially they can only make tile layers.
 - (void) newTileLayer {
     NSLog(@"Adding new tile layer");
     _tileData = [[GPKGSCreateTilesData alloc] init];
@@ -160,9 +170,15 @@
     _tileData.loadTiles.url = url;
     _tileData.loadTiles.epsg = referenceCode;
     
-    _boundingBoxViewController = [[MCBoundingBoxViewController alloc] init];
-    _boundingBoxViewController.delegate = self;
+    //_boundingBoxViewController = [[MCBoundingBoxViewController alloc] init];
+    //_boundingBoxViewController.delegate = self;
     //[_navigationController pushViewController:_boundingBoxViewController animated:YES];
+    
+    _boundingBoxDetailsViewController = [[MCBoundingBoxDetailsViewController alloc] init];
+    _boundingBoxDetailsViewController.drawerViewDelegate = _drawerDelegate;
+    [_drawerDelegate popDrawer];
+    _boundingBoxDetailsViewController.boundingBoxDetailsDelegate = self;
+    [_boundingBoxDetailsViewController.drawerViewDelegate pushDrawer:_boundingBoxDetailsViewController];
 }
 
 
@@ -171,8 +187,20 @@
     _tileData.loadTiles.generateTiles.boundingBox = boundingBox;
     
     _zoomAndQualityViewController = [[MCZoomAndQualityViewController alloc] init];
-    _zoomAndQualityViewController.delegate = self;
+    _zoomAndQualityViewController.zoomAndQualityDelegate = self;
     //[_navigationController pushViewController:_zoomAndQualityViewController animated:YES]; // TODO replace with drawer
+}
+
+#pragma mark MCBoundingBoxDetailsDelegate methods
+// TODO clean up these delegates, some duplicates in switching to the drawers from the navigation controller.
+- (void) boundingBoxDetailsCompletionHandler:(GPKGBoundingBox *) boundingBox {
+    _tileData.loadTiles.generateTiles.boundingBox = boundingBox;
+    
+    _zoomAndQualityViewController = [[MCZoomAndQualityViewController alloc] initAsFullView:YES];
+    _zoomAndQualityViewController.zoomAndQualityDelegate = self;
+    _zoomAndQualityViewController.drawerViewDelegate = _drawerDelegate;
+    [_drawerDelegate popDrawer];
+    [_zoomAndQualityViewController.drawerViewDelegate pushDrawer:_zoomAndQualityViewController];
 }
 
 
@@ -243,6 +271,7 @@
     //TODO: fill in
     NSLog(@"Loading tiles completed");
     //[_navigationController popToViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
+    [_drawerDelegate popDrawer];
     [_geoPackageViewController update];
 }
 

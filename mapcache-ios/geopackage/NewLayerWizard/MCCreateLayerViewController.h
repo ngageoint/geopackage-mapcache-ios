@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "GPKGSDatabase.h"
+#import "NGADrawerViewController.h"
 
 
 @protocol MCCreateLayerDelegate <NSObject>
@@ -17,6 +18,6 @@
 @end
 
 
-@interface MCCreateLayerViewController : UIViewController
+@interface MCCreateLayerViewController : NGADrawerViewController
 @property (weak, nonatomic) id<MCCreateLayerDelegate> delegate;
 @end
