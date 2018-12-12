@@ -107,14 +107,17 @@
     return YES;
 }
 
-//
-//- (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer {
-//    if (otherGestureRecognizer != _panGestureRecognizer) {
-//        return true; //UIScrollViewPanGestureRecognizer _UISwipeActionPanGestureRecognizer
-//    }
-//
-//    return true;
-//}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    
+    if ([otherGestureRecognizer.view isKindOfClass:UITableView.class]) {
+        return true;
+    }
+    
+    NSLog(@"Checking those recognizers");
+    
+    return false;
+}
 
 
 - (void) makeFullView {
@@ -147,7 +150,9 @@
     // Taking the width of the drag handle into account when adding it.
     UIImageView *dragHandle = [[UIImageView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 36)/2, 8, 36, 4)];
     dragHandle.image = [UIImage imageNamed:@"dragHandle"];
-    [self.view addSubview:dragHandle];
+    UIView *handleHolder = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 16)];
+    [handleHolder addSubview:dragHandle];
+    [self.view addSubview:handleHolder];
 }
 
 

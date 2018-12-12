@@ -41,6 +41,7 @@
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
+    
     [self.view addSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
@@ -49,17 +50,6 @@
 
 - (void) didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-}
-
-
-- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
-    CGPoint point = [recognizer locationInView:self.view];
-    
-    if (CGRectContainsPoint(self.tableView.frame, point)) {
-        return true;
-    }
-    
-    return false;
 }
 
 

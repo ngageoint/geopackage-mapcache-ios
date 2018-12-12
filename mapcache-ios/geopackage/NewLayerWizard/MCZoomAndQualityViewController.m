@@ -89,6 +89,12 @@
 }
 
 
+- (void) closeDrawer {
+    [super closeDrawer];
+    [self.drawerViewDelegate popDrawer];
+}
+
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

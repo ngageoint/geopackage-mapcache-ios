@@ -58,17 +58,6 @@
 }
 
 
-- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
-    CGPoint point = [recognizer locationInView:self.view];
-    
-    if (CGRectContainsPoint(self.tableView.frame, point)) {
-        return true;
-    }
-    
-    return false;
-}
-
-
 - (void) initCellArray {
     _cellArray = [[NSMutableArray alloc] init];
     
