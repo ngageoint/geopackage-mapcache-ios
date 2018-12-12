@@ -10,6 +10,7 @@
 #import "MCTitleCell.h"
 #import "MCSectionTitleCell.h"
 #import "MCSegmentedControlCell.h"
+#import "MCDesctiptionCell.h"
 #import "MCButtonCell.h"
 #import <MapKit/MapKit.h>
 

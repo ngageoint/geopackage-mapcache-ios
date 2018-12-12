@@ -64,6 +64,14 @@
     NSArray *maps = [[NSArray alloc] initWithObjects:@"Standard", @"Satellite", @"Hybrid", nil];
     [_baseMapSelector setItems:maps];
     [_cellArray addObject:_baseMapSelector];
+
+    MCTitleCell *disclaimerTitle = [_tableView dequeueReusableCellWithIdentifier:@"title"];
+    disclaimerTitle.label.text = @"Disclaimer";
+    [_cellArray addObject:disclaimerTitle];
+    
+    MCDesctiptionCell *disclaimer = [_tableView dequeueReusableCellWithIdentifier:@"description"];
+    disclaimer.descriptionLabel.text = @"With respect to information available in this Application, neither the United States Government nor the National Geospatial-Intelligence Agency nor any of their employees, makes any warranty, express or implied, including the warranties of merchantability and fitness for a particular purpose, or assumes any legal liability or responsibility for the accuracy, completeness, or usefulness of any information, apparatus, product, or process disclosed, or represents that its use would not infringe privately owned rights.";
+    [_cellArray addObject: disclaimer];
     
 }
 
@@ -72,6 +80,7 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"sectionTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCSegmentedControlCell" bundle:nil] forCellReuseIdentifier:@"segmentedControl"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"buttonCell"];
 }
 
