@@ -171,7 +171,15 @@
     
     // TODO: add check for state of the geopackage data, if it is on or off set this button accordingly
     
-    toggleGeoPackageAction.backgroundColor = [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0];
+    MCGeoPackageCell *geoPackageCell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if ([geoPackageCell.visibilityStatusIndicator isHidden]) {
+        toggleGeoPackageAction.backgroundColor = [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0];
+        toggleGeoPackageAction.title = @"Add to map";
+    } else {
+        toggleGeoPackageAction.backgroundColor = [UIColor grayColor];
+        toggleGeoPackageAction.title = @"Remove from map";
+    }
+    
     UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[toggleGeoPackageAction]];
     configuration.performsFirstActionWithFullSwipe = YES;
     return configuration;
@@ -188,7 +196,6 @@
     UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[delete]];
     configuration.performsFirstActionWithFullSwipe = YES;
     return configuration;
-    
 }
 
 

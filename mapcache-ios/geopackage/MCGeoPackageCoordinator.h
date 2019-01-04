@@ -11,6 +11,7 @@
 #import "GPKGSLoadTilesTask.h"
 #import "MCGeopackageSingleViewController.h"
 #import "GPKGSDatabase.h"
+#import "GPKGSDatabases.h"
 #import "GPKGSCreateTilesData.h"
 #import "GPKGSLoadTilesData.h"
 #import "GPKGSGenerateTilesData.h"
@@ -26,13 +27,14 @@
 #import "GPKGSDisplayTextViewController.h"
 #import "MCFeatureLayerOperationsCell.h"
 #import "MCLayerCoordinator.h"
+#import "MCMapCoordinator.h"
 
-
+@protocol MCMapDelegate;
 @protocol MCGeoPackageCoordinatorDelegate <NSObject>
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete;
 @end
 
 @interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCTileLayerBoundingBoxDelegate, MCZoomAndQualityDelegate, MCCreateLayerDelegate, GPKGSLoadTilesProtocol, MCManualBoundingBoxDelegate, MCBoundingBoxDetailsViewDelegate>
-- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andDatabase:(GPKGSDatabase *) database;
+- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(GPKGSDatabase *) database;
 - (void) start;
 @end

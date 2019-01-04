@@ -11,6 +11,7 @@
 #import "GPKGSFeatureTable.h"
 #import "GPKGSTileTable.h"
 #import "GPKGSDatabase.h"
+#import "GPKGSDatabases.h"
 #import "MCHeaderCell.h"
 #import "MCSectionTitleCell.h"
 #import "MCLayerCell.h"
@@ -31,6 +32,7 @@
 - (void) callCompletionHandler;
 - (void) deleteLayer:(NSString *) layerName;
 - (void) showLayerDetails:(GPKGUserDao *) layerDao;
+- (void) toggleLayer:(GPKGSTable *) table;
 @end
 
 
