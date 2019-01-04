@@ -90,7 +90,7 @@ static GPKGSDatabases * instance;
     
     return response;
 }
-
+ 
 -(GPKGSDatabase *) getDatabaseWithTable:(GPKGSTable *) table{
     return [self getDatabaseWithName:table.database];
 }

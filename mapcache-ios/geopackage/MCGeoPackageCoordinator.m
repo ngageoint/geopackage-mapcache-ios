@@ -13,8 +13,8 @@
 @property (nonatomic, strong) MCGeopackageSingleViewController *geoPackageViewController;
 @property (nonatomic, strong) id<MCGeoPackageCoordinatorDelegate> geoPackageCoordinatorDelegate;
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerDelegate;
+@property (nonatomic, strong) id<MCMapDelegate> mapDelegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-// @property (strong, nonatomic) UINavigationController *navigationController; // TODO replace all of the navigation controller references with drawer
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureDetailsController;
 @property (nonatomic, strong) MCTileLayerDetailsViewController *tileDetailsController;
@@ -22,7 +22,7 @@
 @property (nonatomic, strong) MCBoundingBoxDetailsViewController *boundingBoxDetailsViewController;
 @property (nonatomic, strong) MCZoomAndQualityViewController *zoomAndQualityViewController;
 @property (nonatomic, strong) MCManualBoundingBoxViewController *manualBoundingBoxViewController;
-@property (nonatomic, strong) UIBarButtonItem *backButton;
+@property (nonatomic, strong) GPKGSDatabases *active;
 @property (nonatomic, strong) GPKGSDatabase *database;
 @property (nonatomic, strong) GPKGSCreateTilesData * tileData;
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
@@ -31,15 +31,17 @@
 
 @implementation MCGeoPackageCoordinator
 
-- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andDatabase:(GPKGSDatabase *) database {
+- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(GPKGSDatabase *) database {
     self = [super init];
     
     _childCoordinators = [[NSMutableArray alloc] init];
     _manager = [GPKGGeoPackageFactory getManager];
     _geoPackageCoordinatorDelegate = geoPackageCoordinatorDelegate;
     _drawerDelegate = drawerDelegate;
+    _mapDelegate = mapDelegate;
     _database = database;
-
+    _active = [GPKGSDatabases getInstance];
+    
     return self;
 }
 
@@ -59,7 +61,8 @@
 #pragma mark - GeoPackage View delegate methods
 - (void) newLayer {
     NSLog(@"Coordinator handling new layer");
-     
+    
+    // Future release will bring feature and tile layers, for now starting with just the tiles.
 //    MCCreateLayerViewController *createLayerViewControler = [[MCCreateLayerViewController alloc] initWithNibName:@"MCCreateLayerView" bundle:nil];
 //    createLayerViewControler.delegate = self;
 //    createLayerViewControler.drawerViewDelegate = _drawerDelegate;
@@ -108,6 +111,25 @@
     }
     @finally {
         [geoPackage close];
+    }
+}
+
+
+- (void) toggleLayer:(GPKGSTable *) table; {
+    if ([_database exists:table]) {
+        
+        if ([_active isActive:_database]) {
+            GPKGSDatabase *activeDatabase = [_active getDatabaseWithName:_database.name];
+            if ([activeDatabase existsWithTable:table.name ofType:table.getType]) {
+                [_active removeTable:table];
+            } else {
+                [_active addTable:table];
+            }
+        } else {
+            [_active addTable:table];
+        }
+        
+        [_mapDelegate updateMapLayers];
     }
 }
 

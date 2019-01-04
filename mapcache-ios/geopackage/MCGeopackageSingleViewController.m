@@ -9,10 +9,11 @@
 #import "MCGeopackageSingleViewController.h"
 
 @interface MCGeopackageSingleViewController ()
-@property (strong, nonatomic) NSMutableArray *cellArray;
-@property (strong, nonatomic) GPKGGeoPackageManager *manager;
-@property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) UIDocumentInteractionController *shareDocumentController;
+@property (nonatomic, strong) NSMutableArray *cellArray;
+@property (nonatomic, strong) GPKGGeoPackageManager *manager;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIDocumentInteractionController *shareDocumentController;
+@property (nonatomic, strong) GPKGSDatabases *active;
 @end
 
 @implementation MCGeopackageSingleViewController
@@ -20,7 +21,8 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
     self.manager = [GPKGGeoPackageFactory getManager];
-    //self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.active = [GPKGSDatabases getInstance];
+    
     CGRect bounds = self.view.bounds;
     CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
     self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
@@ -33,7 +35,6 @@
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     [self registerCellTypes];
     [self initCellArray];
-    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -56,13 +57,6 @@
 - (void) initCellArray {
     if ([_cellArray count] > 0) {
         [_cellArray removeAllObjects];
-        
-        /*NSArray *databases = [_manager databases];
-        
-        if ([databases containsObject:_database.name]) {
-            NSInteger index = [databases indexOfObject:_database.name];
-            _database = [_manager open:[databases objectAtIndex:index]];
-        }*/
     }
     
     MCHeaderCell *headerCell = [self.tableView dequeueReusableCellWithIdentifier:@"header"];
@@ -104,13 +98,20 @@
             typeImageName = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_TILES];
         }
         
+        layerCell.table = table;
         layerCell.layerNameLabel.text = table.name;
         [layerCell.layerTypeImage setImage:[UIImage imageNamed:typeImageName]];
+        
+        if ([_active exists:table]) {
+            [layerCell activeIndicatorOn];
+        } else {
+            [layerCell activeIndicatorOff];
+        }
+        
         [_cellArray addObject:layerCell];
     }
     
-    // TODO: add title cell for reference systems
-    // loop over geospatial reference systems create cells, push to array
+    // TODO: add section for reference systems
 }
 
 
@@ -237,15 +238,6 @@
 }
 
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        MCLayerCell *layerCell = [_cellArray objectAtIndex:indexPath.row];
-        NSString *layerName = layerCell.layerNameLabel.text;
-        [_delegate deleteLayer:layerName];
-    }
-}
-
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     MCLayerCell *layerCell;
     NSObject *cellObject = [_cellArray objectAtIndex:indexPath.row];
@@ -258,11 +250,52 @@
         if ([geoPackage isFeatureTable:layerName]) {
             GPKGFeatureDao *featureDao =  [geoPackage getFeatureDaoWithTableName:layerName];
             [_delegate showLayerDetails:featureDao];
+            [geoPackage close];
         } else if ([geoPackage isTileTable:layerName]) {
             GPKGTileDao *tileDao =  [geoPackage getTileDaoWithTableName:layerName];
             [_delegate showLayerDetails:tileDao];
+            [geoPackage close];
         }
     }
+}
+
+
+- (UISwipeActionsConfiguration *) tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    MCLayerCell *cell = (MCLayerCell *)[_cellArray objectAtIndex:indexPath.row];
+    
+    UIContextualAction *toggleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"Add to map" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        [self.delegate toggleLayer: cell.table];
+        [cell toggleActiveIndicator];
+        completionHandler(YES);
+    }];
+    
+    if ([cell.activeIndicator isHidden]) {
+        toggleAction.backgroundColor = [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0];
+        toggleAction.title = @"Add to map";
+    } else {
+        toggleAction.backgroundColor = [UIColor grayColor];
+        toggleAction.title = @"Remove from map";
+    }
+    
+    UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[toggleAction]];
+    configuration.performsFirstActionWithFullSwipe = YES;
+    return configuration;
+}
+
+
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        MCLayerCell *cell = [_cellArray objectAtIndex:indexPath.row];
+        NSString *layerName = cell.layerNameLabel.text;
+        [_delegate deleteLayer:layerName];
+        completionHandler(YES);
+    }];
+    
+    deleteAction.backgroundColor = [UIColor redColor];
+    UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
+    configuration.performsFirstActionWithFullSwipe = YES;
+    return configuration;
 }
 
 
