@@ -16,36 +16,38 @@
 @property (nonatomic, strong) NSMutableDictionary *geoPackages;
 @property (nonatomic, strong) MCTileHelper *tileHelper;
 @property (nonatomic, strong) MCFeatureHelper *featureHelper;
-@property (nonatomic, strong) NSMutableDictionary * featureDaos;
-@property (nonatomic, strong) GPKGBoundingBox * featuresBoundingBox;
-@property (nonatomic, strong) GPKGBoundingBox * tilesBoundingBox;
+@property (nonatomic, strong) NSMutableDictionary *featureDaos;
+@property (nonatomic, strong) GPKGBoundingBox *featuresBoundingBox;
+@property (nonatomic, strong) GPKGBoundingBox *tilesBoundingBox;
+@property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic) BOOL showingUserLocation;
 @property (nonatomic) BOOL featureOverlayTiles;
 @property (atomic) int updateCountId;
 @property (atomic) int featureUpdateCountId;
-@property (nonatomic, strong) GPKGFeatureShapes * featureShapes;
+@property (nonatomic, strong) GPKGFeatureShapes *featureShapes;
 @property (nonatomic) BOOL needsInitialZoom;
-@property (nonatomic, strong) UIColor * boundingBoxColor;
+@property (nonatomic, strong) UIColor *boundingBoxColor;
 @property (nonatomic) double boundingBoxLineWidth;
-@property (nonatomic, strong) UIColor * boundingBoxFillColor;
-@property (nonatomic, strong) UIColor * defaultPolylineColor;
+@property (nonatomic, strong) UIColor *boundingBoxFillColor;
+@property (nonatomic, strong) UIColor *defaultPolylineColor;
 @property (nonatomic) double defaultPolylineLineWidth;
-@property (nonatomic, strong) UIColor * defaultPolygonColor;
+@property (nonatomic, strong) UIColor *defaultPolygonColor;
 @property (nonatomic) double defaultPolygonLineWidth;
-@property (nonatomic, strong) UIColor * defaultPolygonFillColor;
-@property (nonatomic, strong) UIColor * editPolylineColor;
+@property (nonatomic, strong) UIColor *defaultPolygonFillColor;
+@property (nonatomic, strong) UIColor *editPolylineColor;
 @property (nonatomic) double editPolylineLineWidth;
-@property (nonatomic, strong) UIColor * editPolygonColor;
+@property (nonatomic, strong) UIColor *editPolygonColor;
 @property (nonatomic) double editPolygonLineWidth;
-@property (nonatomic, strong) UIColor * editPolygonFillColor;
-@property (nonatomic, strong) UIColor * drawPolylineColor;
+@property (nonatomic, strong) UIColor *editPolygonFillColor;
+@property (nonatomic, strong) UIColor *drawPolylineColor;
 @property (nonatomic) double drawPolylineLineWidth;
-@property (nonatomic, strong) UIColor * drawPolygonColor;
+@property (nonatomic, strong) UIColor *drawPolygonColor;
 @property (nonatomic) double drawPolygonLineWidth;
-@property (nonatomic, strong) UIColor * drawPolygonFillColor;
+@property (nonatomic, strong) UIColor *drawPolygonFillColor;
 @property (nonatomic, strong) NSNumberFormatter *locationDecimalFormatter;
 @property (nonatomic) BOOL boundingBoxMode;
 @property (nonatomic) BOOL drawing;
-@property (nonatomic, strong) MKPolygon * boundingBox;
+@property (nonatomic, strong) MKPolygon *boundingBox;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxEndCorner;
 @property (nonatomic) double minLat;
@@ -82,6 +84,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.locationDecimalFormatter = [[NSNumberFormatter alloc] init];
     self.locationDecimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     self.locationDecimalFormatter.maximumFractionDigits = 4;
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.showingUserLocation = NO;
     
     [self.view setNeedsLayout];
     
@@ -130,6 +135,35 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 
 - (IBAction)changeLocationState:(id)sender {
+    NSLog(@"GPS button tapped");
+    
+    if (!self.showingUserLocation) {
+        if (![CLLocationManager locationServicesEnabled]) {
+            // todo show a message asking the user to enable it
+            return;
+        }
+        
+        switch ([CLLocationManager authorizationStatus]) {
+            case kCLAuthorizationStatusAuthorizedWhenInUse:
+                [self.locationManager startUpdatingLocation];
+                self.mapView.showsUserLocation = YES;
+                [self.locationButton setImage:[UIImage imageNamed:@"GPSActive"] forState:UIControlStateNormal];
+                self.showingUserLocation = YES;
+                
+                [self zoomToPointWithOffset:self.mapView.userLocation.coordinate];
+                break;
+            default:
+                self.showingUserLocation = NO;
+                [self.locationManager requestWhenInUseAuthorization];
+                break;
+        }
+    } else {
+        [self.locationManager stopUpdatingLocation];
+        self.mapView.showsUserLocation = NO;
+        self.showingUserLocation = NO;
+        [self.locationButton setImage:[UIImage imageNamed:@"GPS"] forState:UIControlStateNormal];
+    }
+    
 }
 
 
@@ -137,6 +171,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (void) updateMapLayers {
     [self updateInBackgroundWithZoom:YES];
 }
+
+
+#pragma mark - CLLocationManagerDelegate
+
 
 
 #pragma mark - MCSettingsDelegate

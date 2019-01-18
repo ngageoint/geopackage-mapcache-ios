@@ -356,7 +356,7 @@
             [mapPoint.options setPinTintColor:[UIColor purpleColor]];
         }
     }else{
-        [mapPoint.options setPinTintColor:[UIColor purpleColor]];
+        [mapPoint.options setPinTintColor:[UIColor redColor]];
     }
 }
 
