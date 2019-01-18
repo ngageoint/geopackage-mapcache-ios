@@ -100,6 +100,8 @@
 		E3568DCB21498387005FC49C /* MCMapCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3568DCA21498387005FC49C /* MCMapCoordinator.m */; };
 		E35B630E21BC24E9004E5BB0 /* MCTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E35B630D21BC24E9004E5BB0 /* MCTitleCell.xib */; };
 		E35B631121BC26F9004E5BB0 /* MCTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E35B631021BC26F9004E5BB0 /* MCTitleCell.m */; };
+		E35F316221EE7FC2001B720F /* privacypolicy in Resources */ = {isa = PBXBuildFile; fileRef = E35F316121EE7FC2001B720F /* privacypolicy */; };
+		E35F316521EFEC7E001B720F /* MCNoticeAndAttributionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35F316421EFEC7E001B720F /* MCNoticeAndAttributionViewController.m */; };
 		E363F53B20EC24B200BBF91A /* MCLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E363F53A20EC24B200BBF91A /* MCLayerViewController.m */; };
 		E363F54320EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E363F54220EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib */; };
 		E363F54520F0177700BBF91A /* MCTileLayerOperationsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E363F54420F0177700BBF91A /* MCTileLayerOperationsCell.xib */; };
@@ -320,6 +322,9 @@
 		E35B630D21BC24E9004E5BB0 /* MCTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCTitleCell.xib; sourceTree = "<group>"; };
 		E35B630F21BC26F9004E5BB0 /* MCTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCTitleCell.h; sourceTree = "<group>"; };
 		E35B631021BC26F9004E5BB0 /* MCTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTitleCell.m; sourceTree = "<group>"; };
+		E35F316121EE7FC2001B720F /* privacypolicy */ = {isa = PBXFileReference; lastKnownFileType = folder; name = privacypolicy; path = "mapcache-ios/privacypolicy"; sourceTree = SOURCE_ROOT; };
+		E35F316321EFEC7E001B720F /* MCNoticeAndAttributionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCNoticeAndAttributionViewController.h; sourceTree = "<group>"; };
+		E35F316421EFEC7E001B720F /* MCNoticeAndAttributionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCNoticeAndAttributionViewController.m; sourceTree = "<group>"; };
 		E363F53920EC24B200BBF91A /* MCLayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCLayerViewController.h; sourceTree = "<group>"; };
 		E363F53A20EC24B200BBF91A /* MCLayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCLayerViewController.m; sourceTree = "<group>"; };
 		E363F54220EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCFeatureLayerOperationsCell.xib; sourceTree = "<group>"; };
@@ -411,6 +416,7 @@
 		040136711AF94FB200C92AFC /* mapcache-ios */ = {
 			isa = PBXGroup;
 			children = (
+				E35F316021EE7F90001B720F /* resources */,
 				E3FB8566213490B0002F012E /* drawer */,
 				044D6B481B627AB400527745 /* load */,
 				045C949C1B5D89E80005CCD0 /* ui */,
@@ -676,6 +682,15 @@
 			path = cells;
 			sourceTree = "<group>";
 		};
+		E35F316021EE7F90001B720F /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				E35F316121EE7FC2001B720F /* privacypolicy */,
+			);
+			name = resources;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		E3A492021FA952C100FFE613 /* geopackage */ = {
 			isa = PBXGroup;
 			children = (
@@ -779,6 +794,8 @@
 				E3BED1DF219116FA001AF654 /* MCSettingsCoordinator.m */,
 				E3BED1E121911712001AF654 /* MCSettingsViewController.h */,
 				E3BED1E221911712001AF654 /* MCSettingsViewController.m */,
+				E35F316321EFEC7E001B720F /* MCNoticeAndAttributionViewController.h */,
+				E35F316421EFEC7E001B720F /* MCNoticeAndAttributionViewController.m */,
 			);
 			path = settings;
 			sourceTree = "<group>";
@@ -909,6 +926,7 @@
 				E33F55721FC4A1C000F252FD /* MCSectionTitleCell.xib in Resources */,
 				E3FB85782134A9E4002F012E /* MCGeoPackageCell.xib in Resources */,
 				E3A4920D1FA9885B00FFE613 /* MCDownloadGeopackage.xib in Resources */,
+				E35F316221EE7FC2001B720F /* privacypolicy in Resources */,
 				E355935220F4170500FC1288 /* MCGeoPackageOperationsCell.xib in Resources */,
 				040136831AF94FB200C92AFC /* Images.xcassets in Resources */,
 			);
@@ -1027,6 +1045,7 @@
 				04E1D8D01B66D366002BD947 /* GPKGSEditContentsViewController.m in Sources */,
 				E331C8ED20FE7645006EFED1 /* MCLayerCoordinator.m in Sources */,
 				044648021B4AF4250052913B /* GPKGSTableTypes.m in Sources */,
+				E35F316521EFEC7E001B720F /* MCNoticeAndAttributionViewController.m in Sources */,
 				045C948D1B50789D0005CCD0 /* GPKGSMapView.m in Sources */,
 				E3A491FF1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m in Sources */,
 				045C949B1B5D4C560005CCD0 /* GPKGSDecimalValidator.m in Sources */,

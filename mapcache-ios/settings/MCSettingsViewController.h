@@ -11,6 +11,7 @@
 #import "MCSectionTitleCell.h"
 #import "MCSegmentedControlCell.h"
 #import "MCDesctiptionCell.h"
+#import "MCFieldWithTitleCell.h"
 #import "MCButtonCell.h"
 #import <MapKit/MapKit.h>
 
@@ -19,6 +20,12 @@
 @end
 
 
-@interface MCSettingsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, MCSegmentedControlCellDelegate>
+@protocol MCNoticeAndAttributeDelegate <NSObject>
+- (void)showNoticeAndAttributeView;
+@end
+
+
+@interface MCSettingsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, MCSegmentedControlCellDelegate, GPKGSButtonCellDelegate>
 @property (nonatomic, strong) id<MCSettingsViewDelegate> settingsDelegate;
+@property (nonatomic, strong) id<MCNoticeAndAttributeDelegate>noticeAndAttributeDelegate;
 @end

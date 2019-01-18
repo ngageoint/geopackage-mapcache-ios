@@ -1,0 +1,25 @@
+body {
+  font-family:  -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: small;
+  margin: 0 16;
+}
+
+h1, h3 {
+  margin-bottom: 5px;
+}
+
+.component p {
+  margin-left: 10px;
+}
+
+p {
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 3px;
+}
+
+.component ul {
+  margin-top: 0px;
+  margin-left: 0px;
+  padding-left: 24px;
+}
