@@ -93,7 +93,6 @@
 - (void) callCompletionHandler {
     NSLog(@"Back pressed");
     [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
-    // TODO Make sure the drawer is being handled properly
 }
 
 

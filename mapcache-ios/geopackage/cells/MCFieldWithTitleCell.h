@@ -13,4 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *title;
 @property (weak, nonatomic) IBOutlet UITextField *field;
 
+- (NSString *)fieldValue;
+- (void)setTextFielDelegate: (id<UITextFieldDelegate>)delegate;
+- (void)setupNumericalKeyboard;
 @end

@@ -13,10 +13,13 @@
 #import "MCDesctiptionCell.h"
 #import "MCFieldWithTitleCell.h"
 #import "MCButtonCell.h"
+#import "GPKGSProperties.h"
 #import <MapKit/MapKit.h>
 
 @protocol MCSettingsViewDelegate <NSObject>
 - (void)setMapType:(NSString *) mapType;
+- (void)setMaxFeatures:(int) maxFeatures;
+- (void)settingsCompletionHandler;
 @end
 
 
@@ -25,7 +28,7 @@
 @end
 
 
-@interface MCSettingsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, MCSegmentedControlCellDelegate, GPKGSButtonCellDelegate>
+@interface MCSettingsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCSegmentedControlCellDelegate, GPKGSButtonCellDelegate>
 @property (nonatomic, strong) id<MCSettingsViewDelegate> settingsDelegate;
 @property (nonatomic, strong) id<MCNoticeAndAttributeDelegate>noticeAndAttributeDelegate;
 @end

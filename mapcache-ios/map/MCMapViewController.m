@@ -54,6 +54,7 @@
 @property (nonatomic) double maxLat;
 @property (nonatomic) double minLon;
 @property (nonatomic) double maxLon;
+@property (nonatomic) BOOL settingsDrawerVisible;
 @end
 
 
@@ -87,12 +88,22 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.showingUserLocation = NO;
+    self.settingsDrawerVisible = NO;
     
     [self.view setNeedsLayout];
     
     self.boundingBoxMode = NO;
     [_mapView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget: self action:@selector(longPressGesture:)]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableBoundingBoxMode) name:@"drawBoundingBox" object:nil];
+    
+    NSString *mapType = [self.settings stringForKey:GPKGS_PROP_MAP_TYPE];
+    if (mapType == nil || [mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
+        [self.mapView setMapType:MKMapTypeStandard];
+    } else if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
+        [self.mapView setMapType:MKMapTypeSatellite];
+    } else {
+        [self.mapView setMapType:MKMapTypeHybrid];
+    }
 }
 
 
@@ -130,7 +141,11 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 #pragma mark - Button actions
 - (IBAction)showInfo:(id)sender {
     NSLog(@"Showing info drawer.");
-    [self.mapActionDelegate showMapInfoDrawer];
+    
+    if (!self.settingsDrawerVisible) {
+        self.settingsDrawerVisible = YES;
+        [self.mapActionDelegate showMapInfoDrawer];
+    }
 }
 
 
@@ -181,15 +196,31 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (void)setMapType:(NSString *)mapType {
     NSLog(@"In MCMapViewController handing setting map change");
     
-    // TODO this is a bit brittle, enum it up
-    if ([mapType isEqualToString:@"Standard"]) {
+    if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
         [self.mapView setMapType:MKMapTypeStandard];
-    } else if ([mapType isEqualToString:@"Satellite"]) {
+        [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
+    } else if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
         [self.mapView setMapType:MKMapTypeSatellite];
+        [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
     } else {
         [self.mapView setMapType:MKMapTypeHybrid];
+        [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
     }
+    
+    NSLog(@"NSUSerDefaults\n %@", [self.settings dictionaryRepresentation]);
 }
+
+
+- (void)setMaxFeatures:(int) maxFeatures {
+    [self.settings setInteger:maxFeatures forKey:GPKGS_PROP_MAP_MAX_FEATURES];
+    [self updateInBackgroundWithZoom:YES];
+}
+
+
+- (void)settingsCompletionHandler {
+    self.settingsDrawerVisible = NO;
+}
+
 
 #pragma mark - MCTileHelperDelegate methods
 - (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay {
