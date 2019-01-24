@@ -15,6 +15,7 @@ NSString * const SHOW_NOTICE = @"showNotice";
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MCSegmentedControlCell *baseMapSelector;
 @property (nonatomic, strong) MCFieldWithTitleCell *maxFeaturesCell;
+@property (nonatomic, strong) NSUserDefaults *settings;
 @end
 
 @implementation MCSettingsViewController
@@ -50,6 +51,7 @@ NSString * const SHOW_NOTICE = @"showNotice";
 
 - (void) closeDrawer {
     [super closeDrawer];
+    [_settingsDelegate settingsCompletionHandler];
     [self.drawerViewDelegate popDrawer];
 }
 
@@ -61,16 +63,38 @@ NSString * const SHOW_NOTICE = @"showNotice";
     titleCell.label.text = @"Settings";
     [_cellArray addObject:titleCell];
     
-    _baseMapSelector = [_tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
-    _baseMapSelector.label.text = @"Base Map Type";
-    _baseMapSelector.delegate = self;
-    NSArray *maps = [[NSArray alloc] initWithObjects:@"Standard", @"Satellite", @"Hybrid", nil];
-    [_baseMapSelector setItems:maps];
-    [_cellArray addObject:_baseMapSelector];
+    self.settings = [NSUserDefaults standardUserDefaults];
     
     _maxFeaturesCell = [_tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     _maxFeaturesCell.title.text = @"Maximum number of features";
+    int maxFeatures = (int)[self.settings integerForKey:GPKGS_PROP_MAP_MAX_FEATURES];
+    if(maxFeatures == 0){
+        maxFeatures = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
+    }
+    _maxFeaturesCell.field.text = [NSString stringWithFormat:@"%d", maxFeatures];
+    [_maxFeaturesCell setTextFielDelegate:self];
+    [_maxFeaturesCell setupNumericalKeyboard];
     [_cellArray addObject:_maxFeaturesCell];
+
+    _baseMapSelector = [_tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
+    _baseMapSelector.label.text = @"Base Map Type";
+    _baseMapSelector.delegate = self;
+    NSArray *maps = [[NSArray alloc] initWithObjects: [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD],
+                     [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE],
+                     [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_HYBRID], nil];
+    
+    [_baseMapSelector setItems:maps];
+    
+    NSString *mapType = [self.settings stringForKey:GPKGS_PROP_MAP_TYPE];
+    if (mapType == nil || [mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
+        [_baseMapSelector.segmentedControl setSelectedSegmentIndex:0];
+    } else if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
+        [_baseMapSelector.segmentedControl setSelectedSegmentIndex:1];
+    } else {
+        [_baseMapSelector.segmentedControl setSelectedSegmentIndex:2];
+    }
+    
+    [_cellArray addObject:_baseMapSelector];
     
     MCButtonCell *showNoticesButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
     [showNoticesButtonCell.button setTitle:@"About MapCache" forState:UIControlStateNormal];
@@ -99,6 +123,19 @@ NSString * const SHOW_NOTICE = @"showNotice";
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_cellArray count];
+}
+
+
+#pragma mark - UITextViewDelegate methods
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    NSLog(@"max features: %d", [textField.text intValue]);
+    [self.settingsDelegate setMaxFeatures:[textField.text intValue]];
 }
 
 
