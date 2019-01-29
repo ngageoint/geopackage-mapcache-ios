@@ -161,11 +161,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         switch ([CLLocationManager authorizationStatus]) {
             case kCLAuthorizationStatusAuthorizedWhenInUse:
                 [self.locationManager startUpdatingLocation];
-                self.mapView.showsUserLocation = YES;
                 [self.locationButton setImage:[UIImage imageNamed:@"GPSActive"] forState:UIControlStateNormal];
                 self.showingUserLocation = YES;
-                
-                [self zoomToPointWithOffset:self.mapView.userLocation.coordinate];
                 break;
             default:
                 self.showingUserLocation = NO;
@@ -189,7 +186,18 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 
 #pragma mark - CLLocationManagerDelegate
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    CLLocation *userLocation = [locations lastObject];
 
+    if (self.showingUserLocation && !self.mapView.showsUserLocation && userLocation.coordinate.latitude != 0.0) {
+        self.mapView.showsUserLocation = YES;
+        [self zoomToPointWithOffset:userLocation.coordinate];
+    } else if (self.showingUserLocation) {
+        self.mapView.showsUserLocation = YES;
+    } else {
+        self.mapView.showsUserLocation = NO;
+    }
+}
 
 
 #pragma mark - MCSettingsDelegate
