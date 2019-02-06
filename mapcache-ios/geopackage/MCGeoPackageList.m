@@ -34,6 +34,7 @@
     self.tableView.estimatedRowHeight = 126.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     [self.tableView registerNib:[UINib nibWithNibName:@"MCGeoPackageCell" bundle:nil] forCellReuseIdentifier:@"geopackage"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCEmptyStateCell" bundle:nil] forCellReuseIdentifier:@"emptyState"];
 }
 
 
@@ -123,29 +124,42 @@
 
 #pragma mark - TableView delegate and data souce methods
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MCGeoPackageCell *cell = (MCGeoPackageCell *)[self.tableView dequeueReusableCellWithIdentifier:@"geopackage"];
-    
-    if (!cell) {
-        cell = [[MCGeoPackageCell alloc] init];
+    if (_geoPackages.count > 0) {
+        MCGeoPackageCell *cell = (MCGeoPackageCell *)[self.tableView dequeueReusableCellWithIdentifier:@"geopackage"];
+        
+        if (!cell) {
+            cell = [[MCGeoPackageCell alloc] init];
+        }
+        
+        GPKGSDatabase *database = [_geoPackages objectAtIndex:indexPath.row];
+        
+        cell.geoPackageNameLabel.text = database.name;
+        cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layers", (long)[database getFeatures].count];
+        cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layers", (long)[database getTileCount]];
+        
+        if ([_active isActive:database]) {
+            [cell activeLayersIndicatorOn];
+        } else {
+            [cell activeLayersIndicatorOff];
+        }
+        
+        return cell;
     }
     
-    GPKGSDatabase *database = [_geoPackages objectAtIndex:indexPath.row];
-    
-    cell.geoPackageNameLabel.text = database.name;
-    cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layers", (long)[database getFeatures].count];
-    cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layers", (long)[database getTileCount]];
-    
-    if ([_active isActive:database]) {
-        [cell activeLayersIndicatorOn];
-    } else {
-        [cell activeLayersIndicatorOff];
-    }
-    
+    MCEmptyStateCell *cell = (MCEmptyStateCell *)[self.tableView dequeueReusableCellWithIdentifier:@"emptyState"];
     return cell;
+    
+    
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (_geoPackages.count == 0) { // special case for empty state
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        return 1;
+    }
+    
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     return _geoPackages.count;
 }
 

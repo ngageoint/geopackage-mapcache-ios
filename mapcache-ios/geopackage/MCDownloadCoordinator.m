@@ -30,7 +30,6 @@
 
 
 - (void) start {
-    //_downloadViewController = [[GPKGSDownloadFileViewController alloc] initWithNibName:@"MCDownloadGeopackage" bundle:nil];
     _downloadViewController = [[MCDownloadGeopackage alloc] initAsFullView:YES];
     _downloadViewController.delegate = self;
     _downloadViewController.drawerViewDelegate = _drawerViewDelegate;

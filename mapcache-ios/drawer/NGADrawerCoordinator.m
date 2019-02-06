@@ -82,17 +82,4 @@
     }
 }
 
-
-// TODO; move over to the GeoPackageCoordinator
-//#pragma mark - MCGeoPackageListDelegate Methods
-//- (void) didSelectGeoPackage:(MCGeoPackage *)geoPackage {
-//    _detailsView = [[MCGeoPackageDetailsViewController alloc] initAsFullView:YES];
-//    _detailsView.delegate = self;
-//    _detailsView.geoPackage = geoPackage;
-//    _detailsView.drawerViewDelegate = self;
-//    [self pushDrawer:_detailsView];
-//    [_detailsView makeFullView];
-//}
-
-
 @end

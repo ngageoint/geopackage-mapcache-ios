@@ -324,8 +324,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 // Lots of mapview stuff in here, most of this can stay
 -(int) updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter{
-    int updateId = ++self.updateCountId;
-    int featureUpdateId = ++self.featureUpdateCountId;
+    int updateId = [self.featureHelper getNewUpdateId];
+    int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];;
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
     for(GPKGGeoPackage * geoPackage in [self.geoPackages allValues]){

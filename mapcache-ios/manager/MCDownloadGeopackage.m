@@ -64,6 +64,14 @@
 - (IBAction)cancel:(id)sender {
     if(self.active){
         self.active = false;
+        [self.importButton setTitle:@"Import" forState:UIControlStateNormal];
+        [GPKGSUtils enableButton:self.preloadedButton];
+        [GPKGSUtils enableButton:self.importButton];
+        [GPKGSUtils enableTextField:self.urlTextField];
+        [GPKGSUtils enableTextField:self.nameTextField];
+        [self.cancelButton setHidden:YES];
+        [self.downloadedLabel setHidden:YES];
+        [self.progressView setHidden:YES];
     }else{
         [self dismissViewControllerAnimated:YES completion:nil];
     }

@@ -38,6 +38,8 @@
     _geoPackageListView = [[MCGeoPackageList alloc] initWithGeoPackages:_databases asFullView:YES andDelegate:self];
     _geoPackageListView.drawerViewDelegate = _drawerViewDelegate;
     [_geoPackageListView.drawerViewDelegate pushDrawer:_geoPackageListView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(boundingBoxDrawn:) name:@"boundingBoxResults" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(geoPackageImported:) name:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION object:nil];
 }
 
 
@@ -102,6 +104,14 @@
             }
         }
     }
+}
+
+
+- (void)geoPackageImported:(NSNotification *) notification {
+    [self update];
+    _geoPackageListView.geoPackages = _databases;
+    [_geoPackageListView.tableView reloadData];
+    
 }
 
 

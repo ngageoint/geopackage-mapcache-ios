@@ -213,8 +213,8 @@
 
 - (void) closeDrawer {
     [super closeDrawer];
-    [self.delegate callCompletionHandler];
     [self.drawerViewDelegate popDrawer];
+    [self.delegate callCompletionHandler];
 }
 
 
