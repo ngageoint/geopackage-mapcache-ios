@@ -19,6 +19,8 @@
 
 +(void) disableTextField: (UITextField *) textField;
 
++(void) enableTextField: (UITextField *) textField;
+
 +(UIToolbar *) buildKeyboardDoneToolbarWithTarget: (id) target andAction:(SEL)action;
 
 +(UIProgressView *) buildProgressBarView;

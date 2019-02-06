@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MCGeoPackageCell.h"
+#import "MCEmptyStateCell.h"
 #import "NGADrawerViewController.h"
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGSDatabase.h"

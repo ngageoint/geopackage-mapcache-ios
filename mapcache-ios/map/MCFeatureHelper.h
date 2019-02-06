@@ -38,10 +38,13 @@
 @interface MCFeatureHelper : NSObject
 @property (nonatomic, strong) id<MCFeatureHelperDelegate> featureHelperDelegate;
 @property (atomic) int featureUpdateCountId;
+@property (atomic) int updateCountId;
 @property (nonatomic, strong) GPKGFeatureShapes * featureShapes;
 
 - (instancetype) initWithFeatureHelperDelegate:(id<MCFeatureHelperDelegate>) delegate;
 
+- (int)getNewUpdateId;
+- (int)getNewFeatureUpdateId;
 - (void)prepareFeaturesWithUpdateId:(int) updateId andFeatureUpdateId:(int) featureUpdateId andZoom:(int) zoom andMaxFeatures:(int) maxFeatures andMapViewBoundingBox:(GPKGBoundingBox *) mapViewBoudingBox andToleranceDistance:(double) toleranceDistance andFilter:(BOOL) filter;
 
 -(void) addMapPointShapeWithFeatureId: (int) featureId andDatabase: (NSString *) database andTableName: (NSString *) tableName andMapShape: (GPKGMapShape *) shape;

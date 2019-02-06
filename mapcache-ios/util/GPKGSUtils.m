@@ -44,6 +44,13 @@
     }
 }
 
++(void) enableTextField: (UITextField *) textField{
+    if(!textField.enabled){
+        textField.enabled = true;
+        textField.alpha = 1.0;
+    }
+}
+
 +(UIToolbar *) buildKeyboardDoneToolbarWithTarget: (id) target andAction:(SEL)action{
     UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:target action:action];
     UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];

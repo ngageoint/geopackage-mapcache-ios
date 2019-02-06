@@ -18,6 +18,7 @@
 #import "MCDownloadCoordinator.h"
 #import "GPKGSTable.h"
 #import "MCMapCoordinator.h"
+#import "GPKGSConstants.h"
 
 @protocol MCMapDelegate;
 @protocol MCGeoPackageCoordinatorDelegate;

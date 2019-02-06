@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" restorationIdentifier="emptyState" id="iN0-l3-epB" customClass="MCEmptyStateCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="300"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You don't have any GeoPackages" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dYW-Ag-G0X">
+                    <rect key="frame" x="56" y="216" width="263" height="21"/>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap here to import one" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EEi-VI-wEk">
+                    <rect key="frame" x="101" y="245" width="173.5" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GeoPackage" translatesAutoresizingMaskIntoConstraints="NO" id="Zh3-km-Ba6">
+                    <rect key="frame" x="87.5" y="8" width="200" height="200"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="F08-Lo-Oo3"/>
+                        <constraint firstAttribute="height" constant="200" id="TIz-VC-pWs"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="EEi-VI-wEk" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="VMG-5i-yKl"/>
+                <constraint firstItem="EEi-VI-wEk" firstAttribute="top" secondItem="dYW-Ag-G0X" secondAttribute="bottom" constant="8" id="cxY-cY-5AR"/>
+                <constraint firstItem="dYW-Ag-G0X" firstAttribute="top" secondItem="Zh3-km-Ba6" secondAttribute="bottom" constant="8" id="k71-ZY-O3f"/>
+                <constraint firstItem="Zh3-km-Ba6" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="mYR-q0-KAi"/>
+                <constraint firstItem="Zh3-km-Ba6" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="8" id="uRV-84-Eme"/>
+                <constraint firstItem="dYW-Ag-G0X" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="uSa-Xt-7FL"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="132" y="154.72263868065968"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="GeoPackage" width="400" height="400"/>
+    </resources>
+</document>

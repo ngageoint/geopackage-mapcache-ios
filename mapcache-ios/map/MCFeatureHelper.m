@@ -34,6 +34,7 @@
     self.geoPackages = [[NSMutableDictionary alloc] init];
     self.featureDaos = [[NSMutableDictionary alloc] init];
     self.featureUpdateCountId = 0;
+    self.updateCountId = 0;
     
     return self;
 }
@@ -49,9 +50,9 @@
     // Open active GeoPackages and create feature DAOS, and feature tiles
     for(GPKGSDatabase * database in activeDatabases){
         
-        //            if([self updateCanceled:updateId]){
-        //                break;
-        //            }
+        if([self updateCanceled:updateId]){
+            break;
+        }
         
         GPKGGeoPackage * geoPackage = [self.manager open:database.name];
         
@@ -282,8 +283,24 @@
 }
 
 
+- (int)getNewUpdateId {
+    return ++self.updateCountId;
+}
+
+
+- (int)getNewFeatureUpdateId {
+    return ++self.featureUpdateCountId;
+}
+
+
 - (BOOL)featureUpdateCanceled: (int) updateId {
     BOOL canceled = updateId < self.featureUpdateCountId;
+    return canceled;
+}
+
+
+-(BOOL) updateCanceled: (int) updateId{
+    BOOL canceled = updateId < self.updateCountId;
     return canceled;
 }
 
@@ -447,5 +464,6 @@
         self.featuresBoundingBox = [shape boundingBox];
     }
 }
+
 
 @end
