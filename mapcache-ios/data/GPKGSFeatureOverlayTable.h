@@ -19,6 +19,7 @@
 @property (nonatomic) double maxLat;
 @property (nonatomic) double minLon;
 @property (nonatomic) double maxLon;
+@property (nonatomic) BOOL ignoreGeoPackageStyles;
 @property (nonatomic, strong) UIColor * pointColor;
 @property (nonatomic, strong) NSString * pointColorName;
 @property (nonatomic) int pointAlpha;

@@ -107,17 +107,13 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
         GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.name];
         
         // Load tiles
-        GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithFeatureDao:featureDao];
+        GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+        if(self.featureTilesDrawData.ignoreGeoPackageStyles){
+            [featureTiles ignoreFeatureTableStyles];
+        }
         [featureTiles setMaxFeaturesPerTile:maxFeatures];
         if(maxFeatures != nil){
             [featureTiles setMaxFeaturesTileDraw:[[GPKGNumberFeaturesTile alloc] init]];
-        }
-        
-        GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
-        if([indexer isIndexed]){
-            [featureTiles setIndexManager:indexer];
-        }else{
-            [indexer close];
         }
         
         double pointRadius = [self.featureTilesDrawData.pointRadius doubleValue];
