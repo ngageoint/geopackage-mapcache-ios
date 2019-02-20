@@ -30,7 +30,7 @@
 - (void) deleteGeoPackage;
 - (void) copyGeoPackage;
 - (void) callCompletionHandler;
-- (void) deleteLayer:(NSString *) layerName;
+- (void) deleteLayer:(GPKGSTable *) table;
 - (void) showLayerDetails:(GPKGUserDao *) layerDao;
 - (void) toggleLayer:(GPKGSTable *) table;
 @end

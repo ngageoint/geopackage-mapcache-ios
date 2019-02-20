@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UITextField+Validators.h"
 
 @interface MCFieldWithTitleCell : UITableViewCell
 

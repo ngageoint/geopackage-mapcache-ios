@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GPKGProgress.h"
 #import "NGADrawerViewController.h"
+#import "UITextField+Validators.h"
 
 @class MCDownloadGeopackage;
 
@@ -16,7 +17,7 @@
 - (void)downloadFileViewController:(MCDownloadGeopackage *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error;
 @end
 
-@interface MCDownloadGeopackage : NGADrawerViewController <GPKGProgress>
+@interface MCDownloadGeopackage : NGADrawerViewController <GPKGProgress, UITextViewDelegate>
 
 @property (nonatomic, strong) id <MCDownloadDelegate> delegate;
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;

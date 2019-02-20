@@ -96,16 +96,18 @@
 }
 
 
-- (void) deleteLayer:(NSString *) layerName {
+- (void) deleteLayer:(GPKGSTable *) table {
     GPKGGeoPackage *geoPackage = [_manager open:_database.name];
     
     @try {
-        [geoPackage deleteUserTable:layerName];
-        [_geoPackageViewController removeLayerNamed:layerName];
+        [geoPackage deleteUserTable:table.name];
+        [_active removeTable:table];
+        [_geoPackageViewController removeLayerNamed:table.name];
+        [_mapDelegate updateMapLayers];
     }
     @catch (NSException *exception) {
         [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], _database.name, layerName]
+                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], _database.name, table.name]
                                  andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
     }
     @finally {

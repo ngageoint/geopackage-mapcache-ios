@@ -25,10 +25,6 @@
 
 #define TAG_PRELOADED 1
 
-
-
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     [GPKGSUtils disableButton:self.importButton];
@@ -44,10 +40,15 @@
 }
 
 
-//- (void) viewDidAppear:(BOOL)animated {
-//    [super viewDidAppear:animated];
-//    [self makeFullView];
-//}
+- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
+    CGPoint point = [recognizer locationInView:self.view];
+    
+    if (CGRectContainsPoint(self.nameTextField.frame, point) || CGRectContainsPoint(self.urlTextField.frame, point)) {
+        return true;
+    }
+    
+    return false;
+}
 
 
 - (void) doneButtonPressed {
@@ -171,10 +172,12 @@
 }
 
 - (IBAction)nameChanged:(id)sender {
+    [self.nameTextField trimWhiteSpace:self.nameTextField];
     [self updateImportButtonState];
 }
 
 - (IBAction)urlChanged:(id)sender {
+    [self.urlTextField trimWhiteSpace:self.urlTextField];
     [self updateImportButtonState];
 }
 

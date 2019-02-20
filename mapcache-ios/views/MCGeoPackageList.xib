@@ -32,10 +32,10 @@
                     <rect key="frame" x="16" y="24" width="343" height="50"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UrW-Pm-8ry">
-                            <rect key="frame" x="0.0" y="0.0" width="163.5" height="50"/>
+                            <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
                             <color key="backgroundColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <state key="normal" title="Download" image="download-white">
+                            <state key="normal" title="Download GeoPackage" image="download-white">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
                             <userDefinedRuntimeAttributes>
@@ -45,22 +45,6 @@
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="downloadGeopackage:" destination="-1" eventType="touchUpInside" id="byW-s0-FZP"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Up9-Iq-eno">
-                            <rect key="frame" x="179.5" y="0.0" width="163.5" height="50"/>
-                            <color key="backgroundColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <state key="normal" title="Create" image="New-white">
-                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </state>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                    <integer key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="createGeoPackage:" destination="-1" eventType="touchUpInside" id="hdW-PF-acW"/>
                             </connections>
                         </button>
                     </subviews>
@@ -86,7 +70,6 @@
         </view>
     </objects>
     <resources>
-        <image name="New-white" width="32" height="32"/>
         <image name="download-white" width="32" height="32"/>
         <image name="dragHandle" width="36" height="4"/>
     </resources>

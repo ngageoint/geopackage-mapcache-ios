@@ -271,10 +271,10 @@
     
     if ([cell.activeIndicator isHidden]) {
         toggleAction.backgroundColor = [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0];
-        toggleAction.title = @"Add to map";
+        toggleAction.title = @"Show on map";
     } else {
         toggleAction.backgroundColor = [UIColor grayColor];
-        toggleAction.title = @"Remove from map";
+        toggleAction.title = @"Hide from map";
     }
     
     UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[toggleAction]];
@@ -287,8 +287,7 @@
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         MCLayerCell *cell = [_cellArray objectAtIndex:indexPath.row];
-        NSString *layerName = cell.layerNameLabel.text;
-        [_delegate deleteLayer:layerName];
+        [_delegate deleteLayer:cell.table];
         completionHandler(YES);
     }];
     
@@ -343,6 +342,7 @@
     UIAlertController *renameAlert = [UIAlertController alertControllerWithTitle:@"Rename" message:@"" preferredStyle:UIAlertControllerStyleAlert];
     [renameAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.text = self.database.name;
+        [textField addTarget:self action:@selector(alertTextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     }];
     
     UIAlertAction *confirmRename = [UIAlertAction actionWithTitle:@"Rename" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
@@ -385,6 +385,7 @@
     UIAlertController *copyAlert = [UIAlertController alertControllerWithTitle:@"Copy" message:@"" preferredStyle:UIAlertControllerStyleAlert];
     [copyAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.text = [NSString stringWithFormat:@"%@_copy", self.database.name];
+        [textField addTarget:self action:@selector(alertTextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     }];
     
     UIAlertAction *confirmCopy = [UIAlertAction actionWithTitle:@"Copy" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -431,6 +432,32 @@
     if ([action isEqualToString:GPKGS_ACTION_NEW_LAYER]) {
         NSLog(@"Button pressed, handling action %@", action);
         [_delegate newLayer];
+    }
+}
+
+
+/* Chekcing */
+- (void)alertTextFieldDidChange:(UITextField *)sender
+{
+    UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
+    if (alertController)
+    {
+        UITextField *textField = alertController.textFields.firstObject;
+        UIAlertAction *okAction = alertController.actions.firstObject;
+        NSString *fieldValue = textField.text;
+        
+        okAction.enabled = YES;
+        
+        if (fieldValue.length == 0) {
+            okAction.enabled = NO;
+        } else {
+            for (NSString* name in [self.manager databases]) {
+                if ([fieldValue isEqualToString:name]) {
+                    okAction.enabled = NO;
+                    break;
+                }
+            }
+        }
     }
 }
 
