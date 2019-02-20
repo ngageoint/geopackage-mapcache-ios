@@ -74,7 +74,7 @@ const char MapConstantKey;
 @property (nonatomic) BOOL editFeaturesMode;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxEndCorner;
-@property (nonatomic, strong) MKPolygon * boundingBox;
+@property (nonatomic, strong) GPKGPolygon * boundingBox;
 @property (nonatomic) BOOL drawing;
 @property (nonatomic, strong) NSString * editFeaturesDatabase;
 @property (nonatomic, strong) NSString * editFeaturesTable;
@@ -233,48 +233,49 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     MKOverlayRenderer * rendered = nil;
     if ([overlay isKindOfClass:[MKPolygon class]]) {
         MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
-        if(self.drawing || (self.boundingBox != nil && self.boundingBox == overlay)){
-            polygonRenderer.strokeColor = self.boundingBoxColor;
-            polygonRenderer.lineWidth = self.boundingBoxLineWidth;
-            if(self.boundingBoxFillColor != nil){
-                polygonRenderer.fillColor = self.boundingBoxFillColor;
-            }
-        }else if(self.editFeaturesMode){
-            if(self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
-                polygonRenderer.strokeColor = self.editPolygonColor;
-                polygonRenderer.lineWidth = self.editPolygonLineWidth;
-                if(self.editPolygonFillColor != nil){
-                    polygonRenderer.fillColor = self.editPolygonFillColor;
+        UIColor *strokeColor = self.defaultPolygonColor;
+        double lineWidth = self.defaultPolygonLineWidth;
+        UIColor *fillColor = self.defaultPolygonFillColor;
+        if ([overlay isKindOfClass:[GPKGPolygon class]]) {
+            GPKGPolygon *polygon = (GPKGPolygon *) overlay;
+            GPKGPolygonOptions *options = polygon.options;
+            if(options != nil){
+                if(options.strokeColor != nil){
+                    strokeColor = options.strokeColor;
+                    fillColor = nil;
                 }
-            }else{
-                polygonRenderer.strokeColor = self.drawPolygonColor;
-                polygonRenderer.lineWidth = self.drawPolygonLineWidth;
-                if(self.drawPolygonFillColor != nil){
-                    polygonRenderer.fillColor = self.drawPolygonFillColor;
+                if(options.lineWidth > 0){
+                    lineWidth = options.lineWidth;
+                }
+                if(options.fillColor != nil){
+                    fillColor = options.fillColor;
                 }
             }
-        }else{
-            polygonRenderer.strokeColor = self.defaultPolygonColor;
-            polygonRenderer.lineWidth = self.defaultPolygonLineWidth;
-            if(self.defaultPolygonFillColor != nil){
-                polygonRenderer.fillColor = self.defaultPolygonFillColor;
-            }
+        }
+        polygonRenderer.strokeColor = strokeColor;
+        polygonRenderer.lineWidth = lineWidth;
+        if(fillColor != nil){
+            polygonRenderer.fillColor = fillColor;
         }
         rendered = polygonRenderer;
     }else if ([overlay isKindOfClass:[MKPolyline class]]) {
         MKPolylineRenderer * polylineRenderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
-        if(self.editFeaturesMode){
-            if(self.editFeatureType == GPKGS_ET_NONE || ([self.editPoints count] == 0 && self.editFeatureMapPoint == nil)){
-                polylineRenderer.strokeColor = self.editPolylineColor;
-                polylineRenderer.lineWidth = self.editPolylineLineWidth;
-            }else{
-                polylineRenderer.strokeColor = self.drawPolylineColor;
-                polylineRenderer.lineWidth = self.drawPolylineLineWidth;
+        UIColor *strokeColor = self.defaultPolylineColor;
+        double lineWidth = self.defaultPolylineLineWidth;
+        if ([overlay isKindOfClass:[GPKGPolyline class]]) {
+            GPKGPolyline *polyline = (GPKGPolyline *) overlay;
+            GPKGPolylineOptions *options = polyline.options;
+            if(options != nil){
+                if(options.strokeColor != nil){
+                    strokeColor = options.strokeColor;
+                }
+                if(options.lineWidth > 0){
+                    lineWidth = options.lineWidth;
+                }
             }
-        }else{
-            polylineRenderer.strokeColor = self.defaultPolylineColor;
-            polylineRenderer.lineWidth = self.defaultPolylineLineWidth;
         }
+        polylineRenderer.strokeColor = strokeColor;
+        polylineRenderer.lineWidth = lineWidth;
         rendered = polylineRenderer;
     }else if ([overlay isKindOfClass:[MKTileOverlay class]]) {
         rendered = [[MKTileOverlayRenderer alloc] initWithTileOverlay:overlay];
@@ -874,7 +875,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 self.boundingBoxStartCorner = point;
                 self.boundingBoxEndCorner = point;
                 CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
-                self.boundingBox = [MKPolygon polygonWithCoordinates:points count:4];
+                self.boundingBox = [GPKGPolygon polygonWithCoordinates:points count:4];
+                [self setBoundingBoxPolygonOptions:self.boundingBox];
                 [self.mapView addOverlay:self.boundingBox];
                 [self setDrawing:true];
                 [self.boundingBoxClearButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_BOUNDING_BOX_CLEAR_ACTIVE_IMAGE] forState:UIControlStateNormal];
@@ -888,7 +890,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                         if(self.drawing && self.boundingBox != nil){
                             self.boundingBoxEndCorner = point;
                             CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
-                            MKPolygon * newBoundingBox = [MKPolygon polygonWithCoordinates:points count:4];
+                            GPKGPolygon * newBoundingBox = [GPKGPolygon polygonWithCoordinates:points count:4];
+                            [self setBoundingBoxPolygonOptions:newBoundingBox];
                             [self.mapView removeOverlay:self.boundingBox];
                             [self.mapView addOverlay:newBoundingBox];
                             self.boundingBox = newBoundingBox;
@@ -962,6 +965,42 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }
     [self.mapView addAnnotation:mapPoint];
     return mapPoint;
+}
+
+-(void) setDrawPolylineOptions: (GPKGPolyline *) polyline{
+    
+    GPKGPolylineOptions *options = [[GPKGPolylineOptions alloc] init];
+    
+    options.strokeColor = self.drawPolylineColor;
+    options.lineWidth = self.drawPolylineLineWidth;
+    
+    [polyline setOptions:options];
+}
+
+-(void) setDrawPolygonOptions: (GPKGPolygon *) polygon{
+    
+    GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
+    
+    options.strokeColor = self.drawPolygonColor;
+    options.lineWidth = self.drawPolygonLineWidth;
+    if(self.drawPolygonFillColor != nil){
+        options.fillColor = self.drawPolygonFillColor;
+    }
+    
+    [polygon setOptions:options];
+}
+
+-(void) setBoundingBoxPolygonOptions: (GPKGPolygon *) polygon{
+    
+    GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
+    
+    options.strokeColor = self.boundingBoxColor;
+    options.lineWidth = self.boundingBoxLineWidth;
+    if(self.boundingBoxFillColor != nil){
+        options.fillColor = self.boundingBoxFillColor;
+    }
+    
+    [polygon setOptions:options];
 }
 
 -(BOOL) isWithinDistanceWithPoint: (CGPoint) point andLocation: (CLLocationCoordinate2D) location andAllowableScreenPercentage: (double) allowableScreenPercentage{
@@ -1387,7 +1426,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(void) updateEditState: (BOOL) updateAcceptClear{
     
     BOOL accept = false;
-    MKPolygon * editHolePolygon = nil;
+    GPKGPolygon * editHolePolygon = nil;
     
     switch(self.editFeatureType){
             
@@ -1403,7 +1442,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 
                 NSArray * points = [self getLocationPoints:self.editPoints];
                 CLLocationCoordinate2D * locations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:points];
-                MKPolyline * tempPolyline = [MKPolyline polylineWithCoordinates:locations count:[points count]];
+                GPKGPolyline * tempPolyline = [GPKGPolyline polylineWithCoordinates:locations count:[points count]];
+                [self setDrawPolylineOptions:tempPolyline];
                 if(self.editLinestring != nil){
                     [self.mapView removeOverlay:self.editLinestring];
                 }
@@ -1432,7 +1472,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     
                     NSArray * points = [self getLocationPoints:self.editHolePoints];
                     CLLocationCoordinate2D * locations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:points];
-                    editHolePolygon = [MKPolygon polygonWithCoordinates:locations count:[points count]];
+                    editHolePolygon = [GPKGPolygon polygonWithCoordinates:locations count:[points count]];
                 }else{
                     [self.editPolygonHoleConfirmButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POLYGON_HOLE_CONFIRM_IMAGE] forState:UIControlStateNormal];
                 }
@@ -1450,13 +1490,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 NSMutableArray * polygonHoles = [[NSMutableArray alloc] initWithCapacity:[self.holePolygons count]];
                 for(NSArray * holePoints in self.holePolygons){
                     CLLocationCoordinate2D * holeLocations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:holePoints];
-                    MKPolyline * polygonHole = [MKPolyline polylineWithCoordinates:holeLocations count:[holePoints count]];
+                    GPKGPolyline * polygonHole = [GPKGPolyline polylineWithCoordinates:holeLocations count:[holePoints count]];
                     [polygonHoles addObject:polygonHole];
                 }
                 if(editHolePolygon != nil){
                     [polygonHoles addObject:editHolePolygon];
                 }
-                MKPolygon * tempPolygon  = [MKPolygon polygonWithCoordinates:locations count:[points count] interiorPolygons:polygonHoles];
+                GPKGPolygon * tempPolygon  = [GPKGPolygon polygonWithCoordinates:locations count:[points count] interiorPolygons:polygonHoles];
+                [self setDrawPolygonOptions:tempPolygon];
                 if(self.editPolygon != nil){
                     [self.mapView removeOverlay:self.editPolygon];
                 }
@@ -2353,11 +2394,43 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             }
             break;
             
+        case GPKG_MST_POLYLINE:
+            {
+                GPKGPolyline *polyline = (GPKGPolyline *) shape.shape;
+                [self setShapeOptionsWithPolyline:polyline andStyleCache:styleCache andFeatureStyle:featureStyle andEditable:editable];
+            }
+            break;
+            
+        case GPKG_MST_POLYGON:
+            {
+                GPKGPolygon *polygon = (GPKGPolygon *) shape.shape;
+                [self setShapeOptionsWithPolygon:polygon andStyleCache:styleCache andFeatureStyle:featureStyle andEditable:editable];
+            }
+            break;
+            
         case GPKG_MST_MULTI_POINT:
             {
                 GPKGMultiPoint * multiPoint = (GPKGMultiPoint *) shape.shape;
                 for(GPKGMapPoint * mapPoint in multiPoint.points){
                     [self setShapeOptionsWithMapPoint:mapPoint andStyleCache:styleCache andFeatureStyle:featureStyle andEditable:editable andClickable:false];
+                }
+            }
+            break;
+            
+        case GPKG_MST_MULTI_POLYLINE:
+            {
+                GPKGMultiPolyline *multiPolyline = (GPKGMultiPolyline *) shape.shape;
+                for(GPKGPolyline *polyline in multiPolyline.polylines){
+                    [self setShapeOptionsWithPolyline:polyline andStyleCache:styleCache andFeatureStyle:featureStyle andEditable:editable];
+                }
+            }
+            break;
+            
+        case GPKG_MST_MULTI_POLYGON:
+            {
+                GPKGMultiPolygon *multiPolygon = (GPKGMultiPolygon *) shape.shape;
+                for(GPKGPolygon *polygon in multiPolygon.polygons){
+                    [self setShapeOptionsWithPolygon:polygon andStyleCache:styleCache andFeatureStyle:featureStyle andEditable:editable];
                 }
             }
             break;
@@ -2390,6 +2463,44 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [mapPoint.options setPinTintColor:[UIColor purpleColor]];
     }
 
+}
+
+-(void) setShapeOptionsWithPolyline: (GPKGPolyline *) polyline andStyleCache: (GPKGStyleCache *) styleCache andFeatureStyle: (GPKGFeatureStyle *) featureStyle andEditable: (BOOL) editable{
+    
+    GPKGPolylineOptions *options = [[GPKGPolylineOptions alloc] init];
+    
+    if(editable){
+        options.strokeColor = self.editPolylineColor;
+        options.lineWidth = self.editPolylineLineWidth;
+    }else if(styleCache == nil || ![styleCache setFeatureStyleWithPolyline:polyline andFeatureStyle:featureStyle]){
+        options.strokeColor = self.defaultPolylineColor;
+        options.lineWidth = self.defaultPolylineLineWidth;
+    }
+    
+    [polyline setOptions:options];
+    
+}
+
+-(void) setShapeOptionsWithPolygon: (GPKGPolygon *) polygon andStyleCache: (GPKGStyleCache *) styleCache andFeatureStyle: (GPKGFeatureStyle *) featureStyle andEditable: (BOOL) editable{
+    
+    GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
+    
+    if(editable){
+        options.strokeColor = self.editPolygonColor;
+        options.lineWidth = self.editPolygonLineWidth;
+        if(self.editPolygonFillColor != nil){
+            options.fillColor = self.editPolygonFillColor;
+        }
+    }else if(styleCache == nil || ![styleCache setFeatureStyleWithPolygon:polygon andFeatureStyle:featureStyle]){
+        options.strokeColor = self.defaultPolygonColor;
+        options.lineWidth = self.defaultPolygonLineWidth;
+        if(self.defaultPolygonFillColor != nil){
+            options.fillColor = self.defaultPolygonFillColor;
+        }
+    }
+    
+    [polygon setOptions:options];
+    
 }
 
 -(GPKGMapPoint *) addEditableShapeWithFeatureId: (NSNumber *) featureId andShape: (GPKGMapShape *) shape{
