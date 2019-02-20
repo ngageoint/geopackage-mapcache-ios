@@ -967,37 +967,37 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     return mapPoint;
 }
 
--(void) setDrawPolylineOptions: (GPKGPolyline *) polyline{
+-(GPKGPolylineOptions *) drawPolylineOptions{
     
     GPKGPolylineOptions *options = [[GPKGPolylineOptions alloc] init];
     
-    options.strokeColor = self.drawPolylineColor;
-    options.lineWidth = self.drawPolylineLineWidth;
+    [options setStrokeColor:self.drawPolylineColor];
+    [options setLineWidth:self.drawPolylineLineWidth];
     
-    [polyline setOptions:options];
+    return options;
 }
 
--(void) setDrawPolygonOptions: (GPKGPolygon *) polygon{
+-(GPKGPolygonOptions *) drawPolygonOptions{
     
     GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
     
-    options.strokeColor = self.drawPolygonColor;
-    options.lineWidth = self.drawPolygonLineWidth;
+    [options setStrokeColor:self.drawPolygonColor];
+    [options setLineWidth:self.drawPolygonLineWidth];
     if(self.drawPolygonFillColor != nil){
-        options.fillColor = self.drawPolygonFillColor;
+        [options setFillColor:self.drawPolygonFillColor];
     }
     
-    [polygon setOptions:options];
+    return options;
 }
 
 -(void) setBoundingBoxPolygonOptions: (GPKGPolygon *) polygon{
     
     GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
     
-    options.strokeColor = self.boundingBoxColor;
-    options.lineWidth = self.boundingBoxLineWidth;
+    [options setStrokeColor:self.boundingBoxColor];
+    [options setLineWidth:self.boundingBoxLineWidth];
     if(self.boundingBoxFillColor != nil){
-        options.fillColor = self.boundingBoxFillColor;
+        [options setFillColor:self.boundingBoxFillColor];
     }
     
     [polygon setOptions:options];
@@ -1226,7 +1226,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                             [featureObject removeFromMapView:self.mapView];
                         }
                         
-                        self.editFeatureShape = [converter addMapShape:shape asPointsToMapView:self.mapView withPointOptions:[self getEditFeaturePointOptions] andPolylinePointOptions:[self getEditFeatureShapePointOptions] andPolygonPointOptions:[self getEditFeatureShapePointOptions] andPolygonPointHoleOptions:[self getEditFeatureShapeHolePointOptions]];
+                        self.editFeatureShape = [converter addMapShape:shape asPointsToMapView:self.mapView withPointOptions:[self getEditFeaturePointOptions] andPolylinePointOptions:[self getEditFeatureShapePointOptions] andPolygonPointOptions:[self getEditFeatureShapePointOptions] andPolygonPointHoleOptions:[self getEditFeatureShapeHolePointOptions] andPolylineOptions:[self drawPolylineOptions] andPolygonOptions:[self drawPolygonOptions]];
                         [self updateEditState:true];
                     }
                     @finally {
@@ -1443,7 +1443,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 NSArray * points = [self getLocationPoints:self.editPoints];
                 CLLocationCoordinate2D * locations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:points];
                 GPKGPolyline * tempPolyline = [GPKGPolyline polylineWithCoordinates:locations count:[points count]];
-                [self setDrawPolylineOptions:tempPolyline];
+                GPKGPolylineOptions *options = [self drawPolylineOptions];
+                [tempPolyline setOptions:options];
                 if(self.editLinestring != nil){
                     [self.mapView removeOverlay:self.editLinestring];
                 }
@@ -1497,7 +1498,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     [polygonHoles addObject:editHolePolygon];
                 }
                 GPKGPolygon * tempPolygon  = [GPKGPolygon polygonWithCoordinates:locations count:[points count] interiorPolygons:polygonHoles];
-                [self setDrawPolygonOptions:tempPolygon];
+                GPKGPolygonOptions *options = [self drawPolygonOptions];
+                [tempPolygon setOptions:options];
                 if(self.editPolygon != nil){
                     [self.mapView removeOverlay:self.editPolygon];
                 }
@@ -2470,11 +2472,11 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGPolylineOptions *options = [[GPKGPolylineOptions alloc] init];
     
     if(editable){
-        options.strokeColor = self.editPolylineColor;
-        options.lineWidth = self.editPolylineLineWidth;
+        [options setStrokeColor:self.editPolylineColor];
+        [options setLineWidth:self.editPolylineLineWidth];
     }else if(styleCache == nil || ![styleCache setFeatureStyleWithPolyline:polyline andFeatureStyle:featureStyle]){
-        options.strokeColor = self.defaultPolylineColor;
-        options.lineWidth = self.defaultPolylineLineWidth;
+        [options setStrokeColor:self.defaultPolylineColor];
+        [options setLineWidth:self.defaultPolylineLineWidth];
     }
     
     [polyline setOptions:options];
@@ -2486,16 +2488,16 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
     
     if(editable){
-        options.strokeColor = self.editPolygonColor;
-        options.lineWidth = self.editPolygonLineWidth;
+        [options setStrokeColor:self.editPolygonColor];
+        [options setLineWidth:self.editPolygonLineWidth];
         if(self.editPolygonFillColor != nil){
-            options.fillColor = self.editPolygonFillColor;
+            [options setFillColor:self.editPolygonFillColor];
         }
     }else if(styleCache == nil || ![styleCache setFeatureStyleWithPolygon:polygon andFeatureStyle:featureStyle]){
-        options.strokeColor = self.defaultPolygonColor;
-        options.lineWidth = self.defaultPolygonLineWidth;
+        [options setStrokeColor:self.defaultPolygonColor];
+        [options setLineWidth:self.defaultPolygonLineWidth];
         if(self.defaultPolygonFillColor != nil){
-            options.fillColor = self.defaultPolygonFillColor;
+            [options setFillColor:self.defaultPolygonFillColor];
         }
     }
     
