@@ -68,6 +68,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     _childCoordinators = [[NSMutableArray alloc] init];
     
     self.mapView.delegate = self;
+    self.mapView.showsCompass = NO;
     [self setupColors];
     self.settings = [NSUserDefaults standardUserDefaults];
     self.geoPackages = [[NSMutableDictionary alloc] init];

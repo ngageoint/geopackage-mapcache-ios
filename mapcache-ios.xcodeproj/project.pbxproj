@@ -94,6 +94,7 @@
 		E34CDC84217A38D0003CABA8 /* MCFeatureHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E34CDC83217A38D0003CABA8 /* MCFeatureHelper.m */; };
 		E34F32E82204E93C0098ED45 /* MCEmptyStateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E34F32E72204E93C0098ED45 /* MCEmptyStateCell.xib */; };
 		E34F32EB2204ECF60098ED45 /* MCEmptyStateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E34F32EA2204ECF60098ED45 /* MCEmptyStateCell.m */; };
+		E34F32F1220CAF1C0098ED45 /* UITextField+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = E34F32F0220CAF1C0098ED45 /* UITextField+Validators.m */; };
 		E354EEDB2006B9B000B062BE /* MCDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */; };
 		E354EEDE2006BB9500B062BE /* MCDesctiptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEDD2006BB9500B062BE /* MCDesctiptionCell.m */; };
 		E354EEE320091BCD00B062BE /* MCFeatureLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEE220091BCD00B062BE /* MCFeatureLayerDetailsViewController.m */; };
@@ -314,6 +315,8 @@
 		E34F32E72204E93C0098ED45 /* MCEmptyStateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCEmptyStateCell.xib; sourceTree = "<group>"; };
 		E34F32E92204ECF60098ED45 /* MCEmptyStateCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCEmptyStateCell.h; sourceTree = "<group>"; };
 		E34F32EA2204ECF60098ED45 /* MCEmptyStateCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCEmptyStateCell.m; sourceTree = "<group>"; };
+		E34F32EF220CAF1C0098ED45 /* UITextField+Validators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITextField+Validators.h"; sourceTree = "<group>"; };
+		E34F32F0220CAF1C0098ED45 /* UITextField+Validators.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITextField+Validators.m"; sourceTree = "<group>"; };
 		E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCDescriptionCell.xib; sourceTree = "<group>"; };
 		E354EEDC2006BB9500B062BE /* MCDesctiptionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDesctiptionCell.h; sourceTree = "<group>"; };
 		E354EEDD2006BB9500B062BE /* MCDesctiptionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDesctiptionCell.m; sourceTree = "<group>"; };
@@ -549,6 +552,8 @@
 				045C949A1B5D4C560005CCD0 /* GPKGSDecimalValidator.m */,
 				E3470CC52020E67D0098D783 /* MCColorUtil.h */,
 				E3470CC62020E67D0098D783 /* MCColorUtil.m */,
+				E34F32EF220CAF1C0098ED45 /* UITextField+Validators.h */,
+				E34F32F0220CAF1C0098ED45 /* UITextField+Validators.m */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -1061,6 +1066,7 @@
 				04CCC86B1B6121E90001296D /* GPKGSLoadTilesViewController.m in Sources */,
 				E3BED1E0219116FA001AF654 /* MCSettingsCoordinator.m in Sources */,
 				04CCC8621B60232A0001296D /* GPKGSUIResponder+FirstResponder.m in Sources */,
+				E34F32F1220CAF1C0098ED45 /* UITextField+Validators.m in Sources */,
 				044648111B4B1D960052913B /* GPKGSTableCell.m in Sources */,
 				04CCC86E1B6122040001296D /* GPKGSLoadTilesData.m in Sources */,
 				044648051B4AF6990052913B /* GPKGSFeatureTable.m in Sources */,

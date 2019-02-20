@@ -135,6 +135,13 @@ NSString * const SHOW_NOTICE = @"showNotice";
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     NSLog(@"max features: %d", [textField.text intValue]);
+    
+    if ([textField.text intValue] > 5000) {
+        [textField setText:[NSString stringWithFormat:@"%d", 5000]];
+        [self.settingsDelegate setMaxFeatures:5000];
+    }
+    
+    [textField setText:[NSString stringWithFormat:@"%d", [textField.text intValue]]];
     [self.settingsDelegate setMaxFeatures:[textField.text intValue]];
 }
 
