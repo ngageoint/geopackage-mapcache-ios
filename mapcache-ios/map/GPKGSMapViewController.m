@@ -2469,40 +2469,40 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void) setShapeOptionsWithPolyline: (GPKGPolyline *) polyline andStyleCache: (GPKGStyleCache *) styleCache andFeatureStyle: (GPKGFeatureStyle *) featureStyle andEditable: (BOOL) editable{
     
-    GPKGPolylineOptions *options = [[GPKGPolylineOptions alloc] init];
-    
     if(editable){
+        GPKGPolylineOptions *options = [[GPKGPolylineOptions alloc] init];
         [options setStrokeColor:self.editPolylineColor];
         [options setLineWidth:self.editPolylineLineWidth];
+        [polyline setOptions:options];
     }else if(styleCache == nil || ![styleCache setFeatureStyleWithPolyline:polyline andFeatureStyle:featureStyle]){
+        GPKGPolylineOptions *options = [[GPKGPolylineOptions alloc] init];
         [options setStrokeColor:self.defaultPolylineColor];
         [options setLineWidth:self.defaultPolylineLineWidth];
+        [polyline setOptions:options];
     }
-    
-    [polyline setOptions:options];
     
 }
 
 -(void) setShapeOptionsWithPolygon: (GPKGPolygon *) polygon andStyleCache: (GPKGStyleCache *) styleCache andFeatureStyle: (GPKGFeatureStyle *) featureStyle andEditable: (BOOL) editable{
     
-    GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
-    
     if(editable){
+        GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
         [options setStrokeColor:self.editPolygonColor];
         [options setLineWidth:self.editPolygonLineWidth];
         if(self.editPolygonFillColor != nil){
             [options setFillColor:self.editPolygonFillColor];
         }
+        [polygon setOptions:options];
     }else if(styleCache == nil || ![styleCache setFeatureStyleWithPolygon:polygon andFeatureStyle:featureStyle]){
+        GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
         [options setStrokeColor:self.defaultPolygonColor];
         [options setLineWidth:self.defaultPolygonLineWidth];
         if(self.defaultPolygonFillColor != nil){
             [options setFillColor:self.defaultPolygonFillColor];
         }
+        [polygon setOptions:options];
     }
-    
-    [polygon setOptions:options];
-    
+
 }
 
 -(GPKGMapPoint *) addEditableShapeWithFeatureId: (NSNumber *) featureId andShape: (GPKGMapShape *) shape{
