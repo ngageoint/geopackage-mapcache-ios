@@ -6,7 +6,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ## 1.21 (TBD)
 
-* TBD
+* geopackage-ios version 3.2.0
+* Feature Style support
+* AFNetworking version 3.2.1
+* Fingertips version 0.5.0 (only used when animate_screen_touches property is set to YES)
 
 ## [1.20](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.20) (10-05-2018)
 
