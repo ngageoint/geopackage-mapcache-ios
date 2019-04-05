@@ -37,6 +37,7 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverl
     [self.table setMaxLat:[self.editTileOverlayData.boundingBox.maxLatitude doubleValue]];
     [self.table setMinLon:[self.editTileOverlayData.boundingBox.minLongitude doubleValue]];
     [self.table setMaxLon:[self.editTileOverlayData.boundingBox.maxLongitude doubleValue]];
+    [self.table setIgnoreGeoPackageStyles:self.editTileOverlayData.featureTilesDraw.ignoreGeoPackageStyles];
     [self.table setPointColor:[self.editTileOverlayData.featureTilesDraw getPointAlphaColor]];
     [self.table setPointColorName:self.editTileOverlayData.featureTilesDraw.pointColorName];
     [self.table setPointAlpha:[self.editTileOverlayData.featureTilesDraw.pointAlpha intValue]];
@@ -83,6 +84,7 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverl
     GPKGBoundingBox * boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:self.table.minLon andMinLatitudeDouble:self.table.minLat andMaxLongitudeDouble:self.table.maxLon andMaxLatitudeDouble:self.table.maxLat];
     [self.editTileOverlayData setBoundingBox:boundingBox];
     GPKGSFeatureTilesDrawData * featureTilesDraw = [[GPKGSFeatureTilesDrawData alloc] init];
+    [featureTilesDraw setIgnoreGeoPackageStyles:self.table.ignoreGeoPackageStyles];
     [featureTilesDraw setPointColorName:self.table.pointColorName];
     [featureTilesDraw setPointAlpha:[NSNumber numberWithInt:self.table.pointAlpha]];
     [featureTilesDraw setPointRadius:[[NSDecimalNumber alloc] initWithDouble:self.table.pointRadius]];
