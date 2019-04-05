@@ -7,6 +7,7 @@
 //
 
 #import "MCFeatureHelper.h"
+#import "MCColorUtil.h"
 
 @interface MCFeatureHelper ()
 @property (nonatomic, strong) GPKGBoundingBox *featuresBoundingBox;
@@ -163,16 +164,21 @@
             
             NSMutableArray * databaseFeatures = [featureTables objectForKey:databaseName];
             
+            GPKGGeoPackage *geoPackage = [self.geoPackages objectForKey:databaseName];
+            GPKGStyleCache *styleCache = [[GPKGStyleCache alloc] initWithGeoPackage:geoPackage];
+            
             for(NSString * features in databaseFeatures){
                 
                 if([[self.featureDaos objectForKey:databaseName] objectForKey:features] != nil){
                     
-                    count = [self displayFeaturesWithId:updateId andDatabase:databaseName andFeatures:features andCount:count andMaxFeatures:maxFeatures andEditable:NO andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
+                    count = [self displayFeaturesWithId:updateId andGeoPackage:geoPackage andStyleCache:styleCache andFeatures:features andCount:count andMaxFeatures:maxFeatures andEditable:NO andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
                     if([self featureUpdateCanceled:updateId] || count >= maxFeatures){
                         break;
                     }
                 }
             }
+            
+            [styleCache clear];
         }
         
         if([self featureUpdateCanceled:updateId]){
@@ -184,14 +190,18 @@
 }
 
 
--(int) displayFeaturesWithId: (int) updateId andDatabase: (NSString *) database andFeatures: (NSString *) features andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andMapViewBoundingBox: (GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance: (double) toleranceDistance andFilter: (BOOL) filter{
+-(int) displayFeaturesWithId: (int) updateId andGeoPackage: (GPKGGeoPackage *) geoPackage andStyleCache: (GPKGStyleCache *) styleCache andFeatures: (NSString *) features andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andMapViewBoundingBox: (GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance: (double) toleranceDistance andFilter: (BOOL) filter{
     
-    GPKGGeoPackage * geoPackage = [self.geoPackages objectForKey:database];
+    NSString *database = geoPackage.name;
     GPKGFeatureDao * featureDao = [[self.featureDaos objectForKey:database] objectForKey:features];
     NSString * tableName = featureDao.tableName;
     GPKGMapShapeConverter * converter = [[GPKGMapShapeConverter alloc] initWithProjection:featureDao.projection];
     
     [converter setSimplifyToleranceAsDouble:toleranceDistance];
+    
+    if(![[styleCache featureStyleExtension] hasWithTable:features]){
+        styleCache = nil;
+    }
     
     count += [self.featureShapes featureIdsCountInDatabase:database withTable:tableName];
     
@@ -208,7 +218,7 @@
                 GPKGFeatureIndexResults *indexResults2 = [indexer queryWithBoundingBox:complementary inProjection:mapViewProjection];
                 indexResults = [[GPKGMultipleFeatureIndexResults alloc] initWithFeatureIndexResults1:indexResults andFeatureIndexResults2:indexResults2];
             }
-            count = [self processFeatureIndexResults:indexResults withUpdateId:updateId andDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter andFilter:filter];
+            count = [self processFeatureIndexResults:indexResults withUpdateId:updateId andDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter andStyleCache:styleCache andFilter:filter];
             
         }else{
             
@@ -220,10 +230,9 @@
                 SFPProjectionTransform * projectionTransform = [[SFPProjectionTransform alloc] initWithFromProjection:mapViewProjection andToProjection:featureProjection];
                 GPKGBoundingBox *boundedMapViewBoundingBox = [mapViewBoundingBox boundWgs84Coordinates];
                 GPKGBoundingBox *transformedBoundingBox = [boundedMapViewBoundingBox transform:projectionTransform];
-                enum SFPUnit unit = [featureProjection getUnit];
-                if(unit == SFP_UNIT_DEGREES){
+                if([featureProjection isUnit:SFP_UNIT_DEGREES]){
                     filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
-                }else if(unit == SFP_UNIT_METERS){
+                }else if([featureProjection isUnit:SFP_UNIT_METERS]){
                     filterMaxLongitude = PROJ_WEB_MERCATOR_HALF_WORLD_WIDTH;
                 }
                 filterBoundingBox = [transformedBoundingBox expandCoordinatesWithMaxLongitude:filterMaxLongitude];
@@ -235,7 +244,7 @@
                 while(![self featureUpdateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
                     @try {
                         GPKGFeatureRow * row = [featureDao getFeatureRow:results];
-                        GPKGMapShape *shape = [self processFeatureRow:row WithDatabase:database andTableName:tableName andConverter:converter andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:filterBoundingBox andFilterMaxLongitude:filterMaxLongitude andFilter:filter];
+                        GPKGMapShape *shape = [self processFeatureRow:row WithDatabase:database andTableName:tableName andConverter:converter andStyleCache:styleCache andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:filterBoundingBox andFilterMaxLongitude:filterMaxLongitude andFilter:filter];
                         
                         if (shape != nil && count++ < maxFeatures) {
                             [self.featureHelperDelegate addShapeToMapView:shape withCount:count];
@@ -257,7 +266,7 @@
 }
 
 
--(int) processFeatureIndexResults: (GPKGFeatureIndexResults *) indexResults withUpdateId: (int) updateId andDatabase: (NSString *) database andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter andFilter: (BOOL) filter{
+-(int) processFeatureIndexResults: (GPKGFeatureIndexResults *) indexResults withUpdateId: (int) updateId andDatabase: (NSString *) database andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter andStyleCache: (GPKGStyleCache *) styleCache andFilter: (BOOL) filter{
     
     @try {
         for(GPKGFeatureRow *row in indexResults){
@@ -267,7 +276,7 @@
             }
             
             if(![self.featureShapes existsWithFeatureId:[row getId] inDatabase:database withTable:tableName]){
-                GPKGMapShape *shape = [self processFeatureRow:row WithDatabase:database andTableName:tableName andConverter:converter andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:nil andFilterMaxLongitude:0 andFilter:filter];
+                GPKGMapShape *shape = [self processFeatureRow:row WithDatabase:database andTableName:tableName andConverter:converter andStyleCache:styleCache andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:nil andFilterMaxLongitude:0 andFilter:filter];
                 
                 if (shape != nil && count++ < maxFeatures) {
                     [self.featureHelperDelegate addShapeToMapView:shape withCount:count];
@@ -365,25 +374,83 @@
 }
 
 
--(void) setShapeOptionsWithMapPoint: (GPKGMapPoint *) mapPoint andEditable: (BOOL) editable andClickable: (BOOL) clickable {
+-(void) setShapeOptionsWithMapPoint: (GPKGMapPoint *) mapPoint andStyleCache: (GPKGStyleCache *) styleCache andFeatureStyle: (GPKGFeatureStyle *) featureStyle andEditable: (BOOL) editable andClickable: (BOOL) clickable {
     if(editable){
         if(clickable){
             [mapPoint.options setPinTintColor:[UIColor greenColor]];
         }else{
             [mapPoint.options setPinTintColor:[UIColor purpleColor]];
         }
-    }else{
+    }else if(styleCache == nil || ![styleCache setFeatureStyleWithMapPoint:mapPoint andFeatureStyle:featureStyle]){
         [mapPoint.options setPinTintColor:[UIColor redColor]];
     }
 }
 
 
--(void) prepareShapeOptionsWithShape: (GPKGMapShape *) shape andEditable: (BOOL) editable andTopLevel: (BOOL) topLevel {
+-(void) setShapeOptionsWithPolyline: (GPKGPolyline *) polyline andStyleCache: (GPKGStyleCache *) styleCache andFeatureStyle: (GPKGFeatureStyle *) featureStyle andEditable: (BOOL) editable{
+    
+    if(editable){
+        // TODO editable style options
+        GPKGPolylineOptions *options = [[GPKGPolylineOptions alloc] init];
+        [options setStrokeColor:[MCColorUtil getPolygonStrokeColor]]; // TODO Polyline stroke color?
+        [options setLineWidth:2.0];
+        [polyline setOptions:options];
+    }else if(styleCache == nil || ![styleCache setFeatureStyleWithPolyline:polyline andFeatureStyle:featureStyle]){
+        GPKGPolylineOptions *options = [[GPKGPolylineOptions alloc] init];
+        [options setStrokeColor:[MCColorUtil getPolygonStrokeColor]]; // TODO Polyline stroke color?
+        [options setLineWidth:2.0];
+        [polyline setOptions:options];
+    }
+    
+}
+
+
+-(void) setShapeOptionsWithPolygon: (GPKGPolygon *) polygon andStyleCache: (GPKGStyleCache *) styleCache andFeatureStyle: (GPKGFeatureStyle *) featureStyle andEditable: (BOOL) editable{
+    
+    if(editable){
+        // TODO editable style options
+        GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
+        [options setStrokeColor:[MCColorUtil getPolygonStrokeColor]];
+        [options setLineWidth:2.0];
+        [options setFillColor:[MCColorUtil getPolygonFillColor]];
+        [polygon setOptions:options];
+    }else if(styleCache == nil || ![styleCache setFeatureStyleWithPolygon:polygon andFeatureStyle:featureStyle]){
+        GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
+        [options setStrokeColor:[MCColorUtil getPolygonStrokeColor]];
+        [options setLineWidth:2.0];
+        [options setFillColor:[MCColorUtil getPolygonFillColor]];
+        [polygon setOptions:options];
+    }
+    
+}
+
+
+-(void) prepareShapeOptionsWithShape: (GPKGMapShape *) shape andStyleCache: (GPKGStyleCache *) styleCache andFeature: (GPKGFeatureRow *) featureRow andEditable: (BOOL) editable andTopLevel: (BOOL) topLevel {
+
+    GPKGFeatureStyle *featureStyle = nil;
+    if (styleCache != nil) {
+        featureStyle = [[styleCache featureStyleExtension] featureStyleWithFeature:featureRow andGeometryType:shape.geometryType];
+    }
+
     switch(shape.shapeType){
         case GPKG_MST_POINT:
         {
             GPKGMapPoint * mapPoint = (GPKGMapPoint *) shape.shape;
-            [self setShapeOptionsWithMapPoint:mapPoint andEditable:editable andClickable:topLevel];
+            [self setShapeOptionsWithMapPoint:mapPoint andStyleCache:styleCache andFeatureStyle:featureStyle andEditable:editable andClickable:topLevel];
+        }
+            break;
+            
+        case GPKG_MST_POLYLINE:
+        {
+            GPKGPolyline *polyline = (GPKGPolyline *) shape.shape;
+            [self setShapeOptionsWithPolyline:polyline andStyleCache:styleCache andFeatureStyle:featureStyle andEditable:editable];
+        }
+            break;
+            
+        case GPKG_MST_POLYGON:
+        {
+            GPKGPolygon *polygon = (GPKGPolygon *) shape.shape;
+            [self setShapeOptionsWithPolygon:polygon andStyleCache:styleCache andFeatureStyle:featureStyle andEditable:editable];
         }
             break;
             
@@ -391,7 +458,25 @@
         {
             GPKGMultiPoint * multiPoint = (GPKGMultiPoint *) shape.shape;
             for(GPKGMapPoint * mapPoint in multiPoint.points){
-                [self setShapeOptionsWithMapPoint:mapPoint andEditable:editable andClickable:false];
+                [self setShapeOptionsWithMapPoint:mapPoint andStyleCache:styleCache andFeatureStyle:featureStyle andEditable:editable andClickable:false];
+            }
+        }
+            break;
+            
+        case GPKG_MST_MULTI_POLYLINE:
+        {
+            GPKGMultiPolyline *multiPolyline = (GPKGMultiPolyline *) shape.shape;
+            for(GPKGPolyline *polyline in multiPolyline.polylines){
+                [self setShapeOptionsWithPolyline:polyline andStyleCache:styleCache andFeatureStyle:featureStyle andEditable:editable];
+            }
+        }
+            break;
+            
+        case GPKG_MST_MULTI_POLYGON:
+        {
+            GPKGMultiPolygon *multiPolygon = (GPKGMultiPolygon *) shape.shape;
+            for(GPKGPolygon *polygon in multiPolygon.polygons){
+                [self setShapeOptionsWithPolygon:polygon andStyleCache:styleCache andFeatureStyle:featureStyle andEditable:editable];
             }
         }
             break;
@@ -400,7 +485,7 @@
         {
             NSArray * shapeArray = (NSArray *) shape.shape;
             for(GPKGMapShape * shape in shapeArray){
-                [self prepareShapeOptionsWithShape:shape andEditable:editable andTopLevel:false];
+                [self prepareShapeOptionsWithShape:shape andStyleCache:styleCache andFeature:featureRow andEditable:editable andTopLevel:false];
             }
         }
             break;
@@ -413,7 +498,7 @@
 }
 
 
--(GPKGMapShape *) processFeatureRow: (GPKGFeatureRow *) row WithDatabase: (NSString *) database andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andFilterBoundingBox: (GPKGBoundingBox *) boundingBox andFilterMaxLongitude: (double) maxLongitude andFilter: (BOOL) filter {
+-(GPKGMapShape *) processFeatureRow: (GPKGFeatureRow *) row WithDatabase: (NSString *) database andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter andStyleCache: (GPKGStyleCache *) styleCache andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andFilterBoundingBox: (GPKGBoundingBox *) boundingBox andFilterMaxLongitude: (double) maxLongitude andFilter: (BOOL) filter {
     
     GPKGGeometryData * geometryData = [row getGeometry];
     if(geometryData != nil && !geometryData.empty){
@@ -444,9 +529,9 @@
                 NSNumber * featureId = [row getId];
                 GPKGMapShape * shape = [converter toShapeWithGeometry:geometry];
                 [self updateFeaturesBoundingBox:shape];
-                [self prepareShapeOptionsWithShape:shape andEditable:editable andTopLevel:true];
+                [self prepareShapeOptionsWithShape:shape andStyleCache:styleCache andFeature:row andEditable:editable andTopLevel:true];
                 [self addMapPointShapeWithFeatureId:[featureId intValue] andDatabase:database andTableName:tableName andMapShape:shape];
-                [self.featureShapes addMapShape:shape withFeatureId:featureId toDatabase:database withTable:tableName];
+                [self.featureShapes addMapMetadataShape:shape withFeatureId:featureId toDatabase:database withTable:tableName];
                 
                 return shape;
             }
