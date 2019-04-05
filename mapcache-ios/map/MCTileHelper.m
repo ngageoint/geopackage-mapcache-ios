@@ -75,11 +75,7 @@
     //    for(GPKGFeatureDao * featureDao in featureDaos){
     //
     //        // Create the feature tiles
-    //        GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithFeatureDao:featureDao];
-    //
-    //        // Create an index manager
-    //        GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
-    //        [featureTiles setIndexManager:indexer];
+    //        GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
     //
     //        self.featureOverlayTiles = true;
     //
@@ -134,7 +130,7 @@
 - (GPKGBoundingBox *)transformBoundingBoxToWgs84: (GPKGBoundingBox *)boundingBox withSrs: (GPKGSpatialReferenceSystem *)srs {
     
     SFPProjection *projection = [srs projection];
-    if([projection getUnit] == SFP_UNIT_DEGREES){
+    if([projection isUnit:SFP_UNIT_DEGREES]){
         boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
     }
     SFPProjectionTransform *transformToWebMercator = [[SFPProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];

@@ -11,7 +11,7 @@
 @interface MCBoundingBoxViewController ()
 @property (nonatomic) BOOL boundingBoxMode;
 @property (nonatomic) BOOL drawing;
-@property (nonatomic, strong) MKPolygon * boundingBox;
+@property (nonatomic, strong) GPKGPolygon * boundingBox;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxEndCorner;
 @property (nonatomic) double minLat;
@@ -133,8 +133,8 @@
                 self.boundingBoxStartCorner = point;
                 self.boundingBoxEndCorner = point;
                 CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
-                self.boundingBox = [MKPolygon polygonWithCoordinates:points count:4];
-                
+                self.boundingBox = [GPKGPolygon polygonWithCoordinates:points count:4];
+                [self setBoundingBoxPolygonOptions:self.boundingBox];
                 [self.mapView addOverlay:self.boundingBox];
                 [self setDrawing:true];
             }
@@ -147,7 +147,8 @@
                         if(self.drawing && self.boundingBox != nil){
                             self.boundingBoxEndCorner = point;
                             CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
-                            MKPolygon * newBoundingBox = [MKPolygon polygonWithCoordinates:points count:4];
+                            GPKGPolygon * newBoundingBox = [GPKGPolygon polygonWithCoordinates:points count:4];
+                            [self setBoundingBoxPolygonOptions:newBoundingBox];
                             [self.mapView removeOverlay:self.boundingBox];
                             [self.mapView addOverlay:newBoundingBox];
                             self.boundingBox = newBoundingBox;
@@ -210,46 +211,26 @@
                     GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
                     data.type = GPKGS_MPDT_EDIT_FEATURE_POINT;
                     [self setTitleWithGeometryType:self.editFeatureShape.shape.geometryType andMapPoint:mapPoint];
-                    [self updateEditState:true]; // TODO figure out if I need all of this method
+                    //[self updateEditState:true]; // TODO figure out if I need all of this method
                 }
             }else{
                 GPKGMapPoint * mapPoint = [self addEditPoint:point];
                 [self setTitleWithTitle:[GPKGSEditTypes pointName:self.editFeatureType] andMapPoint:mapPoint];
-                [self updateEditState:true]; // TODO figure out if I need all of this method
+                //[self updateEditState:true]; // TODO figure out if I need all of this method
             }
         }
     }
 }
 
-
--(void) updateEditState: (BOOL) updateAcceptClear{
-    BOOL accept = false;
+-(void) setBoundingBoxPolygonOptions: (GPKGPolygon *) polygon{
     
-    switch(self.editFeatureType){
-            
-        case GPKGS_ET_POLYGON:
-            
-            if([self.editPoints count] >= 3){
-                accept = true;
-                
-                NSArray * points = [self getLocationPoints:self.editPoints];
-                CLLocationCoordinate2D * locations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:points];
-                
-                MKPolygon * tempPolygon  = [MKPolygon polygonWithCoordinates:locations count:[points count] interiorPolygons:nil];
-                if(self.editPolygon != nil){
-                    [self.mapView removeOverlay:self.editPolygon];
-                }
-                self.editPolygon = tempPolygon;
-                [self.mapView addOverlay:self.editPolygon];
-            } else if(self.editPolygon != nil){
-                [self.mapView removeOverlay:self.editPolygon];
-                self.editPolygon = nil;
-            }
-            
-            break;
-        default:
-            break;
-    }
+    GPKGPolygonOptions *options = [[GPKGPolygonOptions alloc] init];
+    
+    [options setStrokeColor:[MCColorUtil getPolygonStrokeColor]];
+    [options setLineWidth:2.0];
+    [options setFillColor:[MCColorUtil getPolygonFillColor]];
+    
+    [polygon setOptions:options];
 }
 
 
@@ -286,7 +267,7 @@
     _boundingBoxEndCorner = CLLocationCoordinate2DMake(upperRightLat, upperRightLon);
     
     CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:_boundingBoxStartCorner andPoint2: _boundingBoxEndCorner];
-    MKPolygon * newBoundingBox = [MKPolygon polygonWithCoordinates:points count:4];
+    GPKGPolygon * newBoundingBox = [GPKGPolygon polygonWithCoordinates:points count:4];
     [self.mapView removeOverlay:self.boundingBox];
     [self.mapView addOverlay:newBoundingBox];
     self.boundingBox = newBoundingBox;
@@ -387,14 +368,29 @@
     MKOverlayRenderer * rendered = nil;
     if ([overlay isKindOfClass:[MKPolygon class]]) {
         MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
-        if(self.drawing || (self.boundingBox != nil && self.boundingBox == overlay)){
-            polygonRenderer.strokeColor = [MCColorUtil getPolygonStrokeColor];
-            polygonRenderer.lineWidth = 2.0;
-            polygonRenderer.fillColor = [MCColorUtil getPolygonFillColor];
-        } else {
-            polygonRenderer.strokeColor = [MCColorUtil getPolygonStrokeColor];
-            polygonRenderer.lineWidth = 2.0;
-            polygonRenderer.fillColor = [MCColorUtil getPolygonFillColor];
+        UIColor *strokeColor = [MCColorUtil getPolygonStrokeColor];
+        double lineWidth = 2.0;
+        UIColor *fillColor = [MCColorUtil getPolygonFillColor];
+        if ([overlay isKindOfClass:[GPKGPolygon class]]) {
+            GPKGPolygon *polygon = (GPKGPolygon *) overlay;
+            GPKGPolygonOptions *options = polygon.options;
+            if(options != nil){
+                if(options.strokeColor != nil){
+                    strokeColor = options.strokeColor;
+                    fillColor = nil;
+                }
+                if(options.lineWidth > 0){
+                    lineWidth = options.lineWidth;
+                }
+                if(options.fillColor != nil){
+                    fillColor = options.fillColor;
+                }
+            }
+        }
+        polygonRenderer.strokeColor = strokeColor;
+        polygonRenderer.lineWidth = lineWidth;
+        if(fillColor != nil){
+            polygonRenderer.fillColor = fillColor;
         }
         rendered = polygonRenderer;
     }
