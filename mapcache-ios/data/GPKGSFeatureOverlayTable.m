@@ -17,6 +17,7 @@ NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MIN_LAT = @"min_lat";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MAX_LAT = @"max_lat";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MIN_LON = @"min_lon";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_MAX_LON = @"max_lon";
+NSString * const GPKGS_FEATURE_OVERLAY_TABLE_IGNORE_GEOPACKAGE_STYLES = @"ignore_geopackage_styles";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_POINT_COLOR = @"point_color";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_POINT_COLOR_NAME = @"point_color_name";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_POINT_ALPHA = @"point_alpha";
@@ -45,6 +46,7 @@ NSString * const GPKGS_FEATURE_OVERLAY_TABLE_COLOR_SUFFIX_ALPHA = @"_alpha";
     self = [super initWithDatabase:database andName:name andGeometryType:geometryType andCount:count];
     if(self != nil){
         self.featureTable = featureTable;
+        self.ignoreGeoPackageStyles = NO;
     }
     return self;
 }
@@ -70,6 +72,8 @@ NSString * const GPKGS_FEATURE_OVERLAY_TABLE_COLOR_SUFFIX_ALPHA = @"_alpha";
         self.minLon = [minLon doubleValue];
         NSDecimalNumber * maxLon = [values objectForKey:GPKGS_FEATURE_OVERLAY_TABLE_MAX_LON];
         self.maxLon = [maxLon doubleValue];
+        NSNumber * ignoreGeoPackageStyles = [values objectForKey:GPKGS_FEATURE_OVERLAY_TABLE_IGNORE_GEOPACKAGE_STYLES];
+        self.ignoreGeoPackageStyles = (BOOL)[ignoreGeoPackageStyles intValue];
         self.pointColor = [self getColorForName:GPKGS_FEATURE_OVERLAY_TABLE_POINT_COLOR inValues:values];
         self.pointColorName = [values objectForKey:GPKGS_FEATURE_OVERLAY_TABLE_POINT_COLOR_NAME];
         NSNumber * pointAlpha = [values objectForKey:GPKGS_FEATURE_OVERLAY_TABLE_POINT_ALPHA];
@@ -115,6 +119,7 @@ NSString * const GPKGS_FEATURE_OVERLAY_TABLE_COLOR_SUFFIX_ALPHA = @"_alpha";
     [values setObject:[NSDecimalNumber numberWithDouble:self.maxLat] forKey:GPKGS_FEATURE_OVERLAY_TABLE_MAX_LAT];
     [values setObject:[NSDecimalNumber numberWithDouble:self.minLon] forKey:GPKGS_FEATURE_OVERLAY_TABLE_MIN_LON];
     [values setObject:[NSDecimalNumber numberWithDouble:self.maxLon] forKey:GPKGS_FEATURE_OVERLAY_TABLE_MAX_LON];
+    [values setObject:[NSNumber numberWithBool:self.ignoreGeoPackageStyles] forKey:GPKGS_FEATURE_OVERLAY_TABLE_IGNORE_GEOPACKAGE_STYLES];
     [self setColor:self.pointColor forName:GPKGS_FEATURE_OVERLAY_TABLE_POINT_COLOR inValues:values];
     [values setObject:self.pointColorName forKey:GPKGS_FEATURE_OVERLAY_TABLE_POINT_COLOR_NAME];
     [values setObject:[NSNumber numberWithInt:self.pointAlpha] forKey:GPKGS_FEATURE_OVERLAY_TABLE_POINT_ALPHA];

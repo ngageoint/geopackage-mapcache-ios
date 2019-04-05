@@ -11,6 +11,7 @@
 
 @interface GPKGSFeatureTilesDrawData : NSObject
 
+@property (nonatomic) BOOL ignoreGeoPackageStyles;
 @property (nonatomic, strong) UIColor * pointColor;
 @property (nonatomic, strong) NSString * pointColorName;
 @property (nonatomic, strong) NSNumber * pointAlpha;
