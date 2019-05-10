@@ -57,6 +57,7 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
     [overlayTable setMaxLat:[self.editTileOverlayData.boundingBox.maxLatitude doubleValue]];
     [overlayTable setMinLon:[self.editTileOverlayData.boundingBox.minLongitude doubleValue]];
     [overlayTable setMaxLon:[self.editTileOverlayData.boundingBox.maxLongitude doubleValue]];
+    [overlayTable setIgnoreGeoPackageStyles:self.editTileOverlayData.featureTilesDraw.ignoreGeoPackageStyles];
     [overlayTable setPointColor:[self.editTileOverlayData.featureTilesDraw getPointAlphaColor]];
     [overlayTable setPointColorName:self.editTileOverlayData.featureTilesDraw.pointColorName];
     [overlayTable setPointAlpha:[self.editTileOverlayData.featureTilesDraw.pointAlpha intValue]];

@@ -140,7 +140,7 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
                     SFPProjection * projection = [contentsDao getProjection:contents];
                     
                     SFPProjectionTransform * webMercatorTransform = [[SFPProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
-                    if([projection getUnit] == SFP_UNIT_DEGREES){
+                    if([projection isUnit:SFP_UNIT_DEGREES]){
                         boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
                     }
                     GPKGBoundingBox * webMercatorBoundingBox = [boundingBox transform:webMercatorTransform];

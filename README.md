@@ -21,7 +21,7 @@ The MapCache app provides read and write access to GeoPackage files, including f
 ### Screen Shots ###
 
 Manager View with GeoPackages linked at Open Geospatial Consortium [GeoPackage](http://www.geopackage.org/#sampledata)
- 
+
 * [Technology Test Data Set](http://www.geopackage.org/data/gdal_sample.gpkg)
 * [ERDC Whitehorse Tiles](https://portal.opengeospatial.org/files/63156)
 
@@ -51,9 +51,9 @@ Editing Haiti Features with [OpenStreetMap](http://www.openstreetmap.org) tiles
 
 MapCache functionality demonstration video
 
-[Watch](https://owncloud.devops.geointservices.io/index.php/s/Q9Z8wdP7d40empT)
+[Watch](https://owncloud.devops.geointservices.io/index.php/s/Qh2pYaoo9ge1Ei0)
 
-[Download](https://owncloud.devops.geointservices.io/index.php/s/Q9Z8wdP7d40empT/download)
+[Download](https://owncloud.devops.geointservices.io/index.php/s/Qh2pYaoo9ge1Ei0/download)
 
 ### Build ###
 

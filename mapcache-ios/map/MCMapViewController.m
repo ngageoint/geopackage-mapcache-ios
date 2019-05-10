@@ -47,7 +47,7 @@
 @property (nonatomic, strong) NSNumberFormatter *locationDecimalFormatter;
 @property (nonatomic) BOOL boundingBoxMode;
 @property (nonatomic) BOOL drawing;
-@property (nonatomic, strong) MKPolygon *boundingBox;
+@property (nonatomic, strong) GPKGPolygon *boundingBox;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxEndCorner;
 @property (nonatomic) double minLat;
@@ -252,23 +252,53 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     MKOverlayRenderer * rendered = nil;
     if ([overlay isKindOfClass:[MKPolygon class]]) {
         MKPolygonRenderer * polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
-        polygonRenderer.strokeColor = self.defaultPolygonColor;
-        polygonRenderer.lineWidth = self.defaultPolygonLineWidth;
-        
-        if(self.defaultPolygonFillColor != nil){
-            polygonRenderer.fillColor = self.defaultPolygonFillColor;
+        UIColor *strokeColor = self.defaultPolygonColor;
+        double lineWidth = self.defaultPolygonLineWidth;
+        UIColor *fillColor = self.defaultPolygonFillColor;
+        if ([overlay isKindOfClass:[GPKGPolygon class]]) {
+            GPKGPolygon *polygon = (GPKGPolygon *) overlay;
+            GPKGPolygonOptions *options = polygon.options;
+            if(options != nil){
+                if(options.strokeColor != nil){
+                    strokeColor = options.strokeColor;
+                    fillColor = nil;
+                }
+                if(options.lineWidth > 0){
+                    lineWidth = options.lineWidth;
+                }
+                if(options.fillColor != nil){
+                    fillColor = options.fillColor;
+                }
+            }
         }
-        
+        polygonRenderer.strokeColor = strokeColor;
+        polygonRenderer.lineWidth = lineWidth;
+        if(fillColor != nil){
+            polygonRenderer.fillColor = fillColor;
+        }
         rendered = polygonRenderer;
-    } else if ([overlay isKindOfClass:[MKPolyline class]]) {
+    }else if ([overlay isKindOfClass:[MKPolyline class]]) {
         MKPolylineRenderer * polylineRenderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
-        polylineRenderer.strokeColor = self.defaultPolylineColor;
-        polylineRenderer.lineWidth = self.defaultPolylineLineWidth;
+        UIColor *strokeColor = self.defaultPolylineColor;
+        double lineWidth = self.defaultPolylineLineWidth;
+        if ([overlay isKindOfClass:[GPKGPolyline class]]) {
+            GPKGPolyline *polyline = (GPKGPolyline *) overlay;
+            GPKGPolylineOptions *options = polyline.options;
+            if(options != nil){
+                if(options.strokeColor != nil){
+                    strokeColor = options.strokeColor;
+                }
+                if(options.lineWidth > 0){
+                    lineWidth = options.lineWidth;
+                }
+            }
+        }
+        polylineRenderer.strokeColor = strokeColor;
+        polylineRenderer.lineWidth = lineWidth;
         rendered = polylineRenderer;
-    } else if ([overlay isKindOfClass:[MKTileOverlay class]]) {
+    }else if ([overlay isKindOfClass:[MKTileOverlay class]]) {
         rendered = [[MKTileOverlayRenderer alloc] initWithTileOverlay:overlay];
     }
-    
     return rendered;
 }
 
@@ -652,7 +682,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 self.boundingBoxStartCorner = point;
                 self.boundingBoxEndCorner = point;
                 CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
-                self.boundingBox = [MKPolygon polygonWithCoordinates:points count:4];
+                self.boundingBox = [GPKGPolygon polygonWithCoordinates:points count:4];
                 
                 [self.mapView addOverlay:self.boundingBox];
                 [self setDrawing:true];
@@ -666,7 +696,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                         if(self.drawing && self.boundingBox != nil){
                             self.boundingBoxEndCorner = point;
                             CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
-                            MKPolygon * newBoundingBox = [MKPolygon polygonWithCoordinates:points count:4];
+                            GPKGPolygon * newBoundingBox = [GPKGPolygon polygonWithCoordinates:points count:4];
                             [self.mapView removeOverlay:self.boundingBox];
                             [self.mapView addOverlay:newBoundingBox];
                             self.boundingBox = newBoundingBox;
