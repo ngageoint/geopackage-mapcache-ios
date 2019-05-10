@@ -72,7 +72,10 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     GPKGBoundingBox *boundingBox = [geoPackage contentsBoundingBoxInProjection:[SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
     CLLocationCoordinate2D center = [boundingBox getCenter];
     
-    [self.mcMapViewController zoomToPointWithOffset:center];
+    if (center.latitude != 0 && center.longitude != 0) {
+        [self.mcMapViewController zoomToPointWithOffset:center];
+    }
+    
     [geoPackage close];
 }
 

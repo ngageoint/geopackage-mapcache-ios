@@ -44,7 +44,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(boundingBoxDrawn:) name:@"boundingBoxResults" object:nil];
 //    [self addDragHandle];
-//    [self addCloseButton];
+    [self addCloseButton];
     
 }
 
@@ -122,5 +122,10 @@
     }
 }
 
+
+#pragma mark - NGADrawerView methods
+- (void) closeDrawer {
+    [self.drawerViewDelegate popDrawer];
+}
 
 @end

@@ -47,6 +47,7 @@
     return YES;
 }
 
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
@@ -93,6 +94,7 @@ annotation {
             [[NSNotificationCenter defaultCenter] postNotificationName:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION object:self];
         }else{
             NSLog(@"Error importing file %@", fileUrl);
+            // TODO: handle this with an alert instead
         }
     }
 
@@ -118,3 +120,12 @@ annotation {
 
 
 @end
+
+
+// TODO: look into this more
+@implementation NSURLRequest(DataController)
++ (BOOL)allowsAnyHTTPSCertificateForHost:(NSString *)host{
+    return YES;
+}
+@end
+

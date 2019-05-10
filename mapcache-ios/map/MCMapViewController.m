@@ -318,6 +318,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
+-(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
+    // TODO: implement redraw of features on zoom in
+}
+
+
+#pragma mark - Zoom and map state
 -(int) updateInBackgroundWithZoom: (BOOL) zoom{
     return [self updateInBackgroundWithZoom:zoom andFilter:false];
 }

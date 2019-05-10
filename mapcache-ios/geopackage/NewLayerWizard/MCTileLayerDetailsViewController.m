@@ -78,8 +78,8 @@
     
     _urlCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     _urlCell.title.text = @"What is the URL to your tiles?";
-    _urlCell.field.placeholder = @"http://openstreetmap.org/{x}/{y}/{z}";
-    _urlCell.field.text = @"http://osm.geointservices.io/osm_tiles/{z}/{x}/{y}.png";
+    _urlCell.field.placeholder = @"https://osm.gs.mil/tiles/default/{x}/{y}/{z}.png";
+    _urlCell.field.text = @"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png";
     _urlCell.field.delegate = self;
     [_urlCell.field setReturnKeyType:UIReturnKeyDone];
     [_cellArray addObject:_urlCell];
@@ -150,6 +150,11 @@
     int referenceSystem = [_referenceSystems[selectedSegmentTitle] intValue];
     
     [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text URL:_urlCell.field.text andReferenceSystemCode:referenceSystem];
+}
+
+#pragma mark - NGADrawerView methods
+- (void) closeDrawer {
+    [self.drawerViewDelegate popDrawer];
 }
 
 @end
