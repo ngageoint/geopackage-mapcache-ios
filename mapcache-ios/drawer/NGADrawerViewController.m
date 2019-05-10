@@ -27,8 +27,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _fullView = 240;
-    _partialView = [UIScreen mainScreen].bounds.size.height - UIApplication.sharedApplication.statusBarFrame.size.height * 3;
+    _fullView = 170;
+    //_partialView = [UIScreen mainScreen].bounds.size.height - UIApplication.sharedApplication.statusBarFrame.size.height *5;
+    _partialView = 600;
     
     _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
     _panGestureRecognizer.delegate = self;
@@ -192,7 +193,5 @@
     [self.view insertSubview:bluredView atIndex:0];
     self.view.backgroundColor = [UIColor whiteColor];
 }
-
-
 
 @end

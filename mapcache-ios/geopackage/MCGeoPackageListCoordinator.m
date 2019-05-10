@@ -38,15 +38,15 @@
     _geoPackageListView = [[MCGeoPackageList alloc] initWithGeoPackages:_databases asFullView:YES andDelegate:self];
     _geoPackageListView.drawerViewDelegate = _drawerViewDelegate;
     [_geoPackageListView.drawerViewDelegate pushDrawer:_geoPackageListView];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(boundingBoxDrawn:) name:@"boundingBoxResults" object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(boundingBoxDrawn:) name:@"boundingBoxResults" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(geoPackageImported:) name:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION object:nil];
 }
 
 
 // TODO make a call to the list view controller to update with the new geopackages, maybe as an array
 - (void) update {
-    _databases = [[NSMutableArray alloc] init];
-    NSArray *databaseNames = [_manager databases];
+    self.databases = [[NSMutableArray alloc] init];
+    NSArray *databaseNames = [self.manager databases];
     
     for(NSString * databaseName in databaseNames){
         GPKGGeoPackage * geoPackage = nil;
@@ -54,7 +54,7 @@
             geoPackage = [self.manager open:databaseName];
             
             GPKGSDatabase * theDatabase = [[GPKGSDatabase alloc] initWithName:databaseName andExpanded:NO];
-            [_databases addObject:theDatabase];
+            [self.databases addObject:theDatabase];
             NSMutableArray * tables = [[NSMutableArray alloc] init];
             
             GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
@@ -186,8 +186,8 @@
     }
     
     [self update];
-    _geoPackageListView.geoPackages = _databases;
-    [_geoPackageListView.tableView reloadData];
+    self.geoPackageListView.geoPackages = self.databases;
+    [self.geoPackageListView.tableView reloadData];
 }
 
 

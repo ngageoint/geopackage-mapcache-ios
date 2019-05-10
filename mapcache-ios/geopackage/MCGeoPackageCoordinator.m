@@ -91,7 +91,7 @@
 
 
 - (void) callCompletionHandler {
-    NSLog(@"Back pressed");
+    NSLog(@"Close pressed");
     [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
 }
 
@@ -161,6 +161,7 @@
     _tileData = [[GPKGSCreateTilesData alloc] init];
     _tileDetailsController = [[MCTileLayerDetailsViewController alloc] init];
     _tileDetailsController.delegate = self;
+    _tileDetailsController.drawerViewDelegate = _drawerDelegate;
     // [_navigationController pushViewController:_tileDetailsController animated:YES]; // TODO replace with drawer
 }
 
@@ -250,6 +251,7 @@
     _tileData.loadTiles.generateTiles.minZoom = minZoom;
     _tileData.loadTiles.generateTiles.maxZoom = maxZoom;
     [self createTileLayer:_tileData];
+    [_mapDelegate updateMapLayers];
 }
 
 

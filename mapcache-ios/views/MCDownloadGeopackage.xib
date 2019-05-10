@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -124,8 +123,8 @@
                         <constraint firstItem="8y7-H6-DOH" firstAttribute="leading" secondItem="oy5-Ds-QpE" secondAttribute="leading" id="lpl-3H-UCN"/>
                     </constraints>
                 </stackView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dNP-nl-O1p">
-                    <rect key="frame" x="16" y="235.5" width="156" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dNP-nl-O1p">
+                    <rect key="frame" x="16" y="236" width="343" height="30"/>
                     <state key="normal" title="Example GeoPackages">
                         <color key="titleColor" red="0.22745098039215686" green="0.65098039215686276" blue="0.67450980392156867" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
@@ -133,7 +132,7 @@
                         <action selector="preloaded:" destination="-1" eventType="touchUpInside" id="Tin-0Z-2GR"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="More exmaples are available on Github from:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWg-bE-Lk9">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="More examples are available on Github from:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWg-bE-Lk9">
                     <rect key="frame" x="16" y="468.5" width="304.5" height="18"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
@@ -158,7 +157,7 @@
                     </connections>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dragHandle" translatesAutoresizingMaskIntoConstraints="NO" id="tZk-lt-UTS">
-                    <rect key="frame" x="169" y="16" width="36" height="4"/>
+                    <rect key="frame" x="169.5" y="16" width="36" height="4"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="4" id="Q7b-A1-nWi"/>
                     </constraints>
@@ -188,7 +187,7 @@
                 <constraint firstItem="dNP-nl-O1p" firstAttribute="top" secondItem="o1o-mI-eXD" secondAttribute="bottom" constant="16" id="QFb-bY-eLd"/>
                 <constraint firstItem="QZB-QV-48k" firstAttribute="top" secondItem="b95-gl-eU7" secondAttribute="bottom" constant="16" id="SYZ-5x-kQ8"/>
                 <constraint firstAttribute="trailing" secondItem="o1o-mI-eXD" secondAttribute="trailing" constant="16" id="T6D-2y-WwK"/>
-                <constraint firstAttribute="trailing" secondItem="dNP-nl-O1p" secondAttribute="trailing" constant="203" id="UXU-Wl-TDz"/>
+                <constraint firstAttribute="trailing" secondItem="dNP-nl-O1p" secondAttribute="trailing" constant="16" id="UXU-Wl-TDz"/>
                 <constraint firstItem="6mJ-nd-yio" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="Utl-2n-x81"/>
                 <constraint firstItem="tZk-lt-UTS" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="XTc-uU-7XE"/>
                 <constraint firstItem="YnB-Na-92a" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="XWN-2x-58v"/>
@@ -204,7 +203,7 @@
                 <constraint firstAttribute="trailing" secondItem="oy5-Ds-QpE" secondAttribute="trailing" constant="16" id="si5-xR-6QO"/>
                 <constraint firstItem="53x-2Z-rHG" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="t7y-oi-uak"/>
             </constraints>
-            <point key="canvasLocation" x="-46" y="16"/>
+            <point key="canvasLocation" x="-47.200000000000003" y="15.742128935532236"/>
         </view>
     </objects>
     <resources>
