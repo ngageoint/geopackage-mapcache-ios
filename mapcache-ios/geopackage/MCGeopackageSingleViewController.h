@@ -33,6 +33,7 @@
 - (void) deleteLayer:(GPKGSTable *) table;
 - (void) showLayerDetails:(GPKGUserDao *) layerDao;
 - (void) toggleLayer:(GPKGSTable *) table;
+- (void) updateDatabase;
 @end
 
 

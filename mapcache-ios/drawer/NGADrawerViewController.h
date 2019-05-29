@@ -16,11 +16,12 @@
 
 @interface NGADrawerViewController : UIViewController <UIGestureRecognizerDelegate>
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
+@property (nonatomic) BOOL swipeEnabled;
 - (instancetype) initAsFullView: (BOOL) isFullView;
 - (void) makeFullView;
 - (void) removeDrawerFromSuperview;
 - (void) addDragHandle;
 - (void) addCloseButton;
 - (void) closeDrawer;
-- (BOOL)gestureIsInConflict;
+- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer;
 @end

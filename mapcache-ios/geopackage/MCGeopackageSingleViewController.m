@@ -125,64 +125,6 @@
 
 
 - (void) update {
-    GPKGGeoPackage *geoPackage = nil;
-    GPKGSDatabase *updatedDatabase = nil;
-    
-    @try {
-        geoPackage = [_manager open:_database.name];
-        
-        GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
-        NSMutableArray *tables = [[NSMutableArray alloc] init];
-        
-        updatedDatabase = [[GPKGSDatabase alloc] initWithName:_database.name andExpanded:false];
-        
-        // Handle the Feature Layers
-        for (NSString *tableName in [geoPackage getFeatureTables]) {
-            GPKGFeatureDao *featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
-            int count = [featureDao count];
-            
-            GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
-            GPKGGeometryColumns *geometryColumns = [contentsDao getGeometryColumns:contents];
-            enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
-            
-            GPKGSFeatureTable *table = [[GPKGSFeatureTable alloc] initWithDatabase:_database.name andName:tableName andGeometryType:geometryType andCount:count];
-            // there was some bit about setting the table as active, but I think that was for the OG manager
-            
-            [tables addObject:table];
-            [updatedDatabase addFeature:table];
-            // there was a bit about expanding the cells to add another to the manager for the new feaure layer, but that might get handled in this case by just calling initCells
-        }
-        
-        // Handle the tile layers
-        for (NSString *tableName in [geoPackage getTileTables]) {
-            GPKGTileDao *tileDao = [geoPackage getTileDaoWithTableName:tableName];
-            int count = [tileDao count];
-            
-            GPKGSTileTable *table = [[GPKGSTileTable alloc] initWithDatabase:_database.name andName:tableName andCount:count];
-            // skipping active setting, that will be handled on the new map
-            [tables addObject:table];
-            [updatedDatabase addTile:table];
-        }
-        
-        // TODO: Figure out what to do about overlays
-    }
-    @finally {
-        
-        
-        if (geoPackage == nil) {
-            @try {
-                [_manager delete:_database.name];
-            }
-            @catch (NSException *exception) {
-            }
-        } else {
-            if (updatedDatabase != nil) {
-                _database = updatedDatabase;
-            }
-            [geoPackage close];
-        }
-    }
-    
     [self initCellArray]; // May not need to call this, or may need to call it closer to the end
     [self.tableView reloadData];
 }
@@ -205,7 +147,7 @@
         
         if ([cell isKindOfClass:[MCLayerCell class]] && [((MCLayerCell *)cell).layerNameLabel.text isEqualToString:layerName]) {
             [_cellArray removeObject:cell];
-            [self update];
+            [self.delegate updateDatabase];
         }
     }
 }
@@ -241,7 +183,7 @@
     MCLayerCell *layerCell;
     NSObject *cellObject = [_cellArray objectAtIndex:indexPath.row];
     
-    if([cellObject isKindOfClass:[MCLayerCell class]]){
+    /*if([cellObject isKindOfClass:[MCLayerCell class]]){
         layerCell = (MCLayerCell *) cellObject;
         NSString *layerName = layerCell.layerNameLabel.text;
         GPKGGeoPackage *geoPackage = [_manager open:_database.name];
@@ -255,7 +197,7 @@
             [_delegate showLayerDetails:tileDao];
             [geoPackage close];
         }
-    }
+    }*/
 }
 
 

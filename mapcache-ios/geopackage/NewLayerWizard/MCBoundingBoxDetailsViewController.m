@@ -33,6 +33,7 @@
     [self.tableView setBackgroundColor:[UIColor whiteColor]];
     _startBoundingBoxCommand = @"startBoundingBox";
     _continueCommand = @"continue";
+    self.swipeEnabled = NO;
     
     [self registerCellTypes];
     [self initCellArray];
@@ -125,6 +126,7 @@
 
 #pragma mark - NGADrawerView methods
 - (void) closeDrawer {
+    [self.boundingBoxDetailsDelegate cancelBoundingBox];
     [self.drawerViewDelegate popDrawer];
 }
 

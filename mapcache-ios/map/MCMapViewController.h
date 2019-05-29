@@ -25,6 +25,7 @@
 #import "MCTileHelper.h"
 #import "MCFeatureHelper.h"
 #import "GPKGBoundingBox.h"
+#import "GPKGMapShapeTypes.h"
 
 
 @protocol MCMapActionDelegate <NSObject>
