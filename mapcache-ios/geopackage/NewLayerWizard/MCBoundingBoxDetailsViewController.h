@@ -13,6 +13,7 @@
 
 @protocol MCBoundingBoxDetailsViewDelegate <NSObject>
 - (void) boundingBoxDetailsCompletionHandler:(GPKGBoundingBox *) boundingBox;
+- (void) cancelBoundingBox;
 @end
 
 @interface MCBoundingBoxDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, GPKGSButtonCellDelegate>

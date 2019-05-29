@@ -17,6 +17,7 @@
 
 @protocol MCZoomAndQualityDelegate
 - (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom;
+- (void) cancelZoomAndQuality;
 @end
 
 @interface MCZoomAndQualityViewController : NGADrawerViewController <GPKGSButtonCellDelegate>

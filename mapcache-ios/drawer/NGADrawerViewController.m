@@ -21,6 +21,7 @@
 - (instancetype) initAsFullView: (BOOL) isFullView {
     self = [super init];
     _startedAsFullView = isFullView;
+    _swipeEnabled = YES;
     return self;
 }
 
@@ -28,8 +29,7 @@
     [super viewDidLoad];
     
     _fullView = 170;
-    //_partialView = [UIScreen mainScreen].bounds.size.height - UIApplication.sharedApplication.statusBarFrame.size.height *5;
-    _partialView = 600;
+    _partialView = [UIScreen mainScreen].bounds.size.height - UIApplication.sharedApplication.statusBarFrame.size.height *5;
     
     _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
     _panGestureRecognizer.delegate = self;
@@ -72,7 +72,7 @@
 
 
 - (void) panGesture:(UIPanGestureRecognizer *) recognizer {
-    if (![self gestureIsInConflict:recognizer]) {
+    if (![self gestureIsInConflict:recognizer] && _swipeEnabled) {
         CGPoint translation = [recognizer translationInView:self.view];
         CGPoint velocity = [recognizer velocityInView:self.view];
         CGFloat y = CGRectGetMinY(self.view.frame);

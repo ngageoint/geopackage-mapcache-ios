@@ -91,6 +91,7 @@
 
 - (void) closeDrawer {
     [super closeDrawer];
+    [self.zoomAndQualityDelegate cancelZoomAndQuality];
     [self.drawerViewDelegate popDrawer];
 }
 

@@ -77,6 +77,67 @@
 }
 
 
+- (void) updateDatabase {
+    GPKGGeoPackage *geoPackage = nil;
+    GPKGSDatabase *updatedDatabase = nil;
+    
+    @try {
+        geoPackage = [_manager open:_database.name];
+        
+        GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
+        NSMutableArray *tables = [[NSMutableArray alloc] init];
+        
+        updatedDatabase = [[GPKGSDatabase alloc] initWithName:_database.name andExpanded:false];
+        
+        // Handle the Feature Layers
+        for (NSString *tableName in [geoPackage getFeatureTables]) {
+            GPKGFeatureDao *featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
+            int count = [featureDao count];
+            
+            GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
+            GPKGGeometryColumns *geometryColumns = [contentsDao getGeometryColumns:contents];
+            enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
+            
+            GPKGSFeatureTable *table = [[GPKGSFeatureTable alloc] initWithDatabase:_database.name andName:tableName andGeometryType:geometryType andCount:count];
+            // there was some bit about setting the table as active, but I think that was for the OG manager
+            
+            [tables addObject:table];
+            [updatedDatabase addFeature:table];
+            // there was a bit about expanding the cells to add another to the manager for the new feaure layer, but that might get handled in this case by just calling initCells
+        }
+        
+        // Handle the tile layers
+        for (NSString *tableName in [geoPackage getTileTables]) {
+            GPKGTileDao *tileDao = [geoPackage getTileDaoWithTableName:tableName];
+            int count = [tileDao count];
+            
+            GPKGSTileTable *table = [[GPKGSTileTable alloc] initWithDatabase:_database.name andName:tableName andCount:count];
+            // skipping active setting, that will be handled on the new map
+            [tables addObject:table];
+            [updatedDatabase addTile:table];
+        }
+        
+        // TODO: Figure out what to do about overlays
+    }
+    @finally {
+        if (geoPackage == nil) {
+            @try {
+                [_manager delete:_database.name];
+            }
+            @catch (NSException *exception) {
+            }
+        } else {
+            if (updatedDatabase != nil) {
+                _database = updatedDatabase;
+                _geoPackageViewController.database = _database;
+                [_geoPackageViewController update];
+            }
+            [geoPackage close];
+        }
+    }
+}
+
+
 - (void) copyGeoPackage {
     //[_navigationController popViewControllerAnimated:YES]; // TODO replace with drawer
     [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
@@ -97,9 +158,10 @@
 
 
 - (void) deleteLayer:(GPKGSTable *) table {
-    GPKGGeoPackage *geoPackage = [_manager open:_database.name];
+    GPKGGeoPackage *geoPackage = nil;
     
     @try {
+        geoPackage = [_manager open:_database.name];
         [geoPackage deleteUserTable:table.name];
         [_active removeTable:table];
         [_geoPackageViewController removeLayerNamed:table.name];
@@ -181,7 +243,7 @@
     @finally {
         [geoPackage close];
         //[_navigationController popToViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
-        [_geoPackageViewController update];
+        [self updateDatabase];
     }
     
     // TODO handle dismissing the view controllers or displaying an error message
@@ -228,6 +290,11 @@
 }
 
 
+- (void) cancelBoundingBox {
+    [self.mapDelegate updateMapLayers];
+}
+
+
 - (void) showManualBoundingBoxViewWithMinLat:(double)minLat andMaxLat:(double)maxLat andMinLon:(double)minLon andMaxLon:(double) maxLon {
     _manualBoundingBoxViewController = [[MCManualBoundingBoxViewController alloc] initWithLowerLeftLat:minLat andLowerLeftLon:minLon andUpperRightLat:maxLat andUpperRightLon:maxLon];
     _manualBoundingBoxViewController.delegate = self;
@@ -252,6 +319,11 @@
     _tileData.loadTiles.generateTiles.maxZoom = maxZoom;
     [self createTileLayer:_tileData];
     [_mapDelegate updateMapLayers];
+}
+
+
+- (void) cancelZoomAndQuality {
+    [self.mapDelegate updateMapLayers];
 }
 
 
@@ -297,7 +369,7 @@
     NSLog(@"Loading tiles completed");
     //[_navigationController popToViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
     [_drawerDelegate popDrawer];
-    [_geoPackageViewController update];
+    [self updateDatabase];
 }
 
 

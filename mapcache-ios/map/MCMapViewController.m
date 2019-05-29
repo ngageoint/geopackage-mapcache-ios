@@ -55,6 +55,7 @@
 @property (nonatomic) double minLon;
 @property (nonatomic) double maxLon;
 @property (nonatomic) BOOL settingsDrawerVisible;
+@property (nonatomic) int currentZoom;
 @end
 
 
@@ -90,6 +91,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.locationManager.delegate = self;
     self.showingUserLocation = NO;
     self.settingsDrawerVisible = NO;
+    self.currentZoom = -1;
     
     [self.view setNeedsLayout];
     
@@ -349,7 +351,30 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
-    // TODO: implement redraw of features on zoom in
+    int updateId = ++self.featureUpdateCountId;
+    int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];;
+    int previousZoom = self.currentZoom;
+    int zoom = (int)[GPKGMapUtils currentZoomWithMapView:mapView];
+    self.currentZoom = zoom;
+    
+    if (zoom != previousZoom) {
+        // Zoom level changed, remove all the feature shapes except the markers
+        [self.featureHelper.featureShapes removeShapesFromMapView:mapView withExclusions:[[NSSet alloc] initWithObjects:[NSNumber numberWithInt:GPKG_MST_POINT], [NSNumber numberWithInt:GPKG_MST_MULTI_POINT], nil]];
+    } else {
+        // Remove shapes no longer visible on the map view
+        [self.featureHelper.featureShapes removeShapesNotWithinMapView:mapView];
+    }
+    
+    GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:mapView];
+    double toleranceDistance = [GPKGMapUtils toleranceDistanceInMapView:mapView];
+    int maxFeatures = [self getMaxFeatures];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        if (self.active != nil) {
+            [self.featureHelper prepareFeaturesWithUpdateId:(int) updateId andFeatureUpdateId:(int) featureUpdateId andZoom:(int) zoom andMaxFeatures:(int) maxFeatures andMapViewBoundingBox:(GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance:(double) toleranceDistance andFilter:(BOOL) YES];
+        }
+    });
 }
 
 
