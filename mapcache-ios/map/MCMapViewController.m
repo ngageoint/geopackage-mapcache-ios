@@ -372,7 +372,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
         if (self.active != nil) {
-            [self.featureHelper prepareFeaturesWithUpdateId:(int) updateId andFeatureUpdateId:(int) featureUpdateId andZoom:(int) zoom andMaxFeatures:(int) maxFeatures andMapViewBoundingBox:(GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance:(double) toleranceDistance andFilter:(BOOL) YES];
+            [self.featureHelper prepareFeaturesWithUpdateId: updateId andFeatureUpdateId: featureUpdateId andZoom: zoom andMaxFeatures: maxFeatures andMapViewBoundingBox: mapViewBoundingBox andToleranceDistance: toleranceDistance andFilter: YES];
+            
+            //[self.featureHelper addFeaturesWithId:featureUpdateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:YES];
         }
     });
 }
