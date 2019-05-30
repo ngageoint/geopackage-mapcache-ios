@@ -410,7 +410,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.tilesBoundingBox = nil;
     self.featureOverlayTiles = false;
     //[self.featureOverlayQueries removeAllObjects];
-    //[self.featureShapes clear];
+    [self.featureHelper.featureShapes clear];
     int maxFeatures = [self getMaxFeatures];
     
     GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:self.mapView];

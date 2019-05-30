@@ -531,7 +531,7 @@
                 [self updateFeaturesBoundingBox:shape];
                 [self prepareShapeOptionsWithShape:shape andStyleCache:styleCache andFeature:row andEditable:editable andTopLevel:true];
                 [self addMapPointShapeWithFeatureId:[featureId intValue] andDatabase:database andTableName:tableName andMapShape:shape];
-                [self.featureShapes addMapMetadataShape:shape withFeatureId:featureId toDatabase:database withTable:tableName];
+                [self.featureShapes addMapShape:shape withFeatureId:featureId toDatabase:database withTable:tableName];
                 
                 return shape;
             }
