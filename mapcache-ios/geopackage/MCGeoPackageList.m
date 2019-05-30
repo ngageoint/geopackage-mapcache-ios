@@ -86,7 +86,7 @@
         NSLog(@"Name: %@", newGeoPackageAlert.textFields[0].text);
         
         NSString * newName = newGeoPackageAlert.textFields[0].text;
-        [_geopackageListViewDelegate createGeoPackage:newName];
+        [self.geopackageListViewDelegate createGeoPackage:newName];
     }];
     
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -108,8 +108,8 @@
 
 - (void)toggleGeoPacakge:(NSIndexPath *) indexPath {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.geopackageListViewDelegate toggleActive:[_geoPackages objectAtIndex:indexPath.row]];
-        MCGeoPackageCell *cell = [_tableView cellForRowAtIndexPath:indexPath];
+        [self.geopackageListViewDelegate toggleActive:[self.geoPackages objectAtIndex:indexPath.row]];
+        MCGeoPackageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         [cell toggleActiveIndicator];
     });
 }
@@ -117,7 +117,7 @@
 
 - (void)deleteGeoPackageAtIndexPath:(NSIndexPath *) indexPath {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.geopackageListViewDelegate deleteGeoPackage:[_geoPackages objectAtIndex:indexPath.row]];
+        [self.geopackageListViewDelegate deleteGeoPackage:[self.geoPackages objectAtIndex:indexPath.row]];
     });
 }
 
@@ -148,8 +148,6 @@
     
     MCEmptyStateCell *cell = (MCEmptyStateCell *)[self.tableView dequeueReusableCellWithIdentifier:@"emptyState"];
     return cell;
-    
-    
 }
 
 
@@ -171,13 +169,39 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    GPKGSDatabase *selectedGeoPackage = [_geoPackages objectAtIndex:indexPath.row];
-    NSLog(@"didSelectRowAtIndexPath for %@", selectedGeoPackage.name);
-    [_geopackageListViewDelegate didSelectGeoPackage:selectedGeoPackage];
+    
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if([cell isKindOfClass:[MCEmptyStateCell class]]){
+        [_geopackageListViewDelegate downloadGeopackage];
+    } else {
+        GPKGSDatabase *selectedGeoPackage = [_geoPackages objectAtIndex:indexPath.row];
+        NSLog(@"didSelectRowAtIndexPath for %@", selectedGeoPackage.name);
+        [_geopackageListViewDelegate didSelectGeoPackage:selectedGeoPackage];
+    }
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if([cell isKindOfClass:[MCEmptyStateCell class]]){
+        return 400.0;
+    } else {
+        return 126.0;
+    }
+    
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleNone;
 }
 
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if([cell isKindOfClass:[MCEmptyStateCell class]]){
+        return nil;
+    }
+    
     UIContextualAction *toggleGeoPackageAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"Toggle" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         [self toggleGeoPacakge:indexPath];
         completionHandler(YES);
@@ -201,6 +225,11 @@
 
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if([cell isKindOfClass:[MCEmptyStateCell class]]){
+        return nil;
+    }
+    
     UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         [self deleteGeoPackageAtIndexPath:indexPath];
         completionHandler(YES);
