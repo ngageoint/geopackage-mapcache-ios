@@ -182,6 +182,8 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if([cell isKindOfClass:[MCEmptyStateCell class]]){
         [_geopackageListViewDelegate downloadGeopackage];
+    } else if([cell isKindOfClass:[MCTutorialCell class]]){
+        return;
     } else {
         GPKGSDatabase *selectedGeoPackage = [_geoPackages objectAtIndex:indexPath.row];
         NSLog(@"didSelectRowAtIndexPath for %@", selectedGeoPackage.name);
