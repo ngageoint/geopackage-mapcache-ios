@@ -12,7 +12,6 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *cellArray;
 @property (nonatomic, strong) MCZoomCell *zoomCell;
-@property (nonatomic, strong) MCSegmentedControlCell *tileFormatCell;
 @property (nonatomic, strong) MCButtonCell *buttonCell;
 @end
 
@@ -69,12 +68,6 @@
     _zoomCell = [self.tableView dequeueReusableCellWithIdentifier:@"zoom"];
     [_cellArray addObject:_zoomCell];
     
-    _tileFormatCell = [self.tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
-    _tileFormatCell.label.text = @"Tile Format";
-    NSArray *formats = [[NSArray alloc] initWithObjects: @"GeoPackage", @"Standard", nil];
-    [_tileFormatCell setItems:formats];
-    [_cellArray addObject:_tileFormatCell];
-    
     _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_buttonCell.button setTitle:@"Create Tile Layer" forState:UIControlStateNormal];
     _buttonCell.delegate = self;
@@ -84,7 +77,6 @@
 
 - (void) registerCellTypes {
     [self.tableView registerNib:[UINib nibWithNibName:@"MCZoomCell" bundle:nil] forCellReuseIdentifier:@"zoom"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"MCSegmentedControlCell" bundle:nil] forCellReuseIdentifier:@"segmentedControl"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
 }
 
@@ -111,17 +103,6 @@
     return [_cellArray objectAtIndex:indexPath.row];
 }
 
-
-#pragma mark - UITextFieldDelegate methods
-- (void) textFieldDidEndEditing:(UITextField *)textField {
-    // TODO check some values and enable or disable the button accordingly
-}
-
-
-- (BOOL) textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    return YES;
-}
 
 #pragma mark -  GPKGSButtonCellDelegate method
 - (void) performButtonAction:(NSString *)action {

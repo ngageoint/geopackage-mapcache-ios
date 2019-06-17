@@ -95,6 +95,10 @@
 		E34F32E82204E93C0098ED45 /* MCEmptyStateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E34F32E72204E93C0098ED45 /* MCEmptyStateCell.xib */; };
 		E34F32EB2204ECF60098ED45 /* MCEmptyStateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E34F32EA2204ECF60098ED45 /* MCEmptyStateCell.m */; };
 		E34F32F1220CAF1C0098ED45 /* UITextField+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = E34F32F0220CAF1C0098ED45 /* UITextField+Validators.m */; };
+		E3500E6022B455C800164ABF /* MCDisclaimerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3500E5F22B455C800164ABF /* MCDisclaimerView.xib */; };
+		E3500E6322B4653B00164ABF /* MCDisclaimerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3500E6222B4653B00164ABF /* MCDisclaimerViewController.m */; };
+		E3500E6522B7F36500164ABF /* MCTutorialCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3500E6422B7F36500164ABF /* MCTutorialCell.xib */; };
+		E3500E6822B7F4F100164ABF /* MCTutorialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3500E6722B7F4F100164ABF /* MCTutorialCell.m */; };
 		E354EEDB2006B9B000B062BE /* MCDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */; };
 		E354EEDE2006BB9500B062BE /* MCDesctiptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEDD2006BB9500B062BE /* MCDesctiptionCell.m */; };
 		E354EEE320091BCD00B062BE /* MCFeatureLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEE220091BCD00B062BE /* MCFeatureLayerDetailsViewController.m */; };
@@ -317,6 +321,12 @@
 		E34F32EA2204ECF60098ED45 /* MCEmptyStateCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCEmptyStateCell.m; sourceTree = "<group>"; };
 		E34F32EF220CAF1C0098ED45 /* UITextField+Validators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITextField+Validators.h"; sourceTree = "<group>"; };
 		E34F32F0220CAF1C0098ED45 /* UITextField+Validators.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITextField+Validators.m"; sourceTree = "<group>"; };
+		E3500E5F22B455C800164ABF /* MCDisclaimerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCDisclaimerView.xib; sourceTree = "<group>"; };
+		E3500E6122B4653B00164ABF /* MCDisclaimerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDisclaimerViewController.h; sourceTree = "<group>"; };
+		E3500E6222B4653B00164ABF /* MCDisclaimerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDisclaimerViewController.m; sourceTree = "<group>"; };
+		E3500E6422B7F36500164ABF /* MCTutorialCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCTutorialCell.xib; sourceTree = "<group>"; };
+		E3500E6622B7F4F100164ABF /* MCTutorialCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCTutorialCell.h; sourceTree = "<group>"; };
+		E3500E6722B7F4F100164ABF /* MCTutorialCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTutorialCell.m; sourceTree = "<group>"; };
 		E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCDescriptionCell.xib; sourceTree = "<group>"; };
 		E354EEDC2006BB9500B062BE /* MCDesctiptionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDesctiptionCell.h; sourceTree = "<group>"; };
 		E354EEDD2006BB9500B062BE /* MCDesctiptionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDesctiptionCell.m; sourceTree = "<group>"; };
@@ -690,6 +700,8 @@
 				E35B631021BC26F9004E5BB0 /* MCTitleCell.m */,
 				E34F32E92204ECF60098ED45 /* MCEmptyStateCell.h */,
 				E34F32EA2204ECF60098ED45 /* MCEmptyStateCell.m */,
+				E3500E6622B7F4F100164ABF /* MCTutorialCell.h */,
+				E3500E6722B7F4F100164ABF /* MCTutorialCell.m */,
 			);
 			path = cells;
 			sourceTree = "<group>";
@@ -736,6 +748,7 @@
 				E3FB85752134A9D8002F012E /* MCGeoPackageList.xib */,
 				E308FBC01FBE400500348577 /* MCSingleGeoPackageView.xib */,
 				E3FB857021349C31002F012E /* MCMapView.xib */,
+				E3500E5F22B455C800164ABF /* MCDisclaimerView.xib */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -785,6 +798,7 @@
 				E355935120F4170500FC1288 /* MCGeoPackageOperationsCell.xib */,
 				E35B630D21BC24E9004E5BB0 /* MCTitleCell.xib */,
 				E34F32E72204E93C0098ED45 /* MCEmptyStateCell.xib */,
+				E3500E6422B7F36500164ABF /* MCTutorialCell.xib */,
 			);
 			path = DisplayCells;
 			sourceTree = "<group>";
@@ -809,6 +823,8 @@
 				E3BED1E221911712001AF654 /* MCSettingsViewController.m */,
 				E35F316321EFEC7E001B720F /* MCNoticeAndAttributionViewController.h */,
 				E35F316421EFEC7E001B720F /* MCNoticeAndAttributionViewController.m */,
+				E3500E6122B4653B00164ABF /* MCDisclaimerViewController.h */,
+				E3500E6222B4653B00164ABF /* MCDisclaimerViewController.m */,
 			);
 			path = settings;
 			sourceTree = "<group>";
@@ -898,6 +914,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -927,10 +944,12 @@
 				E354EEDB2006B9B000B062BE /* MCDescriptionCell.xib in Resources */,
 				E36D2DCE2017BFBE0097A8DE /* MCPickerViewCell.xib in Resources */,
 				E33F55771FC4FEBD00F252FD /* MCLayerCell.xib in Resources */,
+				E3500E6022B455C800164ABF /* MCDisclaimerView.xib in Resources */,
 				E3A651AD2004407600B8AB27 /* MCFieldWithTitleCell.xib in Resources */,
 				E33F557C1FCC954B00F252FD /* MCButtonCell.xib in Resources */,
 				047733C61B4C3E3400E523BD /* mapcache.plist in Resources */,
 				E363F54320EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib in Resources */,
+				E3500E6522B7F36500164ABF /* MCTutorialCell.xib in Resources */,
 				040136811AF94FB200C92AFC /* Main.storyboard in Resources */,
 				E34F32E82204E93C0098ED45 /* MCEmptyStateCell.xib in Resources */,
 				E3FB857121349C32002F012E /* MCMapView.xib in Resources */,
@@ -1034,6 +1053,7 @@
 				E3FB856C2134955F002F012E /* NGADrawerViewController.m in Sources */,
 				04CCC8681B6114EE0001296D /* GPKGSGenerateTilesData.m in Sources */,
 				04DD108E1BD9443F00CC59A0 /* GPKGSTableIndex.m in Sources */,
+				E3500E6822B7F4F100164ABF /* MCTutorialCell.m in Sources */,
 				04082B531B4EBE6F00D65E6B /* MCDownloadGeopackage.m in Sources */,
 				04E1D8D61B66D439002BD947 /* GPKGSEditTilesViewController.m in Sources */,
 				04E1D8E21B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m in Sources */,
@@ -1058,6 +1078,7 @@
 				040136781AF94FB200C92AFC /* AppDelegate.m in Sources */,
 				04E1D8D01B66D366002BD947 /* GPKGSEditContentsViewController.m in Sources */,
 				E331C8ED20FE7645006EFED1 /* MCLayerCoordinator.m in Sources */,
+				E3500E6322B4653B00164ABF /* MCDisclaimerViewController.m in Sources */,
 				044648021B4AF4250052913B /* GPKGSTableTypes.m in Sources */,
 				E35F316521EFEC7E001B720F /* MCNoticeAndAttributionViewController.m in Sources */,
 				045C948D1B50789D0005CCD0 /* GPKGSMapView.m in Sources */,

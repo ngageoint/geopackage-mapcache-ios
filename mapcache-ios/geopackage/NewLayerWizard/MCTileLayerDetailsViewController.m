@@ -13,9 +13,8 @@
 @property (nonatomic, strong) MCButtonCell *buttonCell;
 @property (nonatomic, strong) MCFieldWithTitleCell *layerNameCell;
 @property (nonatomic, strong) MCFieldWithTitleCell *urlCell;
-@property (nonatomic, strong) MCSegmentedControlCell *referenceSystemSelector;
-@property (nonatomic, strong) NSDictionary *referenceSystems;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
 @end
 
 @implementation MCTileLayerDetailsViewController
@@ -24,7 +23,6 @@
     [super viewDidLoad];
     
     _tableView = [[UITableView alloc] init];
-    _referenceSystems = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt: 3857], @"EPSG 3857", [NSNumber numberWithInt: 4326], @"EPSG 4326", nil];
     CGRect bounds = self.view.bounds;
     CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
     self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
@@ -38,6 +36,7 @@
     [self.tableView setBackgroundColor:[UIColor whiteColor]];
     [self registerCellTypes];
     [self initCellArray];
+    self.sessionManager = [AFHTTPSessionManager manager];
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
@@ -62,22 +61,22 @@
     _cellArray = [[NSMutableArray alloc] init];
     
     MCTitleCell *title = [self.tableView dequeueReusableCellWithIdentifier:@"title"];
-    title.label.text = @"New Tile Layer";
+    title.label.text = @"New tile layer";
     [_cellArray addObject:title];
-    
-    _layerNameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    _layerNameCell.title.text = @"Name your new layer";
-    [_layerNameCell.field setReturnKeyType:UIReturnKeyDone]; // TODO look into UIReturnKeyNext
-    _layerNameCell.field.delegate = self;
-    [_cellArray addObject:_layerNameCell];
-    
     
     MCDesctiptionCell *tilesDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
     tilesDescription.descriptionLabel.text = @"Tile layers consist of a pyramid of images within a geographic extent and zoom levels.";
     [_cellArray addObject:tilesDescription];
     
+    _layerNameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _layerNameCell.title.text = @"New layer name";
+    [_layerNameCell.field setReturnKeyType:UIReturnKeyDone]; // TODO look into UIReturnKeyNext
+    _layerNameCell.field.delegate = self;
+    [_cellArray addObject:_layerNameCell];
+    
+    
     _urlCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    _urlCell.title.text = @"What is the URL to your tiles?";
+    _urlCell.title.text = @"Tile server URL";
     _urlCell.field.placeholder = @"https://osm.gs.mil/tiles/default/{x}/{y}/{z}.png";
     _urlCell.field.text = @"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png";
     _urlCell.field.delegate = self;
@@ -85,13 +84,8 @@
     [_cellArray addObject:_urlCell];
     
     MCDesctiptionCell *urlDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
-    urlDescription.descriptionLabel.text = @"Tip: Enter the full URL to the tile server with any of the following template options {x}, {y}, {z}, {minLat}, {minLon}, {maxLat}, {maxLon}.";
+    urlDescription.descriptionLabel.text = @"Tip: Make sure you enter the full URL to the tile server with the {x}/{y}/{z}.png template on the end.";
     [_cellArray addObject:urlDescription];
-    
-    _referenceSystemSelector = [self.tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
-    _referenceSystemSelector.label.text = @"Spatial Reference System";
-    [_referenceSystemSelector setItems:_referenceSystems.allKeys];
-    [_cellArray addObject:_referenceSystemSelector];
     
     _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_buttonCell.button setTitle:@"Next" forState:UIControlStateNormal];
@@ -106,7 +100,6 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"MCSegmentedControlCell" bundle:nil] forCellReuseIdentifier:@"segmentedControl"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
 }
 
@@ -128,10 +121,40 @@
 
 #pragma mark- UITextFieldDelegate methods
 - (void) textFieldDidEndEditing:(UITextField *)textField {
+    BOOL enableButton = YES;
+    
+    [textField trimWhiteSpace:textField];
+    
+    if (textField == _urlCell.field) {
+        NSLog(@"URL Field ended editing");
+        [textField isValidURL:textField withResult:^(BOOL isValid) {
+            if (isValid) {
+                NSLog(@"Valid URL");
+                self.urlCell.field.borderStyle = UITextBorderStyleRoundedRect;
+                self.urlCell.field.layer.cornerRadius = 4;
+                self.urlCell.field.layer.borderColor = [[UIColor colorWithRed:0.79 green:0.8 blue:0.8 alpha:1] CGColor];
+                self.urlCell.field.layer.borderWidth = 0.5;
+
+                [self.buttonCell enableButton];
+            } else {
+                NSLog(@"Bad url");
+                [self.buttonCell disableButton];
+                self.urlCell.field.borderStyle = UITextBorderStyleRoundedRect;
+                self.urlCell.field.layer.cornerRadius = 4;
+                self.urlCell.field.layer.borderColor = [[UIColor redColor] CGColor];
+                self.urlCell.field.layer.borderWidth = 2.0;
+            }
+        }];
+    }
+    
     if ([_layerNameCell.field.text isEqualToString:@""] || [_urlCell.field.text isEqualToString:@""]) {
-        [_buttonCell disableButton];
-    } else {
+        enableButton = NO;
+    }
+    
+    if (enableButton) {
         [_buttonCell enableButton];
+    } else {
+        [_buttonCell disableButton];
     }
     
     [textField resignFirstResponder];
@@ -142,19 +165,24 @@
     return YES;
 }
 
-#pragma mark - GPKGSSegmentedControlDelegate methods
-
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
-    NSString *selectedSegmentTitle =  [_referenceSystemSelector.segmentedControl titleForSegmentAtIndex:[_referenceSystemSelector.segmentedControl selectedSegmentIndex]];
-    int referenceSystem = [_referenceSystems[selectedSegmentTitle] intValue];
-    
-    [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text URL:_urlCell.field.text andReferenceSystemCode:referenceSystem];
+    [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text URL:_urlCell.field.text andReferenceSystemCode:3857];
 }
 
 #pragma mark - NGADrawerView methods
 - (void) closeDrawer {
     [self.drawerViewDelegate popDrawer];
+}
+
+- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
+    CGPoint point = [recognizer locationInView:self.view];
+    
+    if (CGRectContainsPoint(_layerNameCell.frame, point) || CGRectContainsPoint(_urlCell.frame, point)) {
+        return true;
+    }
+    
+    return false;
 }
 
 @end

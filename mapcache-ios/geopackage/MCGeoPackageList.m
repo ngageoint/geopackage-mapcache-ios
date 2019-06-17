@@ -35,6 +35,7 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     [self.tableView registerNib:[UINib nibWithNibName:@"MCGeoPackageCell" bundle:nil] forCellReuseIdentifier:@"geopackage"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCEmptyStateCell" bundle:nil] forCellReuseIdentifier:@"emptyState"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCTutorialCell" bundle:nil] forCellReuseIdentifier:@"tutorialCell"];
 }
 
 
@@ -125,6 +126,12 @@
 #pragma mark - TableView delegate and data souce methods
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (_geoPackages.count > 0) {
+        
+        if (indexPath.row == _geoPackages.count) {
+            MCTutorialCell *tutorialCell = (MCTutorialCell *)[self.tableView dequeueReusableCellWithIdentifier:@"tutorialCell"];
+            return tutorialCell;
+        }
+        
         MCGeoPackageCell *cell = (MCGeoPackageCell *)[self.tableView dequeueReusableCellWithIdentifier:@"geopackage"];
         
         if (!cell) {
@@ -146,6 +153,8 @@
         return cell;
     }
     
+    
+    
     MCEmptyStateCell *cell = (MCEmptyStateCell *)[self.tableView dequeueReusableCellWithIdentifier:@"emptyState"];
     return cell;
 }
@@ -158,7 +167,7 @@
     }
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    return _geoPackages.count;
+    return _geoPackages.count + 1;
 }
 
 
@@ -185,6 +194,8 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if([cell isKindOfClass:[MCEmptyStateCell class]]){
         return 400.0;
+    } else if([cell isKindOfClass:[MCTutorialCell class]]) {
+        return 200.0;
     } else {
         return 126.0;
     }
@@ -198,7 +209,7 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if([cell isKindOfClass:[MCEmptyStateCell class]]){
+    if([cell isKindOfClass:[MCEmptyStateCell class]] || [cell isKindOfClass:[MCTutorialCell class]]){
         return nil;
     }
     
@@ -226,7 +237,7 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if([cell isKindOfClass:[MCEmptyStateCell class]]){
+    if([cell isKindOfClass:[MCEmptyStateCell class]] || [cell isKindOfClass:[MCTutorialCell class]]){
         return nil;
     }
     

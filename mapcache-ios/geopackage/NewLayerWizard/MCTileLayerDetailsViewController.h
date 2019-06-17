@@ -17,12 +17,14 @@
 #import "MCColorUtil.h"
 #import "MCTitleCell.h"
 #import "NGADrawerViewController.h"
+#import "UITextField+Validators.h"
+#import "AFNetworking.h"
 
 
 @protocol MCTileLayerDetailsDelegate
 - (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode;
 @end
 
-@interface MCTileLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCSegmentedControlCellDelegate, GPKGSButtonCellDelegate>
+@interface MCTileLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate>
 @property (weak, nonatomic) id<MCTileLayerDetailsDelegate> delegate;
 @end

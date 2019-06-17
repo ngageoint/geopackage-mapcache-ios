@@ -67,7 +67,7 @@
     _width = self.backgroundViewController.view.frame.size.width;
     
     // The height of the screen minus the bit at the top where the map shows through
-    childViewController.view.frame = CGRectMake(0, CGRectGetMaxY(self.backgroundViewController.view.frame), _width, CGRectGetMaxY(self.backgroundViewController.view.frame) - 170);
+    childViewController.view.frame = CGRectMake(0, CGRectGetMaxY(self.backgroundViewController.view.frame), _width, CGRectGetMaxY(self.backgroundViewController.view.frame) - 160);
 }
 
 

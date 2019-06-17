@@ -20,14 +20,15 @@
     _minZoomStepper.stepValue = 1;
     
     _maxZoom = [NSNumber numberWithInt:10];
-    _maxZoomStepper.minimumValue = [_maxZoom doubleValue];
+    _maxZoomStepper.minimumValue = 1;
     _maxZoomStepper.maximumValue = 18;
+    _maxZoomStepper.value = 10;
     _maxZoomStepper.stepValue = 1;
     
     _minZoomStepper.maximumValue = [_maxZoom doubleValue] -1;
     
     _minZoomDisplay.text = [NSString stringWithFormat:@"%.0f", _minZoomStepper.minimumValue];
-    _maxZoomDisplay.text = [NSString stringWithFormat:@"%.0f", _maxZoomStepper.minimumValue];
+    _maxZoomDisplay.text = [NSString stringWithFormat:@"%.0f", 10.0];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

@@ -44,6 +44,12 @@
     [_childCoordinators addObject:mapCoordinator];
     _window.rootViewController = mapViewController;
     
+    BOOL preventDisclaimer = [[NSUserDefaults standardUserDefaults] boolForKey:@"preventDisclaimer"];
+    if (!preventDisclaimer) {
+        MCDisclaimerViewController *disclaimer = [[MCDisclaimerViewController alloc] init];
+        [_window.rootViewController presentViewController:disclaimer animated:YES completion:nil];
+    }
+    
     return YES;
 }
 
