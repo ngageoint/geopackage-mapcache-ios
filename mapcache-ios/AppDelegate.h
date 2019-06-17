@@ -11,6 +11,7 @@
 #import "MCMapViewController.h"
 #import "NGADrawerCoordinator.h"
 #import "MCMapCoordinator.h"
+#import "MCDisclaimerViewController.h"
 
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>

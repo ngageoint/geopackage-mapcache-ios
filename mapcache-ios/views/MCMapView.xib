@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,7 +27,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="391" height="667"/>
                 </mapView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ujd-S3-bPF">
-                    <rect key="frame" x="322" y="72" width="45" height="90"/>
+                    <rect key="frame" x="322" y="36" width="45" height="90"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9k9-7k-Tsz">
                             <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
@@ -68,7 +68,7 @@
                 <constraint firstItem="wr8-dW-dfS" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" constant="16" id="X7G-aB-s7o"/>
                 <constraint firstItem="wr8-dW-dfS" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="hPK-T4-erq"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ujd-S3-bPF" secondAttribute="trailing" constant="8" id="l4i-TE-zdU"/>
-                <constraint firstItem="ujd-S3-bPF" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="52" id="lH4-UT-aYK"/>
+                <constraint firstItem="ujd-S3-bPF" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="lH4-UT-aYK"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="24.5" y="51.5"/>

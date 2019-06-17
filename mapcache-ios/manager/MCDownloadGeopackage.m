@@ -43,7 +43,8 @@
 - (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
     CGPoint point = [recognizer locationInView:self.view];
     
-    if (CGRectContainsPoint(self.nameTextField.frame, point) || CGRectContainsPoint(self.urlTextField.frame, point)) {
+    if (CGRectContainsPoint(self.nameTextField.frame, point) || CGRectContainsPoint(self.urlTextField.frame, point)
+        || CGRectContainsPoint(self.scrollView.frame, point)) {
         return true;
     }
     
@@ -76,26 +77,6 @@
     }else{
         [self dismissViewControllerAnimated:YES completion:nil];
     }
-}
-
-- (IBAction)link1:(UIButton *)sender {
-    
-    NSURL *url = [NSURL URLWithString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_PRELOADED_OGC_EXAMPLES]];
-    if( [[UIApplication sharedApplication] canOpenURL:url]){
-        [[UIApplication sharedApplication] openURL:url];
-        [self dismissViewControllerAnimated:NO completion:nil];
-    }
-    
-}
-
-- (IBAction)link2:(UIButton *)sender {
-    
-    NSURL *url = [NSURL URLWithString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_PRELOADED_NGA_EXAMPLES]];
-    if( [[UIApplication sharedApplication] canOpenURL:url]){
-        [[UIApplication sharedApplication] openURL:url];
-        [self dismissViewControllerAnimated:NO completion:nil];
-    }
-    
 }
 
 - (IBAction)preloaded:(id)sender {

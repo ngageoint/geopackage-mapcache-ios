@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AFNetworking.h"
+#import <AFNetworking/AFImageDownloader.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UITextField (Validators)
-- (BOOL)isValidURL:(UITextField *)textField;
+- (BOOL)isValidURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock;
 - (void)trimWhiteSpace:(UITextField *)textField;
 @end
 
