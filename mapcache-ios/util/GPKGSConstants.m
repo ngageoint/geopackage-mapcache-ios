@@ -145,6 +145,7 @@ NSString * const GPKGS_PROP_CLEAR_ACTIVE_LABEL = @"clear_active_label";
 NSString * const GPKGS_PROP_MAP_MAX_FEATURES = @"map_max_features";
 NSString * const GPKGS_PROP_MAP_MAX_FEATURES_MESSAGE = @"map_max_features_message";
 NSString * const GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT = @"map_max_features_default";
+NSString * const GPKGS_PROP_HIDE_MAX_FEATURES_WARNING = @"hide_max_features_warning";
 NSString * const GPKGS_PROP_MAP_TYPE = @"map_type";
 NSString * const GPKGS_PROP_MAP_TYPE_STANDARD = @"map_type_standard";
 NSString * const GPKGS_PROP_MAP_TYPE_SATELLITE = @"map_type_satellite";

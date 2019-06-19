@@ -139,6 +139,13 @@
 }
 
 
+- (void) slideDown {
+    [UIView animateWithDuration:0.3 animations:^{
+        self.view.frame = CGRectMake(0, self.collapsedView, self.view.frame.size.width, self.view.frame.size.height);
+    }];
+}
+
+
 - (void) removeDrawerFromSuperview {
     [UIView animateWithDuration:0.37 delay:0.0 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         self.view.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height, self.view.frame.size.width, self.view.frame.size.height);

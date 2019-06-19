@@ -145,6 +145,7 @@ extern NSString * const GPKGS_PROP_CLEAR_ACTIVE_LABEL;
 extern NSString * const GPKGS_PROP_MAP_MAX_FEATURES;
 extern NSString * const GPKGS_PROP_MAP_MAX_FEATURES_MESSAGE;
 extern NSString * const GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT;
+extern NSString * const GPKGS_PROP_HIDE_MAX_FEATURES_WARNING;
 extern NSString * const GPKGS_PROP_MAP_TYPE;
 extern NSString * const GPKGS_PROP_MAP_TYPE_STANDARD;
 extern NSString * const GPKGS_PROP_MAP_TYPE_SATELLITE;
