@@ -23,5 +23,6 @@
 - (void) addDragHandle;
 - (void) addCloseButton;
 - (void) closeDrawer;
+- (void) slideDown;
 - (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer;
 @end

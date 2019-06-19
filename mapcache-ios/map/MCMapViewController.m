@@ -249,6 +249,23 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
+- (void) showMaxFeaturesWarning {
+    
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        BOOL hideWarning = [self.settings boolForKey:GPKGS_PROP_HIDE_MAX_FEATURES_WARNING];
+        if (hideWarning) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Max features exceeded" message:@"In the app settings you can adjust how many features you display on the map." preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                
+            }];
+            
+            [alert addAction:defaultAction];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    });
+}
+
+
 #pragma mark - MKMapViewDelegate methods
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
     MKOverlayRenderer * rendered = nil;
@@ -373,8 +390,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     dispatch_async(queue, ^{
         if (self.active != nil) {
             [self.featureHelper prepareFeaturesWithUpdateId: updateId andFeatureUpdateId: featureUpdateId andZoom: zoom andMaxFeatures: maxFeatures andMapViewBoundingBox: mapViewBoundingBox andToleranceDistance: toleranceDistance andFilter: YES];
-            
-            //[self.featureHelper addFeaturesWithId:featureUpdateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:YES];
         }
     });
 }

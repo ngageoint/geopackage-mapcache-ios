@@ -99,6 +99,8 @@
 		E3500E6322B4653B00164ABF /* MCDisclaimerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3500E6222B4653B00164ABF /* MCDisclaimerViewController.m */; };
 		E3500E6522B7F36500164ABF /* MCTutorialCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3500E6422B7F36500164ABF /* MCTutorialCell.xib */; };
 		E3500E6822B7F4F100164ABF /* MCTutorialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3500E6722B7F4F100164ABF /* MCTutorialCell.m */; };
+		E354DB3322BAD7DA00FFD477 /* MCSwitchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354DB3222BAD7DA00FFD477 /* MCSwitchCell.xib */; };
+		E354DB3622BAD89D00FFD477 /* MCSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354DB3522BAD89D00FFD477 /* MCSwitchCell.m */; };
 		E354EEDB2006B9B000B062BE /* MCDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */; };
 		E354EEDE2006BB9500B062BE /* MCDesctiptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEDD2006BB9500B062BE /* MCDesctiptionCell.m */; };
 		E354EEE320091BCD00B062BE /* MCFeatureLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E354EEE220091BCD00B062BE /* MCFeatureLayerDetailsViewController.m */; };
@@ -327,6 +329,9 @@
 		E3500E6422B7F36500164ABF /* MCTutorialCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCTutorialCell.xib; sourceTree = "<group>"; };
 		E3500E6622B7F4F100164ABF /* MCTutorialCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCTutorialCell.h; sourceTree = "<group>"; };
 		E3500E6722B7F4F100164ABF /* MCTutorialCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTutorialCell.m; sourceTree = "<group>"; };
+		E354DB3222BAD7DA00FFD477 /* MCSwitchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCSwitchCell.xib; sourceTree = "<group>"; };
+		E354DB3422BAD89D00FFD477 /* MCSwitchCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCSwitchCell.h; sourceTree = "<group>"; };
+		E354DB3522BAD89D00FFD477 /* MCSwitchCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCSwitchCell.m; sourceTree = "<group>"; };
 		E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCDescriptionCell.xib; sourceTree = "<group>"; };
 		E354EEDC2006BB9500B062BE /* MCDesctiptionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDesctiptionCell.h; sourceTree = "<group>"; };
 		E354EEDD2006BB9500B062BE /* MCDesctiptionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDesctiptionCell.m; sourceTree = "<group>"; };
@@ -702,6 +707,8 @@
 				E34F32EA2204ECF60098ED45 /* MCEmptyStateCell.m */,
 				E3500E6622B7F4F100164ABF /* MCTutorialCell.h */,
 				E3500E6722B7F4F100164ABF /* MCTutorialCell.m */,
+				E354DB3422BAD89D00FFD477 /* MCSwitchCell.h */,
+				E354DB3522BAD89D00FFD477 /* MCSwitchCell.m */,
 			);
 			path = cells;
 			sourceTree = "<group>";
@@ -810,6 +817,7 @@
 				E36D2DCD2017BFBE0097A8DE /* MCPickerViewCell.xib */,
 				E3470CC8202126140098D783 /* MCSegmentedControlCell.xib */,
 				E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */,
+				E354DB3222BAD7DA00FFD477 /* MCSwitchCell.xib */,
 			);
 			path = EditCells;
 			sourceTree = "<group>";
@@ -962,6 +970,7 @@
 				E35F316221EE7FC2001B720F /* privacypolicy in Resources */,
 				E355935220F4170500FC1288 /* MCGeoPackageOperationsCell.xib in Resources */,
 				040136831AF94FB200C92AFC /* Images.xcassets in Resources */,
+				E354DB3322BAD7DA00FFD477 /* MCSwitchCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1071,6 +1080,7 @@
 				E35B631121BC26F9004E5BB0 /* MCTitleCell.m in Sources */,
 				046877F81C68FE9400967470 /* GPKGSLinkedTablesViewController.m in Sources */,
 				04CCC85C1B5FF1830001296D /* GPKGSManagerCreateTilesViewController.m in Sources */,
+				E354DB3622BAD89D00FFD477 /* MCSwitchCell.m in Sources */,
 				047733BE1B4C371500E523BD /* GPKGSDatabaseOptionsButton.m in Sources */,
 				044647FF1B4AF3870052913B /* GPKGSTable.m in Sources */,
 				E33F557F1FCC956A00F252FD /* MCButtonCell.m in Sources */,

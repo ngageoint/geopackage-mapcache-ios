@@ -15,6 +15,7 @@ NSString * const SHOW_NOTICE = @"showNotice";
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MCSegmentedControlCell *baseMapSelector;
 @property (nonatomic, strong) MCFieldWithTitleCell *maxFeaturesCell;
+@property (nonatomic, strong) MCSwitchCell *switchCell;
 @property (nonatomic, strong) NSUserDefaults *settings;
 @end
 
@@ -65,17 +66,6 @@ NSString * const SHOW_NOTICE = @"showNotice";
     
     self.settings = [NSUserDefaults standardUserDefaults];
     
-    _maxFeaturesCell = [_tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    _maxFeaturesCell.title.text = @"Maximum number of features";
-    int maxFeatures = (int)[self.settings integerForKey:GPKGS_PROP_MAP_MAX_FEATURES];
-    if(maxFeatures == 0){
-        maxFeatures = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
-    }
-    _maxFeaturesCell.field.text = [NSString stringWithFormat:@"%d", maxFeatures];
-    [_maxFeaturesCell setTextFielDelegate:self];
-    [_maxFeaturesCell setupNumericalKeyboard];
-    [_cellArray addObject:_maxFeaturesCell];
-
     _baseMapSelector = [_tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
     _baseMapSelector.label.text = @"Base Map Type";
     _baseMapSelector.delegate = self;
@@ -96,6 +86,30 @@ NSString * const SHOW_NOTICE = @"showNotice";
     
     [_cellArray addObject:_baseMapSelector];
     
+    _maxFeaturesCell = [_tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    _maxFeaturesCell.title.text = @"Maximum number of features";
+    int maxFeatures = (int)[self.settings integerForKey:GPKGS_PROP_MAP_MAX_FEATURES];
+    if(maxFeatures == 0){
+        maxFeatures = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
+    }
+    _maxFeaturesCell.field.text = [NSString stringWithFormat:@"%d", maxFeatures];
+    [_maxFeaturesCell setTextFielDelegate:self];
+    [_maxFeaturesCell setupNumericalKeyboard];
+    [_cellArray addObject:_maxFeaturesCell];
+    
+    
+    _switchCell = [_tableView dequeueReusableCellWithIdentifier:@"switchCell"];
+    _switchCell.label.text = @"Show max feature warning";
+    _switchCell.switchDelegate = self;
+    BOOL hideWarning = [self.settings boolForKey:GPKGS_PROP_HIDE_MAX_FEATURES_WARNING];
+    if (hideWarning) {
+        [_switchCell switchOn];
+    } else {
+        [_switchCell switchOff];
+    }
+    [_cellArray addObject:_switchCell];
+    
+    
     MCButtonCell *showNoticesButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
     [showNoticesButtonCell.button setTitle:@"About MapCache" forState:UIControlStateNormal];
     showNoticesButtonCell.action = SHOW_NOTICE;
@@ -110,6 +124,7 @@ NSString * const SHOW_NOTICE = @"showNotice";
     [self.tableView registerNib:[UINib nibWithNibName:@"MCSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"sectionTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCSegmentedControlCell" bundle:nil] forCellReuseIdentifier:@"segmentedControl"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCSwitchCell" bundle:nil] forCellReuseIdentifier:@"switchCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"buttonCell"];
 }
@@ -149,6 +164,12 @@ NSString * const SHOW_NOTICE = @"showNotice";
 #pragma mark - MCSegmentedControlDelegate method
 - (void)selectionChanged:(NSString *)selection {
     [_settingsDelegate setMapType:selection];
+}
+
+
+#pragma mark - MCSwitchCellDelegate
+- (void) switchChanged:(BOOL)switchValue {
+    [self.settings setBool:switchValue forKey:GPKGS_PROP_HIDE_MAX_FEATURES_WARNING];
 }
 
 

@@ -12,6 +12,7 @@
 #import "MCSegmentedControlCell.h"
 #import "MCDesctiptionCell.h"
 #import "MCFieldWithTitleCell.h"
+#import "MCSwitchCell.h"
 #import "MCButtonCell.h"
 #import "GPKGSProperties.h"
 #import <MapKit/MapKit.h>
@@ -28,7 +29,7 @@
 @end
 
 
-@interface MCSettingsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCSegmentedControlCellDelegate, GPKGSButtonCellDelegate>
+@interface MCSettingsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCSegmentedControlCellDelegate, GPKGSButtonCellDelegate, MCSwitchCellDelegate>
 @property (nonatomic, strong) id<MCSettingsViewDelegate> settingsDelegate;
 @property (nonatomic, strong) id<MCNoticeAndAttributeDelegate>noticeAndAttributeDelegate;
 @end

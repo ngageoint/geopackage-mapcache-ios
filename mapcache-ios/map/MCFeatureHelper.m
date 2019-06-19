@@ -172,7 +172,10 @@
                 if([[self.featureDaos objectForKey:databaseName] objectForKey:features] != nil){
                     
                     count = [self displayFeaturesWithId:updateId andGeoPackage:geoPackage andStyleCache:styleCache andFeatures:features andCount:count andMaxFeatures:maxFeatures andEditable:NO andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
-                    if([self featureUpdateCanceled:updateId] || count >= maxFeatures){
+                    if([self featureUpdateCanceled:updateId]){
+                        break;
+                    } else if (count >= maxFeatures) {
+                        [self.featureHelperDelegate showMaxFeaturesWarning];
                         break;
                     }
                 }

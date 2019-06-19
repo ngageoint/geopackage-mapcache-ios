@@ -48,6 +48,7 @@
     if (_drawerStack.count > 1) {
         NGADrawerViewController *currentTopDrawer = [_drawerStack objectAtIndex:_drawerStack.count -2];
         [currentTopDrawer.view setHidden:YES];
+        [currentTopDrawer slideDown];
     }
 }
 
@@ -77,6 +78,7 @@
         NGADrawerViewController *oldTopDrawer = [_drawerStack objectAtIndex:_drawerStack.count -1];
         [_drawerStack removeLastObject];
         NGADrawerViewController *newTopDrawer = [_drawerStack objectAtIndex:_drawerStack.count -1];
+        [newTopDrawer makeFullView];
         [newTopDrawer.view setHidden:NO];
         [oldTopDrawer removeDrawerFromSuperview];
     }

@@ -33,6 +33,7 @@
 
 @protocol MCFeatureHelperDelegate <NSObject>
 - (void) addShapeToMapView:(GPKGMapShape *) shape withCount:(int) count;
+- (void) showMaxFeaturesWarning;
 @end
 
 
@@ -61,4 +62,5 @@
 -(GPKGMapShape *) processFeatureRow: (GPKGFeatureRow *) row WithDatabase: (NSString *) database andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter andStyleCache: (GPKGStyleCache *) styleCache andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andFilterBoundingBox: (GPKGBoundingBox *) boundingBox andFilterMaxLongitude: (double) maxLongitude andFilter: (BOOL) filter;
 
 @end
+
 
