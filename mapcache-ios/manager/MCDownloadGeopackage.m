@@ -32,6 +32,8 @@
     
     self.nameTextField.inputAccessoryView = keyboardToolbar;
     self.urlTextField.inputAccessoryView = keyboardToolbar;
+    self.nameTextField.delegate = self;
+    self.urlTextField.delegate = self;
     
     [self.cancelButton setHidden:YES];
     [self.downloadedLabel setHidden:YES];
@@ -114,7 +116,7 @@
                     NSDictionary * url = (NSDictionary *)[urls objectAtIndex:buttonIndex];
                     [self.nameTextField setText:[url objectForKey:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_NAME]];
                     [self.urlTextField setText:[url objectForKey:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_URL]];
-                    [self updateImportButtonState];
+                    [self validateURLField];
                 }
             }
             
@@ -152,23 +154,6 @@
 
 }
 
-- (IBAction)nameChanged:(id)sender {
-    [self.nameTextField trimWhiteSpace:self.nameTextField];
-    [self updateImportButtonState];
-}
-
-- (IBAction)urlChanged:(id)sender {
-    [self.urlTextField trimWhiteSpace:self.urlTextField];
-    [self updateImportButtonState];
-}
-
--(void) updateImportButtonState{
-    if([self.nameTextField.text length] == 0 || [self.urlTextField.text length] == 0){
-        [GPKGSUtils disableButton:self.importButton];
-    }else{
-        [GPKGSUtils enableButton:self.importButton];
-    }
-}
 
 -(void) updateProgress{
     if(self.maxProgress != nil){
@@ -214,6 +199,58 @@
         [self.delegate downloadFileViewController:self downloadedFile:false withError:errorMessage];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+#pragma mark- UITextFieldDelegate methods
+- (void) textFieldDidEndEditing:(UITextField *)textField {
+    [textField trimWhiteSpace:textField];
+    
+    if (textField == self.urlTextField) {
+        NSLog(@"URL Field ended editing");
+        [self validateURLField];
+    } else {
+        if ([self.nameTextField.text isEqualToString:@""] || [self.urlTextField.text isEqualToString:@""]) {
+            [GPKGSUtils disableButton:self.importButton];
+            [self.downloadedLabel setText:@"Check your GeoPackage's name and URL"];
+            self.downloadedLabel.hidden = NO;
+        } else {
+            [GPKGSUtils enableButton:self.importButton];
+            [self.downloadedLabel setText:@""];
+            self.downloadedLabel.hidden = YES;
+        }
+    }
+    
+    [textField resignFirstResponder];
+}
+
+
+- (void) validateURLField {
+    [self.urlTextField isValidGeoPackageURL:self.urlTextField withResult:^(BOOL isValid) {
+        if (isValid) {
+            NSLog(@"Valid URL");
+            self.urlTextField.borderStyle = UITextBorderStyleRoundedRect;
+            self.urlTextField.layer.cornerRadius = 4;
+            self.urlTextField.layer.borderColor = [[UIColor colorWithRed:0.79 green:0.8 blue:0.8 alpha:1] CGColor];
+            self.urlTextField.layer.borderWidth = 0.5;
+            
+            [GPKGSUtils enableButton:self.importButton];
+            [self.downloadedLabel setText:@""];
+            self.downloadedLabel.hidden = YES;
+            
+        } else {
+            NSLog(@"Bad url");
+            [GPKGSUtils disableButton:self.importButton];
+            
+            [self.downloadedLabel setText:@"Invalid URL"];
+            self.downloadedLabel.hidden = NO;
+            
+            self.urlTextField.borderStyle = UITextBorderStyleRoundedRect;
+            self.urlTextField.layer.cornerRadius = 4;
+            self.urlTextField.layer.borderColor = [[UIColor redColor] CGColor];
+            self.urlTextField.layer.borderWidth = 2.0;
+        }
+    }];
 }
 
 @end

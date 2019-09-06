@@ -13,7 +13,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UITextField (Validators)
-- (BOOL)isValidURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock;
+- (BOOL)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock;
+- (BOOL)isValidGeoPackageURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock;
 - (void)trimWhiteSpace:(UITextField *)textField;
 @end
 

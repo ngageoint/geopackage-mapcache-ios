@@ -19,7 +19,7 @@
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="example" translatesAutoresizingMaskIntoConstraints="NO" id="Kv9-eI-0Wy">
                     <rect key="frame" x="92.666666666666686" y="16" width="229" height="84"/>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swipe a GeoPacakge to the right to add it to the map." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DiN-ew-T3Y">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swipe a GeoPackage to the right to add it to the map." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DiN-ew-T3Y">
                     <rect key="frame" x="56" y="116.00000000000001" width="302" height="40.666666666666671"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="302" id="5NY-7U-oxj"/>

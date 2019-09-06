@@ -16,6 +16,8 @@
                 <outlet property="locationButton" destination="Kgz-Xo-TlV" id="Kqq-rC-9vH"/>
                 <outlet property="mapView" destination="wr8-dW-dfS" id="0bZ-30-JrW"/>
                 <outlet property="view" destination="iN0-l3-epB" id="r6m-qk-tnu"/>
+                <outlet property="zoomIndicatorButton" destination="lmp-sw-3cO" id="Nmd-bL-vR8"/>
+                <outlet property="zoomIndicatorButtonWidth" destination="m44-sE-e7v" id="2vA-Z5-JIa"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -23,52 +25,63 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="wr8-dW-dfS">
-                    <rect key="frame" x="0.0" y="0.0" width="391" height="667"/>
+                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="wr8-dW-dfS">
+                    <rect key="frame" x="-8" y="0.0" width="391" height="667"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </mapView>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ujd-S3-bPF">
-                    <rect key="frame" x="322" y="36" width="45" height="90"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9k9-7k-Tsz">
-                            <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
-                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="45" id="fqk-22-yRr"/>
-                                <constraint firstAttribute="height" constant="45" id="sn6-1m-kR0"/>
-                            </constraints>
-                            <state key="normal" image="Info"/>
-                            <connections>
-                                <action selector="showInfo:" destination="-1" eventType="touchUpInside" id="h3l-lH-tgQ"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kgz-Xo-TlV">
-                            <rect key="frame" x="0.0" y="45" width="45" height="45"/>
-                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="45" id="Wkn-1r-Y16"/>
-                                <constraint firstAttribute="width" constant="45" id="kMT-84-zBR"/>
-                            </constraints>
-                            <state key="normal" image="GPS"/>
-                            <connections>
-                                <action selector="changeLocationState:" destination="-1" eventType="touchUpInside" id="bji-z2-Qxa"/>
-                            </connections>
-                        </button>
-                    </subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9k9-7k-Tsz">
+                    <rect key="frame" x="322" y="36" width="45" height="45"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="45" id="fqk-22-yRr"/>
+                        <constraint firstAttribute="height" constant="45" id="sn6-1m-kR0"/>
+                    </constraints>
+                    <state key="normal" image="Info">
+                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="showInfo:" destination="-1" eventType="touchUpInside" id="h3l-lH-tgQ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kgz-Xo-TlV">
+                    <rect key="frame" x="322" y="82" width="45" height="45"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="45" id="Wkn-1r-Y16"/>
+                        <constraint firstAttribute="width" constant="45" id="kMT-84-zBR"/>
+                    </constraints>
+                    <state key="normal" image="GPS">
+                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="changeLocationState:" destination="-1" eventType="touchUpInside" id="bji-z2-Qxa"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lmp-sw-3cO">
+                    <rect key="frame" x="8" y="36" width="45" height="45"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="45" id="iCy-HY-rlX"/>
+                        <constraint firstAttribute="width" constant="45" id="m44-sE-e7v"/>
+                    </constraints>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                             <integer key="value" value="8"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
-                </stackView>
+                    <connections>
+                        <action selector="toggleZoomDetails:" destination="-1" eventType="touchUpInside" id="4Bs-3N-AHS"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="wr8-dW-dfS" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="3gn-tr-cjK"/>
-                <constraint firstItem="wr8-dW-dfS" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Ejy-Jm-DsJ"/>
-                <constraint firstItem="wr8-dW-dfS" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" constant="16" id="X7G-aB-s7o"/>
-                <constraint firstItem="wr8-dW-dfS" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="hPK-T4-erq"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ujd-S3-bPF" secondAttribute="trailing" constant="8" id="l4i-TE-zdU"/>
-                <constraint firstItem="ujd-S3-bPF" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="lH4-UT-aYK"/>
+                <constraint firstItem="lmp-sw-3cO" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="2eU-zB-oUU"/>
+                <constraint firstItem="9k9-7k-Tsz" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="7NI-aA-0x1"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Kgz-Xo-TlV" secondAttribute="trailing" constant="8" id="Dqk-wm-cPh"/>
+                <constraint firstItem="Kgz-Xo-TlV" firstAttribute="top" secondItem="9k9-7k-Tsz" secondAttribute="bottom" constant="1" id="ItX-5Y-B2x"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="9k9-7k-Tsz" secondAttribute="trailing" constant="8" id="NvC-mE-gSm"/>
+                <constraint firstItem="lmp-sw-3cO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="jP1-MM-iEU"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="24.5" y="51.5"/>

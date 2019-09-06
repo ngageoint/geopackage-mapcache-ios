@@ -20,6 +20,7 @@
 @protocol MCSettingsViewDelegate <NSObject>
 - (void)setMapType:(NSString *) mapType;
 - (void)setMaxFeatures:(int) maxFeatures;
+- (void)toggleZoomIndicator;
 - (void)settingsCompletionHandler;
 @end
 

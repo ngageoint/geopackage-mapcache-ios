@@ -9,11 +9,9 @@
 #import "NGADrawerViewController.h"
 
 @interface NGADrawerViewController ()
-@property (nonatomic) CGFloat openView;
-@property (nonatomic) CGFloat partialVIew;
-@property (nonatomic) CGFloat collapsedView;
 @property (nonatomic) BOOL startedAsFullView;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
+@property (nonatomic) CGFloat previousContentOffset; // Only used for rolled up gestures
 @end
 
 
@@ -22,6 +20,7 @@
 - (instancetype) initAsFullView: (BOOL) isFullView {
     self = [super init];
     _startedAsFullView = isFullView;
+    _isFullView = YES;
     _swipeEnabled = YES;
     return self;
 }
@@ -30,12 +29,12 @@
     [super viewDidLoad];
     
     _openView = 160;
-    _partialVIew = 220;
     _collapsedView = [UIScreen mainScreen].bounds.size.height - 180;
     NSLog(@"Screen height: %f", [UIScreen mainScreen].bounds.size.height);
     
     _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
     _panGestureRecognizer.delegate = self;
+    _previousContentOffset = 0;
     [self.view addGestureRecognizer:_panGestureRecognizer];
     [self roundViews];
 }
@@ -92,12 +91,47 @@
             [UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
                 if (velocity.y >= 0) {
                     self.view.frame = CGRectMake(0, self.collapsedView, self.view.frame.size.width, self.view.frame.size.height);
+                    _isFullView = NO;
                 } else {
                     self.view.frame = CGRectMake(0, self.openView, self.view.frame.size.width, self.view.frame.size.height);
+                    _isFullView = YES;
                 }
             } completion:nil];
         }
     }
+}
+
+
+- (void) rollUpPanGesture:(UIPanGestureRecognizer *) recognizer withScrollView:(UIScrollView *) scrollView {
+    CGPoint velocity = [scrollView.panGestureRecognizer velocityInView:self.view];
+    CGFloat y = CGRectGetMinY(self.view.frame);
+    double duration = velocity.y < 0? ((y - self.openView) / -velocity.y) : ((self.collapsedView - y) / velocity.y);
+    duration = duration > 1.3 ? 0.65 : duration;
+    
+    if (scrollView.contentOffset.y < 0  && self.previousContentOffset == 0) {
+        scrollView.scrollEnabled = NO;
+        [UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+            if (velocity.y >= 0) {
+                self.view.frame = CGRectMake(0, self.collapsedView, self.view.frame.size.width, self.view.frame.size.height);
+            }
+        } completion:^(BOOL finished) {
+            self.isFullView = NO;
+            scrollView.scrollEnabled = YES;
+        }];
+        
+        
+    } else if (scrollView.contentOffset.y > 0 && !self.isFullView) {
+        [UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+            if (velocity.y >= 0) {
+                self.view.frame = CGRectMake(0, self.openView, self.view.frame.size.width, self.view.frame.size.height);
+            }
+        } completion:^(BOOL finished) {
+            scrollView.scrollEnabled = YES;
+            self.isFullView = YES;
+        }];
+    }
+    
+    self.previousContentOffset = scrollView.contentOffset.y;
 }
 
 
@@ -135,6 +169,7 @@
         [self.drawerViewDelegate drawerAddAnimationComplete:self];
     }];
     
+    self.isFullView = YES;
     [_drawerViewDelegate drawerAddAnimationComplete:self];
 }
 
@@ -142,6 +177,7 @@
 - (void) slideDown {
     [UIView animateWithDuration:0.3 animations:^{
         self.view.frame = CGRectMake(0, self.collapsedView, self.view.frame.size.width, self.view.frame.size.height);
+        self.isFullView = NO;
     }];
 }
 

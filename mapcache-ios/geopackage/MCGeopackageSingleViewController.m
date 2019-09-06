@@ -14,6 +14,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIDocumentInteractionController *shareDocumentController;
 @property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic) BOOL haveScrolled;
 @end
 
 @implementation MCGeopackageSingleViewController
@@ -42,6 +43,7 @@
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
+    self.haveScrolled = NO;
     
     [self.view addSubview:self.tableView];
     [self addDragHandle];
@@ -94,8 +96,10 @@
         
         if ([table isMemberOfClass:[GPKGSFeatureTable class]]) {
             typeImageName = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
+            [layerCell.detailLabel setText: [NSString stringWithFormat:@"%d features", [(GPKGSFeatureTable *)table count]]];
         } else if ([table isMemberOfClass:[GPKGSTileTable class]]) {
             typeImageName = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_TILES];
+            [layerCell.detailLabel setText:[NSString stringWithFormat:@"Zoom levels %d - %d",  [(GPKGSTileTable *)table minZoom], [(GPKGSTileTable *)table maxZoom]]];
         }
         
         layerCell.table = table;
@@ -185,6 +189,7 @@
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     
+    // TODO add layer details view
     /*if([cellObject isKindOfClass:[MCLayerCell class]]){
         layerCell = (MCLayerCell *) cellObject;
         NSString *layerName = layerCell.layerNameLabel.text;
@@ -379,6 +384,26 @@
 }
 
 
+// Override this method to make the drawer and the scrollview play nice
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.haveScrolled) {
+        [self rollUpPanGesture:scrollView.panGestureRecognizer withScrollView:scrollView];
+    }
+}
+
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.haveScrolled = YES;
+    
+    if (!self.isFullView) {
+        scrollView.scrollEnabled = NO;
+        scrollView.scrollEnabled = YES;
+    } else {
+        scrollView.scrollEnabled = YES;
+    }
+}
+
+
 /* Chekcing */
 - (void)alertTextFieldDidChange:(UITextField *)sender
 {
@@ -406,3 +431,4 @@
 
 
 @end
+

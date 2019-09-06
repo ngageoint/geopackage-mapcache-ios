@@ -10,7 +10,7 @@
 
 @implementation UITextField (Validators)
 
-- (BOOL)isValidURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock {
+- (BOOL)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock {
     AFHTTPSessionManager *sessionManager = [AFHTTPSessionManager manager];
     
     NSString *urlText = textField.text;
@@ -44,8 +44,43 @@
 }
 
 
+- (BOOL)isValidGeoPackageURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock {
+    AFHTTPSessionManager *sessionManager = [AFHTTPSessionManager manager];
+    NSURL *url = [NSURL URLWithString:textField.text];
+    
+    if (url) {
+        
+        AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+        securityPolicy.allowInvalidCertificates = YES;
+        [securityPolicy setValidatesDomainName:NO];
+        sessionManager.securityPolicy = securityPolicy;
+        sessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        
+        [sessionManager HEAD:url.absoluteString parameters:nil success:^(NSURLSessionDataTask * _Nonnull task) {
+            NSLog(@"HEAD from GeoPacakge pre-import %@", task.response.description);
+            NSHTTPURLResponse *response = ((NSHTTPURLResponse *) [task response]);
+            NSDictionary *headers = [response allHeaderFields];
+            
+            if ([[headers objectForKey:@"Content-Type"] isEqualToString:@"gpkg"]) {
+                resultBlock(YES);
+            } else {
+                resultBlock(NO);
+            }
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"Unable to reach GeoPacakge to import %@", error);
+            resultBlock(NO);
+        }];
+        
+        return YES;
+    }
+    
+    return NO;
+}
+
+
 - (void)trimWhiteSpace:(UITextField *)textField {
     textField.text = [textField.text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
 }
+
 
 @end

@@ -12,6 +12,7 @@
 #import "NGADrawerCoordinator.h"
 #import "MCMapCoordinator.h"
 #import "MCDisclaimerViewController.h"
+#import "GPKGGeoPackageCache.h"
 
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>

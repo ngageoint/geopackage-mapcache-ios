@@ -56,6 +56,7 @@
 @property (nonatomic) double maxLon;
 @property (nonatomic) BOOL settingsDrawerVisible;
 @property (nonatomic) int currentZoom;
+@property (nonatomic) BOOL expandedZoomDetails;
 @end
 
 
@@ -92,6 +93,29 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.showingUserLocation = NO;
     self.settingsDrawerVisible = NO;
     self.currentZoom = -1;
+    
+    self.infoButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.infoButton.layer.shadowOpacity = 0.3;
+    self.infoButton.layer.shadowRadius = 2;
+    self.infoButton.layer.shadowOffset = CGSizeMake(0.0f, -1.0f);
+    self.infoButton.layer.cornerRadius = 8;
+    self.infoButton.layer.maskedCorners = UIRectCornerTopLeft | UIRectCornerTopRight;
+    
+    self.locationButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.locationButton.layer.shadowOpacity = 0.3;
+    self.locationButton.layer.shadowRadius = 2;
+    self.locationButton.layer.shadowOffset = CGSizeMake(0.0f, 1.0f);
+    self.locationButton.layer.cornerRadius = 8;
+    self.locationButton.layer.maskedCorners = UIRectCornerBottomLeft | UIRectCornerBottomRight;
+    
+    self.zoomIndicatorButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.zoomIndicatorButton.layer.shadowOpacity = 0.3;
+    self.zoomIndicatorButton.layer.shadowRadius = 2;
+    self.zoomIndicatorButton.layer.shadowOffset = CGSizeMake(0.0f, 1.0f);
+    int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
+    [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", zoom] forState:UIControlStateNormal];
+    self.expandedZoomDetails = NO;
+    [self.zoomIndicatorButton setHidden:[_settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR]];
     
     [self.view setNeedsLayout];
     
@@ -182,6 +206,29 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
+- (IBAction)toggleZoomDetails:(id)sender {
+    int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
+    
+    if (self.expandedZoomDetails) {
+        self.expandedZoomDetails = NO;
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", zoom] forState:UIControlStateNormal];
+        self.zoomIndicatorButtonWidth.constant = 45;
+        
+        [UIView animateWithDuration:0.15 animations:^{
+            [self.zoomIndicatorButton layoutIfNeeded];
+        }];
+    } else {
+        self.expandedZoomDetails = YES;
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", zoom] forState:UIControlStateNormal];
+        self.zoomIndicatorButtonWidth.constant = 130;
+        
+        [UIView animateWithDuration:0.15 animations:^{
+            [self.zoomIndicatorButton layoutIfNeeded];
+        }];
+    }
+}
+
+
 #pragma mark - Updaing the data on the map
 - (void) updateMapLayers {
     [self updateInBackgroundWithZoom:YES];
@@ -232,6 +279,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.settingsDrawerVisible = NO;
 }
 
+
+- (void) toggleZoomIndicator {
+    [self.zoomIndicatorButton setHidden:[self.settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR]];
+}
 
 #pragma mark - MCTileHelperDelegate methods
 - (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay {
@@ -373,6 +424,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     int previousZoom = self.currentZoom;
     int zoom = (int)[GPKGMapUtils currentZoomWithMapView:mapView];
     self.currentZoom = zoom;
+    
+    if (self.expandedZoomDetails) {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", zoom] forState:UIControlStateNormal];
+    } else {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", zoom] forState:UIControlStateNormal];
+    }
     
     if (zoom != previousZoom) {
         // Zoom level changed, remove all the feature shapes except the markers

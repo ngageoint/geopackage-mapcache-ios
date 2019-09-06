@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol MCSwitchCellDelegate <NSObject>
-- (void) switchChanged:(BOOL) switchValue;
+- (void) switchChanged:(id) sender;
 @end
 
 

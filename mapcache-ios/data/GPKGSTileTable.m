@@ -15,6 +15,13 @@
     return self;
 }
 
+-(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count andMinZoom: (int) minZoom andMaxZoom: (int) maxZoom {
+    self = [super initWithDatabase:database andName:name andCount:count];
+    self.minZoom = minZoom;
+    self.maxZoom = maxZoom;
+    return self;
+}
+
 -(enum GPKGSTableType) getType{
     return GPKGS_TT_TILE;
 }

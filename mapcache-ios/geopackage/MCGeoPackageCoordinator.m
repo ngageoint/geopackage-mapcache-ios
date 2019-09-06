@@ -93,17 +93,13 @@
         for (NSString *tableName in [geoPackage getFeatureTables]) {
             GPKGFeatureDao *featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
             int count = [featureDao count];
-            
             GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
             GPKGGeometryColumns *geometryColumns = [contentsDao getGeometryColumns:contents];
             enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
-            
             GPKGSFeatureTable *table = [[GPKGSFeatureTable alloc] initWithDatabase:_database.name andName:tableName andGeometryType:geometryType andCount:count];
-            // there was some bit about setting the table as active, but I think that was for the OG manager
             
             [tables addObject:table];
             [updatedDatabase addFeature:table];
-            // there was a bit about expanding the cells to add another to the manager for the new feaure layer, but that might get handled in this case by just calling initCells
         }
         
         // Handle the tile layers
@@ -111,8 +107,8 @@
             GPKGTileDao *tileDao = [geoPackage getTileDaoWithTableName:tableName];
             int count = [tileDao count];
             
-            GPKGSTileTable *table = [[GPKGSTileTable alloc] initWithDatabase:_database.name andName:tableName andCount:count];
-            // skipping active setting, that will be handled on the new map
+            GPKGSTileTable *table = [[GPKGSTileTable alloc] initWithDatabase:_database.name andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
+            
             [tables addObject:table];
             [updatedDatabase addTile:table];
         }
@@ -365,9 +361,7 @@
 
 
 -(void) onLoadTilesCompleted: (int) count {
-    //TODO: fill in
     NSLog(@"Loading tiles completed");
-    //[_navigationController popToViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
     [_drawerDelegate popDrawer];
     [self updateDatabase];
 }
