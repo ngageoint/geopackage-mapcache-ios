@@ -31,7 +31,7 @@
 
 
 - (IBAction)switchChanged:(id)sender {
-    [self.switchDelegate switchChanged:[sender isOn]];
+    [self.switchDelegate switchChanged:sender];
 }
 
 

@@ -17,6 +17,9 @@
 @interface NGADrawerViewController : UIViewController <UIGestureRecognizerDelegate>
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (nonatomic) BOOL swipeEnabled;
+@property (nonatomic) BOOL isFullView;
+@property (nonatomic) CGFloat openView;
+@property (nonatomic) CGFloat collapsedView;
 - (instancetype) initAsFullView: (BOOL) isFullView;
 - (void) makeFullView;
 - (void) removeDrawerFromSuperview;
@@ -25,4 +28,6 @@
 - (void) closeDrawer;
 - (void) slideDown;
 - (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer;
+- (void) panGesture:(UIPanGestureRecognizer *) recognizer;
+- (void) rollUpPanGesture:(UIPanGestureRecognizer *) recognizer withScrollView:(UIScrollView *) scrollView;
 @end

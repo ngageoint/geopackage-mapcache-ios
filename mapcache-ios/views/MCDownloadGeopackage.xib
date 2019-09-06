@@ -121,9 +121,6 @@
                                     <nil key="textColor"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits"/>
-                                    <connections>
-                                        <action selector="urlChanged:" destination="-1" eventType="editingDidEnd" id="e0q-Xa-i4C"/>
-                                    </connections>
                                 </textField>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="URL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="53x-2Z-rHG">
                                     <rect key="frame" x="20" y="140" width="335" height="18"/>
@@ -136,9 +133,6 @@
                                     <nil key="textColor"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits"/>
-                                    <connections>
-                                        <action selector="nameChanged:" destination="-1" eventType="editingDidEnd" id="8ik-Cq-wuz"/>
-                                    </connections>
                                 </textField>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GeoPackage Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QZB-QV-48k">
                                     <rect key="frame" x="20" y="68" width="130.5" height="18"/>

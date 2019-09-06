@@ -15,6 +15,8 @@
 
 @interface AppDelegate ()
 @property (strong, nonatomic) NSMutableArray *childCoordinators;
+@property (strong, nonatomic) GPKGGeoPackageManager *manager;
+@property (nonatomic, strong) GPKGGeoPackageCache *geoPackages;
 @end
 
 @implementation AppDelegate
@@ -50,9 +52,20 @@
         [_window.rootViewController presentViewController:disclaimer animated:YES completion:nil];
     }
     
+    _manager = [GPKGGeoPackageFactory getManager];
+    _geoPackages = [[GPKGGeoPackageCache alloc] initWithManager:self.manager];
+    
     return YES;
 }
 
+- (void) initializeUserDefaults {
+    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    
+    if (nil == [settings objectForKey:GPKGS_PROP_DEFAULTS_INITIALIZED]) {
+        [settings setBool:NO forKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR];
+        [settings setBool:YES forKey:GPKGS_PROP_DEFAULTS_INITIALIZED];
+    }
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -74,6 +87,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    [_geoPackages closeAll];
 }
 
 - (BOOL) application:(UIApplication *)application openURL:(NSURL *)

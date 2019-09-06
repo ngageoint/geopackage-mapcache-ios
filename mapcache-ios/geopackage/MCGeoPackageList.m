@@ -11,6 +11,7 @@
 @interface MCGeoPackageList()
 @property (strong, nonatomic) NSMutableArray *childCoordinators;
 @property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic) BOOL haveScrolled;
 @end
 
 
@@ -29,6 +30,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.haveScrolled = NO;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     self.tableView.estimatedRowHeight = 126.0;
@@ -252,6 +254,25 @@
     UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[delete]];
     configuration.performsFirstActionWithFullSwipe = YES;
     return configuration;
+}
+
+// Override this method to make the drawer and the scrollview play nice
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.haveScrolled) {
+        [self rollUpPanGesture:scrollView.panGestureRecognizer withScrollView:scrollView];
+    }
+}
+
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.haveScrolled = YES;
+    
+    if (!self.isFullView) {
+        scrollView.scrollEnabled = NO;
+        scrollView.scrollEnabled = YES;
+    } else {
+        scrollView.scrollEnabled = YES;
+    }
 }
 
 

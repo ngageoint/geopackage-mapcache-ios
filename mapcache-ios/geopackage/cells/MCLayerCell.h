@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *activeIndicator;
 @property (weak, nonatomic) IBOutlet UIImageView *layerTypeImage;
 @property (weak, nonatomic) IBOutlet UILabel *layerNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *detailLabel;
 @property (nonatomic, strong) GPKGSTable *table;
 - (void)activeIndicatorOn;
 - (void)activeIndicatorOff;

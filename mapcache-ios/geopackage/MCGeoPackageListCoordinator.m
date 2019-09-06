@@ -16,6 +16,7 @@
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) GPKGSDatabases *active;
 @property (nonatomic, strong) NSMutableArray *databases;
+@property (nonatomic, strong) GPKGGeoPackageCache *geoPacakageCache;
 @end
 
 
@@ -27,6 +28,7 @@
     _childCoordinators = [[NSMutableArray alloc] init];
     _databases = [[NSMutableArray alloc] init];
     _manager = [GPKGGeoPackageFactory getManager];
+    _geoPacakageCache = [[GPKGGeoPackageCache alloc] initWithManager:_manager];
     self.active = [GPKGSDatabases getInstance];
     
     return self;
@@ -75,7 +77,7 @@
             for(NSString * tableName in [geoPackage getTileTables]){
                 GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName: tableName];
                 int count = [tileDao count];
-                GPKGSTileTable * table = [[GPKGSTileTable alloc] initWithDatabase:databaseName andName:tableName andCount:count];
+                GPKGSTileTable * table = [[GPKGSTileTable alloc] initWithDatabase:databaseName andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
                 [table setActive: [self.active exists:table]];
                 
                 [tables addObject:table];
@@ -151,6 +153,10 @@
         } else {
             [_active removeTable:table];
         }
+    }
+    
+    if (!switchOn && [_geoPacakageCache has:database.name]) {
+        [_geoPacakageCache close:database.name];
     }
     
     // make the call to the map view to update the view

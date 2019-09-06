@@ -121,13 +121,11 @@
 
 #pragma mark- UITextFieldDelegate methods
 - (void) textFieldDidEndEditing:(UITextField *)textField {
-    BOOL enableButton = YES;
-    
     [textField trimWhiteSpace:textField];
     
     if (textField == _urlCell.field) {
         NSLog(@"URL Field ended editing");
-        [textField isValidURL:textField withResult:^(BOOL isValid) {
+        [textField isValidTileServerURL:textField withResult:^(BOOL isValid) {
             if (isValid) {
                 NSLog(@"Valid URL");
                 self.urlCell.field.borderStyle = UITextBorderStyleRoundedRect;
@@ -145,16 +143,12 @@
                 self.urlCell.field.layer.borderWidth = 2.0;
             }
         }];
-    }
-    
-    if ([_layerNameCell.field.text isEqualToString:@""] || [_urlCell.field.text isEqualToString:@""]) {
-        enableButton = NO;
-    }
-    
-    if (enableButton) {
-        [_buttonCell enableButton];
     } else {
-        [_buttonCell disableButton];
+        if ([_layerNameCell.field.text isEqualToString:@""] || [_urlCell.field.text isEqualToString:@""]) {
+            [_buttonCell disableButton];
+        } else {
+            [_buttonCell enableButton];
+        }
     }
     
     [textField resignFirstResponder];

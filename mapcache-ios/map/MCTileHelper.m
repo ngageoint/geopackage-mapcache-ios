@@ -50,9 +50,7 @@
                     [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay];
                 } @catch (NSException *e) {
                     NSLog(@"%@", [e description]);
-                } @finally {
-                    [geoPackage close];
-                }
+                } 
             }
         }
     }
@@ -100,7 +98,6 @@
     }
     
     [self updateTileBoundingBox:displayBoundingBox withSrs:tileMatrixSetSrs andSpecifiedBoundingBox:nil];
-    [geoPackage close];
     return overlay;
 }
 

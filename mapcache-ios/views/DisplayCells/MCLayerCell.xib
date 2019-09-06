@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,13 +13,9 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" restorationIdentifier="layerCell" id="iN0-l3-epB" customClass="MCLayerCell">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IxB-60-MLY">
-                    <rect key="frame" x="24" y="0.0" width="40" height="40"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcc-wG-Wcw">
                     <rect key="frame" x="72" y="10" width="295" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -28,22 +24,40 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dVB-qC-zUZ">
-                    <rect key="frame" x="0.0" y="0.0" width="16" height="40"/>
+                    <rect key="frame" x="0.0" y="0.0" width="16" height="60"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="16" id="hqc-cK-KsS"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fkH-Qs-GRg">
+                    <rect key="frame" x="72" y="29" width="295" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IxB-60-MLY">
+                    <rect key="frame" x="24" y="10" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="C1k-1o-c2M"/>
+                        <constraint firstAttribute="height" constant="40" id="HtS-a4-RED"/>
                     </constraints>
                 </imageView>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="IxB-60-MLY" firstAttribute="leading" secondItem="dVB-qC-zUZ" secondAttribute="trailing" constant="8" id="0VO-Ll-yAv"/>
+                <constraint firstItem="IxB-60-MLY" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="10" id="2zS-Ca-VjC"/>
                 <constraint firstItem="dVB-qC-zUZ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="KMn-aQ-5bc"/>
                 <constraint firstItem="dVB-qC-zUZ" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="c7c-gp-r1O"/>
                 <constraint firstItem="dVB-qC-zUZ" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="gRw-aL-Zoy"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="IxB-60-MLY" secondAttribute="bottom" constant="10" id="xgn-Lq-qLm"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="activeIndicator" destination="dVB-qC-zUZ" id="Rr0-Sm-wy9"/>
+                <outlet property="detailLabel" destination="fkH-Qs-GRg" id="gjf-zA-ygw"/>
                 <outlet property="layerNameLabel" destination="bcc-wG-Wcw" id="L6J-MF-yeb"/>
                 <outlet property="layerTypeImage" destination="IxB-60-MLY" id="wqR-o1-hyk"/>
             </connections>

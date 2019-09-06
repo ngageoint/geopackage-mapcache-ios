@@ -15,7 +15,8 @@ NSString * const SHOW_NOTICE = @"showNotice";
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MCSegmentedControlCell *baseMapSelector;
 @property (nonatomic, strong) MCFieldWithTitleCell *maxFeaturesCell;
-@property (nonatomic, strong) MCSwitchCell *switchCell;
+@property (nonatomic, strong) MCSwitchCell *alertSwitchCell;
+@property (nonatomic, strong) MCSwitchCell *zoomSwitchCell;
 @property (nonatomic, strong) NSUserDefaults *settings;
 @end
 
@@ -97,17 +98,27 @@ NSString * const SHOW_NOTICE = @"showNotice";
     [_maxFeaturesCell setupNumericalKeyboard];
     [_cellArray addObject:_maxFeaturesCell];
     
-    
-    _switchCell = [_tableView dequeueReusableCellWithIdentifier:@"switchCell"];
-    _switchCell.label.text = @"Show max feature warning";
-    _switchCell.switchDelegate = self;
+    _alertSwitchCell = [_tableView dequeueReusableCellWithIdentifier:@"switchCell"];
+    _alertSwitchCell.label.text = @"Show max feature warning";
+    _alertSwitchCell.switchDelegate = self;
     BOOL hideWarning = [self.settings boolForKey:GPKGS_PROP_HIDE_MAX_FEATURES_WARNING];
     if (hideWarning) {
-        [_switchCell switchOn];
+        [_alertSwitchCell switchOn];
     } else {
-        [_switchCell switchOff];
+        [_alertSwitchCell switchOff];
     }
-    [_cellArray addObject:_switchCell];
+    [_cellArray addObject:_alertSwitchCell];
+    
+    _zoomSwitchCell = [_tableView dequeueReusableCellWithIdentifier:@"switchCell"];
+    _zoomSwitchCell.label.text = @"Show zoom level indicator";
+    _zoomSwitchCell.switchDelegate = self;
+    BOOL hideZoomIndicator = [self.settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR];
+    if (hideZoomIndicator) {
+        [_zoomSwitchCell switchOff];
+    } else {
+        [_zoomSwitchCell switchOn];
+    }
+    [_cellArray addObject:_zoomSwitchCell];
     
     
     MCButtonCell *showNoticesButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
@@ -168,8 +179,16 @@ NSString * const SHOW_NOTICE = @"showNotice";
 
 
 #pragma mark - MCSwitchCellDelegate
-- (void) switchChanged:(BOOL)switchValue {
-    [self.settings setBool:switchValue forKey:GPKGS_PROP_HIDE_MAX_FEATURES_WARNING];
+- (void) switchChanged:(id)sender {
+    UISwitch *switchControl = (UISwitch*)sender;
+    
+    if ([sender superview] == _alertSwitchCell) {
+        [self.settings setBool:[switchControl isOn] forKey:GPKGS_PROP_HIDE_MAX_FEATURES_WARNING];
+    } else {
+        [self.settings setBool:![switchControl isOn] forKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR];
+        [self.settingsDelegate toggleZoomIndicator];
+    }
+    
 }
 
 

@@ -37,6 +37,8 @@
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet UIButton *infoButton;
 @property (nonatomic, weak) IBOutlet UIButton *locationButton;
+@property (weak, nonatomic) IBOutlet UIButton *zoomIndicatorButton;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *zoomIndicatorButtonWidth;
 @property (nonatomic, strong) id<MCMapActionDelegate> mapActionDelegate;
 
 - (int)updateInBackgroundWithZoom: (BOOL) zoom;
