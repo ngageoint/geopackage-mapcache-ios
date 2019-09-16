@@ -20,17 +20,18 @@
 
 @implementation MCDownloadCoordinator
 
-- (instancetype)initWithDownlaodDelegate:(id<GPKGSDownloadCoordinatorDelegate>) delegate andDrawerDelegate:(id<NGADrawerViewDelegate>)drawerDelegate {
+- (instancetype)initWithDownlaodDelegate:(id<GPKGSDownloadCoordinatorDelegate>) delegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate withExample:(BOOL) prefillExample {
     self = [super init];
     _downloadDelegate = delegate;
     _drawerViewDelegate = drawerDelegate;
     _didDownload = false;
+    _prefillExample = prefillExample;
     return self;
 }
 
 
 - (void) start {
-    _downloadViewController = [[MCDownloadGeopackage alloc] initAsFullView:YES];
+    _downloadViewController = [[MCDownloadGeopackage alloc] initAsFullView:YES withExample:_prefillExample];
     _downloadViewController.delegate = self;
     _downloadViewController.drawerViewDelegate = _drawerViewDelegate;
     [_drawerViewDelegate pushDrawer:_downloadViewController];

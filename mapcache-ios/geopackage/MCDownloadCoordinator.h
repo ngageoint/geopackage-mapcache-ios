@@ -23,7 +23,7 @@
 
 
 @interface MCDownloadCoordinator : NSObject <MCDownloadDelegate>
-- (instancetype)initWithDownlaodDelegate:(id<GPKGSDownloadCoordinatorDelegate>) delegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate;
+- (instancetype)initWithDownlaodDelegate:(id<GPKGSDownloadCoordinatorDelegate>) delegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate withExample:(BOOL) prefillExample;
 - (void)start;
-
+@property (nonatomic) BOOL prefillExample;
 @end

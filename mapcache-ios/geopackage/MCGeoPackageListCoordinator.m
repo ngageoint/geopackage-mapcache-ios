@@ -127,8 +127,8 @@
 }
 
 
-- (void) downloadGeopackage {
-    MCDownloadCoordinator *downloadCoordinator = [[MCDownloadCoordinator alloc] initWithDownlaodDelegate:self andDrawerDelegate:_drawerViewDelegate];
+-(void) downloadGeopackageWithExample:(BOOL)prefillExample {
+    MCDownloadCoordinator *downloadCoordinator = [[MCDownloadCoordinator alloc] initWithDownlaodDelegate:self andDrawerDelegate:_drawerViewDelegate withExample:prefillExample];
     [downloadCoordinator start];
 }
 
@@ -179,8 +179,7 @@
 - (void) downloadCoordinatorCompletitonHandler:(bool) didDownload {
     NSLog(@"Downloaded geopakcage");
     [self update];
-    _geoPackageListView.geoPackages = _databases;
-    [_geoPackageListView.tableView reloadData];
+    [_geoPackageListView refreshWithGeoPackages:_databases];
     [_childCoordinators removeLastObject];
 }
 
