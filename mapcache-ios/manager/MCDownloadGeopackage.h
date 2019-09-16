@@ -18,7 +18,7 @@
 @end
 
 @interface MCDownloadGeopackage : NGADrawerViewController <GPKGProgress, UITextViewDelegate>
-
+- (instancetype) initAsFullView:(BOOL) isFullView withExample:(BOOL) prefillExample;
 @property (nonatomic, strong) id <MCDownloadDelegate> delegate;
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;

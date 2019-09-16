@@ -41,4 +41,23 @@
     }
 }
 
+
+- (void)animateSwipeHint {  
+    [UIView animateWithDuration:0.45 delay:0.3 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.contentView.transform = CGAffineTransformMakeTranslation(24, 0);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+            self.contentView.transform = CGAffineTransformMakeTranslation(0, 0);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.45 delay:0.3 options:UIViewAnimationOptionCurveLinear animations:^{
+                self.contentView.transform = CGAffineTransformMakeTranslation(24, 0);
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+                    self.contentView.transform = CGAffineTransformMakeTranslation(0, 0);
+                } completion:nil];
+            }];
+        }];
+    }];
+}
+
 @end

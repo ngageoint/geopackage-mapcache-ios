@@ -48,6 +48,7 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [self showSwipeHelp];
 }
 
 
@@ -68,9 +69,18 @@
 }
 
 
+- (void) showSwipeHelp {
+    if (self.geoPackages.count > 0 && [_active getActiveTableCount] == 0) {
+        MCGeoPackageCell *topCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+        [topCell animateSwipeHint];
+    }
+}
+
+
 - (void)refreshWithGeoPackages:(NSMutableArray *) geoPackages {
     _geoPackages = geoPackages;
     [self.tableView reloadData];
+    [self showSwipeHelp];
 }
 
 
@@ -105,7 +115,7 @@
 
 
 - (IBAction)downloadGeopackage:(id)sender {
-    [_geopackageListViewDelegate downloadGeopackage];
+    [_geopackageListViewDelegate downloadGeopackageWithExample:NO];
 }
 
 
@@ -155,8 +165,6 @@
         return cell;
     }
     
-    
-    
     MCEmptyStateCell *cell = (MCEmptyStateCell *)[self.tableView dequeueReusableCellWithIdentifier:@"emptyState"];
     return cell;
 }
@@ -183,7 +191,7 @@
     
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if([cell isKindOfClass:[MCEmptyStateCell class]]){
-        [_geopackageListViewDelegate downloadGeopackage];
+        [_geopackageListViewDelegate downloadGeopackageWithExample:YES];
     } else if([cell isKindOfClass:[MCTutorialCell class]]){
         return;
     } else {

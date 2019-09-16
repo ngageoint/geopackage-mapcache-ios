@@ -29,7 +29,7 @@
     [super viewDidLoad];
     
     _openView = 160;
-    _collapsedView = [UIScreen mainScreen].bounds.size.height - 180;
+    _collapsedView = [UIScreen mainScreen].bounds.size.height - 120; //180
     NSLog(@"Screen height: %f", [UIScreen mainScreen].bounds.size.height);
     
     _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];

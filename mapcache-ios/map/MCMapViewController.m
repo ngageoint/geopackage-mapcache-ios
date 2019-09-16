@@ -71,6 +71,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     self.mapView.delegate = self;
     self.mapView.showsCompass = NO;
+    UIScreen *screen = [UIScreen mainScreen];
+    self.mapView.frame = CGRectMake(0, 0, screen.bounds.size.width, screen.bounds.size.height-110);
     [self setupColors];
     self.settings = [NSUserDefaults standardUserDefaults];
     self.geoPackages = [[NSMutableDictionary alloc] init];

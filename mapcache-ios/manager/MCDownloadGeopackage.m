@@ -16,14 +16,21 @@
 @interface MCDownloadGeopackage ()
 
 @property (nonatomic) BOOL active;
+@property (nonatomic) BOOL prefillExample;
 @property (nonatomic, strong) NSNumber * progress;
 @property (nonatomic, strong) NSNumber * maxProgress;
-
 @end
 
 @implementation MCDownloadGeopackage
 
 #define TAG_PRELOADED 1
+
+- (instancetype) initAsFullView:(BOOL) isFullView withExample:(BOOL) prefillExample {
+    self = [super initAsFullView:isFullView];
+    self.prefillExample = prefillExample;
+    
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -39,6 +46,14 @@
     [self.downloadedLabel setHidden:YES];
     [self.progressView setHidden:YES];
     [self.importButton setTitle:@"Import" forState:UIControlStateNormal];
+    
+    if (_prefillExample) {
+        NSArray * urls = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS];
+        NSDictionary * url = (NSDictionary *)[urls objectAtIndex:0];
+        [self.nameTextField setText:[url objectForKey:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_NAME]];
+        [self.urlTextField setText:[url objectForKey:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_URL]];
+        [self validateURLField];
+    }
 }
 
 

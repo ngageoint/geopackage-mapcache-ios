@@ -523,22 +523,6 @@
 	<array>
 		<dict>
 			<key>label</key>
-			<string>Washington DC</string>
-			<key>url</key>
-			<string>http://portal.opengeospatial.org/files/74984</string>
-			<key>name</key>
-			<string>washington_dc</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>Port au Prince</string>
-			<key>url</key>
-			<string>http://portal.opengeospatial.org/files/74863</string>
-			<key>name</key>
-			<string>port_au_prince</string>
-		</dict>
-		<dict>
-			<key>label</key>
 			<string>Blue Marble</string>
 			<key>url</key>
 			<string>http://portal.opengeospatial.org/files/73648</string>
@@ -547,11 +531,27 @@
 		</dict>
 		<dict>
 			<key>label</key>
+			<string>Washington DC</string>
+			<key>url</key>
+			<string>http://portal.opengeospatial.org/files/74984</string>
+			<key>name</key>
+			<string>washington_dc</string>
+		</dict>
+		<dict>
+			<key>label</key>
 			<string>Whitehorse</string>
 			<key>url</key>
 			<string>http://portal.opengeospatial.org/files/63156</string>
 			<key>name</key>
 			<string>whitehorse</string>
+		</dict>
+		<dict>
+			<key>label</key>
+			<string>Port au Prince</string>
+			<key>url</key>
+			<string>http://portal.opengeospatial.org/files/74863</string>
+			<key>name</key>
+			<string>port_au_prince</string>
 		</dict>
 	</array>
 	<key>preloaded_tile_urls</key>

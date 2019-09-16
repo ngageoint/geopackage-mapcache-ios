@@ -13,7 +13,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *geoPackageNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tileLayerDetailsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *featureLayerDetailsLabel;
+@property (weak, nonatomic) IBOutlet UIView *contentView;
 - (void)activeLayersIndicatorOn;
 - (void)activeLayersIndicatorOff;
 - (void)toggleActiveIndicator;
+- (void)animateSwipeHint;
 @end
