@@ -38,6 +38,11 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCGeoPackageCell" bundle:nil] forCellReuseIdentifier:@"geopackage"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCEmptyStateCell" bundle:nil] forCellReuseIdentifier:@"emptyState"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCTutorialCell" bundle:nil] forCellReuseIdentifier:@"tutorialCell"];
+    
+    // iOS 13 dark mode support
+    if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
+        self.view.backgroundColor = [UIColor systemBackgroundColor];
+    }
 }
 
 
@@ -201,18 +206,6 @@
     }
 }
 
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if([cell isKindOfClass:[MCEmptyStateCell class]]){
-        return 400.0;
-    } else if([cell isKindOfClass:[MCTutorialCell class]]) {
-        return 200.0;
-    } else {
-        return 126.0;
-    }
-    
-}
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     return UITableViewCellEditingStyleNone;

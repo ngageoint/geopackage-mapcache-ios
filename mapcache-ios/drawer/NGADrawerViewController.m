@@ -229,15 +229,12 @@
 
 
 - (void) prepareBackgroundView {
-    UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-    UIVisualEffectView *visualEfect = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    UIVisualEffectView *bluredView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    [bluredView.contentView addSubview:visualEfect];
-    
-    visualEfect.frame = UIScreen.mainScreen.bounds;
-    bluredView.frame = UIScreen.mainScreen.bounds;
-    [self.view insertSubview:bluredView atIndex:0];
-    self.view.backgroundColor = [UIColor whiteColor];
+    // iOS 13 dark mode support
+    if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
+        self.view.backgroundColor = [UIColor systemBackgroundColor];
+    } else {
+        self.view.backgroundColor = [UIColor whiteColor];
+    }
 }
 
 @end

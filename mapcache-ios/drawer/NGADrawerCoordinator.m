@@ -84,4 +84,25 @@
     }
 }
 
+
+- (void) popDrawerAndHide {
+    if ([_drawerStack count] > 1) {
+        NGADrawerViewController *oldTopDrawer = [_drawerStack objectAtIndex:_drawerStack.count -1];
+        [_drawerStack removeLastObject];
+        NGADrawerViewController *newTopDrawer = [_drawerStack objectAtIndex:_drawerStack.count -1];
+        [newTopDrawer makeFullView];
+        [newTopDrawer.view setHidden:YES];
+        [oldTopDrawer removeDrawerFromSuperview];
+    }
+}
+
+
+- (void) showTopDrawer {
+    if ([_drawerStack count] > 1) {
+        NGADrawerViewController *topDrawer = [_drawerStack objectAtIndex:_drawerStack.count - 1];
+        [topDrawer makeFullView];
+        [topDrawer.view setHidden:NO];
+    }
+}
+
 @end

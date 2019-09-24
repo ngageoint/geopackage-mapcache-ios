@@ -13,6 +13,11 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.visibilityStatusIndicator.image = [UIImage imageNamed:@"allLayersOn"];
+    
+    // iOS 13 dark mode support
+    if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
+        self.contentView.backgroundColor = [UIColor systemBackgroundColor];
+    }
 }
 
 
@@ -42,15 +47,15 @@
 }
 
 
-- (void)animateSwipeHint {  
-    [UIView animateWithDuration:0.45 delay:0.3 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.contentView.transform = CGAffineTransformMakeTranslation(24, 0);
+- (void)animateSwipeHint {
+    [UIView animateWithDuration:0.65 delay:0.3 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.contentView.transform = CGAffineTransformMakeTranslation(16, 0);
     } completion:^(BOOL finished) {
         [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
             self.contentView.transform = CGAffineTransformMakeTranslation(0, 0);
         } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.45 delay:0.3 options:UIViewAnimationOptionCurveLinear animations:^{
-                self.contentView.transform = CGAffineTransformMakeTranslation(24, 0);
+            [UIView animateWithDuration:0.65 delay:0.3 options:UIViewAnimationOptionCurveLinear animations:^{
+                self.contentView.transform = CGAffineTransformMakeTranslation(16, 0);
             } completion:^(BOOL finished) {
                 [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
                     self.contentView.transform = CGAffineTransformMakeTranslation(0, 0);

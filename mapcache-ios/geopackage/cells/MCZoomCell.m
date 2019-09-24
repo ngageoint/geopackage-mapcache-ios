@@ -29,6 +29,7 @@
     
     _minZoomDisplay.text = [NSString stringWithFormat:@"%.0f", _minZoomStepper.minimumValue];
     _maxZoomDisplay.text = [NSString stringWithFormat:@"%.0f", 10.0];
+    [_valueChangedDelegate zoomValuesChanged:_minZoom andMaxZoom:_maxZoom];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -41,6 +42,7 @@
     _minZoom = [NSNumber numberWithDouble:sender.value];
     _minZoomDisplay.text = [NSString stringWithFormat:@"%.0f", [_minZoom doubleValue]];
     _maxZoomStepper.minimumValue = [_minZoom doubleValue] + 1;
+    [_valueChangedDelegate zoomValuesChanged:_minZoom andMaxZoom:_maxZoom];
 }
 
 
@@ -48,6 +50,7 @@
     _maxZoom = [NSNumber numberWithDouble:sender.value];
     _minZoomStepper.maximumValue = [_maxZoom doubleValue] - 1;
     _maxZoomDisplay.text = [NSString stringWithFormat:@"%.0f", [_maxZoom doubleValue]];
+    [_valueChangedDelegate zoomValuesChanged:_minZoom andMaxZoom:_maxZoom];
 }
 
 @end

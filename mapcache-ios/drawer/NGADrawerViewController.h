@@ -12,6 +12,8 @@
 - (void) drawerAddAnimationComplete: (UIViewController *) viewController;
 - (void) pushDrawer: (UIViewController *) childViewController;
 - (void) popDrawer;
+- (void) popDrawerAndHide;
+- (void) showTopDrawer;
 @end
 
 @interface NGADrawerViewController : UIViewController <UIGestureRecognizerDelegate>

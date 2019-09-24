@@ -18,10 +18,8 @@
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureDetailsController;
 @property (nonatomic, strong) MCTileLayerDetailsViewController *tileDetailsController;
-@property (nonatomic, strong) MCBoundingBoxViewController *boundingBoxViewController;
-@property (nonatomic, strong) MCBoundingBoxDetailsViewController *boundingBoxDetailsViewController;
+@property (nonatomic, strong) MCBoundingBoxGuideView *boundingBoxGuideViewController;
 @property (nonatomic, strong) MCZoomAndQualityViewController *zoomAndQualityViewController;
-@property (nonatomic, strong) MCManualBoundingBoxViewController *manualBoundingBoxViewController;
 @property (nonatomic, strong) GPKGSDatabases *active;
 @property (nonatomic, strong) GPKGSDatabase *database;
 @property (nonatomic, strong) GPKGSCreateTilesData * tileData;
@@ -252,58 +250,44 @@
     _tileData.loadTiles.url = url;
     _tileData.loadTiles.epsg = referenceCode;
     
-    //_boundingBoxViewController = [[MCBoundingBoxViewController alloc] init];
-    //_boundingBoxViewController.delegate = self;
-    //[_navigationController pushViewController:_boundingBoxViewController animated:YES];
-    
-    _boundingBoxDetailsViewController = [[MCBoundingBoxDetailsViewController alloc] init];
-    _boundingBoxDetailsViewController.drawerViewDelegate = _drawerDelegate;
-    [_drawerDelegate popDrawer];
-    _boundingBoxDetailsViewController.boundingBoxDetailsDelegate = self;
-    [_boundingBoxDetailsViewController.drawerViewDelegate pushDrawer:_boundingBoxDetailsViewController];
+    [_drawerDelegate popDrawerAndHide];
+    self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] init];
+    self.boundingBoxGuideViewController.delegate = self;
+    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view];
 }
 
 
-#pragma mark- MCBoundingBoxDelegate
-- (void) boundingBoxCompletionHandler:(GPKGBoundingBox *)boundingBox  {
-    _tileData.loadTiles.generateTiles.boundingBox = boundingBox;
-    
-    _zoomAndQualityViewController = [[MCZoomAndQualityViewController alloc] init];
-    _zoomAndQualityViewController.zoomAndQualityDelegate = self;
-    //[_navigationController pushViewController:_zoomAndQualityViewController animated:YES]; // TODO replace with drawer
-}
-
-#pragma mark MCBoundingBoxDetailsDelegate methods
+#pragma mark MCBoundingBoxGuideDelegate methods
 // TODO clean up these delegates, some duplicates in switching to the drawers from the navigation controller.
-- (void) boundingBoxDetailsCompletionHandler:(GPKGBoundingBox *) boundingBox {
-    _tileData.loadTiles.generateTiles.boundingBox = boundingBox;
+- (void) boundingBoxCompletionHandler:(CGRect) boundingBox {
+    // make bounding box and hand it off accordingly
+    
+    
+    CGPoint lowerLeft = CGPointMake(boundingBox.origin.x, boundingBox.origin.y + boundingBox.size.height);
+    CGPoint upperRight = CGPointMake(boundingBox.origin.x + boundingBox.size.width, boundingBox.origin.y);
+    
+    CLLocationCoordinate2D lowerLeftCoordinate = [_mapDelegate convertPointToCoordinate:lowerLeft];
+    CLLocationCoordinate2D upperRightCoordinate = [_mapDelegate convertPointToCoordinate:upperRight];
+    
+    GPKGBoundingBox *boundingBoxCoordinates = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:(double)lowerLeftCoordinate.longitude
+                                                                             andMinLatitudeDouble:(double)lowerLeftCoordinate.latitude
+                                                                            andMaxLongitudeDouble:(double)upperRightCoordinate.longitude
+                                                                             andMaxLatitudeDouble:(double)upperRightCoordinate.latitude];
+    
+    _tileData.loadTiles.generateTiles.boundingBox = boundingBoxCoordinates;
+    [_mapDelegate removeTileBoundingBoxGuide];
     
     _zoomAndQualityViewController = [[MCZoomAndQualityViewController alloc] initAsFullView:YES];
     _zoomAndQualityViewController.zoomAndQualityDelegate = self;
     _zoomAndQualityViewController.drawerViewDelegate = _drawerDelegate;
-    [_drawerDelegate popDrawer];
     [_zoomAndQualityViewController.drawerViewDelegate pushDrawer:_zoomAndQualityViewController];
 }
 
 
-- (void) cancelBoundingBox {
+- (void) boundingBoxCanceled {
+    [self.mapDelegate removeTileBoundingBoxGuide];
     [self.mapDelegate updateMapLayers];
-}
-
-
-- (void) showManualBoundingBoxViewWithMinLat:(double)minLat andMaxLat:(double)maxLat andMinLon:(double)minLon andMaxLon:(double) maxLon {
-    _manualBoundingBoxViewController = [[MCManualBoundingBoxViewController alloc] initWithLowerLeftLat:minLat andLowerLeftLon:minLon andUpperRightLat:maxLat andUpperRightLon:maxLon];
-    _manualBoundingBoxViewController.delegate = self;
-    //[_navigationController pushViewController:_manualBoundingBoxViewController animated:YES]; // TODO replace with drawer
-    
-}
-
-
-#pragma mark- MCManualBoundingBoxDelegate
-- (void) manualBoundingBoxCompletionHandlerWithLowerLeftLat:(double)lowerLeftLat andLowerLeftLon:(double)lowerLeftLon andUpperRightLat:(double)upperRightLat andUpperRightLon:(double)upperRightLon{
-    [_boundingBoxViewController setBoundingBoxWithLowerLeftLat:lowerLeftLat andLowerLeftLon:lowerLeftLon andUpperRightLat:upperRightLat andUpperRightLon:upperRightLon];
-    //[_navigationController popToViewController:_boundingBoxViewController animated:YES]; // TODO replace with drawer
-    
+    [self.drawerDelegate showTopDrawer];
 }
 
 
@@ -318,8 +302,27 @@
 }
 
 
+- (void) goBackToBoundingBox {
+    [_drawerDelegate popDrawerAndHide];
+    self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] init];
+    self.boundingBoxGuideViewController.delegate = self;
+    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view];
+}
+
+- (NSString *) updateTileDownloadSizeEstimateWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
+    // TODO
+    // Calculate number of tiles to be downloaded based on the default zoom levels
+    // Make a few tile requests
+    
+    return [NSString stringWithFormat: @"Tile download size estimate for min zoom %@ and max zoom %@.", minZoom, maxZoom];
+}
+
+
+
+
 - (void) cancelZoomAndQuality {
     [self.mapDelegate updateMapLayers];
+    [self updateDatabase];
 }
 
 

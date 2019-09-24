@@ -33,7 +33,6 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
-    [self.tableView setBackgroundColor:[UIColor whiteColor]];
     [self registerCellTypes];
     [self initCellArray];
     self.sessionManager = [AFHTTPSessionManager manager];

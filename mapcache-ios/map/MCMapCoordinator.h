@@ -11,6 +11,7 @@
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGGeoPackageManager.h"
 #import "MCSettingsCoordinator.h"
+#import "MCBoundingBoxGuideView.h"
 
 
 @class MCMapViewController;
@@ -20,6 +21,9 @@
 - (void) updateMapLayers;
 - (void) toggleGeoPackage:(GPKGSDatabase *) geoPackage;
 - (void) zoomToSelectedGeoPackage:(NSString *) geoPackageName;
+- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView;
+- (void) removeTileBoundingBoxGuide;
+- (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;
 @end
 
 
