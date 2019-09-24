@@ -12,7 +12,9 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *cellArray;
 @property (nonatomic, strong) MCZoomCell *zoomCell;
-@property (nonatomic, strong) MCButtonCell *buttonCell;
+@property (nonatomic, strong) MCButtonCell *continueButtonCell;
+@property (nonatomic, strong) MCButtonCell *backButtonCell;
+@property (nonatomic, strong) MCDesctiptionCell *downloadDetailsCell;
 @end
 
 @implementation MCZoomAndQualityViewController
@@ -40,19 +42,14 @@
     [self registerCellTypes];
     [self initCellArray];
 
-    self.tableView.estimatedRowHeight = 100;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UIAccessibilityTraitNone;
-    [self.tableView setBackgroundColor:[UIColor whiteColor]];
     
     [self addDragHandle];
     [self addCloseButton];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 
@@ -66,25 +63,41 @@
     _cellArray = [[NSMutableArray alloc] init];
     
     _zoomCell = [self.tableView dequeueReusableCellWithIdentifier:@"zoom"];
+    _zoomCell.valueChangedDelegate = self;
     [_cellArray addObject:_zoomCell];
     
-    _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
-    [_buttonCell.button setTitle:@"Create Tile Layer" forState:UIControlStateNormal];
-    _buttonCell.delegate = self;
-    [_cellArray addObject:_buttonCell];
+    _continueButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
+    [_continueButtonCell.button setTitle:@"Create Tile Layer" forState:UIControlStateNormal];
+    _continueButtonCell.delegate = self;
+    _continueButtonCell.action = @"continue";
+    [_cellArray addObject:_continueButtonCell];
+    
+    _downloadDetailsCell = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+    [_downloadDetailsCell setDescription:@"\n\n"];
+    [_cellArray addObject: _downloadDetailsCell];
+    
+    _backButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
+    [_backButtonCell useSecondaryColors];
+    [_backButtonCell setButtonLabel:@"Adjust bounding box"];
+    _backButtonCell.delegate = self;
+    _backButtonCell.action = @"back";
+    [_cellArray addObject:_backButtonCell];
+    
+    
 }
 
 
 - (void) registerCellTypes {
     [self.tableView registerNib:[UINib nibWithNibName:@"MCZoomCell" bundle:nil] forCellReuseIdentifier:@"zoom"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
 }
 
 
 - (void) closeDrawer {
     [super closeDrawer];
-    [self.zoomAndQualityDelegate cancelZoomAndQuality];
     [self.drawerViewDelegate popDrawer];
+    [self.zoomAndQualityDelegate cancelZoomAndQuality];
 }
 
 
@@ -104,10 +117,23 @@
 }
 
 
-#pragma mark -  GPKGSButtonCellDelegate method
+#pragma mark - MCZoomCellValueChangedDelegate
+- (void) zoomValuesChanged:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
+    NSString * updatedEstimate = [_zoomAndQualityDelegate updateTileDownloadSizeEstimateWith:minZoom andMaxZoom:maxZoom];
+    [_downloadDetailsCell setDescription:updatedEstimate];
+}
+
+
+#pragma mark - GPKGSButtonCellDelegate method
 - (void) performButtonAction:(NSString *)action {
     NSLog(@"Button tapped in zoom and format screen");
-    [_zoomAndQualityDelegate zoomAndQualityCompletionHandlerWith:_zoomCell.minZoom andMaxZoom:_zoomCell.maxZoom];
+    
+    if ([action isEqualToString:@"continue"]) {
+        [_zoomAndQualityDelegate zoomAndQualityCompletionHandlerWith:_zoomCell.minZoom andMaxZoom:_zoomCell.maxZoom];
+    } else {
+        [_zoomAndQualityDelegate goBackToBoundingBox];
+    }
+    
 }
 
 @end

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina3_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,40 +11,60 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" restorationIdentifier="geopackage" id="iN0-l3-epB" customClass="MCGeoPackageCell">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="126"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tutorial" translatesAutoresizingMaskIntoConstraints="NO" id="OU2-TL-bAB">
-                    <rect key="frame" x="0.0" y="0.0" width="96" height="126"/>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="allLayersOn" translatesAutoresizingMaskIntoConstraints="NO" id="OU2-TL-bAB">
+                    <rect key="frame" x="0.0" y="0.0" width="16" height="99"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="96" id="3Bc-Or-Mkj"/>
+                        <constraint firstAttribute="width" constant="96" id="3Bc-Or-Mkj">
+                            <variation key="widthClass=compact" constant="16"/>
+                        </constraint>
+                        <constraint firstAttribute="height" constant="99" id="6Xc-Jv-Paw"/>
+                        <constraint firstAttribute="height" constant="99" id="DRS-to-hyB"/>
+                        <constraint firstAttribute="height" constant="99" id="QET-vF-e25"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="6Xc-Jv-Paw"/>
+                            <exclude reference="DRS-to-hyB"/>
+                            <exclude reference="QET-vF-e25"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="6Xc-Jv-Paw"/>
+                            <exclude reference="DRS-to-hyB"/>
+                            <exclude reference="QET-vF-e25"/>
+                        </mask>
+                    </variation>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dfj-iy-uBr">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="126"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="GeoPackage_Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SlT-s1-hbr">
-                            <rect key="frame" x="32" y="20" width="182.5" height="24"/>
+                            <rect key="frame" x="32" y="8" width="182.5" height="24"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                            <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 Tile layers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E3u-hY-SOA">
-                            <rect key="frame" x="32" y="54" width="87" height="19"/>
+                            <rect key="frame" x="32" y="40" width="87" height="19"/>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <nil key="textColor"/>
+                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="0 Feature layers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2bc-7W-T5e">
-                            <rect key="frame" x="32" y="83" width="116" height="20"/>
+                            <rect key="frame" x="32" y="67" width="116" height="20"/>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <nil key="textColor"/>
+                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Gar-ae-7cx">
-                            <rect key="frame" x="0.0" y="0.0" width="16" height="125"/>
+                            <rect key="frame" x="0.0" y="0.0" width="16" height="99"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="125" id="HIc-PG-Lmz"/>
+                                <constraint firstAttribute="height" constant="125" id="HIc-PG-Lmz">
+                                    <variation key="widthClass=compact" constant="99"/>
+                                </constraint>
                                 <constraint firstAttribute="width" constant="16" id="lHW-dc-qrG"/>
                             </constraints>
                         </imageView>
@@ -53,28 +72,79 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="E3u-hY-SOA" firstAttribute="leading" secondItem="Gar-ae-7cx" secondAttribute="trailing" constant="16" id="483-03-eTg"/>
-                        <constraint firstItem="2bc-7W-T5e" firstAttribute="top" secondItem="E3u-hY-SOA" secondAttribute="bottom" constant="10" id="GPJ-AN-JY3"/>
-                        <constraint firstItem="E3u-hY-SOA" firstAttribute="top" secondItem="SlT-s1-hbr" secondAttribute="bottom" constant="10" id="GyJ-i1-TPZ"/>
+                        <constraint firstItem="2bc-7W-T5e" firstAttribute="top" secondItem="E3u-hY-SOA" secondAttribute="bottom" constant="10" id="GPJ-AN-JY3">
+                            <variation key="widthClass=compact" constant="8"/>
+                        </constraint>
+                        <constraint firstItem="E3u-hY-SOA" firstAttribute="top" secondItem="SlT-s1-hbr" secondAttribute="bottom" constant="10" id="GyJ-i1-TPZ">
+                            <variation key="widthClass=compact" constant="8"/>
+                        </constraint>
                         <constraint firstItem="Gar-ae-7cx" firstAttribute="leading" secondItem="dfj-iy-uBr" secondAttribute="leading" id="Ird-mU-HrI"/>
                         <constraint firstItem="SlT-s1-hbr" firstAttribute="leading" secondItem="Gar-ae-7cx" secondAttribute="trailing" constant="16" id="NfS-c3-nuu"/>
                         <constraint firstItem="Gar-ae-7cx" firstAttribute="top" secondItem="dfj-iy-uBr" secondAttribute="top" id="RSe-Lt-t4w"/>
-                        <constraint firstItem="SlT-s1-hbr" firstAttribute="top" secondItem="dfj-iy-uBr" secondAttribute="top" constant="20" id="VvY-XJ-vcb"/>
+                        <constraint firstItem="SlT-s1-hbr" firstAttribute="top" secondItem="dfj-iy-uBr" secondAttribute="top" constant="20" id="VvY-XJ-vcb">
+                            <variation key="widthClass=compact" constant="8"/>
+                        </constraint>
+                        <constraint firstAttribute="bottom" secondItem="2bc-7W-T5e" secondAttribute="bottom" constant="13" id="alT-F2-EfY"/>
                         <constraint firstItem="2bc-7W-T5e" firstAttribute="leading" secondItem="Gar-ae-7cx" secondAttribute="trailing" constant="16" id="gta-bN-Xda"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="alT-F2-EfY"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="alT-F2-EfY"/>
+                        </mask>
+                    </variation>
                 </view>
             </subviews>
-            <color key="backgroundColor" red="0.0" green="0.31372549020000001" blue="0.49019607840000001" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
+                <constraint firstItem="OU2-TL-bAB" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="2Sd-2a-Dxg"/>
+                <constraint firstItem="OU2-TL-bAB" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="APq-jV-eKn"/>
+                <constraint firstAttribute="bottom" secondItem="OU2-TL-bAB" secondAttribute="bottom" constant="-1" id="CCj-NC-dfi"/>
+                <constraint firstAttribute="bottom" secondItem="OU2-TL-bAB" secondAttribute="bottom" id="Cf0-jV-BLp"/>
                 <constraint firstItem="dfj-iy-uBr" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="CqW-pW-u6A"/>
                 <constraint firstItem="dfj-iy-uBr" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="I7C-Pk-Wid"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="dfj-iy-uBr" secondAttribute="trailing" id="Kzm-yt-OiI"/>
+                <constraint firstItem="OU2-TL-bAB" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="dKa-3b-EPC"/>
                 <constraint firstItem="OU2-TL-bAB" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="gvJ-Qx-dsh"/>
                 <constraint firstItem="OU2-TL-bAB" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="ivp-Lc-Xnv"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="dfj-iy-uBr" secondAttribute="bottom" id="kZm-nU-M8j"/>
+                <constraint firstItem="OU2-TL-bAB" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="mnS-i2-P7k"/>
+                <constraint firstItem="OU2-TL-bAB" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="osR-jE-B7R"/>
                 <constraint firstItem="OU2-TL-bAB" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="piI-Jg-2T6"/>
+                <constraint firstItem="OU2-TL-bAB" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="wvU-Ox-Lmq"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="2Sd-2a-Dxg"/>
+                    <exclude reference="APq-jV-eKn"/>
+                    <exclude reference="CCj-NC-dfi"/>
+                    <exclude reference="Cf0-jV-BLp"/>
+                    <exclude reference="dKa-3b-EPC"/>
+                    <exclude reference="mnS-i2-P7k"/>
+                    <exclude reference="osR-jE-B7R"/>
+                    <exclude reference="wvU-Ox-Lmq"/>
+                </mask>
+            </variation>
+            <variation key="widthClass=compact">
+                <mask key="constraints">
+                    <exclude reference="2Sd-2a-Dxg"/>
+                    <exclude reference="APq-jV-eKn"/>
+                    <exclude reference="CCj-NC-dfi"/>
+                    <exclude reference="Cf0-jV-BLp"/>
+                    <exclude reference="dKa-3b-EPC"/>
+                    <exclude reference="gvJ-Qx-dsh"/>
+                    <exclude reference="ivp-Lc-Xnv"/>
+                    <exclude reference="mnS-i2-P7k"/>
+                    <include reference="osR-jE-B7R"/>
+                    <exclude reference="piI-Jg-2T6"/>
+                    <include reference="wvU-Ox-Lmq"/>
+                </mask>
+            </variation>
             <connections>
                 <outlet property="contentView" destination="dfj-iy-uBr" id="Xro-76-wdg"/>
                 <outlet property="featureLayerDetailsLabel" destination="2bc-7W-T5e" id="TSK-0E-cXf"/>
@@ -86,6 +156,6 @@
         </view>
     </objects>
     <resources>
-        <image name="tutorial" width="96" height="126"/>
+        <image name="allLayersOn" width="16" height="126"/>
     </resources>
 </document>

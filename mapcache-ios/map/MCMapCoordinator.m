@@ -15,6 +15,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 @interface MCMapCoordinator ()
 @property (nonatomic, strong) MCMapViewController *mcMapViewController;
+@property (nonatomic, strong) UIView *boundingBoxGuideView;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
 @property (nonatomic, strong) NSUserDefaults *preferences;
@@ -80,6 +81,37 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView {
+    self.boundingBoxGuideView = boudingBoxGuideView;
+    self.boundingBoxGuideView.alpha = 0.0;
+    [self.mcMapViewController.view addSubview:self.boundingBoxGuideView];
+    
+    [UIView animateWithDuration:0.35 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.boundingBoxGuideView.alpha = 1.0;
+    } completion:nil];
+    
+    [self.mcMapViewController toggleMapControls];
+}
+
+
+- (void) removeTileBoundingBoxGuide {
+    if  (self.boundingBoxGuideView != nil) {
+        
+        [UIView animateWithDuration:0.35 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.boundingBoxGuideView.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            [self.boundingBoxGuideView removeFromSuperview];
+            [self.mcMapViewController toggleMapControls];
+        }];
+    }
+}
+
+
+- (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point {
+    return [self.mcMapViewController convertPointToCoordinate:point];
+}
+
+
 #pragma mark - MCMapActionDelegate
 - (void)showMapInfoDrawer {
     MCSettingsCoordinator *settingsCoordinator = [[MCSettingsCoordinator alloc] init];
@@ -87,6 +119,15 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     settingsCoordinator.drawerViewDelegate = _drawerViewDelegate;
     settingsCoordinator.settingsDelegate = _mcMapViewController;
     [settingsCoordinator start];
+}
+
+-(CLLocationCoordinate2D *) getPolygonPointsWithPoint1: (CLLocationCoordinate2D) point1 andPoint2: (CLLocationCoordinate2D) point2{
+    CLLocationCoordinate2D *coordinates = calloc(4, sizeof(CLLocationCoordinate2D));
+    coordinates[0] = CLLocationCoordinate2DMake(point1.latitude, point1.longitude);
+    coordinates[1] = CLLocationCoordinate2DMake(point1.latitude, point2.longitude);
+    coordinates[2] = CLLocationCoordinate2DMake(point2.latitude, point2.longitude);
+    coordinates[3] = CLLocationCoordinate2DMake(point2.latitude, point1.longitude);
+    return coordinates;
 }
 
 @end

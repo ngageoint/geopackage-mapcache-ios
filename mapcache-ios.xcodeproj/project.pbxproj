@@ -70,6 +70,9 @@
 		04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8DE1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m */; };
 		04E1D8E21B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8E11B682D5D002BD947 /* GPKGSCreateFeatureTilesViewController.m */; };
 		CF52A7895D9F544D637D87A3 /* libPods-mapcache-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C949BBDA5ECEE9FFAC05F51 /* libPods-mapcache-ios.a */; };
+		E300A93323313D77002336A0 /* MCBoundingBoxGuideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E300A93223313D77002336A0 /* MCBoundingBoxGuideView.xib */; };
+		E300A93623313DCE002336A0 /* MCBoundingBoxGuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = E300A93523313DCE002336A0 /* MCBoundingBoxGuideView.m */; };
+		E300A93923315B9D002336A0 /* MCBoundingBoxPassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = E300A93823315B9D002336A0 /* MCBoundingBoxPassthroughView.m */; };
 		E308FBC11FBE400500348577 /* MCSingleGeoPackageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E308FBC01FBE400500348577 /* MCSingleGeoPackageView.xib */; };
 		E308FBC61FBFA7CA00348577 /* MCHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E308FBC51FBFA7CA00348577 /* MCHeaderCell.m */; };
 		E3100EAF203CAF1E00FFA56E /* MCZoomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */; };
@@ -281,6 +284,11 @@
 		5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.debug.xcconfig"; sourceTree = "<group>"; };
+		E300A93223313D77002336A0 /* MCBoundingBoxGuideView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCBoundingBoxGuideView.xib; sourceTree = "<group>"; };
+		E300A93423313DCE002336A0 /* MCBoundingBoxGuideView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MCBoundingBoxGuideView.h; path = "mapcache-ios/geopackage/NewLayerWizard/MCBoundingBoxGuideView.h"; sourceTree = SOURCE_ROOT; };
+		E300A93523313DCE002336A0 /* MCBoundingBoxGuideView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MCBoundingBoxGuideView.m; path = "mapcache-ios/geopackage/NewLayerWizard/MCBoundingBoxGuideView.m"; sourceTree = SOURCE_ROOT; };
+		E300A93723315B9D002336A0 /* MCBoundingBoxPassthroughView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCBoundingBoxPassthroughView.h; sourceTree = "<group>"; };
+		E300A93823315B9D002336A0 /* MCBoundingBoxPassthroughView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCBoundingBoxPassthroughView.m; sourceTree = "<group>"; };
 		E308FBC01FBE400500348577 /* MCSingleGeoPackageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCSingleGeoPackageView.xib; sourceTree = "<group>"; };
 		E308FBC41FBFA7CA00348577 /* MCHeaderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCHeaderCell.h; sourceTree = "<group>"; };
 		E308FBC51FBFA7CA00348577 /* MCHeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCHeaderCell.m; sourceTree = "<group>"; };
@@ -756,6 +764,7 @@
 				E308FBC01FBE400500348577 /* MCSingleGeoPackageView.xib */,
 				E3FB857021349C31002F012E /* MCMapView.xib */,
 				E3500E5F22B455C800164ABF /* MCDisclaimerView.xib */,
+				E300A93223313D77002336A0 /* MCBoundingBoxGuideView.xib */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -769,6 +778,10 @@
 				E3A651AF200563AF00B8AB27 /* MCTileLayerDetailsViewController.m */,
 				E354EEE120091BCD00B062BE /* MCFeatureLayerDetailsViewController.h */,
 				E354EEE220091BCD00B062BE /* MCFeatureLayerDetailsViewController.m */,
+				E300A93423313DCE002336A0 /* MCBoundingBoxGuideView.h */,
+				E300A93523313DCE002336A0 /* MCBoundingBoxGuideView.m */,
+				E300A93723315B9D002336A0 /* MCBoundingBoxPassthroughView.h */,
+				E300A93823315B9D002336A0 /* MCBoundingBoxPassthroughView.m */,
 				E346590A2025315D001E6E81 /* MCBoundingBoxViewController.h */,
 				E346590B2025315D001E6E81 /* MCBoundingBoxViewController.m */,
 				E34C37902040ABA200287CF9 /* MCManualBoundingBoxViewController.h */,
@@ -909,7 +922,7 @@
 				TargetAttributes = {
 					0401366E1AF94FB200C92AFC = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = KBKX8X5SZ7;
+						DevelopmentTeam = ZL8G5D9G2H;
 					};
 					0401368A1AF94FB200C92AFC = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -943,6 +956,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3FB85762134A9D8002F012E /* MCGeoPackageList.xib in Resources */,
+				E300A93323313D77002336A0 /* MCBoundingBoxGuideView.xib in Resources */,
 				E33FB474202506B500AF509B /* MCBoundingBoxView.xib in Resources */,
 				E35B630E21BC24E9004E5BB0 /* MCTitleCell.xib in Resources */,
 				E3470CC9202126140098D783 /* MCSegmentedControlCell.xib in Resources */,
@@ -1061,6 +1075,7 @@
 				044D6B4B1B627B0000527745 /* GPKGSLoadTilesTask.m in Sources */,
 				E3FB856C2134955F002F012E /* NGADrawerViewController.m in Sources */,
 				04CCC8681B6114EE0001296D /* GPKGSGenerateTilesData.m in Sources */,
+				E300A93623313DCE002336A0 /* MCBoundingBoxGuideView.m in Sources */,
 				04DD108E1BD9443F00CC59A0 /* GPKGSTableIndex.m in Sources */,
 				E3500E6822B7F4F100164ABF /* MCTutorialCell.m in Sources */,
 				04082B531B4EBE6F00D65E6B /* MCDownloadGeopackage.m in Sources */,
@@ -1101,6 +1116,7 @@
 				044648111B4B1D960052913B /* GPKGSTableCell.m in Sources */,
 				04CCC86E1B6122040001296D /* GPKGSLoadTilesData.m in Sources */,
 				044648051B4AF6990052913B /* GPKGSFeatureTable.m in Sources */,
+				E300A93923315B9D002336A0 /* MCBoundingBoxPassthroughView.m in Sources */,
 				043A45911B7E63C1001B8FC5 /* GPKGSEditTypes.m in Sources */,
 				045C94831B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m in Sources */,
 				043A45821B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m in Sources */,
@@ -1282,11 +1298,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = KBKX8X5SZ7;
+				CURRENT_PROJECT_VERSION = 25;
+				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = mil.nga;
+				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.mapcache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -1299,11 +1316,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = KBKX8X5SZ7;
+				CURRENT_PROJECT_VERSION = 25;
+				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = mil.nga;
+				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.mapcache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};

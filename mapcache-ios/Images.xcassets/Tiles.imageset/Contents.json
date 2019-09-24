@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "ic_tiles.png"
+      "filename" : "Layers_4.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "Layers@2x_3.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "Layers@3x_3.png",
       "scale" : "3x"
     }
   ],

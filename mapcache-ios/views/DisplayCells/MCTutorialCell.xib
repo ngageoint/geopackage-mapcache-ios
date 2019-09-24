@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_5" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,10 +15,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="example" translatesAutoresizingMaskIntoConstraints="NO" id="Kv9-eI-0Wy">
-                    <rect key="frame" x="92.666666666666686" y="16" width="229" height="84"/>
+                    <rect key="frame" x="92.666666666666686" y="16" width="229" height="83.333333333333329"/>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swipe a GeoPackage to the right to add it to the map." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DiN-ew-T3Y">
-                    <rect key="frame" x="56" y="116.00000000000001" width="302" height="40.666666666666671"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Swipe a GeoPackage to the right to add it to the map." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DiN-ew-T3Y">
+                    <rect key="frame" x="56" y="115.33333333333333" width="302" height="40.666666666666671"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="302" id="5NY-7U-oxj"/>
                     </constraints>
@@ -29,11 +27,12 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="DiN-ew-T3Y" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="ERB-2h-L17"/>
                 <constraint firstItem="Kv9-eI-0Wy" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="PkE-um-vEm"/>
                 <constraint firstItem="Kv9-eI-0Wy" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="Wjf-4e-BRw"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="DiN-ew-T3Y" secondAttribute="bottom" constant="24" id="pWr-VN-D5E"/>
                 <constraint firstItem="DiN-ew-T3Y" firstAttribute="top" secondItem="Kv9-eI-0Wy" secondAttribute="bottom" constant="16" id="yur-KX-fof"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

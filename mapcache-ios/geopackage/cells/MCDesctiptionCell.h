@@ -10,5 +10,6 @@
 
 @interface MCDesctiptionCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+- (void) setDescription: (NSString *) description;
 @end
  

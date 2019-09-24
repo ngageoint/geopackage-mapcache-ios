@@ -136,7 +136,7 @@
     [loadTilesTask setTileGenerator:tileGenerator];
     
     UIAlertView *alertView = [[UIAlertView alloc]
-                              initWithTitle:[NSString stringWithFormat:@"%@ %@ - %@", label, geoPackage.name, tableName]
+                              initWithTitle:[NSString stringWithFormat:@"%@ for %@ into layer: %@", label, geoPackage.name, tableName]
                               message:@""
                               delegate:loadTilesTask
                               cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_STOP_LABEL]
@@ -220,7 +220,7 @@
     self.progress += progress;
     float progressPercentage = self.progress / [self.maxTiles floatValue];
     dispatch_sync(dispatch_get_main_queue(), ^{
-        [self.alertView setMessage:[NSString stringWithFormat:@"( %d of %@ )", self.progress, self.maxTiles]];
+        [self.alertView setMessage:[NSString stringWithFormat:@"%d of %@", self.progress, self.maxTiles]];
         [self.progressView setProgress:progressPercentage];
     });
 }

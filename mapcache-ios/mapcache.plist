@@ -377,7 +377,7 @@
 	<key>geopackage_create_features_label</key>
 	<string>Create Features</string>
 	<key>geopackage_create_tiles_label</key>
-	<string>Create Tiles</string>
+	<string>Downloading tiles</string>
 	<key>geopackage_table_view_label</key>
 	<string>View</string>
 	<key>geopackage_table_edit_label</key>

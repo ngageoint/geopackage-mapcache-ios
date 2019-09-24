@@ -2,11 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "ic_geometry.png"
+      "filename" : "Polygon.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "Polygon_2.png",
       "scale" : "2x"
     },
     {

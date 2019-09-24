@@ -18,6 +18,7 @@ NSString * const SHOW_NOTICE = @"showNotice";
 @property (nonatomic, strong) MCSwitchCell *alertSwitchCell;
 @property (nonatomic, strong) MCSwitchCell *zoomSwitchCell;
 @property (nonatomic, strong) NSUserDefaults *settings;
+@property (nonatomic) BOOL haveScrolled;
 @end
 
 @implementation MCSettingsViewController
@@ -25,6 +26,7 @@ NSString * const SHOW_NOTICE = @"showNotice";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.haveScrolled = NO;
     CGRect bounds = self.view.bounds;
     CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
     self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
@@ -99,7 +101,7 @@ NSString * const SHOW_NOTICE = @"showNotice";
     [_cellArray addObject:_maxFeaturesCell];
     
     _alertSwitchCell = [_tableView dequeueReusableCellWithIdentifier:@"switchCell"];
-    _alertSwitchCell.label.text = @"Show max feature warning";
+    _alertSwitchCell.label.text = @"Max feature warning";
     _alertSwitchCell.switchDelegate = self;
     BOOL hideWarning = [self.settings boolForKey:GPKGS_PROP_HIDE_MAX_FEATURES_WARNING];
     if (hideWarning) {
@@ -110,7 +112,7 @@ NSString * const SHOW_NOTICE = @"showNotice";
     [_cellArray addObject:_alertSwitchCell];
     
     _zoomSwitchCell = [_tableView dequeueReusableCellWithIdentifier:@"switchCell"];
-    _zoomSwitchCell.label.text = @"Show zoom level indicator";
+    _zoomSwitchCell.label.text = @"Zoom level indicator";
     _zoomSwitchCell.switchDelegate = self;
     BOOL hideZoomIndicator = [self.settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR];
     if (hideZoomIndicator) {
@@ -149,6 +151,26 @@ NSString * const SHOW_NOTICE = @"showNotice";
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_cellArray count];
+}
+
+
+// Override this method to make the drawer and the scrollview play nice
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.haveScrolled) {
+        [self rollUpPanGesture:scrollView.panGestureRecognizer withScrollView:scrollView];
+    }
+}
+
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.haveScrolled = YES;
+    
+    if (!self.isFullView) {
+        scrollView.scrollEnabled = NO;
+        scrollView.scrollEnabled = YES;
+    } else {
+        scrollView.scrollEnabled = YES;
+    }
 }
 
 

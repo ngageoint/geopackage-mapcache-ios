@@ -19,6 +19,7 @@
 @property (nonatomic) BOOL prefillExample;
 @property (nonatomic, strong) NSNumber * progress;
 @property (nonatomic, strong) NSNumber * maxProgress;
+@property (nonatomic) BOOL haveScrolled;
 @end
 
 @implementation MCDownloadGeopackage
@@ -45,7 +46,8 @@
     [self.cancelButton setHidden:YES];
     [self.downloadedLabel setHidden:YES];
     [self.progressView setHidden:YES];
-    [self.importButton setTitle:@"Import" forState:UIControlStateNormal];
+    [self.importButton setTitle:@"Download" forState:UIControlStateNormal];
+    self.haveScrolled = NO;
     
     if (_prefillExample) {
         NSArray * urls = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS];
@@ -140,7 +142,7 @@
 }
 
 - (IBAction)import:(id)sender {
-    [self.importButton setTitle:@"Importing" forState:UIControlStateNormal];
+    [self.importButton setTitle:@"Downloading" forState:UIControlStateNormal];
     [self.cancelButton setHidden:NO];
     [self.downloadedLabel setHidden:NO];
     [self.progressView setHidden:NO];
@@ -266,6 +268,27 @@
             self.urlTextField.layer.borderWidth = 2.0;
         }
     }];
+}
+
+
+#pragma mark - Scrollview handling
+// Override this method to make the drawer and the scrollview play nice
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.haveScrolled) {
+        [self rollUpPanGesture:scrollView.panGestureRecognizer withScrollView:scrollView];
+    }
+}
+
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.haveScrolled = YES;
+    
+    if (!self.isFullView) {
+        scrollView.scrollEnabled = NO;
+        scrollView.scrollEnabled = YES;
+    } else {
+        scrollView.scrollEnabled = YES;
+    }
 }
 
 @end

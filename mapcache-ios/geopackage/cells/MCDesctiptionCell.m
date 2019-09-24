@@ -21,4 +21,13 @@
     [super setSelected:selected animated:animated];
 }
 
+
+- (void) setDescription: (NSString *) description {
+    [self.descriptionLabel setText:description];
+    [self.descriptionLabel sizeToFit];
+    [self updateConstraintsIfNeeded];
+    [self layoutSubviews];
+    [self.descriptionLabel layoutIfNeeded];
+}
+
 @end

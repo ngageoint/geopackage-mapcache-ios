@@ -72,7 +72,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.mapView.delegate = self;
     self.mapView.showsCompass = NO;
     UIScreen *screen = [UIScreen mainScreen];
-    self.mapView.frame = CGRectMake(0, 0, screen.bounds.size.width, screen.bounds.size.height-110);
+    self.mapView.frame = CGRectMake(0, 0, screen.bounds.size.width, screen.bounds.size.height);
     [self setupColors];
     self.settings = [NSUserDefaults standardUserDefaults];
     self.geoPackages = [[NSMutableDictionary alloc] init];
@@ -142,6 +142,15 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     if (self.active.modified) {
         [self.active setModified:NO];
         [self updateInBackgroundWithZoom:YES];
+    }
+    
+    // iOS 13 dark mode support
+    if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
+        [self.zoomIndicatorButton setBackgroundColor:[UIColor systemBackgroundColor]];
+        [self.locationButton setBackgroundColor:[UIColor systemBackgroundColor]];
+        [self.infoButton setBackgroundColor:[UIColor systemBackgroundColor]];
+    } else {
+        
     }
 }
 
@@ -284,6 +293,27 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 - (void) toggleZoomIndicator {
     [self.zoomIndicatorButton setHidden:[self.settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR]];
+}
+
+
+- (void) toggleMapControls {
+    if (![self.zoomIndicatorButton isHidden]) {
+        [self.zoomIndicatorButton setHidden:YES];
+    } else {
+        [self.zoomIndicatorButton setHidden:[self.settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR]];
+    }
+    
+    if ([self.infoButton isHidden]) {
+        [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+            [self.infoButton setHidden:NO];
+            [self.locationButton setHidden:NO];
+        } completion:nil];
+    } else {
+        [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+            [self.infoButton setHidden:YES];
+            [self.locationButton setHidden:YES];
+        } completion:nil];
+    }
 }
 
 #pragma mark - MCTileHelperDelegate methods
@@ -732,9 +762,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 #pragma mark - Bounding Box methods for creating new tile layers
 - (void) enableBoundingBoxMode {
     NSLog(@"MCMapController - going into bounding box mode");
-    
     self.boundingBoxMode = YES;
-    
 }
 
 
@@ -890,6 +918,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     BOOL withinDistance = distance / MIN(self.mapView.frame.size.width, self.mapView.frame.size.height) <= allowableScreenPercentage;
     return withinDistance;
+}
+
+
+- (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point {
+    CLLocationCoordinate2D coordinate = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
+    return coordinate;
 }
 
 

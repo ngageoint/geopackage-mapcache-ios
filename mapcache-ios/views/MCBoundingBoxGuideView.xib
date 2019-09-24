@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MCBoundingBoxGuideView">
+            <connections>
+                <outlet property="controlView" destination="ynA-GN-QYc" id="UUb-xR-iYa"/>
+                <outlet property="guideView" destination="RWm-CU-Lbt" id="2Hg-rd-AFe"/>
+                <outlet property="instructionsLabel" destination="Eaq-tZ-kb1" id="UrR-3A-Xdi"/>
+                <outlet property="view" destination="iN0-l3-epB" id="244-cG-BDg"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MCBoundingBoxPassthroughView">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RWm-CU-Lbt" customClass="MCBoundingBoxPassthroughView">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="741"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ynA-GN-QYc">
+                    <rect key="frame" x="0.0" y="741" width="414" height="155"/>
+                    <subviews>
+                        <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="863-2a-6cd">
+                            <rect key="frame" x="16" y="73" width="183" height="50"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="50" id="bhu-xA-CJj"/>
+                            </constraints>
+                            <state key="normal" title="Cancel">
+                                <color key="titleColor" red="0.97575825449999998" green="0.38110277059999997" blue="0.28535854820000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="10"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="cancel:" destination="-1" eventType="touchUpInside" id="tFV-3t-ufb"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pdt-KD-Ctt">
+                            <rect key="frame" x="215" y="73" width="183" height="50"/>
+                            <color key="backgroundColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="50" id="Y1w-bt-gIP">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="10"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
+                            </constraints>
+                            <state key="normal" title="Continue">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="10"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="continue:" destination="-1" eventType="touchUpInside" id="bDf-dd-ZHI"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Position the map so the box is over the area where you would like to download map tiles. " textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eaq-tZ-kb1">
+                            <rect key="frame" x="16" y="16" width="382" height="41"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="pdt-KD-Ctt" secondAttribute="bottom" constant="32" id="1J2-G5-xmG"/>
+                        <constraint firstItem="pdt-KD-Ctt" firstAttribute="width" secondItem="863-2a-6cd" secondAttribute="width" id="1nV-SI-DCN"/>
+                        <constraint firstAttribute="bottom" secondItem="863-2a-6cd" secondAttribute="bottom" constant="32" id="6lY-VZ-BCl"/>
+                        <constraint firstAttribute="trailing" secondItem="pdt-KD-Ctt" secondAttribute="trailing" constant="16" id="MXW-Ht-nkP"/>
+                        <constraint firstItem="Eaq-tZ-kb1" firstAttribute="top" secondItem="ynA-GN-QYc" secondAttribute="top" constant="16" id="Zt5-Lr-5PK"/>
+                        <constraint firstItem="Eaq-tZ-kb1" firstAttribute="leading" secondItem="ynA-GN-QYc" secondAttribute="leading" constant="16" id="miI-bE-MwT"/>
+                        <constraint firstItem="pdt-KD-Ctt" firstAttribute="leading" secondItem="863-2a-6cd" secondAttribute="trailing" constant="16" id="r68-gX-L7d"/>
+                        <constraint firstItem="863-2a-6cd" firstAttribute="top" secondItem="Eaq-tZ-kb1" secondAttribute="bottom" constant="16" id="t8P-Rt-7rC"/>
+                        <constraint firstItem="863-2a-6cd" firstAttribute="leading" secondItem="ynA-GN-QYc" secondAttribute="leading" constant="16" id="vDX-FK-VLo"/>
+                        <constraint firstAttribute="trailing" secondItem="Eaq-tZ-kb1" secondAttribute="trailing" constant="16" id="xJ7-04-RS7"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="RWm-CU-Lbt" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="87I-4V-yd2"/>
+                <constraint firstItem="ynA-GN-QYc" firstAttribute="top" secondItem="RWm-CU-Lbt" secondAttribute="bottom" id="9DN-zQ-Ejx"/>
+                <constraint firstItem="RWm-CU-Lbt" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="HMD-pl-vgX"/>
+                <constraint firstItem="ynA-GN-QYc" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="T33-Kr-q6l"/>
+                <constraint firstAttribute="bottom" secondItem="ynA-GN-QYc" secondAttribute="bottom" id="dQj-Tr-H9m"/>
+                <constraint firstItem="RWm-CU-Lbt" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="uHR-6L-6GP"/>
+                <constraint firstItem="ynA-GN-QYc" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="zB7-hT-Dzj"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="131.8840579710145" y="125.89285714285714"/>
+        </view>
+    </objects>
+</document>

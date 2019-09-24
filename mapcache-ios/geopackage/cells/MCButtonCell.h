@@ -22,4 +22,6 @@
 @property (strong, nonatomic) NSString *action;
 - (void) enableButton;
 - (void) disableButton;
+- (void) useSecondaryColors;
+- (void) setButtonLabel: (NSString *) text;
 @end

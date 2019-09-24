@@ -27,6 +27,19 @@
 }
 
 
+- (void) setButtonLabel: (NSString *) text {
+    [self.button setTitle:text forState:UIControlStateNormal];
+}
+
+
+- (void) useSecondaryColors {
+    UIImage *background = [UIImage imageNamed:@"secondaryButton"];
+    [self.button setBackgroundImage:background forState:UIControlStateNormal];
+    self.button.clipsToBounds = YES;
+    [self.button setTitleColor: [UIColor colorWithRed:3/255.0 green:77/255.0 blue:127/255.0 alpha:1.0] forState:UIControlStateNormal];
+}
+
+
 - (void) enableButton {
     _button.userInteractionEnabled = YES;
     _button.backgroundColor = [MCColorUtil getAccent];
