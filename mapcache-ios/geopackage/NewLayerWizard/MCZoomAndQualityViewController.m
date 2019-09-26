@@ -74,7 +74,7 @@
     
     _downloadDetailsCell = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
     [_downloadDetailsCell setDescription:@"\n\n"];
-    [_cellArray addObject: _downloadDetailsCell];
+    //[_cellArray addObject: _downloadDetailsCell];
     
     _backButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_backButtonCell useSecondaryColors];

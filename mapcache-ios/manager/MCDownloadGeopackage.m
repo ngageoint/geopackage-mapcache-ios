@@ -213,7 +213,13 @@
 -(void) failureWithError: (NSString *) error{
     NSString * errorMessage = self.active ? error : nil;
     if(self.delegate != nil){
-        [self.delegate downloadFileViewController:self downloadedFile:false withError:errorMessage];
+        NSRange startRange = [error rangeOfString:@"NSLocalizedDescription="];
+        NSRange endRange = [error rangeOfString:@", NSErrorFailingURLStringKey"];
+        NSInteger start = NSMaxRange(startRange);
+        NSInteger length = endRange.location - start;
+        NSString *localizedDescription = [error substringWithRange:NSMakeRange(start, length)];
+        
+        [self.delegate downloadFileViewController:self downloadedFile:false withError:localizedDescription];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -246,26 +252,29 @@
     [self.urlTextField isValidGeoPackageURL:self.urlTextField withResult:^(BOOL isValid) {
         if (isValid) {
             NSLog(@"Valid URL");
-            self.urlTextField.borderStyle = UITextBorderStyleRoundedRect;
-            self.urlTextField.layer.cornerRadius = 4;
-            self.urlTextField.layer.borderColor = [[UIColor colorWithRed:0.79 green:0.8 blue:0.8 alpha:1] CGColor];
-            self.urlTextField.layer.borderWidth = 0.5;
-            
-            [GPKGSUtils enableButton:self.importButton];
-            [self.downloadedLabel setText:@""];
-            self.downloadedLabel.hidden = YES;
-            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.urlTextField.borderStyle = UITextBorderStyleRoundedRect;
+                self.urlTextField.layer.cornerRadius = 4;
+                self.urlTextField.layer.borderColor = [[UIColor colorWithRed:0.79 green:0.8 blue:0.8 alpha:1] CGColor];
+                self.urlTextField.layer.borderWidth = 0.5;
+                
+                [GPKGSUtils enableButton:self.importButton];
+                [self.downloadedLabel setText:@""];
+                self.downloadedLabel.hidden = YES;
+            });
         } else {
             NSLog(@"Bad url");
-            [GPKGSUtils disableButton:self.importButton];
-            
-            [self.downloadedLabel setText:@"Invalid URL"];
-            self.downloadedLabel.hidden = NO;
-            
-            self.urlTextField.borderStyle = UITextBorderStyleRoundedRect;
-            self.urlTextField.layer.cornerRadius = 4;
-            self.urlTextField.layer.borderColor = [[UIColor redColor] CGColor];
-            self.urlTextField.layer.borderWidth = 2.0;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [GPKGSUtils disableButton:self.importButton];
+                
+                [self.downloadedLabel setText:@"Invalid URL"];
+                self.downloadedLabel.hidden = NO;
+                
+                self.urlTextField.borderStyle = UITextBorderStyleRoundedRect;
+                self.urlTextField.layer.cornerRadius = 4;
+                self.urlTextField.layer.borderColor = [[UIColor redColor] CGColor];
+                self.urlTextField.layer.borderWidth = 2.0;
+            });
         }
     }];
 }

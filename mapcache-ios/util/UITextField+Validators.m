@@ -10,71 +10,61 @@
 
 @implementation UITextField (Validators)
 
-- (BOOL)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock {
-    AFHTTPSessionManager *sessionManager = [AFHTTPSessionManager manager];
-    
+- (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock {
     NSString *urlText = textField.text;
     urlText = [urlText stringByReplacingOccurrencesOfString:@"{x}" withString:@"0"];
     urlText = [urlText stringByReplacingOccurrencesOfString:@"{y}" withString:@"0"];
     urlText = [urlText stringByReplacingOccurrencesOfString:@"{z}" withString:@"0"];
     
     NSURL *url = [NSURL URLWithString:urlText];
+    
     if (url) {
-        AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
-        securityPolicy.allowInvalidCertificates = YES;
-        [securityPolicy setValidatesDomainName:NO];
-        sessionManager.securityPolicy = securityPolicy;
-        sessionManager.responseSerializer = [AFImageResponseSerializer serializer];
-        
-        [sessionManager GET:url.absoluteString parameters:nil progress:nil success:^(NSURLSessionDataTask * task, id responseObject) {
-            NSLog(@"response object: %@", responseObject);
-            resultBlock(YES);
-        } failure:^(NSURLSessionDataTask * task, NSError * error) {
-            NSLog(@"Problem getting...%@", error);
-            resultBlock(NO);
+        NSURLSessionDownloadTask *downlaodTask = [[NSURLSession sharedSession] downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            UIImage *downloadedTile = [UIImage imageWithData:[NSData dataWithContentsOfURL: location]];
+            
+            if (error || downloadedTile == nil) {
+                resultBlock(NO);
+            } else {
+                resultBlock(YES);
+            }
+            
         }];
-        
-        NSLog(@"was able to make a url");
-        return YES;
+        [downlaodTask resume];
     } else {
         resultBlock(NO);
     }
-    
-    return NO;
 }
 
 
-- (BOOL)isValidGeoPackageURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock {
-    AFHTTPSessionManager *sessionManager = [AFHTTPSessionManager manager];
+- (void)isValidGeoPackageURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock {
     NSURL *url = [NSURL URLWithString:textField.text];
     
-    if (url) {
+    if (url) {        
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+        request.HTTPMethod = @"HEAD";
         
-        AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
-        securityPolicy.allowInvalidCertificates = YES;
-        [securityPolicy setValidatesDomainName:NO];
-        sessionManager.securityPolicy = securityPolicy;
-        sessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
         
-        [sessionManager HEAD:url.absoluteString parameters:nil success:^(NSURLSessionDataTask * _Nonnull task) {
-            NSLog(@"HEAD from GeoPacakge pre-import %@", task.response.description);
-            NSHTTPURLResponse *response = ((NSHTTPURLResponse *) [task response]);
-            NSDictionary *headers = [response allHeaderFields];
-            
-            if ([[headers objectForKey:@"Content-Type"] isEqualToString:@"gpkg"]) {
-                resultBlock(YES);
-            } else {
+        NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            if (error) {
                 resultBlock(NO);
+            } else {
+                NSHTTPURLResponse *urlResponse = (NSHTTPURLResponse *)response;
+                NSDictionary *headers = [urlResponse allHeaderFields];
+                
+                if ([[headers objectForKey:@"Content-Type"] isEqualToString:@"gpkg"]) {
+                    resultBlock(YES);
+                } else {
+                    resultBlock(NO);
+                }
             }
-        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            NSLog(@"Unable to reach GeoPacakge to import %@", error);
-            resultBlock(NO);
         }];
         
-        return YES;
+        [downloadTask resume];
+        
+        
     }
-    
-    return NO;
 }
 
 

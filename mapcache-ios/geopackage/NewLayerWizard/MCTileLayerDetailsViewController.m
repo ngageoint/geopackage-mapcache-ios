@@ -14,7 +14,6 @@
 @property (nonatomic, strong) MCFieldWithTitleCell *layerNameCell;
 @property (nonatomic, strong) MCFieldWithTitleCell *urlCell;
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
 @end
 
 @implementation MCTileLayerDetailsViewController
@@ -35,7 +34,6 @@
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     [self registerCellTypes];
     [self initCellArray];
-    self.sessionManager = [AFHTTPSessionManager manager];
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
@@ -127,19 +125,22 @@
         [textField isValidTileServerURL:textField withResult:^(BOOL isValid) {
             if (isValid) {
                 NSLog(@"Valid URL");
-                self.urlCell.field.borderStyle = UITextBorderStyleRoundedRect;
-                self.urlCell.field.layer.cornerRadius = 4;
-                self.urlCell.field.layer.borderColor = [[UIColor colorWithRed:0.79 green:0.8 blue:0.8 alpha:1] CGColor];
-                self.urlCell.field.layer.borderWidth = 0.5;
-
-                [self.buttonCell enableButton];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.urlCell.field.borderStyle = UITextBorderStyleRoundedRect;
+                    self.urlCell.field.layer.cornerRadius = 4;
+                    self.urlCell.field.layer.borderColor = [[UIColor colorWithRed:0.79 green:0.8 blue:0.8 alpha:1] CGColor];
+                    self.urlCell.field.layer.borderWidth = 0.5;
+                    [self.buttonCell enableButton];
+                });
             } else {
                 NSLog(@"Bad url");
-                [self.buttonCell disableButton];
-                self.urlCell.field.borderStyle = UITextBorderStyleRoundedRect;
-                self.urlCell.field.layer.cornerRadius = 4;
-                self.urlCell.field.layer.borderColor = [[UIColor redColor] CGColor];
-                self.urlCell.field.layer.borderWidth = 2.0;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.buttonCell disableButton];
+                    self.urlCell.field.borderStyle = UITextBorderStyleRoundedRect;
+                    self.urlCell.field.layer.cornerRadius = 4;
+                    self.urlCell.field.layer.borderColor = [[UIColor redColor] CGColor];
+                    self.urlCell.field.layer.borderWidth = 2.0;
+                });
             }
         }];
     } else {

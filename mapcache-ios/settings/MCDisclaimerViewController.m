@@ -17,6 +17,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];    
     [self disableButton];
+
+    // iOS 13 dark mode support
+    if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
+        self.view.backgroundColor = [UIColor systemBackgroundColor];
+        [self setModalInPresentation:YES];
+    } else {
+        self.view.backgroundColor = [UIColor whiteColor];
+    }
 }
 
 

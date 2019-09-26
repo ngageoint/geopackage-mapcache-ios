@@ -17,8 +17,6 @@
 #import "MCColorUtil.h"
 #import "MCTitleCell.h"
 #import "NGADrawerViewController.h"
-#import "UITextField+Validators.h"
-#import "AFNetworking.h"
 
 
 @protocol MCTileLayerDetailsDelegate
