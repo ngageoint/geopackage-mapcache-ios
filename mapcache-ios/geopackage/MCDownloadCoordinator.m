@@ -47,7 +47,7 @@
     if(error != nil){
         [GPKGSUtils showMessageWithDelegate:self
                                    andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_IMPORT_URL_ERROR]
-                                 andMessage:[NSString stringWithFormat:@"Error downloading '%@' at:\n%@\n\nError: %@", controller.nameTextField.text, controller.urlTextField.text, error]];
+                                 andMessage:[NSString stringWithFormat:@"There was a problem downloading '%@' from:\n%@\n\n%@", controller.nameTextField.text, controller.urlTextField.text, error]];
     }
 }
 
