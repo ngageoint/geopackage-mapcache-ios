@@ -193,11 +193,7 @@
 
 - (void) showLayerDetails:(GPKGUserDao *) layerDao {
     NSLog(@"In showLayerDetails with %@", layerDao.tableName);
-    // TODO: Create a layer details view and show it
-    
-    //MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithNavigationController:_navigationController andDatabase:_database andDao:layerDao]; // TODO replace with drawer
-    //[_childCoordinators addObject:layerCoordinator];
-    //[layerCoordinator start];
+    // TODO: Update to show the layerDetailsView in a drawer
 }
 
 
@@ -269,12 +265,13 @@
     CLLocationCoordinate2D lowerLeftCoordinate = [_mapDelegate convertPointToCoordinate:lowerLeft];
     CLLocationCoordinate2D upperRightCoordinate = [_mapDelegate convertPointToCoordinate:upperRight];
     
-    GPKGBoundingBox *boundingBoxCoordinates = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:(double)lowerLeftCoordinate.longitude
+    GPKGBoundingBox *boundingBoxWithCoordinates = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:(double)lowerLeftCoordinate.longitude
                                                                              andMinLatitudeDouble:(double)lowerLeftCoordinate.latitude
                                                                             andMaxLongitudeDouble:(double)upperRightCoordinate.longitude
                                                                              andMaxLatitudeDouble:(double)upperRightCoordinate.latitude];
     
-    _tileData.loadTiles.generateTiles.boundingBox = boundingBoxCoordinates;
+    
+    _tileData.loadTiles.generateTiles.boundingBox = boundingBoxWithCoordinates;
     [_mapDelegate removeTileBoundingBoxGuide];
     
     _zoomAndQualityViewController = [[MCZoomAndQualityViewController alloc] initAsFullView:YES];
@@ -310,12 +307,26 @@
 }
 
 - (NSString *) updateTileDownloadSizeEstimateWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
-    // TODO
-    // Calculate number of tiles to be downloaded based on the default zoom levels
-    // Make a few tile requests
+    int count = 0;
+    GPKGBoundingBox *boundingBox = _tileData.loadTiles.generateTiles.boundingBox;
     
-    return [NSString stringWithFormat: @"Tile download size estimate for min zoom %@ and max zoom %@.", minZoom, maxZoom];
+    SFPProjection *projection = [SFPProjectionFactory projectionWithAuthority: PROJ_AUTHORITY_EPSG andCode: [NSString stringWithFormat:@"%d", _tileData.loadTiles.epsg]];
+    GPKGBoundingBox *transformedBox = boundingBox;
+    
+    if (![projection isEqualToAuthority:PROJ_AUTHORITY_EPSG andNumberCode:[NSNumber numberWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]]) {
+        GPKGBoundingBox *bounded = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
+        SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM andToProjection:projection];
+        transformedBox = [bounded transform:transform];
+    }
+    
+    for (int zoom = [minZoom intValue]; zoom <= [maxZoom intValue]; zoom++) {
+        GPKGTileGrid *tileGrid = [GPKGTileBoundingBoxUtils getTileGridWithWebMercatorBoundingBox:transformedBox andZoom:zoom];
+        count += [tileGrid count];
+    }
+    
+    return [NSString stringWithFormat: @"Continue to donwload %d tiles for min zoom %@ and max zoom %@.", count, minZoom, maxZoom];
 }
+
 
 
 
@@ -360,6 +371,8 @@
 -(void) onLoadTilesFailure: (NSString *) result withCount: (int) count {
     //TODO: fill in
     NSLog(@"Loading tiles failed");
+    [_drawerDelegate popDrawer];
+    [self updateDatabase];
 }
 
 

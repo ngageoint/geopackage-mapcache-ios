@@ -14,7 +14,7 @@
 @property (nonatomic, strong) MCZoomCell *zoomCell;
 @property (nonatomic, strong) MCButtonCell *continueButtonCell;
 @property (nonatomic, strong) MCButtonCell *backButtonCell;
-@property (nonatomic, strong) MCDesctiptionCell *downloadDetailsCell;
+//@property (nonatomic, strong) MCDesctiptionCell *downloadDetailsCell;
 @end
 
 @implementation MCZoomAndQualityViewController
@@ -72,10 +72,10 @@
     _continueButtonCell.action = @"continue";
     [_cellArray addObject:_continueButtonCell];
     
-    _downloadDetailsCell = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
-    [_downloadDetailsCell setDescription:@"\n\n"];
-    //[_cellArray addObject: _downloadDetailsCell];
-    
+//    _downloadDetailsCell = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+//    [_downloadDetailsCell setDescription:@"\n\n"];
+//    [_cellArray addObject: _downloadDetailsCell];
+
     _backButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_backButtonCell useSecondaryColors];
     [_backButtonCell setButtonLabel:@"Adjust bounding box"];
@@ -119,8 +119,9 @@
 
 #pragma mark - MCZoomCellValueChangedDelegate
 - (void) zoomValuesChanged:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
-    NSString * updatedEstimate = [_zoomAndQualityDelegate updateTileDownloadSizeEstimateWith:minZoom andMaxZoom:maxZoom];
-    [_downloadDetailsCell setDescription:updatedEstimate];
+    //TODO Update to estimate downlaod size.
+    //NSString * updatedEstimate = [_zoomAndQualityDelegate updateTileDownloadSizeEstimateWith:minZoom andMaxZoom:maxZoom];
+    //[_downloadDetailsCell setDescription:updatedEstimate];
 }
 
 

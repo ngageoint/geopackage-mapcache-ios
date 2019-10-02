@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <GPKGGeoPackageManager.h>
+#import <GPKGTileBoundingBoxUtils.h>
+#import <GPKGTileGrid.h>
+#import "SFPProjectionFactory.h"
 #import "GPKGSLoadTilesTask.h"
 #import "MCGeopackageSingleViewController.h"
 #import "GPKGSDatabase.h"
@@ -21,7 +24,6 @@
 #import "MCTileLayerDetailsViewController.h"
 #import "MCBoundingBoxGuideView.h"
 #import "MCZoomAndQualityViewController.h"
-#import "MCManualBoundingBoxViewController.h"
 #import "MCLayerViewController.h"
 #import "GPKGSDisplayTextViewController.h"
 #import "MCFeatureLayerOperationsCell.h"
