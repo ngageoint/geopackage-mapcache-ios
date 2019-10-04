@@ -158,8 +158,18 @@
         GPKGSDatabase *database = [_geoPackages objectAtIndex:indexPath.row];
         
         cell.geoPackageNameLabel.text = database.name;
-        cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layers", (long)[database getFeatures].count];
-        cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layers", (long)[database getTileCount]];
+        
+        if ([database getFeatures].count == 1) {
+            cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layer", (long)[database getFeatures].count];
+        } else {
+            cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layers", (long)[database getFeatures].count];
+        }
+        
+        if ([database getTileCount] == 1) {
+            cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layer", (long)[database getTileCount]];
+        } else {
+            cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layers", (long)[database getTileCount]];
+        }
         
         if ([_active isActive:database]) {
             [cell activeLayersIndicatorOn];
