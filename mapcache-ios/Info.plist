@@ -13,6 +13,8 @@
 			<array/>
 			<key>CFBundleTypeName</key>
 			<string>GeoPackage</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Default</string>
 			<key>LSItemContentTypes</key>
@@ -85,7 +87,12 @@
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.database</string>
+				<string>public.data</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>GeoPackage</string>
+			<key>UTTypeIconFiles</key>
+			<array/>
 			<key>UTTypeIdentifier</key>
 			<string>mil.nga.mapcache.geoPackageUTIHandler.csm</string>
 			<key>UTTypeTagSpecification</key>

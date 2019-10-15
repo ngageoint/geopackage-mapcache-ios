@@ -51,7 +51,7 @@
     GPKGGeoPackage *geoPackage = [_manager open:_database.name];
     
     @try {
-        [geoPackage deleteUserTable:_dao.tableName];
+        [geoPackage deleteTable:_dao.tableName];
         [_navigationController popViewControllerAnimated:YES];
     }
     @catch (NSException *exception) {

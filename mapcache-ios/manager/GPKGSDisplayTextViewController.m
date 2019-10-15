@@ -217,7 +217,7 @@
             if(userColumn.primaryKey){
                 [info appendFormat:@"\nPrimary Key: %d", userColumn.primaryKey];
             }
-            [info appendFormat:@"\nType: %@", [userColumn getTypeName]];
+            [info appendFormat:@"\nType: %@", userColumn.type];
             GPKGDataColumns * dataColumn = [dataColumnsDao getDataColumnByTableName:tableName andColumnName:userColumn.name];
             if (dataColumn) {
                 [info appendFormat: @"\nData Column Information:"];

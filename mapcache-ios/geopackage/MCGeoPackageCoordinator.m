@@ -156,7 +156,7 @@
     
     @try {
         geoPackage = [_manager open:_database.name];
-        [geoPackage deleteUserTable:table.name];
+        [geoPackage deleteTable:table.name];
         [_active removeTable:table];
         [_geoPackageViewController removeLayerNamed:table.name];
         [_mapDelegate updateMapLayers];

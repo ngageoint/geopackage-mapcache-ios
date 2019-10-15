@@ -742,7 +742,7 @@ const char ConstantKey;
                 {
                     GPKGGeoPackage * geoPackage = [self.manager open:table.database];
                     @try {
-                        [geoPackage deleteUserTable:table.name];
+                        [geoPackage deleteTable:table.name];
                         [self.active removeTable:table];
                         [self updateAndReloadData];
                     }
