@@ -4,6 +4,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## 1.23 (TBD)
+
+* TBD
+
 ## [1.22](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.22) (10-15-2019)
 
 * geopackage-ios version 3.3.0
