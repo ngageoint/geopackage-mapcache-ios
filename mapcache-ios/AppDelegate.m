@@ -90,10 +90,8 @@
     [_geoPackages closeAll];
 }
 
-- (BOOL) application:(UIApplication *)application openURL:(NSURL *)
-url sourceApplication:(NSString *) sourceApplication annotation:(id)
-annotation {
-    
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+
     if (!url) {
         return NO;
     }
@@ -119,6 +117,12 @@ annotation {
     }
 
     return YES;
+}
+
+- (BOOL) application:(UIApplication *)application openURL:(NSURL *)
+url sourceApplication:(NSString *) sourceApplication annotation:(id)
+annotation {
+    return [self application:application openURL:url options:[NSDictionary dictionary]];
 }
 
 
