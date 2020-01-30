@@ -211,15 +211,8 @@
 }
 
 -(void) failureWithError: (NSString *) error{
-    NSString * errorMessage = self.active ? error : nil;
-    if(self.delegate != nil){
-        NSRange startRange = [error rangeOfString:@"NSLocalizedDescription="];
-        NSRange endRange = [error rangeOfString:@", NSErrorFailingURLStringKey"];
-        NSInteger start = NSMaxRange(startRange);
-        NSInteger length = endRange.location - start;
-        NSString *localizedDescription = [error substringWithRange:NSMakeRange(start, length)];
-        
-        [self.delegate downloadFileViewController:self downloadedFile:false withError:localizedDescription];
+    if(self.delegate != nil && ![error isEqualToString:@"Operation was canceled"]){
+        [self.delegate downloadFileViewController:self downloadedFile:false withError:error];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }

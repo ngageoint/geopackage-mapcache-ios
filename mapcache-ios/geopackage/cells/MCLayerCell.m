@@ -24,6 +24,16 @@
 }
 
 
+- (void) setName: (NSString *) name {
+    [self.layerNameLabel setText:name];
+}
+
+
+- (void) setDetails: (NSString *) details {
+    [self.detailLabel setText:details];
+}
+
+
 - (void)activeIndicatorOn {
     [self.activeIndicator setHidden:NO];
 }

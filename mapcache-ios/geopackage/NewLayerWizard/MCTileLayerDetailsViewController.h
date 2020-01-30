@@ -10,7 +10,7 @@
 #import "SFPProjectionConstants.h"
 #import "MCSectionTitleCell.h"
 #import "MCFieldWithTitleCell.h"
-#import "MCDesctiptionCell.h"
+#import "MCDescriptionCell.h"
 #import "MCSectionTitleCell.h"
 #import "MCButtonCell.h"
 #import "MCSegmentedControlCell.h"
@@ -22,8 +22,13 @@
 
 @protocol MCTileLayerDetailsDelegate
 - (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode;
+- (void) showURLHelp;
+- (void) showTileServerList;
 @end
 
 @interface MCTileLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate>
 @property (weak, nonatomic) id<MCTileLayerDetailsDelegate> delegate;
+@property (nonatomic, strong) NSString *selectedServerURL;
+@property (nonatomic, strong) NSString *layerName;
+- (void)update;
 @end

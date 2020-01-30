@@ -19,4 +19,6 @@
 - (void)activeIndicatorOn;
 - (void)activeIndicatorOff;
 - (void)toggleActiveIndicator;
+- (void) setDetails: (NSString *) details;
+- (void) setName: (NSString *) name;
 @end

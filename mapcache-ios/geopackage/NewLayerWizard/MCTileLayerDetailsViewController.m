@@ -11,6 +11,8 @@
 @interface MCTileLayerDetailsViewController ()
 @property (nonatomic, strong) NSMutableArray *cellArray;
 @property (nonatomic, strong) MCButtonCell *buttonCell;
+@property (nonatomic, strong) MCButtonCell *selectServerButtonCell;
+@property (nonatomic, strong) MCButtonCell *helpButtonCell;
 @property (nonatomic, strong) MCFieldWithTitleCell *layerNameCell;
 @property (nonatomic, strong) MCFieldWithTitleCell *urlCell;
 @property (nonatomic, strong) UITableView *tableView;
@@ -45,6 +47,8 @@
     [self.view addSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
+    self.selectedServerURL = nil;
+    self.layerName = nil;
 }
 
 
@@ -61,35 +65,61 @@
     title.label.text = @"New tile layer";
     [_cellArray addObject:title];
     
-    MCDesctiptionCell *tilesDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
-    tilesDescription.descriptionLabel.text = @"Tile layers consist of a pyramid of images within a geographic extent and zoom levels.";
-    [_cellArray addObject:tilesDescription];
-    
     _layerNameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    _layerNameCell.title.text = @"New layer name";
+    _layerNameCell.title.text = @"Layer name";
+    
+    if (self.layerName != nil) {
+        [_layerNameCell.field setText:self.layerName];
+    }
+    
     [_layerNameCell.field setReturnKeyType:UIReturnKeyDone]; // TODO look into UIReturnKeyNext
     _layerNameCell.field.delegate = self;
     [_cellArray addObject:_layerNameCell];
     
-    
     _urlCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    _urlCell.title.text = @"Tile server URL";
-    _urlCell.field.placeholder = @"https://osm.gs.mil/tiles/default/{x}/{y}/{z}.png";
-    _urlCell.field.text = @"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png";
-    _urlCell.field.delegate = self;
-    [_urlCell.field setReturnKeyType:UIReturnKeyDone];
+    [_urlCell setTitleText:@"Tile server URL"];
+    
+    if (self.selectedServerURL != nil) {
+        [_urlCell setFieldText:self.selectedServerURL];
+    } else {
+        [_urlCell setPlaceholder:@"https://osm.gs.mil/tiles/default/{x}/{y}/{z}.png"];
+        [_urlCell setFieldText:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
+    }
+    
+    [_urlCell setTextFielDelegate: self];
+    [_urlCell useReturnKeyDone];
     [_cellArray addObject:_urlCell];
     
-    MCDesctiptionCell *urlDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
-    urlDescription.descriptionLabel.text = @"Tip: Make sure you enter the full URL to the tile server with the {x}/{y}/{z}.png template on the end.";
+    MCDescriptionCell *urlDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+    urlDescription.descriptionLabel.text = @"Tip: XYZ and WMS are supported. Make sure you enter the URL template.";
     [_cellArray addObject:urlDescription];
+    
+    _selectServerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
+    [_selectServerButtonCell.button setTitle:@"Choose Tile Server" forState:UIControlStateNormal];
+    _selectServerButtonCell.action = @"ShowServers";
+    _selectServerButtonCell.delegate = self;
+    [_cellArray addObject:_selectServerButtonCell];
+    [_selectServerButtonCell useSecondaryColors];
     
     _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_buttonCell.button setTitle:@"Next" forState:UIControlStateNormal];
     [_buttonCell disableButton];
     _buttonCell.delegate = self;
-    _buttonCell.action = @"BoundingBox";
+    _buttonCell.action = @"ContinueToBoundingBox";
     [_cellArray addObject:_buttonCell];
+    
+    _helpButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
+    [_helpButtonCell.button setTitle:@"More about URL templates" forState:UIControlStateNormal];
+    _helpButtonCell.action = @"ShowHelp";
+    _helpButtonCell.delegate = self;
+    [_cellArray addObject:_helpButtonCell];
+    [_helpButtonCell useSecondaryColors];
+}
+
+- (void)update {
+    [self initCellArray];
+    [self.tableView reloadData];
+    [self textFieldDidEndEditing:self.layerNameCell.field];
 }
 
 
@@ -126,24 +156,19 @@
             if (isValid) {
                 NSLog(@"Valid URL");
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    self.urlCell.field.borderStyle = UITextBorderStyleRoundedRect;
-                    self.urlCell.field.layer.cornerRadius = 4;
-                    self.urlCell.field.layer.borderColor = [[UIColor colorWithRed:0.79 green:0.8 blue:0.8 alpha:1] CGColor];
-                    self.urlCell.field.layer.borderWidth = 0.5;
+                    [self.urlCell useNormalAppearance];
                     [self.buttonCell enableButton];
                 });
             } else {
                 NSLog(@"Bad url");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.buttonCell disableButton];
-                    self.urlCell.field.borderStyle = UITextBorderStyleRoundedRect;
-                    self.urlCell.field.layer.cornerRadius = 4;
-                    self.urlCell.field.layer.borderColor = [[UIColor redColor] CGColor];
-                    self.urlCell.field.layer.borderWidth = 2.0;
+                    [self.urlCell useErrorAppearance];
                 });
             }
         }];
     } else {
+        self.layerName = textField.text;
         if ([_layerNameCell.field.text isEqualToString:@""] || [_urlCell.field.text isEqualToString:@""]) {
             [_buttonCell disableButton];
         } else {
@@ -161,7 +186,13 @@
 
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
-    [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text URL:_urlCell.field.text andReferenceSystemCode:PROJ_EPSG_WEB_MERCATOR];
+    if ([action isEqualToString:@"ContinueToBoundingBox"]) {
+        [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text URL:_urlCell.field.text andReferenceSystemCode:PROJ_EPSG_WEB_MERCATOR];
+    } else if ([action isEqualToString:@"ShowServers"]) {
+        [self.delegate showTileServerList];
+    } else {
+        [_delegate showURLHelp];
+    }
 }
 
 #pragma mark - NGADrawerView methods

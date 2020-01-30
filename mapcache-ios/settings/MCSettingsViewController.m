@@ -8,7 +8,8 @@
 
 #import "MCSettingsViewController.h"
 
-NSString * const SHOW_NOTICE = @"showNotice";
+NSString *const SHOW_NOTICE = @"showNotice";
+NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 
 @interface MCSettingsViewController ()
 @property (nonatomic, strong) NSMutableArray *cellArray;
@@ -55,7 +56,7 @@ NSString * const SHOW_NOTICE = @"showNotice";
 
 - (void) closeDrawer {
     [super closeDrawer];
-    [_settingsDelegate settingsCompletionHandler];
+    [_mapSettingsDelegate settingsCompletionHandler];
     [self.drawerViewDelegate popDrawer];
 }
 
@@ -122,11 +123,17 @@ NSString * const SHOW_NOTICE = @"showNotice";
     }
     [_cellArray addObject:_zoomSwitchCell];
     
+    MCButtonCell *tileURLServerManagerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
+    [tileURLServerManagerButtonCell setButtonLabel:@"Saved Tile Server URLs"];
+    tileURLServerManagerButtonCell.action = SHOW_TILE_URL_MANAGER;
+    tileURLServerManagerButtonCell.delegate = self;
+    [_cellArray addObject:tileURLServerManagerButtonCell];
     
     MCButtonCell *showNoticesButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
-    [showNoticesButtonCell.button setTitle:@"About MapCache" forState:UIControlStateNormal];
+    [showNoticesButtonCell setButtonLabel:@"About MapCache"];
     showNoticesButtonCell.action = SHOW_NOTICE;
     showNoticesButtonCell.delegate = self;
+    [showNoticesButtonCell useSecondaryColors];
     [_cellArray addObject:showNoticesButtonCell];
 
 }
@@ -186,17 +193,17 @@ NSString * const SHOW_NOTICE = @"showNotice";
     
     if ([textField.text intValue] > 5000) {
         [textField setText:[NSString stringWithFormat:@"%d", 5000]];
-        [self.settingsDelegate setMaxFeatures:5000];
+        [self.mapSettingsDelegate setMaxFeatures:5000];
     }
     
     [textField setText:[NSString stringWithFormat:@"%d", [textField.text intValue]]];
-    [self.settingsDelegate setMaxFeatures:[textField.text intValue]];
+    [self.mapSettingsDelegate setMaxFeatures:[textField.text intValue]];
 }
 
 
 #pragma mark - MCSegmentedControlDelegate method
 - (void)selectionChanged:(NSString *)selection {
-    [_settingsDelegate setMapType:selection];
+    [_mapSettingsDelegate setMapType:selection];
 }
 
 
@@ -208,7 +215,7 @@ NSString * const SHOW_NOTICE = @"showNotice";
         [self.settings setBool:[switchControl isOn] forKey:GPKGS_PROP_HIDE_MAX_FEATURES_WARNING];
     } else {
         [self.settings setBool:![switchControl isOn] forKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR];
-        [self.settingsDelegate toggleZoomIndicator];
+        [self.mapSettingsDelegate toggleZoomIndicator];
     }
     
 }
@@ -217,7 +224,9 @@ NSString * const SHOW_NOTICE = @"showNotice";
 #pragma mark - ButtonCell delegate
 - (void)performButtonAction:(NSString *)action {
     if ([action isEqualToString:SHOW_NOTICE]) {
-        [self.noticeAndAttributeDelegate showNoticeAndAttributeView];
+        [self.settingsDelegate showNoticeAndAttributeView];
+    } else if ([action isEqualToString:SHOW_TILE_URL_MANAGER]) {
+        [self.settingsDelegate showTileURLManager];
     }
 }
 

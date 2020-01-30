@@ -45,6 +45,7 @@ extern NSString * const GPKGS_PROP_ICON_POINT;
 extern NSString * const GPKGS_PROP_ICON_LINESTRING;
 extern NSString * const GPKGS_PROP_ICON_POLYGON;
 extern NSString * const GPKGS_PROP_ICON_TILES;
+extern NSString * const GPKGS_PROP_ICON_TILE_SERVER;
 extern NSString * const GPKGS_PROP_ICON_PAINT;
 extern NSString * const GPKGS_PROP_ICON_UP;
 extern NSString * const GPKGS_PROP_ICON_DOWN;
@@ -183,7 +184,7 @@ extern NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LAT;
 extern NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LAT;
 extern NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LON;
 extern NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LON;
-
+extern NSString * const MC_SAVED_TILE_SERVER_URLS;
 extern NSString * const GPKGS_ACTION_DELETE;
 extern NSString * const GPKGS_ACTION_SHARE;
 extern NSString * const GPKGS_ACTION_NEW_LAYER;

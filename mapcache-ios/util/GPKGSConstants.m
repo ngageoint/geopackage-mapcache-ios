@@ -45,6 +45,7 @@ NSString * const GPKGS_PROP_ICON_POINT = @"icon_point";
 NSString * const GPKGS_PROP_ICON_LINESTRING = @"icon_linestring";
 NSString * const GPKGS_PROP_ICON_POLYGON = @"icon_polygon";
 NSString * const GPKGS_PROP_ICON_TILES = @"icon_tiles";
+NSString * const GPKGS_PROP_ICON_TILE_SERVER = @"icon_tile_server";
 NSString * const GPKGS_PROP_ICON_PAINT = @"icon_paint";
 NSString * const GPKGS_PROP_ICON_UP = @"icon_up";
 NSString * const GPKGS_PROP_ICON_DOWN = @"icon_down";
@@ -183,7 +184,7 @@ NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LAT = @"min_lat";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LAT = @"max_lat";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LON = @"min_lon";
 NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LON = @"max_lon";
-
+NSString * const MC_SAVED_TILE_SERVER_URLS = @"tile_server_urls";
 NSString * const GPKGS_ACTION_DELETE = @"action_delete";
 NSString * const GPKGS_ACTION_SHARE = @"action_share";
 NSString * const GPKGS_ACTION_NEW_LAYER = @"action_new_layer";

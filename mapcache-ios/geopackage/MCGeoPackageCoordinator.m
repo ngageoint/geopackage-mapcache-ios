@@ -240,6 +240,16 @@
 }
 
 
+#pragma mark - MCSelectTileServerDelegate
+- (void) selectTileServer:(NSString *)serverURL {
+    // pass the selected server url to the tile detail view controller to display in the url field
+    NSLog(@"Selected %@", serverURL);
+    _tileDetailsController.selectedServerURL = serverURL;
+    [_tileDetailsController update];
+}
+
+
+
 #pragma mark - MCTileLayerDetailsDelegate
 - (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode {
     _tileData.name = name;
@@ -250,6 +260,22 @@
     self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] init];
     self.boundingBoxGuideViewController.delegate = self;
     [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view];
+}
+
+
+- (void) showURLHelp {
+    MCTileServerHelpViewController *tileHelpViewController = [[MCTileServerHelpViewController alloc] initAsFullView:YES];
+    tileHelpViewController.drawerViewDelegate = _drawerDelegate;
+    [tileHelpViewController.drawerViewDelegate pushDrawer:tileHelpViewController];
+}
+
+
+- (void) showTileServerList {
+    MCSettingsCoordinator *settingsCoordinator = [[MCSettingsCoordinator alloc] init];
+    [self.childCoordinators addObject:settingsCoordinator];
+    settingsCoordinator.selectServerDelegate = self;
+    settingsCoordinator.drawerViewDelegate = self.drawerDelegate;
+    [settingsCoordinator startForServerSelection];
 }
 
 

@@ -36,7 +36,7 @@
     self.featureDaos = [[NSMutableDictionary alloc] init];
     self.featureUpdateCountId = 0;
     self.updateCountId = 0;
-    
+    self.featureCount = 0;
     return self;
 }
 
@@ -72,54 +72,53 @@
                 NSMutableDictionary * databaseFeatureDaos = [[NSMutableDictionary alloc] init];
                 [self.featureDaos setObject:databaseFeatureDaos forKey:database.name];
                 for(NSString *featureTable in featureTableDaos){
-                    
-                    //                        if([self updateCanceled:updateId]){
-                    //                            break;
-                    //                        }
-                    
                     GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:featureTable];
                     [databaseFeatureDaos setObject:featureDao forKey:featureTable];
                 }
             }
-            
-            // TODO: sort out feature overlays
-            //            for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
-            //                if(featureOverlay.active){
-            //                    [featureTableDaos addObject:featureOverlay.featureTable];
-            //                }
-            //            }
-            
-            // Display the feature tiles, this should be handled with a delegate method
-//            for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
-//                if([self updateCanceled:updateId]){
-//                    break;
-//                }
-//                if(featureOverlay.active){
-//                    @try {
-//                        //                            [self displayFeatureTiles:featureOverlay];
-//                    }
-//                    @catch (NSException *e) {
-//                        NSLog(@"%@", [e description]);
-//                    }
-//                }
-//            }
-            
         } else{
             [self.active removeDatabase:database.name andPreserveOverlays:false];
         }
     }
     
-    // Add features
-    //if(![self featureUpdateCanceled:featureUpdateId]){ // see about keeping this check in the map view controller
-        count = [self addFeaturesWithId:featureUpdateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
-    //}
+    count = [self addFeaturesWithId:featureUpdateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
 }
 
 
--(int) addFeaturesWithId: (int) updateId andMaxFeatures: (int) maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance: (double) toleranceDistance andFilter: (BOOL) filter{
+- (void)prepareFeaturesWithGeoPackage:(GPKGGeoPackage *) geoPackage andDatabase:(GPKGSDatabase *) database andUpdateId:(int) updateId andFeatureUpdateId:(int) featureUpdateId andZoom:(int) zoom andMaxFeatures:(int) maxFeatures andMapViewBoundingBox:(GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance:(double) toleranceDistance andFilter:(BOOL) filter {
+
+    if([self updateCanceled:updateId]){
+        return;
+    }
     
-    int count = 0;
+    if(geoPackage != nil){
+        [self.geoPackages setObject:geoPackage forKey:database.name];
+        
+        NSMutableSet * featureTableDaos = [[NSMutableSet alloc] init];
+        NSArray * features = [database getFeatures];
+        if([features count] > 0){
+            for(GPKGSTable * features in [database getFeatures]){
+                [featureTableDaos addObject:features.name];
+            }
+        }
+        
+        if(featureTableDaos.count > 0){
+            NSMutableDictionary * databaseFeatureDaos = [[NSMutableDictionary alloc] init];
+            [self.featureDaos setObject:databaseFeatureDaos forKey:database.name];
+            for(NSString *featureTable in featureTableDaos){
+                GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:featureTable];
+                [databaseFeatureDaos setObject:featureDao forKey:featureTable];
+            }
+        }
+    } else{
+        [self.active removeDatabase:database.name andPreserveOverlays:false];
+    }
     
+    [self addFeaturesWithId:featureUpdateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
+}
+
+
+-(int) addFeaturesWithId: (int) updateId andMaxFeatures: (int) maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance: (double) toleranceDistance andFilter: (BOOL) filter {
     // Add features
     NSMutableDictionary * featureTables = [[NSMutableDictionary alloc] init];
     //    if(self.editFeaturesMode){
@@ -156,7 +155,7 @@
     
     for(NSString * databaseName in [featureTables allKeys]){
         
-        if(count >= maxFeatures){
+        if(self.featureCount >= maxFeatures){
             break;
         }
         
@@ -171,10 +170,10 @@
                 
                 if([[self.featureDaos objectForKey:databaseName] objectForKey:features] != nil){
                     
-                    count = [self displayFeaturesWithId:updateId andGeoPackage:geoPackage andStyleCache:styleCache andFeatures:features andCount:count andMaxFeatures:maxFeatures andEditable:NO andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
+                    self.featureCount = [self displayFeaturesWithId:updateId andGeoPackage:geoPackage andStyleCache:styleCache andFeatures:features andCount:self.featureCount andMaxFeatures:maxFeatures andEditable:NO andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
                     if([self featureUpdateCanceled:updateId]){
                         break;
-                    } else if (count >= maxFeatures) {
+                    } else if (self.featureCount >= maxFeatures) {
                         [self.featureHelperDelegate showMaxFeaturesWarning];
                         break;
                     }
@@ -189,7 +188,7 @@
         }
     }
     
-    return count;
+    return self.featureCount;
 }
 
 
@@ -254,8 +253,6 @@
                         }
                     } @catch (NSException *exception) {
                         NSLog(@"Failed to display feature. database: %@, feature table: %@, error: %@", database, features, [exception description]);
-                    } @finally {
-                        [geoPackage close];
                     }
                 }
             }
@@ -292,6 +289,11 @@
     }
     
     return count;
+}
+
+
+- (void) resetFeatureCount {
+    self.featureCount = 0;
 }
 
 

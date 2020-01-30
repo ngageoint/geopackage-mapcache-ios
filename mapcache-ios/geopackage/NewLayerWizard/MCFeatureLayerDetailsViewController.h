@@ -17,7 +17,7 @@
 #import "MCButtonCell.h"
 #import "GPKGBoundingBox.h"
 #import "GPKGSDatabase.h"
-#import "MCDesctiptionCell.h"
+#import "MCDescriptionCell.h"
 #import "MCSectionTitleCell.h"
 #import "MCFieldWithTitleCell.h"
 #import "MCPickerViewCell.h"

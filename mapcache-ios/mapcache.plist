@@ -14,6 +14,8 @@
 	<string>Polygon</string>
 	<key>icon_tiles</key>
 	<string>Tiles</string>
+	<key>icon_tile_server</key>
+	<string>TileServer</string>
 	<key>icon_paint</key>
 	<string>paint</string>
 	<key>icon_up</key>
@@ -528,14 +530,6 @@
 			<string>http://portal.opengeospatial.org/files/73648</string>
 			<key>name</key>
 			<string>blue_marble</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>Washington DC</string>
-			<key>url</key>
-			<string>http://portal.opengeospatial.org/files/74984</string>
-			<key>name</key>
-			<string>washington_dc</string>
 		</dict>
 		<dict>
 			<key>label</key>

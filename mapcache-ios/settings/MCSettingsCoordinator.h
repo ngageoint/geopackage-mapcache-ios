@@ -9,11 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "MCSettingsViewController.h"
 #import "MCNoticeAndAttributionViewController.h"
+#import "MCTileServerURLManagerViewController.h"
+#import "MCNewTileServerViewController.h"
+#import "GPKGSConstants.h"
 
 
-@interface MCSettingsCoordinator : NSObject <MCNoticeAndAttributeDelegate>
+@interface MCSettingsCoordinator : NSObject <MCSettingsDelegate, MCTileServerManagerDelegate, MCSaveTileServerDelegate>
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
-@property (nonatomic, strong) id<MCSettingsViewDelegate> settingsDelegate;
-@property (nonatomic, strong) id<MCNoticeAndAttributeDelegate> noticeDelegate;
+@property (nonatomic, strong) id<MCMapSettingsDelegate> settingsDelegate;
+@property (nonatomic, strong) id<MCSettingsDelegate> noticeDelegate;
+@property (nonatomic, strong) id<MCSelectTileServerDelegate> selectServerDelegate;
 - (void)start;
+- (void)startForServerSelection;
 @end

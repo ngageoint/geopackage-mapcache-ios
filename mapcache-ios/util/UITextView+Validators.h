@@ -1,0 +1,19 @@
+//
+//  UITextView+Validators.h
+//  mapcache-ios
+//
+//  Created by Tyler Burgett on 1/29/20.
+//  Copyright © 2020 NGA. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface UITextView (Validators)
+- (void)isValidTileServerURL:(UITextView *)textView withResult:(void(^)(BOOL isValid))resultBlock;
+- (void)isValidGeoPackageURL:(UITextView *)textView withResult:(void(^)(BOOL isValid))resultBlock;
+- (void)trimWhiteSpace:(UITextView *)textView;
+@end
+
+NS_ASSUME_NONNULL_END

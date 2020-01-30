@@ -15,6 +15,12 @@
 @property (weak, nonatomic) IBOutlet UITextField *field;
 
 - (NSString *)fieldValue;
+- (void) setTitleText:(NSString *) titleText;
+- (void) setPlaceholder:(NSString *) placeholder;
+- (void) setFieldText:(NSString *) text;
 - (void)setTextFielDelegate: (id<UITextFieldDelegate>)delegate;
+- (void) useReturnKeyDone;
 - (void)setupNumericalKeyboard;
+- (void) useNormalAppearance;
+- (void) useErrorAppearance;
 @end

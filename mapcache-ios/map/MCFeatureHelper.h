@@ -41,13 +41,16 @@
 @property (nonatomic, strong) id<MCFeatureHelperDelegate> featureHelperDelegate;
 @property (atomic) int featureUpdateCountId;
 @property (atomic) int updateCountId;
+@property (atomic) int featureCount;
 @property (nonatomic, strong) GPKGFeatureShapes * featureShapes;
 
 - (instancetype) initWithFeatureHelperDelegate:(id<MCFeatureHelperDelegate>) delegate;
-
+- (void) resetFeatureCount;
 - (int)getNewUpdateId;
 - (int)getNewFeatureUpdateId;
 - (void)prepareFeaturesWithUpdateId:(int) updateId andFeatureUpdateId:(int) featureUpdateId andZoom:(int) zoom andMaxFeatures:(int) maxFeatures andMapViewBoundingBox:(GPKGBoundingBox *) mapViewBoudingBox andToleranceDistance:(double) toleranceDistance andFilter:(BOOL) filter;
+
+- (void)prepareFeaturesWithGeoPackage:(GPKGGeoPackage *) geoPackage andDatabase:(GPKGSDatabase *) database andUpdateId:(int) updateId andFeatureUpdateId:(int) featureUpdateId andZoom:(int) zoom andMaxFeatures:(int) maxFeatures andMapViewBoundingBox:(GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance:(double) toleranceDistance andFilter:(BOOL) filter;
 
 -(void) addMapPointShapeWithFeatureId: (int) featureId andDatabase: (NSString *) database andTableName: (NSString *) tableName andMapShape: (GPKGMapShape *) shape;
 

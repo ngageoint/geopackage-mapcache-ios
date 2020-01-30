@@ -10,14 +10,15 @@
 #import "MCTitleCell.h"
 #import "MCSectionTitleCell.h"
 #import "MCSegmentedControlCell.h"
-#import "MCDesctiptionCell.h"
+#import "MCDescriptionCell.h"
 #import "MCFieldWithTitleCell.h"
 #import "MCSwitchCell.h"
 #import "MCButtonCell.h"
 #import "GPKGSProperties.h"
 #import <MapKit/MapKit.h>
 
-@protocol MCSettingsViewDelegate <NSObject>
+/* Settings that change the state of the map, or the controls that are shown are handled here */
+@protocol MCMapSettingsDelegate <NSObject>
 - (void)setMapType:(NSString *) mapType;
 - (void)setMaxFeatures:(int) maxFeatures;
 - (void)toggleZoomIndicator;
@@ -25,12 +26,14 @@
 @end
 
 
-@protocol MCNoticeAndAttributeDelegate <NSObject>
+/* Details about the app, tile servers, and other details that do not change the map state. */
+@protocol MCSettingsDelegate <NSObject>
 - (void)showNoticeAndAttributeView;
+- (void)showTileURLManager;
 @end
 
 
 @interface MCSettingsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCSegmentedControlCellDelegate, GPKGSButtonCellDelegate, MCSwitchCellDelegate>
-@property (nonatomic, strong) id<MCSettingsViewDelegate> settingsDelegate;
-@property (nonatomic, strong) id<MCNoticeAndAttributeDelegate>noticeAndAttributeDelegate;
+@property (nonatomic, strong) id<MCMapSettingsDelegate> mapSettingsDelegate;
+@property (nonatomic, strong) id<MCSettingsDelegate> settingsDelegate;
 @end

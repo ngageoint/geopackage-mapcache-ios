@@ -33,6 +33,7 @@
 
 - (instancetype)initWithTileHelperDelegate: (id<MCTileHelperDelegate>) delegate;
 - (void)prepareTiles;
+- (void) prepareTilesForGeoPackage: (GPKGGeoPackage *) geoPackage andDatabase:(GPKGSDatabase *) database;
 - (MKTileOverlay *)createOverlayForTiles: (GPKGSTileTable *) tiles fromGeoPacakge:(GPKGGeoPackage *) geoPackage;
 - (GPKGBoundingBox *)tilesBoundingBox;
 - (GPKGBoundingBox *)transformBoundingBoxToWgs84: (GPKGBoundingBox *)boundingBox withSrs: (GPKGSpatialReferenceSystem *)srs;

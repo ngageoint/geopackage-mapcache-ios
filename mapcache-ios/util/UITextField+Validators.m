@@ -11,15 +11,32 @@
 @implementation UITextField (Validators)
 
 - (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock {
+    resultBlock(YES);
+    
     NSString *urlText = textField.text;
-    urlText = [urlText stringByReplacingOccurrencesOfString:@"{x}" withString:@"0"];
-    urlText = [urlText stringByReplacingOccurrencesOfString:@"{y}" withString:@"0"];
-    urlText = [urlText stringByReplacingOccurrencesOfString:@"{z}" withString:@"0"];
+    BOOL isXYZ = NO;
+    BOOL isWMS = NO;
+    NSURL *url;
     
-    NSURL *url = [NSURL URLWithString:urlText];
+    if ([urlText rangeOfString:@"{x}"].length > 0) {
+        urlText = [urlText stringByReplacingOccurrencesOfString:@"{x}" withString:@"0"];
+        urlText = [urlText stringByReplacingOccurrencesOfString:@"{y}" withString:@"0"];
+        urlText = [urlText stringByReplacingOccurrencesOfString:@"{z}" withString:@"0"];
+        url = [NSURL URLWithString:urlText];
+        isXYZ = YES;
+    } else if ([urlText rangeOfString:@"{minLon}"].length > 0) {
+        urlText = [urlText stringByReplacingOccurrencesOfString:@"{minLon}" withString:@"0"];
+        urlText = [urlText stringByReplacingOccurrencesOfString:@"{minLat}" withString:@"0"];
+        urlText = [urlText stringByReplacingOccurrencesOfString:@"{maxLon}" withString:@"1"];
+        urlText = [urlText stringByReplacingOccurrencesOfString:@"{maxLat}" withString:@"1"];
+        url = [NSURL URLWithString:urlText];
+        isWMS = YES;
+    }
     
+
     if (url) {
-        NSURLSessionDownloadTask *downlaodTask = [[NSURLSession sharedSession] downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (isXYZ) {
+            NSURLSessionDownloadTask *downlaodTask = [[NSURLSession sharedSession] downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
             UIImage *downloadedTile = [UIImage imageWithData:[NSData dataWithContentsOfURL: location]];
             
             if (error || downloadedTile == nil) {
@@ -27,9 +44,13 @@
             } else {
                 resultBlock(YES);
             }
+            }];
+            [downlaodTask resume];
+        } else if (isWMS) {
             
-        }];
-        [downlaodTask resume];
+        } else {
+            resultBlock(NO);
+        }
     } else {
         resultBlock(NO);
     }

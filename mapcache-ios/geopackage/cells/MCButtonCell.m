@@ -33,10 +33,9 @@
 
 
 - (void) useSecondaryColors {
-    UIImage *background = [UIImage imageNamed:@"secondaryButton"];
-    [self.button setBackgroundImage:background forState:UIControlStateNormal];
+    [self.button setBackgroundColor:[UIColor clearColor]];
     self.button.clipsToBounds = YES;
-    [self.button setTitleColor: [UIColor colorWithRed:3/255.0 green:77/255.0 blue:127/255.0 alpha:1.0] forState:UIControlStateNormal];
+    [self.button setTitleColor: [UIColor colorWithRed:15.3/255.0 green:187.5/255.0 blue:186.15/255.0 alpha:1.0] forState:UIControlStateNormal];
 }
 
 

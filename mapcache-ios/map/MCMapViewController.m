@@ -261,7 +261,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
-#pragma mark - MCSettingsDelegate
+#pragma mark - MCMapSettingsDelegate
 - (void)setMapType:(NSString *)mapType {
     NSLog(@"In MCMapViewController handing setting map change");
     
@@ -452,7 +452,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
     int updateId = ++self.featureUpdateCountId;
-    int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];;
+    int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];
+    [self.featureHelper resetFeatureCount];
     int previousZoom = self.currentZoom;
     int zoom = (int)[GPKGMapUtils currentZoomWithMapView:mapView];
     self.currentZoom = zoom;
@@ -477,9 +478,22 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
-        if (self.active != nil) {
-            [self.featureHelper prepareFeaturesWithUpdateId: updateId andFeatureUpdateId: featureUpdateId andZoom: zoom andMaxFeatures: maxFeatures andMapViewBoundingBox: mapViewBoundingBox andToleranceDistance: toleranceDistance andFilter: YES];
-        }
+         if (self.active != nil) {
+                    for (GPKGSDatabase *database in [self.active getDatabases]) {
+                        GPKGGeoPackage *geoPacakge;
+                        @try {
+                            geoPacakge = [self.manager open:database.name];
+                            [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
+                            
+                            [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)zoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter: YES];
+                            
+                        } @catch (NSException *exception) {
+                           NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
+                        } @finally {
+                            [geoPacakge close];
+                        }
+                    }
+                }
     });
 }
 
@@ -493,7 +507,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 // Lots of mapview stuff in here, most of this can stay
 -(int) updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter{
     int updateId = [self.featureHelper getNewUpdateId];
-    int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];;
+    int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];
+    [self.featureHelper resetFeatureCount];
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
     for(GPKGGeoPackage * geoPackage in [self.geoPackages allValues]){
@@ -513,7 +528,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
     self.featureOverlayTiles = false;
-    //[self.featureOverlayQueries removeAllObjects];
     [self.featureHelper.featureShapes clear];
     int maxFeatures = [self getMaxFeatures];
     
@@ -523,9 +537,21 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
          if (self.active != nil) {
-              [self.tileHelper prepareTiles];
-              [self.featureHelper prepareFeaturesWithUpdateId:(int) updateId andFeatureUpdateId:(int) featureUpdateId andZoom:(int) zoom andMaxFeatures:(int) maxFeatures andMapViewBoundingBox:(GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance:(double) toleranceDistance andFilter:(BOOL) filter];
-        }
+             for (GPKGSDatabase *database in [self.active getDatabases]) {
+                 GPKGGeoPackage *geoPacakge;
+                 @try {
+                     geoPacakge = [self.manager open:database.name];
+                     [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
+                     
+                     [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)zoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter:(BOOL) filter];
+                     
+                 } @catch (NSException *exception) {
+                    NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
+                 } @finally {
+                     [geoPacakge close];
+                 }
+             }
+         }
     });
 }
 

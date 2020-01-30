@@ -57,6 +57,18 @@
 }
 
 
+- (void) prepareTilesForGeoPackage: (GPKGGeoPackage *) geoPackage andDatabase:(GPKGSDatabase *) database {
+    for (GPKGSTileTable *tiles in [database getTiles]) {
+        @try {
+            MKTileOverlay *tileOverlay = [self createOverlayForTiles:tiles fromGeoPacakge:geoPackage];
+            [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay];
+        } @catch (NSException *e) {
+            NSLog(@"%@", [e description]);
+        }
+    }
+}
+
+
 // MCTileHelper version of -(void) displayTiles: (GPKGSTileTable *)
 -(MKTileOverlay *) createOverlayForTiles: (GPKGSTileTable *) tiles fromGeoPacakge:(GPKGGeoPackage *) geoPackage {
     GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName:tiles.name];

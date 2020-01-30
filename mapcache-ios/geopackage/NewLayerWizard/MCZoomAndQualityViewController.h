@@ -12,7 +12,7 @@
 #import "MCSegmentedControlCell.h"
 #import "MCButtonCell.h"
 #import "MCZoomCell.h"
-#import "MCDesctiptionCell.h"
+#import "MCDescriptionCell.h"
 #import "NGADrawerViewController.h"
 
 
