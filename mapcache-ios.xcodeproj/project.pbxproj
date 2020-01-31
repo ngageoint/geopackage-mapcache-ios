@@ -135,6 +135,7 @@
 		E3CF687723DA667E0005A6EF /* MCTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CF687623DA667E0005A6EF /* MCTextViewCell.m */; };
 		E3CF687A23DA6AC40005A6EF /* MCNewTileServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CF687923DA6AC40005A6EF /* MCNewTileServerViewController.m */; };
 		E3DE0DEA23E2420D00CB27AF /* UITextView+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DE0DE923E2420D00CB27AF /* UITextView+Validators.m */; };
+		E3DE0DED23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DE0DEC23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m */; };
 		E3FB856B2134955F002F012E /* NGADrawerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB85682134955D002F012E /* NGADrawerCoordinator.m */; };
 		E3FB856C2134955F002F012E /* NGADrawerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB85692134955D002F012E /* NGADrawerViewController.m */; };
 		E3FB856F21349B5E002F012E /* MCMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB856E21349B5E002F012E /* MCMapViewController.m */; };
@@ -393,6 +394,8 @@
 		E3CF687923DA6AC40005A6EF /* MCNewTileServerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCNewTileServerViewController.m; sourceTree = "<group>"; };
 		E3DE0DE823E2420D00CB27AF /* UITextView+Validators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITextView+Validators.h"; sourceTree = "<group>"; };
 		E3DE0DE923E2420D00CB27AF /* UITextView+Validators.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITextView+Validators.m"; sourceTree = "<group>"; };
+		E3DE0DEB23E3781800CB27AF /* MCCreateGeoPacakgeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCCreateGeoPacakgeViewController.h; sourceTree = "<group>"; };
+		E3DE0DEC23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCCreateGeoPacakgeViewController.m; sourceTree = "<group>"; };
 		E3FB85672134955C002F012E /* NGADrawerCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NGADrawerCoordinator.h; sourceTree = "<group>"; };
 		E3FB85682134955D002F012E /* NGADrawerCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NGADrawerCoordinator.m; sourceTree = "<group>"; };
 		E3FB85692134955D002F012E /* NGADrawerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NGADrawerViewController.m; sourceTree = "<group>"; };
@@ -761,6 +764,8 @@
 				E331C8EC20FE7645006EFED1 /* MCLayerCoordinator.m */,
 				E3FB857C2134C533002F012E /* MCGeoPackageListCoordinator.h */,
 				E3FB857D2134C533002F012E /* MCGeoPackageListCoordinator.m */,
+				E3DE0DEB23E3781800CB27AF /* MCCreateGeoPacakgeViewController.h */,
+				E3DE0DEC23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m */,
 			);
 			path = geopackage;
 			sourceTree = "<group>";
@@ -1074,6 +1079,7 @@
 				E3CF687223D901750005A6EF /* MCTileServerURLManagerViewController.m in Sources */,
 				E3CF687A23DA6AC40005A6EF /* MCNewTileServerViewController.m in Sources */,
 				E346590F202BB20B001E6E81 /* MCZoomAndQualityViewController.m in Sources */,
+				E3DE0DED23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m in Sources */,
 				043A459E1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.m in Sources */,
 				E34CDC84217A38D0003CABA8 /* MCFeatureHelper.m in Sources */,
 				E3470CC72020E67E0098D783 /* MCColorUtil.m in Sources */,

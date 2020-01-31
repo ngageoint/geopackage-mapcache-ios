@@ -95,7 +95,9 @@
 
 
 - (IBAction)createGeoPackage:(id)sender {
-    UIAlertController *newGeoPackageAlert = [UIAlertController alertControllerWithTitle:@"New GeoPackage" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    [self.geopackageListViewDelegate showNewGeoPackageView];
+    
+    /*UIAlertController *newGeoPackageAlert = [UIAlertController alertControllerWithTitle:@"New GeoPackage" message:@"" preferredStyle:UIAlertControllerStyleAlert];
     [newGeoPackageAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.text = @"";
     }];
@@ -114,7 +116,7 @@
     [newGeoPackageAlert addAction:confirmCreate];
     [newGeoPackageAlert addAction:cancel];
     
-    [self presentViewController:newGeoPackageAlert animated:YES completion:nil];
+    [self presentViewController:newGeoPackageAlert animated:YES completion:nil];*/
 }
 
 

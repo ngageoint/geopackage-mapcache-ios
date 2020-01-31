@@ -169,15 +169,20 @@
         }];
     } else {
         self.layerName = textField.text;
-        if ([_layerNameCell.field.text isEqualToString:@""] || [_urlCell.field.text isEqualToString:@""]) {
+        BOOL isLayerNameAvailable = [self.delegate isLayerNameAvailable: self.layerName];
+        
+        if ([_layerNameCell.field.text isEqualToString:@""] || !isLayerNameAvailable) {
+            [self.layerNameCell useErrorAppearance];
             [_buttonCell disableButton];
         } else {
+            [self.layerNameCell useNormalAppearance];
             [_buttonCell enableButton];
         }
     }
     
     [textField resignFirstResponder];
 }
+
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];

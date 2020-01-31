@@ -279,6 +279,17 @@
 }
 
 
+- (BOOL) isLayerNameAvailable: (NSString *) layerName {
+    for (GPKGSTable *table in [_database getTables]) {
+        if ([layerName isEqualToString:table.name]){
+            return NO;
+        }
+    }
+
+    return YES;
+}
+
+
 #pragma mark MCBoundingBoxGuideDelegate methods
 // TODO clean up these delegates, some duplicates in switching to the drawers from the navigation controller.
 - (void) boundingBoxCompletionHandler:(CGRect) boundingBox {

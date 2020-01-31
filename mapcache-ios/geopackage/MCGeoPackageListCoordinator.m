@@ -133,11 +133,11 @@
 }
 
 
-- (void) createGeoPackage:(NSString *) geoPackageName {
-    NSLog(@"Creating GeoPackage %@", geoPackageName);
-    [_manager create:geoPackageName];
-    [self update];
-    [_geoPackageListView refreshWithGeoPackages:_databases];
+- (void) showNewGeoPackageView {
+    MCCreateGeoPacakgeViewController *createGeoPackageView = [[MCCreateGeoPacakgeViewController alloc] initAsFullView:YES];
+    createGeoPackageView.drawerViewDelegate = self.drawerViewDelegate;
+    createGeoPackageView.createGeoPackageDelegate = self;
+    [createGeoPackageView.drawerViewDelegate pushDrawer:createGeoPackageView];
 }
 
 
@@ -173,6 +173,27 @@
     [self.mcMapDelegate updateMapLayers];
 }
 
+
+#pragma mark - MCCreateGeoPackageDelegate methods
+-(BOOL) isValidGeoPackageName:(NSString *)name {
+    NSArray *databaseNames = [self.manager databases];
+    
+    for (NSString * databaseName in databaseNames) {
+        if ([name isEqualToString:databaseName]) {
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
+
+- (void) createGeoPackage:(NSString *) geoPackageName {
+    NSLog(@"Creating GeoPackage %@", geoPackageName);
+    [_manager create:geoPackageName];
+    [self update];
+    [_geoPackageListView refreshWithGeoPackages:_databases];
+}
 
 
 #pragma mark - DownloadCoordinatorDelegate

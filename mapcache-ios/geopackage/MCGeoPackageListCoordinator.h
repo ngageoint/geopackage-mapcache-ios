@@ -20,11 +20,13 @@
 #import "MCMapCoordinator.h"
 #import "GPKGSConstants.h"
 #import "GPKGGeoPackageCache.h"
+#import "MCCreateGeoPacakgeViewController.h"
+
 
 @protocol MCMapDelegate;
 @protocol MCGeoPackageCoordinatorDelegate;
 
-@interface MCGeoPackageListCoordinator : NSObject <MCGeoPackageCoordinatorDelegate, MCGeoPacakageListViewDelegate, GPKGSDownloadCoordinatorDelegate>
+@interface MCGeoPackageListCoordinator : NSObject <MCGeoPackageCoordinatorDelegate, MCGeoPacakageListViewDelegate, GPKGSDownloadCoordinatorDelegate, MCCreateGeoPackageDelegate>
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (nonatomic, strong) id<MCMapDelegate> mcMapDelegate;
 - (void)start;

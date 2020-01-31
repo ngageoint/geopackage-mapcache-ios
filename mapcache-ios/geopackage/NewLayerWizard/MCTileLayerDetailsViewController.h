@@ -11,10 +11,8 @@
 #import "MCSectionTitleCell.h"
 #import "MCFieldWithTitleCell.h"
 #import "MCDescriptionCell.h"
-#import "MCSectionTitleCell.h"
 #import "MCButtonCell.h"
 #import "MCSegmentedControlCell.h"
-#import "MCButtonCell.h"
 #import "MCColorUtil.h"
 #import "MCTitleCell.h"
 #import "NGADrawerViewController.h"
@@ -24,6 +22,7 @@
 - (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode;
 - (void) showURLHelp;
 - (void) showTileServerList;
+- (BOOL) isLayerNameAvailable: (NSString *) layerName;
 @end
 
 @interface MCTileLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate>
