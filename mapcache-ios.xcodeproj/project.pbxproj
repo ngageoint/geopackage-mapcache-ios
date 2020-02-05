@@ -136,6 +136,7 @@
 		E3CF687A23DA6AC40005A6EF /* MCNewTileServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CF687923DA6AC40005A6EF /* MCNewTileServerViewController.m */; };
 		E3DE0DEA23E2420D00CB27AF /* UITextView+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DE0DE923E2420D00CB27AF /* UITextView+Validators.m */; };
 		E3DE0DED23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DE0DEC23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m */; };
+		E3E9ED6923EA407E004C4530 /* mapcache_iosUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E9ED6823EA407E004C4530 /* mapcache_iosUITests.m */; };
 		E3FB856B2134955F002F012E /* NGADrawerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB85682134955D002F012E /* NGADrawerCoordinator.m */; };
 		E3FB856C2134955F002F012E /* NGADrawerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB85692134955D002F012E /* NGADrawerViewController.m */; };
 		E3FB856F21349B5E002F012E /* MCMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB856E21349B5E002F012E /* MCMapViewController.m */; };
@@ -150,6 +151,13 @@
 
 /* Begin PBXContainerItemProxy section */
 		0401368C1AF94FB200C92AFC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 040136671AF94FB200C92AFC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0401366E1AF94FB200C92AFC;
+			remoteInfo = "mapcache-ios";
+		};
+		E3E9ED6B23EA407E004C4530 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 040136671AF94FB200C92AFC /* Project object */;
 			proxyType = 1;
@@ -396,6 +404,9 @@
 		E3DE0DE923E2420D00CB27AF /* UITextView+Validators.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITextView+Validators.m"; sourceTree = "<group>"; };
 		E3DE0DEB23E3781800CB27AF /* MCCreateGeoPacakgeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCCreateGeoPacakgeViewController.h; sourceTree = "<group>"; };
 		E3DE0DEC23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCCreateGeoPacakgeViewController.m; sourceTree = "<group>"; };
+		E3E9ED6623EA407E004C4530 /* mapcache-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mapcache-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E3E9ED6823EA407E004C4530 /* mapcache_iosUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = mapcache_iosUITests.m; sourceTree = "<group>"; };
+		E3E9ED6A23EA407E004C4530 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3FB85672134955C002F012E /* NGADrawerCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NGADrawerCoordinator.h; sourceTree = "<group>"; };
 		E3FB85682134955D002F012E /* NGADrawerCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NGADrawerCoordinator.m; sourceTree = "<group>"; };
 		E3FB85692134955D002F012E /* NGADrawerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NGADrawerViewController.m; sourceTree = "<group>"; };
@@ -432,6 +443,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E3E9ED6323EA407E004C4530 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -440,6 +458,7 @@
 			children = (
 				040136711AF94FB200C92AFC /* mapcache-ios */,
 				0401368E1AF94FB200C92AFC /* mapcache-iosTests */,
+				E3E9ED6723EA407E004C4530 /* mapcache-iosUITests */,
 				040136701AF94FB200C92AFC /* Products */,
 				C5D6DE3118DC6CC3BD7E852D /* Pods */,
 				F92DE52400ADCEC8CC3BBB88 /* Frameworks */,
@@ -451,6 +470,7 @@
 			children = (
 				0401366F1AF94FB200C92AFC /* mapcache-ios.app */,
 				0401368B1AF94FB200C92AFC /* mapcache-iosTests.xctest */,
+				E3E9ED6623EA407E004C4530 /* mapcache-iosUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -868,6 +888,15 @@
 			path = settings;
 			sourceTree = "<group>";
 		};
+		E3E9ED6723EA407E004C4530 /* mapcache-iosUITests */ = {
+			isa = PBXGroup;
+			children = (
+				E3E9ED6823EA407E004C4530 /* mapcache_iosUITests.m */,
+				E3E9ED6A23EA407E004C4530 /* Info.plist */,
+			);
+			path = "mapcache-iosUITests";
+			sourceTree = "<group>";
+		};
 		E3FB8566213490B0002F012E /* drawer */ = {
 			isa = PBXGroup;
 			children = (
@@ -929,6 +958,24 @@
 			productReference = 0401368B1AF94FB200C92AFC /* mapcache-iosTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		E3E9ED6523EA407E004C4530 /* mapcache-iosUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E3E9ED6D23EA407E004C4530 /* Build configuration list for PBXNativeTarget "mapcache-iosUITests" */;
+			buildPhases = (
+				E3E9ED6223EA407E004C4530 /* Sources */,
+				E3E9ED6323EA407E004C4530 /* Frameworks */,
+				E3E9ED6423EA407E004C4530 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E3E9ED6C23EA407E004C4530 /* PBXTargetDependency */,
+			);
+			name = "mapcache-iosUITests";
+			productName = "mapcache-iosUITests";
+			productReference = E3E9ED6623EA407E004C4530 /* mapcache-iosUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -944,6 +991,12 @@
 					};
 					0401368A1AF94FB200C92AFC = {
 						CreatedOnToolsVersion = 6.3.1;
+						TestTargetID = 0401366E1AF94FB200C92AFC;
+					};
+					E3E9ED6523EA407E004C4530 = {
+						CreatedOnToolsVersion = 11.3;
+						DevelopmentTeam = ZL8G5D9G2H;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 0401366E1AF94FB200C92AFC;
 					};
 				};
@@ -964,6 +1017,7 @@
 			targets = (
 				0401366E1AF94FB200C92AFC /* mapcache-ios */,
 				0401368A1AF94FB200C92AFC /* mapcache-iosTests */,
+				E3E9ED6523EA407E004C4530 /* mapcache-iosUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1008,6 +1062,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		040136891AF94FB200C92AFC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E3E9ED6423EA407E004C4530 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1178,6 +1239,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E3E9ED6223EA407E004C4530 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E3E9ED6923EA407E004C4530 /* mapcache_iosUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1185,6 +1254,11 @@
 			isa = PBXTargetDependency;
 			target = 0401366E1AF94FB200C92AFC /* mapcache-ios */;
 			targetProxy = 0401368C1AF94FB200C92AFC /* PBXContainerItemProxy */;
+		};
+		E3E9ED6C23EA407E004C4530 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0401366E1AF94FB200C92AFC /* mapcache-ios */;
+			targetProxy = E3E9ED6B23EA407E004C4530 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1320,11 +1394,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.mapcache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1339,11 +1414,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.mapcache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1387,6 +1463,54 @@
 			};
 			name = Release;
 		};
+		E3E9ED6E23EA407E004C4530 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = ZL8G5D9G2H;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "mapcache-iosUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "mil.nga.mapcache-iosUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "mapcache-ios";
+			};
+			name = Debug;
+		};
+		E3E9ED6F23EA407E004C4530 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ZL8G5D9G2H;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "mapcache-iosUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "mil.nga.mapcache-iosUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "mapcache-ios";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1413,6 +1537,15 @@
 			buildConfigurations = (
 				040136991AF94FB200C92AFC /* Debug */,
 				0401369A1AF94FB200C92AFC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E3E9ED6D23EA407E004C4530 /* Build configuration list for PBXNativeTarget "mapcache-iosUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E3E9ED6E23EA407E004C4530 /* Debug */,
+				E3E9ED6F23EA407E004C4530 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -32,7 +32,13 @@
 
 - (void) setTextViewContent:(NSString *) text {
     [self.textView setText:text];
-    self.textView.textColor = [UIColor blackColor];
+    
+    // iOS 13 dark mode support
+    if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
+        self.textView.textColor = UIColor.labelColor;
+    } else {
+        self.textView.textColor = [UIColor blackColor];
+    }
 }
 
 
@@ -51,7 +57,13 @@
 - (void)textViewDidBeginEditing:(UITextView *)textView {
     if ([self.textView.text isEqualToString:self.placeholder]) {
         self.textView.text = @"";
-        self.textView.textColor = [UIColor blackColor];
+        
+        // iOS 13 dark mode support
+        if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
+            self.textView.textColor = UIColor.labelColor;
+        } else {
+            self.textView.textColor = [UIColor blackColor];
+        }
     }
     
     [self.textView becomeFirstResponder];

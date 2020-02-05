@@ -113,6 +113,12 @@
         }else{
             NSLog(@"Error importing file %@", fileUrl);
             // TODO: handle this with an alert instead
+            
+//            if ([fileUrl containsString:@"com~apple~CloudDocs"]) {
+//                NSURL *url = [[NSURL alloc] initWithString:fileUrl];
+//                
+//                UIDocumentPickerViewController *docPicker = [[UIDocumentPickerViewController alloc] initWithURL:url inMode:UIDocumentPickerModeMoveToService];
+//            }
         }
     }
 
