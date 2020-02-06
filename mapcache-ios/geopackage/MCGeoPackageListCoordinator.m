@@ -178,6 +178,10 @@
 -(BOOL) isValidGeoPackageName:(NSString *)name {
     NSArray *databaseNames = [self.manager databases];
     
+    if ([name isEqualToString: @""]) {
+        return NO;
+    }
+    
     for (NSString * databaseName in databaseNames) {
         if ([name isEqualToString:databaseName]) {
             return NO;

@@ -105,7 +105,7 @@
         [_buttonCell enableButton];
     } else {
         [_buttonCell disableButton];
-        [_helpTextCell setDescription:@"Make sure your name is not already in use."];
+        [_helpTextCell setDescription:@"Make sure your name is not blank or already in use."];
         [_nameCell useErrorAppearance];
     }
 }
