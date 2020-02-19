@@ -81,7 +81,7 @@ static NSDictionary * properties;
 
 +(void) loadProperties{
     if(properties == nil){
-        NSString * propertiesPath = [GPKGIOUtils getPropertyListPathWithName:GPKGS_MAPCACHE_RESOURCES_PROPERTIES];
+        NSString * propertiesPath = [GPKGIOUtils propertyListPathWithName:GPKGS_MAPCACHE_RESOURCES_PROPERTIES];
         properties = [NSDictionary dictionaryWithContentsOfFile:propertiesPath];
     }
 }

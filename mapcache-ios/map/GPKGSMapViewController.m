@@ -140,7 +140,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.settings = [NSUserDefaults standardUserDefaults];
     self.mapView.delegate = self;
     self.mapView.showsUserLocation = YES;
-    self.manager = [GPKGGeoPackageFactory getManager];
+    self.manager = [GPKGGeoPackageFactory manager];
     self.active = [GPKGSDatabases getInstance];
     self.geoPackages = [[GPKGGeoPackageCache alloc] initWithManager:self.manager];
     self.featureDaos = [[NSMutableDictionary alloc] init];
@@ -174,37 +174,37 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.boundingBoxStartCorner = kCLLocationCoordinate2DInvalid;
     self.boundingBoxEndCorner = kCLLocationCoordinate2DInvalid;
     
-    self.boundingBoxColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_COLOR]];
+    self.boundingBoxColor = [GPKGUtils color:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_COLOR]];
     self.boundingBoxLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_LINE_WIDTH] doubleValue];
     if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL]){
-        self.boundingBoxFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
+        self.boundingBoxFillColor = [GPKGUtils color:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
     }
     
-    self.defaultPolylineColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_COLOR]];
+    self.defaultPolylineColor = [GPKGUtils color:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_COLOR]];
     self.defaultPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_LINE_WIDTH] doubleValue];
 
-    self.defaultPolygonColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_COLOR]];
+    self.defaultPolygonColor = [GPKGUtils color:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_COLOR]];
     self.defaultPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYGON_LINE_WIDTH] doubleValue];
     if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL]){
-        self.defaultPolygonFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL_COLOR]];
+        self.defaultPolygonFillColor = [GPKGUtils color:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL_COLOR]];
     }
     
-    self.editPolylineColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYLINE_COLOR]];
+    self.editPolylineColor = [GPKGUtils color:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYLINE_COLOR]];
     self.editPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYLINE_LINE_WIDTH] doubleValue];
     
-    self.editPolygonColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_COLOR]];
+    self.editPolygonColor = [GPKGUtils color:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_COLOR]];
     self.editPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYGON_LINE_WIDTH] doubleValue];
     if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL]){
-        self.editPolygonFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL_COLOR]];
+        self.editPolygonFillColor = [GPKGUtils color:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL_COLOR]];
     }
     
-    self.drawPolylineColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYLINE_COLOR]];
+    self.drawPolylineColor = [GPKGUtils color:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYLINE_COLOR]];
     self.drawPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYLINE_LINE_WIDTH] doubleValue];
     
-    self.drawPolygonColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_COLOR]];
+    self.drawPolygonColor = [GPKGUtils color:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_COLOR]];
     self.drawPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYGON_LINE_WIDTH] doubleValue];
     if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL]){
-        self.drawPolygonFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
+        self.drawPolygonFillColor = [GPKGUtils color:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
     }
     
     self.locationDecimalFormatter = [[NSNumberFormatter alloc] init];
@@ -422,7 +422,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void) editFeatureShapeClickWithMapPoint: (GPKGMapPoint *) mapPoint{
     
-    NSObject<GPKGShapePoints> * shapePoints = [self.editFeatureShape getShapePointsForPoint:mapPoint];
+    NSObject<GPKGShapePoints> * shapePoints = [self.editFeatureShape shapePointsForPoint:mapPoint];
     
     if(shapePoints != nil){
         
@@ -462,7 +462,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     if(buttonIndex >= 0){
         
         GPKGMapPoint *mapPoint = objc_getAssociatedObject(alertView, &MapConstantKey);
-        NSObject<GPKGShapePoints> * shapePoints = [self.editFeatureShape getShapePointsForPoint:mapPoint];
+        NSObject<GPKGShapePoints> * shapePoints = [self.editFeatureShape shapePointsForPoint:mapPoint];
         
         switch(buttonIndex){
             case 0:
@@ -549,9 +549,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         GPKGGeoPackage * geoPackage = [self.manager open:self.editFeaturesDatabase];
         @try {
 
-            GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.editFeaturesTable];
+            GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:self.editFeaturesTable];
         
-            NSNumber * mapPointId = [mapPoint getIdAsNumber];
+            NSNumber * mapPointId = [mapPoint idAsNumber];
             NSNumber * featureId = [self.editFeatureIds objectForKey:mapPointId];
             if(featureId != nil){
                 GPKGFeatureRow * featureRow = (GPKGFeatureRow *)[featureDao queryForIdObject:featureId];
@@ -586,17 +586,17 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(void) expandBoundsWithGeoPackage: (GPKGGeoPackage *) geoPackage andFeatureDao: (GPKGFeatureDao *) featureDao andGeometry: (SFGeometry *) geometry{
     if(geometry !=  nil){
         @try {
-            GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage getGeometryColumnsDao];
-            GPKGContents * contents = [geometryColumnsDao getContents:featureDao.geometryColumns];
-            GPKGBoundingBox *boundingBox = [contents getBoundingBox];
+            GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage geometryColumnsDao];
+            GPKGContents * contents = [geometryColumnsDao contents:featureDao.geometryColumns];
+            GPKGBoundingBox *boundingBox = [contents boundingBox];
             if(boundingBox != nil){
                 
                 SFGeometryEnvelope *envelope = [SFGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
-                GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithGeometryEnvelope:envelope];
+                GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithEnvelope:envelope];
                 GPKGBoundingBox *unionBoundingBox = [boundingBox union:geometryBoundingBox];
                 
                 [contents setBoundingBox:unionBoundingBox];
-                GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
+                GPKGContentsDao * contentsDao = [geoPackage contentsDao];
                 [contentsDao update:contents];
             }
             
@@ -609,10 +609,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void) updateLastChangeWithGeoPackage: (GPKGGeoPackage *) geoPackage andFeatureDao: (GPKGFeatureDao *) featureDao{
     @try {
-        GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage getGeometryColumnsDao];
-        GPKGContents * contents = [geometryColumnsDao getContents:featureDao.geometryColumns];
+        GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage geometryColumnsDao];
+        GPKGContents * contents = [geometryColumnsDao contents:featureDao.geometryColumns];
         [contents setLastChange:[NSDate date]];
-        GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
+        GPKGContentsDao * contentsDao = [geoPackage contentsDao];
         [contentsDao update:contents];
     }
     @catch (NSException *e) {
@@ -720,7 +720,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 
                 for(GPKGSTable *features in [database getFeatures]){
                     
-                    GPKGGeoPackage *geoPackage = [self.geoPackages get:database.name];
+                    GPKGGeoPackage *geoPackage = [self.geoPackages geoPackageWithName:database.name];
                     NSDictionary *databaseFeatureDaos = [self.featureDaos objectForKey:database.name];
                     
                     if(geoPackage != nil && databaseFeatureDaos != nil){
@@ -762,9 +762,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                                     @try {
                                         while([results moveToNext]){
                                             @try {
-                                                GPKGFeatureRow * row = [featureDao getFeatureRow:results];
+                                                GPKGFeatureRow * row = [featureDao featureRow:results];
                                                 
-                                                GPKGGeometryData *geometryData = [row getGeometry];
+                                                GPKGGeometryData *geometryData = [row geometry];
                                                 if(geometryData != nil && !geometryData.empty){
                                                     
                                                     SFGeometry *geometry = geometryData.geometry;
@@ -776,7 +776,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                                                             envelope = [SFGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
                                                         }
                                                         if (envelope != nil) {
-                                                            GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithGeometryEnvelope:envelope];
+                                                            GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithEnvelope:envelope];
                                                             
                                                             if([GPKGTileBoundingBoxUtils overlapWithBoundingBox:transformedBoundingBox andBoundingBox:geometryBoundingBox withMaxLongitude:filterMaxLongitude] != nil){
                                                                 [listResults addRow:row];
@@ -1210,19 +1210,19 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 {
                     self.editFeatureMapPoint = self.tempEditFeatureMapPoint;
                     self.tempEditFeatureMapPoint = nil;
-                    NSNumber * featureId = [self.editFeatureIds objectForKey:[self.editFeatureMapPoint getIdAsNumber]];
+                    NSNumber * featureId = [self.editFeatureIds objectForKey:[self.editFeatureMapPoint idAsNumber]];
                     GPKGGeoPackage * geoPackage = [self.manager open:self.editFeaturesDatabase];
                     @try {
-                        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.editFeaturesTable];
+                        GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:self.editFeaturesTable];
                         GPKGFeatureRow * featureRow = (GPKGFeatureRow *)[featureDao queryForIdObject:featureId];
-                        SFGeometry * geometry = [featureRow getGeometry].geometry;
+                        SFGeometry * geometry = [featureRow geometry].geometry;
                         GPKGMapShapeConverter * converter = [[GPKGMapShapeConverter alloc] initWithProjection:featureDao.projection];
                         GPKGMapShape * shape = [converter toShapeWithGeometry:geometry];
                         
                         [self.mapView removeAnnotation:self.editFeatureMapPoint];
-                        GPKGMapShape * featureObject = [self.editFeatureObjects objectForKey:[self.editFeatureMapPoint getIdAsNumber]];
+                        GPKGMapShape * featureObject = [self.editFeatureObjects objectForKey:[self.editFeatureMapPoint idAsNumber]];
                         if(featureObject != nil){
-                            [self.editFeatureObjects removeObjectForKey:[self.editFeatureMapPoint getIdAsNumber]];
+                            [self.editFeatureObjects removeObjectForKey:[self.editFeatureMapPoint idAsNumber]];
                             [featureObject removeFromMapView:self.mapView];
                         }
                         
@@ -1243,12 +1243,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void) addEditableShapeBack{
     
-    NSNumber * featureId = [self.editFeatureIds objectForKey:[self.editFeatureMapPoint getIdAsNumber]];
+    NSNumber * featureId = [self.editFeatureIds objectForKey:[self.editFeatureMapPoint idAsNumber]];
     GPKGGeoPackage * geoPackage = [self.manager open:self.editFeaturesDatabase];
     @try {
-        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.editFeaturesTable];
+        GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:self.editFeaturesTable];
         GPKGFeatureRow * featureRow = (GPKGFeatureRow *) [featureDao queryForIdObject:featureId];
-        GPKGGeometryData * geomData = [featureRow getGeometry];
+        GPKGGeometryData * geomData = [featureRow geometry];
         if(geomData != nil){
             SFGeometry * geometry = geomData.geometry;
             if(geometry != nil){
@@ -1301,7 +1301,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGFeatureIndexManager *indexer = nil;
     enum GPKGSEditType tempEditFeatureType = self.editFeatureType;
     @try {
-        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.editFeaturesTable];
+        GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:self.editFeaturesTable];
         NSNumber * srsId = featureDao.geometryColumns.srsId;
         indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         NSArray<NSString *> *indexedTypes = [indexer indexedTypes];
@@ -1367,12 +1367,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             case GPKGS_ET_EDIT_FEATURE:
                 {
                     self.editFeatureType = GPKGS_ET_NONE;
-                    NSNumber * featureId = [self.editFeatureIds objectForKey:[self.editFeatureMapPoint getIdAsNumber]];
+                    NSNumber * featureId = [self.editFeatureIds objectForKey:[self.editFeatureMapPoint idAsNumber]];
                     
                     SFGeometry * geometry = [converter toGeometryFromMapShape:self.editFeatureShape.shape];
                     if(geometry != nil){
                         GPKGFeatureRow * featureRow = (GPKGFeatureRow *)[featureDao queryForIdObject:featureId];
-                        GPKGGeometryData * geomData = [featureRow getGeometry];
+                        GPKGGeometryData * geomData = [featureRow geometry];
                         [geomData setGeometry:geometry];
                         if(geomData.envelope != nil){
                             geomData.envelope = [SFGeometryEnvelopeBuilder buildEnvelopeWithGeometry:geometry];
@@ -1441,7 +1441,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 accept = true;
                 
                 NSArray * points = [self getLocationPoints:self.editPoints];
-                CLLocationCoordinate2D * locations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:points];
+                CLLocationCoordinate2D * locations = [GPKGMapShapeConverter locationCoordinatesFromLocations:points];
                 GPKGPolyline * tempPolyline = [GPKGPolyline polylineWithCoordinates:locations count:[points count]];
                 GPKGPolylineOptions *options = [self drawPolylineOptions];
                 [tempPolyline setOptions:options];
@@ -1472,7 +1472,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     [self.editPolygonHoleConfirmButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POLYGON_HOLE_CONFIRM_ACTIVE_IMAGE] forState:UIControlStateNormal];
                     
                     NSArray * points = [self getLocationPoints:self.editHolePoints];
-                    CLLocationCoordinate2D * locations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:points];
+                    CLLocationCoordinate2D * locations = [GPKGMapShapeConverter locationCoordinatesFromLocations:points];
                     editHolePolygon = [GPKGPolygon polygonWithCoordinates:locations count:[points count]];
                 }else{
                     [self.editPolygonHoleConfirmButton setImage:[UIImage imageNamed:GPKGS_MAP_BUTTON_EDIT_POLYGON_HOLE_CONFIRM_IMAGE] forState:UIControlStateNormal];
@@ -1487,10 +1487,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 accept = true;
                 
                 NSArray * points = [self getLocationPoints:self.editPoints];
-                CLLocationCoordinate2D * locations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:points];
+                CLLocationCoordinate2D * locations = [GPKGMapShapeConverter locationCoordinatesFromLocations:points];
                 NSMutableArray * polygonHoles = [[NSMutableArray alloc] initWithCapacity:[self.holePolygons count]];
                 for(NSArray * holePoints in self.holePolygons){
-                    CLLocationCoordinate2D * holeLocations = [GPKGMapShapeConverter getLocationCoordinatesFromLocations:holePoints];
+                    CLLocationCoordinate2D * holeLocations = [GPKGMapShapeConverter locationCoordinatesFromLocations:holePoints];
                     GPKGPolyline * polygonHole = [GPKGPolyline polylineWithCoordinates:holeLocations count:[holePoints count]];
                     [polygonHoles addObject:polygonHole];
                 }
@@ -1762,17 +1762,17 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             
             if(featureTableDaos.count > 0){
                 
-                GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
+                GPKGContentsDao *contentsDao = [geoPackage contentsDao];
                 
                 for (NSString *featureTable in featureTableDaos) {
                     
                     @try {
                         GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:featureTable];
-                        GPKGBoundingBox *contentsBoundingBox = [contents getBoundingBox];
+                        GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
                         
                         if (contentsBoundingBox != nil) {
                             
-                            contentsBoundingBox = [self transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao getSrs:contents]];
+                            contentsBoundingBox = [self transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao srs:contents]];
                             
                             if (self.featuresBoundingBox != nil) {
                                 self.featuresBoundingBox = [self.featuresBoundingBox union:contentsBoundingBox];
@@ -1789,15 +1789,15 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             NSArray *tileTables = [database getTiles];
             if(tileTables.count > 0){
                 
-                GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
+                GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage tileMatrixSetDao];
                 
                 for(GPKGSTileTable *tileTable in tileTables){
                     
                     @try {
                         GPKGTileMatrixSet *tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:tileTable.name];
-                        GPKGBoundingBox *tileMatrixSetBoundingBox = [tileMatrixSet getBoundingBox];
+                        GPKGBoundingBox *tileMatrixSetBoundingBox = [tileMatrixSet boundingBox];
                         
-                        tileMatrixSetBoundingBox = [self transformBoundingBoxToWgs84:tileMatrixSetBoundingBox withSrs:[tileMatrixSetDao getSrs:tileMatrixSet]];
+                        tileMatrixSetBoundingBox = [self transformBoundingBoxToWgs84:tileMatrixSetBoundingBox withSrs:[tileMatrixSetDao srs:tileMatrixSet]];
                         
                         if (self.tilesBoundingBox != nil) {
                             self.tilesBoundingBox = [self.tilesBoundingBox union:tileMatrixSetBoundingBox];
@@ -1854,7 +1854,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 break;
             }
             
-            GPKGGeoPackage *geoPackage = [self.geoPackages getOrOpen:database.name];
+            GPKGGeoPackage *geoPackage = [self.geoPackages geoPackageOpenName:database.name];
             
             if(geoPackage != nil){
             
@@ -1881,7 +1881,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                             break;
                         }
                         
-                        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:featureTable];
+                        GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:featureTable];
                         [databaseFeatureDaos setObject:featureDao forKey:featureTable];
                     }
                 }
@@ -1949,7 +1949,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         NSMutableArray * databaseFeatures = [[NSMutableArray alloc] init];
         [databaseFeatures addObject:self.editFeaturesTable];
         [featureTables setObject:databaseFeatures forKey:self.editFeaturesDatabase];
-        GPKGGeoPackage *geoPackage = [self.geoPackages getOrOpen:self.editFeaturesDatabase];
+        GPKGGeoPackage *geoPackage = [self.geoPackages geoPackageOpenName:self.editFeaturesDatabase];
         NSMutableDictionary * databaseFeatureDaos = [self.featureDaos objectForKey:self.editFeaturesDatabase];
         if(databaseFeatureDaos == nil){
             databaseFeatureDaos = [[NSMutableDictionary alloc] init];
@@ -1957,7 +1957,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         }
         GPKGFeatureDao * featureDao = [databaseFeatureDaos objectForKey:self.editFeaturesTable];
         if(featureDao == nil){
-            featureDao = [geoPackage getFeatureDaoWithTableName:self.editFeaturesTable];
+            featureDao = [geoPackage featureDaoWithTableName:self.editFeaturesTable];
             [databaseFeatureDaos setObject:featureDao forKey:self.editFeaturesTable];
         }
     }else{
@@ -1979,11 +1979,11 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             break;
         }
         
-        if([self.geoPackages has:databaseName]){
+        if([self.geoPackages hasName:databaseName]){
         
             NSMutableArray * databaseFeatures = [featureTables objectForKey:databaseName];
             
-            GPKGGeoPackage *geoPackage = [self.geoPackages getOrOpen:databaseName];
+            GPKGGeoPackage *geoPackage = [self.geoPackages geoPackageOpenName:databaseName];
             GPKGStyleCache *styleCache = [[GPKGStyleCache alloc] initWithGeoPackage:geoPackage];
             
             for(NSString * features in databaseFeatures){
@@ -2077,7 +2077,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             double expandedHeight = size.height + (2 * (size.height * paddingPercentage));
             double expandedWidth = size.width + (2 * (size.width * paddingPercentage));
             
-            CLLocationCoordinate2D center = [bbox getCenter];
+            CLLocationCoordinate2D center = [bbox center];
             MKCoordinateRegion expandedRegion = MKCoordinateRegionMakeWithDistance(center, expandedHeight, expandedWidth);
             
             double latitudeRange = expandedRegion.span.latitudeDelta / 2.0;
@@ -2096,12 +2096,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void) displayTiles: (GPKGSTileTable *) tiles{
     
-    GPKGGeoPackage *geoPackage = [self.geoPackages getOrOpen:tiles.database];
+    GPKGGeoPackage *geoPackage = [self.geoPackages geoPackageOpenName:tiles.database];
     
-    GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName:tiles.name];
+    GPKGTileDao * tileDao = [geoPackage tileDaoWithTableName:tiles.name];
     
     GPKGTileTableScaling *tileTableScaling = [[GPKGTileTableScaling alloc] initWithGeoPackage:geoPackage andTileDao:tileDao];
-    GPKGTileScaling *tileScaling = [tileTableScaling get];
+    GPKGTileScaling *tileScaling = [tileTableScaling tileScaling];
     
     GPKGBoundedOverlay * overlay = [GPKGOverlayFactory boundedOverlay:tileDao andScaling:tileScaling];
     overlay.canReplaceMapContent = false;
@@ -2109,7 +2109,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
     
     GPKGFeatureTileTableLinker * linker = [[GPKGFeatureTileTableLinker alloc] initWithGeoPackage:geoPackage];
-    NSArray<GPKGFeatureDao *> * featureDaos = [linker getFeatureDaosForTileTable:tileDao.tableName];
+    NSArray<GPKGFeatureDao *> * featureDaos = [linker featureDaosForTileTable:tileDao.tableName];
     for(GPKGFeatureDao * featureDao in featureDaos){
         
         // Create the feature tiles
@@ -2122,14 +2122,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self.featureOverlayQueries addObject:featureOverlayQuery];
     }
     
-    GPKGBoundingBox *displayBoundingBox = [tileMatrixSet getBoundingBox];
-    GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
-    GPKGSpatialReferenceSystem *tileMatrixSetSrs = [tileMatrixSetDao getSrs:tileMatrixSet];
-    GPKGContents *contents = [tileMatrixSetDao getContents:tileMatrixSet];
-    GPKGBoundingBox *contentsBoundingBox = [contents getBoundingBox];
+    GPKGBoundingBox *displayBoundingBox = [tileMatrixSet boundingBox];
+    GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage tileMatrixSetDao];
+    GPKGSpatialReferenceSystem *tileMatrixSetSrs = [tileMatrixSetDao srs:tileMatrixSet];
+    GPKGContents *contents = [tileMatrixSetDao contents:tileMatrixSet];
+    GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
     if(contentsBoundingBox != nil){
-        GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
-        SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromProjection:[[contentsDao getSrs:contents] projection] andToProjection:[tileMatrixSetSrs projection]];
+        GPKGContentsDao *contentsDao = [geoPackage contentsDao];
+        SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromProjection:[[contentsDao srs:contents] projection] andToProjection:[tileMatrixSetSrs projection]];
         GPKGBoundingBox *transformedContentsBoundingBox = contentsBoundingBox;
         if(![transform isSameProjection]){
             transformedContentsBoundingBox = [transformedContentsBoundingBox transform:transform];
@@ -2142,7 +2142,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(void) displayFeatureTiles: (GPKGSFeatureOverlayTable *) featureOverlayTable{
     
-    GPKGGeoPackage *geoPackage = [self.geoPackages getOrOpen:featureOverlayTable.database];
+    GPKGGeoPackage *geoPackage = [self.geoPackages geoPackageOpenName:featureOverlayTable.database];
     
     GPKGFeatureDao * featureDao = [[self.featureDaos objectForKey:featureOverlayTable.database] objectForKey:featureOverlayTable.featureTable];
     
@@ -2174,7 +2174,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     GPKGFeatureOverlay * featureOverlay = [[GPKGFeatureOverlay alloc] initWithFeatureTiles:featureTiles];
     boundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
-    [featureOverlay setBoundingBox:boundingBox withProjection:[SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
+    [featureOverlay setBoundingBox:boundingBox inProjection:[SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
     [featureOverlay setMinZoom:[NSNumber numberWithInt:featureOverlayTable.minZoom]];
     [featureOverlay setMaxZoom:[NSNumber numberWithInt:featureOverlayTable.maxZoom]];
     
@@ -2182,15 +2182,15 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGBoundedOverlay *overlay = [GPKGOverlayFactory linkedFeatureOverlayWithOverlay:featureOverlay andGeoPackage:geoPackage];
     
     GPKGGeometryColumns * geometryColumns = featureDao.geometryColumns;
-    GPKGContents * contents = [[geoPackage getGeometryColumnsDao] getContents:geometryColumns];
+    GPKGContents * contents = [[geoPackage geometryColumnsDao] contents:geometryColumns];
     
     self.featureOverlayTiles = true;
     
     GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithBoundedOverlay:overlay andFeatureTiles:featureTiles];
     [self.featureOverlayQueries addObject:featureOverlayQuery];
     
-    GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
-    [self displayTilesWithOverlay:overlay andBoundingBox:[contents getBoundingBox] andSrs:[contentsDao getSrs:contents] andSpecifiedBoundingBox:boundingBox];
+    GPKGContentsDao * contentsDao = [geoPackage contentsDao];
+    [self displayTilesWithOverlay:overlay andBoundingBox:[contents boundingBox] andSrs:[contentsDao srs:contents] andSpecifiedBoundingBox:boundingBox];
 }
 
 -(void) displayTilesWithOverlay: (MKTileOverlay *) overlay andBoundingBox: (GPKGBoundingBox *) dataBoundingBox andSrs: (GPKGSpatialReferenceSystem *) srs andSpecifiedBoundingBox: (GPKGBoundingBox *) specifiedBoundingBox{
@@ -2271,7 +2271,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 @try {
                     while(![self featureUpdateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
                         @try {
-                            GPKGFeatureRow * row = [featureDao getFeatureRow:results];
+                            GPKGFeatureRow * row = [featureDao featureRow:results];
                             
                             count = [self processFeatureRow:row withDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter andStyleCache:styleCache andFilterBoundingBox:filterBoundingBox andFilterMaxLongitude:filterMaxLongitude andFilter:filter];
                         } @catch (NSException *exception) {
@@ -2313,7 +2313,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(int) processFeatureRow: (GPKGFeatureRow *) row withDatabase: (NSString *) database andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter andStyleCache: (GPKGStyleCache *) styleCache andFilterBoundingBox: (GPKGBoundingBox *) filterBoundingBox andFilterMaxLongitude: (double) maxLongitude andFilter: (BOOL) filter{
     
-    if(![self.featureShapes existsWithFeatureId:[row getId] inDatabase:database withTable:tableName]){
+    if(![self.featureShapes existsWithFeatureId:[row id] inDatabase:database withTable:tableName]){
         count = [self processFeatureRowWithDatabase:database andTableName:tableName andConverter:converter andStyleCache:styleCache andFeatureRow:row andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:filterBoundingBox andFilterMaxLongitude:maxLongitude andFilter:filter];
     }
     
@@ -2322,7 +2322,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(int) processFeatureRowWithDatabase: (NSString *) database andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter andStyleCache: (GPKGStyleCache *) styleCache andFeatureRow: (GPKGFeatureRow *) row andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andFilterBoundingBox: (GPKGBoundingBox *) boundingBox andFilterMaxLongitude: (double) maxLongitude andFilter: (BOOL) filter{
     
-    GPKGGeometryData * geometryData = [row getGeometry];
+    GPKGGeometryData * geometryData = [row geometry];
     if(geometryData != nil && !geometryData.empty){
         
         SFGeometry * geometry = geometryData.geometry;
@@ -2341,14 +2341,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                         SFPoint *point = (SFPoint *) geometry;
                         passesFilter = [GPKGTileBoundingBoxUtils isPoint:point inBoundingBox:boundingBox withMaxLongitude:maxLongitude];
                     }else{
-                        GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithGeometryEnvelope:envelope];
+                        GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithEnvelope:envelope];
                         passesFilter = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:boundingBox andBoundingBox:geometryBoundingBox withMaxLongitude:maxLongitude] != nil;
                     }
                 }
             }
             
             if(passesFilter && count++ < maxFeatures){
-                NSNumber * featureId = [row getId];
+                NSNumber * featureId = [row id];
                 GPKGMapShape * shape = [converter toShapeWithGeometry:geometry];
                 [self updateFeaturesBoundingBox:shape];
                 [self prepareShapeOptionsWithShape:shape andStyleCache:styleCache andFeature:row andEditable:editable andTopLevel:true];
@@ -2514,12 +2514,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }else{
         mapPoint = [self getMapPointWithShape:shape];
         if(mapPoint != nil){
-            [self.editFeatureObjects setObject:shape forKey:[mapPoint getIdAsNumber]];
+            [self.editFeatureObjects setObject:shape forKey:[mapPoint idAsNumber]];
         }
     }
     
     if(mapPoint != nil){
-        [self.editFeatureIds setObject:featureId forKey:[mapPoint getIdAsNumber]];
+        [self.editFeatureIds setObject:featureId forKey:[mapPoint idAsNumber]];
         GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
         data.type = GPKGS_MPDT_EDIT_FEATURE;
         data.database = self.editFeaturesDatabase;

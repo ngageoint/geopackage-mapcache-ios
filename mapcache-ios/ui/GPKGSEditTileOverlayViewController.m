@@ -40,7 +40,7 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
     // Check if indexed
     GPKGGeoPackage * geoPackage = [self.manager open:self.database];
     @try {
-        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:self.featureTable];
+        GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:self.featureTable];
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         @try{
             self.data.indexed = [indexer isIndexed];
@@ -131,13 +131,13 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
     if(self.data.boundingBox == nil){
         GPKGGeoPackage * geoPackage = [self.manager open:self.database];
         @try {
-            GPKGContentsDao * contentsDao =  [geoPackage getContentsDao];
+            GPKGContentsDao * contentsDao =  [geoPackage contentsDao];
             GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:self.featureTable];
             if(contents != nil){
-                GPKGBoundingBox * boundingBox = [contents getBoundingBox];
+                GPKGBoundingBox * boundingBox = [contents boundingBox];
                 GPKGBoundingBox * worldGeodeticBoundingBox = nil;
                 if(boundingBox != nil){
-                    SFPProjection * projection = [contentsDao getProjection:contents];
+                    SFPProjection * projection = [contentsDao projection:contents];
                     
                     SFPProjectionTransform * webMercatorTransform = [[SFPProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
                     if([projection getUnit] == SFP_UNIT_DEGREES){

@@ -67,7 +67,7 @@ annotation {
         NSString * fileUrl = [url path];
         
         BOOL imported = false;
-        GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory getManager];
+        GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory manager];
         @try {
             imported = [manager importGeoPackageFromPath:fileUrl andOverride:true andMove:true];
         }

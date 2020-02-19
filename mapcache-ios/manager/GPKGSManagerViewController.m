@@ -84,7 +84,7 @@ const char ConstantKey;
                                                  name:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION
                                                object:nil];
     
-    self.manager = [GPKGGeoPackageFactory getManager];
+    self.manager = [GPKGGeoPackageFactory manager];
     self.active = [GPKGSDatabases getInstance];
     self.settings = [NSUserDefaults standardUserDefaults];
     NSArray * expandedDatabases = [self.settings stringArrayForKey:GPKGS_EXPANDED_PREFERENCE];
@@ -138,13 +138,13 @@ const char ConstantKey;
             [self.tableCells addObject:theDatabase];
             NSMutableArray * tables = [[NSMutableArray alloc] init];
             
-            GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
-            for(NSString * tableName in [geoPackage getFeatureTables]){
-                GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
+            GPKGContentsDao * contentsDao = [geoPackage contentsDao];
+            for(NSString * tableName in [geoPackage featureTables]){
+                GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:tableName];
                 int count = [featureDao count];
                 
                 GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
-                GPKGGeometryColumns * geometryColumns = [contentsDao getGeometryColumns:contents];
+                GPKGGeometryColumns * geometryColumns = [contentsDao geometryColumns:contents];
                 enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
                 
                 GPKGSFeatureTable * table = [[GPKGSFeatureTable alloc] initWithDatabase:database andName:tableName andGeometryType:geometryType andCount:count];
@@ -157,8 +157,8 @@ const char ConstantKey;
                 }
             }
             
-            for(NSString * tableName in [geoPackage getTileTables]){
-                GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName: tableName];
+            for(NSString * tableName in [geoPackage tileTables]){
+                GPKGTileDao * tileDao = [geoPackage tileDaoWithTableName: tableName];
                 int count = [tileDao count];
                 
                 GPKGSTileTable * table = [[GPKGSTileTable alloc] initWithDatabase:database andName:tableName andCount:count];
@@ -172,7 +172,7 @@ const char ConstantKey;
             }
             
             for(GPKGSFeatureOverlayTable * table in [self.active featureOverlays:database]){
-                GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:table.featureTable];
+                GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:table.featureTable];
                 int count = [featureDao count];
                 [table setCount:count];
                 
@@ -752,7 +752,7 @@ const char ConstantKey;
     BOOL metadataIndexed = false;
     GPKGGeoPackage * geoPackage = [self.manager open:table.database];
     @try {
-        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:table.name];
+        GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:table.name];
     
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         @try{
@@ -818,7 +818,7 @@ const char ConstantKey;
     BOOL indexed = false;
     GPKGGeoPackage * geoPackage = [self.manager open:tableIndex.table.database];
     @try {
-        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableIndex.table.name];
+        GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:tableIndex.table.name];
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         @try{
             indexed = [indexer isIndexedWithFeatureIndexType:tableIndex.indexLocation];
@@ -873,7 +873,7 @@ const char ConstantKey;
         
         GPKGGeoPackage * geoPackage = [self.manager open:tableIndex.table.database];
         @try {
-            GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableIndex.table.name];
+            GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:tableIndex.table.name];
             GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
             @try{
                 [indexer setIndexLocation:tableIndex.indexLocation];

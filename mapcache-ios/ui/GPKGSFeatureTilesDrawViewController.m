@@ -204,7 +204,7 @@
 
 -(void) setColor: (NSDictionary *) color withTag: (NSInteger) tag{
     
-    UIColor * createdColor = [GPKGUtils getColor:color];
+    UIColor * createdColor = [GPKGUtils color:color];
     
     NSString * name = [color objectForKey:GPKGS_PROP_COLORS_NAME];
     

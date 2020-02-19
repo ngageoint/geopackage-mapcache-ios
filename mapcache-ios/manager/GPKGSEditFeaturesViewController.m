@@ -55,10 +55,10 @@ NSString * const GPKGS_MANAGER_EDIT_FEATURES_SEG_EDIT_CONTENTS = @"editContents"
     
     GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
     @try {
-        GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage getGeometryColumnsDao];
-        GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
+        GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage geometryColumnsDao];
+        GPKGContentsDao * contentsDao = [geoPackage contentsDao];
         GPKGGeometryColumns * geometryColumns = (GPKGGeometryColumns *)[geometryColumnsDao queryForTableName:self.table.name];
-        GPKGContents * contents = [geometryColumnsDao getContents:geometryColumns];
+        GPKGContents * contents = [geometryColumnsDao contents:geometryColumns];
         
         [contents setIdentifier:self.data.identifier];
         [contents setTheDescription:self.data.theDescription];
@@ -156,9 +156,9 @@ NSString * const GPKGS_MANAGER_EDIT_FEATURES_SEG_EDIT_CONTENTS = @"editContents"
     
     GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
     @try {
-        GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage getGeometryColumnsDao];
+        GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage geometryColumnsDao];
         GPKGGeometryColumns * geometryColumns = (GPKGGeometryColumns *)[geometryColumnsDao queryForTableName:self.table.name];
-        GPKGContents * contents = [geometryColumnsDao getContents:geometryColumns];
+        GPKGContents * contents = [geometryColumnsDao contents:geometryColumns];
         
         [self.data setIdentifier:contents.identifier];
         [self.data setTheDescription:contents.theDescription];
@@ -167,7 +167,7 @@ NSString * const GPKGS_MANAGER_EDIT_FEATURES_SEG_EDIT_CONTENTS = @"editContents"
         [self.data setMinX:contents.minX];
         [self.data setMaxX:contents.maxX];
         
-        enum SFGeometryType geometryType = [geometryColumns getGeometryType];
+        enum SFGeometryType geometryType = [geometryColumns geometryType];
         [self.geometryTypeButton setTitle:[SFGeometryTypes name:geometryType] forState:UIControlStateNormal];
         [self.zTextField setText:[geometryColumns.z stringValue]];
         [self.mTextField setText:[geometryColumns.m stringValue]];
