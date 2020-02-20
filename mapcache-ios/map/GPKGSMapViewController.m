@@ -758,7 +758,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                                     GPKGFeatureIndexListResults *listResults = [[GPKGFeatureIndexListResults alloc] init];
                                     
                                     // Query for all rows
-                                    GPKGResultSet * results = [featureDao queryForAll];
+                                    GPKGResultSet * results = [featureDao query];
                                     @try {
                                         while([results moveToNext]){
                                             @try {
@@ -2236,14 +2236,16 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
         SFPProjection *mapViewProjection = [SFPProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
         
+        NSArray<NSString *> *columns = [featureDao idAndGeometryColumnNames];
+        
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         @try{
             if(filter && [indexer isIndexed]){
                 
-                GPKGFeatureIndexResults *indexResults = [indexer queryWithBoundingBox:mapViewBoundingBox inProjection:mapViewProjection];
+                GPKGFeatureIndexResults *indexResults = [indexer queryWithColumns:columns andBoundingBox:mapViewBoundingBox inProjection:mapViewProjection];
                 GPKGBoundingBox *complementary = [mapViewBoundingBox complementaryWgs84];
                 if(complementary != nil){
-                    GPKGFeatureIndexResults *indexResults2 = [indexer queryWithBoundingBox:complementary inProjection:mapViewProjection];
+                    GPKGFeatureIndexResults *indexResults2 = [indexer queryWithColumns:columns andBoundingBox:complementary inProjection:mapViewProjection];
                     indexResults = [[GPKGMultipleFeatureIndexResults alloc] initWithFeatureIndexResults1:indexResults andFeatureIndexResults2:indexResults2];
                 }
                 count = [self processFeatureIndexResults:indexResults withUpdateId:updateId andDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter andStyleCache:styleCache andFilter:filter];
@@ -2267,7 +2269,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 }
                 
                 // Query for all rows
-                GPKGResultSet * results = [featureDao queryForAll];
+                GPKGResultSet * results = [featureDao query];
                 @try {
                     while(![self featureUpdateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
                         @try {
