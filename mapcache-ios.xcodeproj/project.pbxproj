@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		040136751AF94FB200C92AFC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 040136741AF94FB200C92AFC /* main.m */; };
 		040136781AF94FB200C92AFC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 040136771AF94FB200C92AFC /* AppDelegate.m */; };
-		040136811AF94FB200C92AFC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0401367F1AF94FB200C92AFC /* Main.storyboard */; };
 		040136831AF94FB200C92AFC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 040136821AF94FB200C92AFC /* Images.xcassets */; };
 		040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 040136841AF94FB200C92AFC /* LaunchScreen.xib */; };
 		040136921AF94FB200C92AFC /* mapcache_iosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 040136911AF94FB200C92AFC /* mapcache_iosTests.m */; };
@@ -35,8 +34,6 @@
 		045C94831B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94821B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m */; };
 		045C94861B50226D0005CCD0 /* GPKGSFeatureOverlayTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94851B50226D0005CCD0 /* GPKGSFeatureOverlayTable.m */; };
 		045C94891B5026E00005CCD0 /* GPKGSDatabases.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94881B5026E00005CCD0 /* GPKGSDatabases.m */; };
-		045C948D1B50789D0005CCD0 /* GPKGSMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C948C1B50789D0005CCD0 /* GPKGSMapView.m */; };
-		045C94901B53EEB80005CCD0 /* GPKGSMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C948F1B53EEB80005CCD0 /* GPKGSMapViewController.m */; };
 		045C94941B56DF620005CCD0 /* GPKGSIndexerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94931B56DF620005CCD0 /* GPKGSIndexerTask.m */; };
 		045C94981B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C94971B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m */; };
 		045C949B1B5D4C560005CCD0 /* GPKGSDecimalValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C949A1B5D4C560005CCD0 /* GPKGSDecimalValidator.m */; };
@@ -134,6 +131,10 @@
 		E3CF687423DA5FF20005A6EF /* MCTextViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF687323DA5FF20005A6EF /* MCTextViewCell.xib */; };
 		E3CF687723DA667E0005A6EF /* MCTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CF687623DA667E0005A6EF /* MCTextViewCell.m */; };
 		E3CF687A23DA6AC40005A6EF /* MCNewTileServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CF687923DA6AC40005A6EF /* MCNewTileServerViewController.m */; };
+		E3D80E9F23FF3DA0006F1014 /* MCDrawingCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D80E9E23FF3DA0006F1014 /* MCDrawingCoordinator.m */; };
+		E3D80EA223FF59E3006F1014 /* MCDrawingStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D80EA123FF59E3006F1014 /* MCDrawingStatusViewController.m */; };
+		E3D80EA5240076AD006F1014 /* MCDualButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D80EA4240076AD006F1014 /* MCDualButtonCell.m */; };
+		E3D80EA7240076CC006F1014 /* MCDualButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3D80EA6240076CC006F1014 /* MCDualButtonCell.xib */; };
 		E3DE0DEA23E2420D00CB27AF /* UITextView+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DE0DE923E2420D00CB27AF /* UITextView+Validators.m */; };
 		E3DE0DED23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DE0DEC23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m */; };
 		E3E9ED6923EA407E004C4530 /* mapcache_iosUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E9ED6823EA407E004C4530 /* mapcache_iosUITests.m */; };
@@ -400,6 +401,13 @@
 		E3CF687623DA667E0005A6EF /* MCTextViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTextViewCell.m; sourceTree = "<group>"; };
 		E3CF687823DA6AC40005A6EF /* MCNewTileServerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCNewTileServerViewController.h; sourceTree = "<group>"; };
 		E3CF687923DA6AC40005A6EF /* MCNewTileServerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCNewTileServerViewController.m; sourceTree = "<group>"; };
+		E3D80E9D23FF3DA0006F1014 /* MCDrawingCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDrawingCoordinator.h; sourceTree = "<group>"; };
+		E3D80E9E23FF3DA0006F1014 /* MCDrawingCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDrawingCoordinator.m; sourceTree = "<group>"; };
+		E3D80EA023FF59E3006F1014 /* MCDrawingStatusViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDrawingStatusViewController.h; sourceTree = "<group>"; };
+		E3D80EA123FF59E3006F1014 /* MCDrawingStatusViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDrawingStatusViewController.m; sourceTree = "<group>"; };
+		E3D80EA3240076AD006F1014 /* MCDualButtonCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDualButtonCell.h; sourceTree = "<group>"; };
+		E3D80EA4240076AD006F1014 /* MCDualButtonCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDualButtonCell.m; sourceTree = "<group>"; };
+		E3D80EA6240076CC006F1014 /* MCDualButtonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCDualButtonCell.xib; sourceTree = "<group>"; };
 		E3DE0DE823E2420D00CB27AF /* UITextView+Validators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITextView+Validators.h"; sourceTree = "<group>"; };
 		E3DE0DE923E2420D00CB27AF /* UITextView+Validators.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITextView+Validators.m"; sourceTree = "<group>"; };
 		E3DE0DEB23E3781800CB27AF /* MCCreateGeoPacakgeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCCreateGeoPacakgeViewController.h; sourceTree = "<group>"; };
@@ -651,6 +659,10 @@
 				043A45971B83B4AB001B8FC5 /* GPGKSMapPointInitializer.m */,
 				043A459C1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.h */,
 				043A459D1B84AA5D001B8FC5 /* GPKGSMapPointDataTypes.m */,
+				E3D80E9D23FF3DA0006F1014 /* MCDrawingCoordinator.h */,
+				E3D80E9E23FF3DA0006F1014 /* MCDrawingCoordinator.m */,
+				E3D80EA023FF59E3006F1014 /* MCDrawingStatusViewController.h */,
+				E3D80EA123FF59E3006F1014 /* MCDrawingStatusViewController.m */,
 			);
 			path = map;
 			sourceTree = "<group>";
@@ -852,6 +864,9 @@
 				E35B630D21BC24E9004E5BB0 /* MCTitleCell.xib */,
 				E34F32E72204E93C0098ED45 /* MCEmptyStateCell.xib */,
 				E3500E6422B7F36500164ABF /* MCTutorialCell.xib */,
+				E3D80EA3240076AD006F1014 /* MCDualButtonCell.h */,
+				E3D80EA4240076AD006F1014 /* MCDualButtonCell.m */,
+				E3D80EA6240076CC006F1014 /* MCDualButtonCell.xib */,
 			);
 			path = DisplayCells;
 			sourceTree = "<group>";
@@ -1033,6 +1048,7 @@
 				E35B630E21BC24E9004E5BB0 /* MCTitleCell.xib in Resources */,
 				E3470CC9202126140098D783 /* MCSegmentedControlCell.xib in Resources */,
 				E3100EAF203CAF1E00FFA56E /* MCZoomCell.xib in Resources */,
+				E3D80EA7240076CC006F1014 /* MCDualButtonCell.xib in Resources */,
 				E3B9753B1FB3DED400E33E0A /* MCHeaderCellDisplay.xib in Resources */,
 				E363F54520F0177700BBF91A /* MCTileLayerOperationsCell.xib in Resources */,
 				E354EEDB2006B9B000B062BE /* MCDescriptionCell.xib in Resources */,
@@ -1044,7 +1060,6 @@
 				047733C61B4C3E3400E523BD /* mapcache.plist in Resources */,
 				E363F54320EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib in Resources */,
 				E3500E6522B7F36500164ABF /* MCTutorialCell.xib in Resources */,
-				040136811AF94FB200C92AFC /* Main.storyboard in Resources */,
 				E34F32E82204E93C0098ED45 /* MCEmptyStateCell.xib in Resources */,
 				E3FB857121349C32002F012E /* MCMapView.xib in Resources */,
 				E3A651AB2003E1B700B8AB27 /* MCCreateLayerView.xib in Resources */,
@@ -1126,7 +1141,6 @@
 				04E1D8CD1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m in Sources */,
 				E354EEDE2006BB9500B062BE /* MCDescriptionCell.m in Sources */,
 				043A45851B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m in Sources */,
-				045C94901B53EEB80005CCD0 /* GPKGSMapViewController.m in Sources */,
 				04E0EE0E1B691AD10095E53E /* GPKGSManagerEditTileOverlayViewController.m in Sources */,
 				E36D2DD12017C0A70097A8DE /* MCPickerViewCell.m in Sources */,
 				E308FBC61FBFA7CA00348577 /* MCHeaderCell.m in Sources */,
@@ -1149,7 +1163,9 @@
 				044647FC1B4AD1C00052913B /* GPKGSManagerViewController.m in Sources */,
 				045C94A91B5DA5C20005CCD0 /* GPKGSBoundingBoxViewController.m in Sources */,
 				043A45981B83B4AB001B8FC5 /* GPGKSMapPointInitializer.m in Sources */,
+				E3D80EA5240076AD006F1014 /* MCDualButtonCell.m in Sources */,
 				04E1D8DC1B682CF4002BD947 /* GPKGSFeatureTilesDrawViewController.m in Sources */,
+				E3D80EA223FF59E3006F1014 /* MCDrawingStatusViewController.m in Sources */,
 				0446481A1B4C24AD0052913B /* GPKGSActiveTableSwitch.m in Sources */,
 				E3A651B32005652400B8AB27 /* MCFieldWithTitleCell.m in Sources */,
 				04E0EE0B1B691A3C0095E53E /* GPKGSEditTileOverlayData.m in Sources */,
@@ -1189,7 +1205,6 @@
 				E3500E6322B4653B00164ABF /* MCDisclaimerViewController.m in Sources */,
 				044648021B4AF4250052913B /* GPKGSTableTypes.m in Sources */,
 				E35F316521EFEC7E001B720F /* MCNoticeAndAttributionViewController.m in Sources */,
-				045C948D1B50789D0005CCD0 /* GPKGSMapView.m in Sources */,
 				E3A491FF1FA78A4C00FFE613 /* GPKGSManagerCoordinator.m in Sources */,
 				045C949B1B5D4C560005CCD0 /* GPKGSDecimalValidator.m in Sources */,
 				04CCC86B1B6121E90001296D /* GPKGSLoadTilesViewController.m in Sources */,
@@ -1200,6 +1215,7 @@
 				04CCC86E1B6122040001296D /* GPKGSLoadTilesData.m in Sources */,
 				044648051B4AF6990052913B /* GPKGSFeatureTable.m in Sources */,
 				E300A93923315B9D002336A0 /* MCBoundingBoxPassthroughView.m in Sources */,
+				E3D80E9F23FF3DA0006F1014 /* MCDrawingCoordinator.m in Sources */,
 				043A45911B7E63C1001B8FC5 /* GPKGSEditTypes.m in Sources */,
 				045C94831B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m in Sources */,
 				043A45821B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m in Sources */,

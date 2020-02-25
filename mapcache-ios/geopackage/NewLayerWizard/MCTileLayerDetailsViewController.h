@@ -25,7 +25,7 @@
 - (BOOL) isLayerNameAvailable: (NSString *) layerName;
 @end
 
-@interface MCTileLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate>
+@interface MCTileLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCButtonCellDelegate>
 @property (weak, nonatomic) id<MCTileLayerDetailsDelegate> delegate;
 @property (nonatomic, strong) NSString *selectedServerURL;
 @property (nonatomic, strong) NSString *layerName;

@@ -29,7 +29,7 @@
     [super viewDidLoad];
     
     _openView = 160;
-    _collapsedView = [UIScreen mainScreen].bounds.size.height - 140; //120
+    _collapsedView = [UIScreen mainScreen].bounds.size.height - 160; //120
     NSLog(@"Screen height: %f", [UIScreen mainScreen].bounds.size.height);
     
     _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
@@ -91,10 +91,10 @@
             [UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
                 if (velocity.y >= 0) {
                     self.view.frame = CGRectMake(0, self.collapsedView, self.view.frame.size.width, self.view.frame.size.height);
-                    _isFullView = NO;
+                    self.isFullView = NO;
                 } else {
                     self.view.frame = CGRectMake(0, self.openView, self.view.frame.size.width, self.view.frame.size.height);
-                    _isFullView = YES;
+                    self.isFullView = YES;
                 }
             } completion:nil];
         }

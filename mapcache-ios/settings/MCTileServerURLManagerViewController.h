@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface MCTileServerURLManagerViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate>
+@interface MCTileServerURLManagerViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCButtonCellDelegate>
 @property (weak, nonatomic) id<MCTileServerManagerDelegate> tileServerManagerDelegate;
 @property (weak, nonatomic) id<MCSelectTileServerDelegate> selectServerDelegate;
 @property (nonatomic) BOOL selectMode;

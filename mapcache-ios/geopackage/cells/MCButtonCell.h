@@ -11,14 +11,14 @@
 #import "MCColorUtil.h"
 #import "GPKGSConstants.h"
 
-@protocol GPKGSButtonCellDelegate <NSObject>
+@protocol MCButtonCellDelegate <NSObject>
 - (void) performButtonAction:(NSString *) action;
 @end
 
 
 @interface MCButtonCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIButton *button;
-@property (weak, nonatomic) id<GPKGSButtonCellDelegate> delegate;
+@property (weak, nonatomic) id<MCButtonCellDelegate> delegate;
 @property (strong, nonatomic) NSString *action;
 - (void) enableButton;
 - (void) disableButton;

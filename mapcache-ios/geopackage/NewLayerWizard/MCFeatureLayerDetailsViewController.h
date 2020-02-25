@@ -28,7 +28,7 @@
 - (void) createFeatueLayerIn:(NSString *)database with:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId;
 @end
 
-@interface MCFeatureLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate>
+@interface MCFeatureLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, MCButtonCellDelegate>
 @property (strong, nonatomic) GPKGSDatabase *database;
 @property (weak, nonatomic) id<MCFeatureLayerCreationDelegate> delegate;
 @end

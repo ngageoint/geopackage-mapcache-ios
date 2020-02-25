@@ -12,6 +12,7 @@
 #import "GPKGGeoPackageManager.h"
 #import "MCSettingsCoordinator.h"
 #import "MCBoundingBoxGuideView.h"
+#import "MCDrawingCoordinator.h"
 
 
 @class MCMapViewController;

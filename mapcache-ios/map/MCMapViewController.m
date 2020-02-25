@@ -124,6 +124,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.boundingBoxMode = NO;
     [_mapView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget: self action:@selector(longPressGesture:)]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableBoundingBoxMode) name:@"drawBoundingBox" object:nil];
+    self.tempMapPoints = [[NSMutableArray alloc] init];
     
     NSString *mapType = [self.settings stringForKey:GPKGS_PROP_MAP_TYPE];
     if (mapType == nil || [mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
@@ -806,11 +807,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         pointAnnotation.coordinate = point;
         [self.mapView addAnnotation: pointAnnotation];
         
+        [self.tempMapPoints addObject:pointAnnotation];
+        
         UINotificationFeedbackGenerator *feedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
         [feedbackGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
         
-        
-        
+        [self.mapActionDelegate showDrawingTools];
     }
     
     // MKMapView workaround for unresponsiveness after a longpress https://forums.developer.apple.com/thread/126473

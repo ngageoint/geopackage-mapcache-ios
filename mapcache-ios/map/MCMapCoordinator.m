@@ -121,6 +121,15 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     [settingsCoordinator start];
 }
 
+
+- (void)showDrawingTools {
+    MCDrawingCoordinator *drawingCoordinator = [[MCDrawingCoordinator alloc] init];
+    [self.childCoordinators addObject:drawingCoordinator];
+    drawingCoordinator.drawerDelegate = _drawerViewDelegate;
+    [drawingCoordinator start];
+}
+
+
 -(CLLocationCoordinate2D *) getPolygonPointsWithPoint1: (CLLocationCoordinate2D) point1 andPoint2: (CLLocationCoordinate2D) point2{
     CLLocationCoordinate2D *coordinates = calloc(4, sizeof(CLLocationCoordinate2D));
     coordinates[0] = CLLocationCoordinate2DMake(point1.latitude, point1.longitude);
@@ -129,5 +138,6 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     coordinates[3] = CLLocationCoordinate2DMake(point2.latitude, point1.longitude);
     return coordinates;
 }
+
 
 @end

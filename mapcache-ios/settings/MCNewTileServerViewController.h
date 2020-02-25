@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface MCNewTileServerViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate, MCTextViewCellDelegate>
+@interface MCNewTileServerViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCButtonCellDelegate, MCTextViewCellDelegate>
 @property (nonatomic, strong) id<MCSaveTileServerDelegate>saveTileServerDelegate;
 - (void) setServerName:(NSString *) serverName;
 - (void) setServerURL:(NSString *) serverURL;
