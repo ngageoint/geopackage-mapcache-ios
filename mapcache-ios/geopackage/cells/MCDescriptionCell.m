@@ -28,6 +28,18 @@
     [self updateConstraintsIfNeeded];
     [self layoutSubviews];
     [self.descriptionLabel layoutIfNeeded];
+ }
+
+- (void)textAlignCenter {
+    self.descriptionLabel.textAlignment = NSTextAlignmentCenter;
+}
+
+- (void)textAlignRight {
+    self.descriptionLabel.textAlignment = NSTextAlignmentRight;
+}
+
+- (void)textAlignLeft {
+    self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
 }
 
 @end

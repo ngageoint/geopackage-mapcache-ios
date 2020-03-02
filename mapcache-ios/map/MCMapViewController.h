@@ -31,6 +31,7 @@
 @protocol MCMapActionDelegate <NSObject>
 - (void)showMapInfoDrawer;
 - (void)showDrawingTools;
+- (void)updateDrawingStatus;
 @end
 
 
@@ -41,11 +42,12 @@
 @property (weak, nonatomic) IBOutlet UIButton *zoomIndicatorButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *zoomIndicatorButtonWidth;
 @property (nonatomic, strong) id<MCMapActionDelegate> mapActionDelegate;
-
+@property (nonatomic) BOOL drawing;
 @property (nonatomic, strong) NSMutableArray *tempMapPoints;
 
 - (int)updateInBackgroundWithZoom: (BOOL) zoom;
 - (void)zoomToPointWithOffset:(CLLocationCoordinate2D) point;
 - (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;
 - (void) toggleMapControls;
+- (void)clearTempPoints;
 @end

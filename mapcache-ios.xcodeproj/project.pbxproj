@@ -131,7 +131,7 @@
 		E3CF687423DA5FF20005A6EF /* MCTextViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF687323DA5FF20005A6EF /* MCTextViewCell.xib */; };
 		E3CF687723DA667E0005A6EF /* MCTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CF687623DA667E0005A6EF /* MCTextViewCell.m */; };
 		E3CF687A23DA6AC40005A6EF /* MCNewTileServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CF687923DA6AC40005A6EF /* MCNewTileServerViewController.m */; };
-		E3D80E9F23FF3DA0006F1014 /* MCDrawingCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D80E9E23FF3DA0006F1014 /* MCDrawingCoordinator.m */; };
+		E3D651D3240D90340082FF10 /* MCGeoPackageRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D651D2240D90340082FF10 /* MCGeoPackageRepository.m */; };
 		E3D80EA223FF59E3006F1014 /* MCDrawingStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D80EA123FF59E3006F1014 /* MCDrawingStatusViewController.m */; };
 		E3D80EA5240076AD006F1014 /* MCDualButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D80EA4240076AD006F1014 /* MCDualButtonCell.m */; };
 		E3D80EA7240076CC006F1014 /* MCDualButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3D80EA6240076CC006F1014 /* MCDualButtonCell.xib */; };
@@ -401,6 +401,8 @@
 		E3CF687623DA667E0005A6EF /* MCTextViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTextViewCell.m; sourceTree = "<group>"; };
 		E3CF687823DA6AC40005A6EF /* MCNewTileServerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCNewTileServerViewController.h; sourceTree = "<group>"; };
 		E3CF687923DA6AC40005A6EF /* MCNewTileServerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCNewTileServerViewController.m; sourceTree = "<group>"; };
+		E3D651D1240D90340082FF10 /* MCGeoPackageRepository.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCGeoPackageRepository.h; sourceTree = "<group>"; };
+		E3D651D2240D90340082FF10 /* MCGeoPackageRepository.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCGeoPackageRepository.m; sourceTree = "<group>"; };
 		E3D80E9D23FF3DA0006F1014 /* MCDrawingCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDrawingCoordinator.h; sourceTree = "<group>"; };
 		E3D80E9E23FF3DA0006F1014 /* MCDrawingCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDrawingCoordinator.m; sourceTree = "<group>"; };
 		E3D80EA023FF59E3006F1014 /* MCDrawingStatusViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDrawingStatusViewController.h; sourceTree = "<group>"; };
@@ -538,6 +540,8 @@
 		044648151B4C1A8D0052913B /* data */ = {
 			isa = PBXGroup;
 			children = (
+				E3D651D1240D90340082FF10 /* MCGeoPackageRepository.h */,
+				E3D651D2240D90340082FF10 /* MCGeoPackageRepository.m */,
 				044647FD1B4AF3870052913B /* GPKGSTable.h */,
 				044647FE1B4AF3870052913B /* GPKGSTable.m */,
 				044648001B4AF4250052913B /* GPKGSTableTypes.h */,
@@ -1138,6 +1142,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3D651D3240D90340082FF10 /* MCGeoPackageRepository.m in Sources */,
 				04E1D8CD1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m in Sources */,
 				E354EEDE2006BB9500B062BE /* MCDescriptionCell.m in Sources */,
 				043A45851B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m in Sources */,
@@ -1215,7 +1220,6 @@
 				04CCC86E1B6122040001296D /* GPKGSLoadTilesData.m in Sources */,
 				044648051B4AF6990052913B /* GPKGSFeatureTable.m in Sources */,
 				E300A93923315B9D002336A0 /* MCBoundingBoxPassthroughView.m in Sources */,
-				E3D80E9F23FF3DA0006F1014 /* MCDrawingCoordinator.m in Sources */,
 				043A45911B7E63C1001B8FC5 /* GPKGSEditTypes.m in Sources */,
 				045C94831B4FFE7E0005CCD0 /* GPKGSDisplayTextViewController.m in Sources */,
 				043A45821B79442C001B8FC5 /* GPKGSDownloadTilesViewController.m in Sources */,

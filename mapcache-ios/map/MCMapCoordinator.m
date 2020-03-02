@@ -19,6 +19,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
 @property (nonatomic, strong) NSUserDefaults *preferences;
+@property (nonatomic, strong) MCDrawingStatusViewController *drawingStatusViewController;
 @end
 
 
@@ -123,10 +124,28 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 
 - (void)showDrawingTools {
-    MCDrawingCoordinator *drawingCoordinator = [[MCDrawingCoordinator alloc] init];
-    [self.childCoordinators addObject:drawingCoordinator];
-    drawingCoordinator.drawerDelegate = _drawerViewDelegate;
-    [drawingCoordinator start];
+    _drawingStatusViewController = [[MCDrawingStatusViewController alloc] init];
+    _drawingStatusViewController.drawerViewDelegate = self.drawerViewDelegate;
+    _drawingStatusViewController.drawingStatusDelegate = self;
+    _drawingStatusViewController.databases = [self.manager databases];
+    [_drawerViewDelegate pushDrawer:_drawingStatusViewController];
+}
+
+
+- (void)updateDrawingStatus {
+    [_drawingStatusViewController updateStatusLabelWithString:[NSString stringWithFormat:@"%d new points", (int)self.mcMapViewController.tempMapPoints.count]];
+}
+
+
+#pragma mark - MCDrawingStatusDelegate
+- (void)cancelDrawingFeatures {
+    [_mcMapViewController setDrawing:NO];
+    [_mcMapViewController clearTempPoints];
+}
+
+
+- (void)showSaveLocationView {
+    
 }
 
 

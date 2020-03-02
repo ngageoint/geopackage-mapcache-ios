@@ -46,7 +46,6 @@
 @property (nonatomic, strong) UIColor *drawPolygonFillColor;
 @property (nonatomic, strong) NSNumberFormatter *locationDecimalFormatter;
 @property (nonatomic) BOOL boundingBoxMode;
-@property (nonatomic) BOOL drawing;
 @property (nonatomic, strong) GPKGPolygon *boundingBox;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxEndCorner;
@@ -56,6 +55,7 @@
 @property (nonatomic) double maxLon;
 @property (nonatomic) BOOL settingsDrawerVisible;
 @property (nonatomic) int currentZoom;
+@property (nonatomic) CLLocationCoordinate2D currentCenter;
 @property (nonatomic) BOOL expandedZoomDetails;
 @end
 
@@ -95,6 +95,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.showingUserLocation = NO;
     self.settingsDrawerVisible = NO;
     self.currentZoom = -1;
+    self.currentCenter = self.mapView.centerCoordinate;
     
     self.infoButton.layer.shadowColor = [UIColor blackColor].CGColor;
     self.infoButton.layer.shadowOpacity = 0.3;
@@ -175,6 +176,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.mapView setCenterCoordinate:point animated:YES];
 }
 
+
+- (void)clearTempPoints {
+    for (GPKGMapPoint *point in self.tempMapPoints) {
+        [self.mapView removeAnnotation:point];
+    }
+    
+    [self.tempMapPoints removeAllObjects];
+}
 
 
 #pragma mark - Button actions
@@ -452,20 +461,26 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
+    CLLocationCoordinate2D previousCenter = self.currentCenter;
+    self.currentCenter = self.mapView.centerCoordinate;
+    int previousZoom = self.currentZoom;
+    self.currentZoom = (int)[GPKGMapUtils currentZoomWithMapView:mapView];
+    
+    if (self.currentCenter.latitude == previousCenter.latitude && self.currentCenter.longitude == previousCenter.longitude && self.currentZoom == previousZoom) {
+        return;
+    }
+    
     int updateId = ++self.featureUpdateCountId;
     int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];
     [self.featureHelper resetFeatureCount];
-    int previousZoom = self.currentZoom;
-    int zoom = (int)[GPKGMapUtils currentZoomWithMapView:mapView];
-    self.currentZoom = zoom;
     
     if (self.expandedZoomDetails) {
-        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", zoom] forState:UIControlStateNormal];
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", self.currentZoom] forState:UIControlStateNormal];
     } else {
-        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", zoom] forState:UIControlStateNormal];
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", self.currentZoom] forState:UIControlStateNormal];
     }
     
-    if (zoom != previousZoom) {
+    if (self.currentZoom != previousZoom) {
         // Zoom level changed, remove all the feature shapes except the markers
         [self.featureHelper.featureShapes removeShapesFromMapView:mapView withExclusions:[[NSSet alloc] initWithObjects:[NSNumber numberWithInt:GPKG_MST_POINT], [NSNumber numberWithInt:GPKG_MST_MULTI_POINT], nil]];
     } else {
@@ -486,7 +501,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                             geoPacakge = [self.manager open:database.name];
                             [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
                             
-                            [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)zoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter: YES];
+                            [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)self.currentZoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter: YES];
                             
                         } @catch (NSException *exception) {
                            NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
@@ -803,16 +818,22 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan) {
         NSLog(@"Adding a pin");
-        MKPointAnnotation *pointAnnotation = [[MKPointAnnotation alloc] init];
-        pointAnnotation.coordinate = point;
-        [self.mapView addAnnotation: pointAnnotation];
+        GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithLocation:point];
+        [mapPoint.options setPinTintColor:[UIColor redColor]];
         
-        [self.tempMapPoints addObject:pointAnnotation];
+        [self.mapView addAnnotation: mapPoint];
+        [self.tempMapPoints addObject:mapPoint];
         
         UINotificationFeedbackGenerator *feedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
         [feedbackGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
         
-        [self.mapActionDelegate showDrawingTools];
+        if (!_drawing) {
+            [self.mapActionDelegate showDrawingTools];
+            _drawing = YES;
+        } else {
+            [self.mapActionDelegate updateDrawingStatus];
+        }
+        
     }
     
     // MKMapView workaround for unresponsiveness after a longpress https://forums.developer.apple.com/thread/126473
