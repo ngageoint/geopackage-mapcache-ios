@@ -7,14 +7,14 @@
 //
 
 #import "GPKGSDownloadTilesViewController.h"
-#import "GPKGSUtils.h"
+#import "MCUtils.h"
 #import "GPKGSCreateTilesViewController.h"
 #import "SFPProjectionTransform.h"
 #import "SFPProjectionConstants.h"
 #import "GPKGTileBoundingBoxUtils.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
-#import "GPKGSLoadTilesTask.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
+#import "MCLoadTilesTask.h"
 
 NSString * const GPKGS_DOWNLOAD_TILES_SEG_CREATE_TILES = @"createTiles";
 
@@ -31,7 +31,7 @@ NSString * const GPKGS_DOWNLOAD_TILES_SEG_CREATE_TILES = @"createTiles";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.databaseValue.inputAccessoryView = keyboardToolbar;
 }
@@ -66,7 +66,7 @@ NSString * const GPKGS_DOWNLOAD_TILES_SEG_CREATE_TILES = @"createTiles";
     self.existing = [self.manager databases];
     
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_CREATE_TILES_EXISTING_GEOPACKAGE_DIALOG_LABEL]
+                          initWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_CREATE_TILES_EXISTING_GEOPACKAGE_DIALOG_LABEL]
                           message:nil
                           delegate:self
                           cancelButtonTitle:nil
@@ -75,7 +75,7 @@ NSString * const GPKGS_DOWNLOAD_TILES_SEG_CREATE_TILES = @"createTiles";
     for (NSString *database in self.existing) {
         [alert addButtonWithTitle:database];
     }
-    alert.cancelButtonIndex = [alert addButtonWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
+    alert.cancelButtonIndex = [alert addButtonWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
     
     alert.tag = TAG_EXISTING_GEOPACKAGES;
     
@@ -122,10 +122,10 @@ NSString * const GPKGS_DOWNLOAD_TILES_SEG_CREATE_TILES = @"createTiles";
             [self.manager create:database];
         }
         
-        GPKGTileScaling *scaling = [GPKGSLoadTilesTask tileScaling];
+        GPKGTileScaling *scaling = [MCLoadTilesTask tileScaling];
         
         // Load tiles
-        [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:database andTable:tableName andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:scaling andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",loadTiles.epsg] andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_CREATE_TILES_DIALOG_LABEL]];
+        [MCLoadTilesTask loadTilesWithCallback:self andDatabase:database andTable:tableName andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:scaling andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",loadTiles.epsg] andLabel:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_CREATE_TILES_DIALOG_LABEL]];
         
     }
     @catch (NSException *e) {
@@ -149,7 +149,7 @@ NSString * const GPKGS_DOWNLOAD_TILES_SEG_CREATE_TILES = @"createTiles";
             SFPProjectionTransform * webMercatorTransform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM andToEpsg:PROJ_EPSG_WEB_MERCATOR];
             GPKGBoundingBox * webMercatorBoundingBox = [self.data.loadTiles.generateTiles.boundingBox transform:webMercatorTransform];
             int zoomLevel = [GPKGTileBoundingBoxUtils getZoomLevelWithWebMercatorBoundingBox:webMercatorBoundingBox];
-            int maxZoomLevel = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MAX_ZOOM_DEFAULT] intValue];
+            int maxZoomLevel = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MAX_ZOOM_DEFAULT] intValue];
             zoomLevel = MAX(0, MIN(zoomLevel, maxZoomLevel - 2));
             self.data.loadTiles.generateTiles.minZoom = [NSNumber numberWithInt:zoomLevel];
             self.data.loadTiles.generateTiles.maxZoom = [NSNumber numberWithInt:maxZoomLevel];

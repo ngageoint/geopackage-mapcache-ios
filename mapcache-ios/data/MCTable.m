@@ -6,14 +6,14 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSTable.h"
+#import "MCTable.h"
 
 NSString * const GPKGS_TABLE_DATABASE = @"database";
 NSString * const GPKGS_TABLE_NAME = @"name";
 NSString * const GPKGS_TABLE_COUNT = @"count";
 NSString * const GPKGS_TABLE_ACTIVE = @"active";
 
-@implementation GPKGSTable
+@implementation MCTable
 
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count{
     self = [super init];

@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GPKGSTableTypes.h"
+#import "MCTableTypes.h"
 
 extern NSString * const GPKGS_TABLE_DATABASE;
 extern NSString * const GPKGS_TABLE_NAME;
 extern NSString * const GPKGS_TABLE_COUNT;
 extern NSString * const GPKGS_TABLE_ACTIVE;
 
-@interface GPKGSTable : NSObject
+@interface MCTable : NSObject
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *database;

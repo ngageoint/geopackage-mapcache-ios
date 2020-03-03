@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSDatabases.h"
-#import "GPKGSTileTable.h"
-#import "GPKGSFeatureTable.h"
-#import "GPKGSFeatureOverlayTable.h"
-#import "GPKGSFeatureTable.h"
+#import "MCDatabases.h"
+#import "MCTileTable.h"
+#import "MCFeatureTable.h"
+#import "MCFeatureOverlayTable.h"
+#import "MCFeatureTable.h"
 
 NSString * const GPKGS_DATABASES_PREFERENCE = @"databases";
 NSString * const GPKGS_TILE_TABLES_PREFERENCE_SUFFIX = @"_tile_tables";
@@ -18,21 +18,21 @@ NSString * const GPKGS_FEATURE_TABLES_PREFERENCE_SUFFIX = @"_feature_tables";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLES_PREFERENCE_SUFFIX = @"_feature_overlay_tables";
 NSString * const GPKGS_TABLE_VALUES_PREFERENCE = @"_tables_values_";
 
-static GPKGSDatabases * instance;
+static MCDatabases * instance;
 
-@interface GPKGSDatabases ()
+@interface MCDatabases ()
 
 @property (nonatomic, strong) NSUserDefaults * settings;
 @property (nonatomic, strong) NSMutableDictionary * databases;
 
 @end
 
-@implementation GPKGSDatabases
+@implementation MCDatabases
 
-+(GPKGSDatabases *) getInstance{
++(MCDatabases *) getInstance{
     if(instance == nil){
         NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-        GPKGSDatabases * active = [[GPKGSDatabases alloc] initWithSettings:settings];
+        MCDatabases * active = [[MCDatabases alloc] initWithSettings:settings];
         [active loadFromPreferences];
         instance = active;
     }
@@ -49,9 +49,9 @@ static GPKGSDatabases * instance;
     return self;
 }
 
--(BOOL) exists: (GPKGSTable *) table{
+-(BOOL) exists: (MCTable *) table{
     BOOL exists = false;
-    GPKGSDatabase * database = [self getDatabaseWithTable:table];
+    MCDatabase * database = [self getDatabaseWithTable:table];
     if(database != nil) {
         exists = [database exists:table];
     }
@@ -60,14 +60,14 @@ static GPKGSDatabases * instance;
 
 -(BOOL) existsWithDatabase: (NSString *) database andTable: (NSString *) table ofType: (enum GPKGSTableType) tableType{
     BOOL exists = false;
-    GPKGSDatabase * db = [self getDatabaseWithName:database];
+    MCDatabase * db = [self getDatabaseWithName:database];
     if(db != nil) {
         exists = [db existsWithTable:table ofType:tableType];
     }
     return exists;
 }
 
-- (BOOL)isActive:(GPKGSDatabase *) database {
+- (BOOL)isActive:(MCDatabase *) database {
     if ([self.databases objectForKey:database.name] != nil) {
         return YES;
     }
@@ -82,7 +82,7 @@ static GPKGSDatabases * instance;
     NSArray * featureOverlays = [self.settings stringArrayForKey:[self getFeatureOverlayTablesPreferenceKeyForDatabase:database]];
     
     for(NSString * featureOverlay in featureOverlays){
-        GPKGSFeatureOverlayTable * featureOverlayTable = [self readFeatureOverlayTable:featureOverlay withDatabase:database];
+        MCFeatureOverlayTable * featureOverlayTable = [self readFeatureOverlayTable:featureOverlay withDatabase:database];
         if(featureOverlayTable != nil){
             [response addObject:featureOverlayTable];
         }
@@ -91,11 +91,11 @@ static GPKGSDatabases * instance;
     return response;
 }
  
--(GPKGSDatabase *) getDatabaseWithTable:(GPKGSTable *) table{
+-(MCDatabase *) getDatabaseWithTable:(MCTable *) table{
     return [self getDatabaseWithName:table.database];
 }
 
--(GPKGSDatabase *) getDatabaseWithName:(NSString *) database{
+-(MCDatabase *) getDatabaseWithName:(NSString *) database{
     return [self.databases objectForKey:database];
 }
 
@@ -103,14 +103,14 @@ static GPKGSDatabases * instance;
     return [self.databases allValues];
 }
 
--(void) addTable: (GPKGSTable *) table{
+-(void) addTable: (MCTable *) table{
     [self addTable:table andUpdatePreferences:true];
 }
 
--(void) addTable: (GPKGSTable *) table andUpdatePreferences: (BOOL) updatePreferences{
-    GPKGSDatabase * database = [self.databases objectForKey:table.database];
+-(void) addTable: (MCTable *) table andUpdatePreferences: (BOOL) updatePreferences{
+    MCDatabase * database = [self.databases objectForKey:table.database];
     if(database == nil){
-        database = [[GPKGSDatabase alloc] initWithName:table.database andExpanded:false];
+        database = [[MCDatabase alloc] initWithName:table.database andExpanded:false];
         [self.databases setObject:database forKey:table.database];
     }
     
@@ -123,12 +123,12 @@ static GPKGSDatabases * instance;
     self.modified = true;
 }
 
--(void) removeTable: (GPKGSTable *) table{
+-(void) removeTable: (MCTable *) table{
     [self removeTable:table andPreserveOverlays:false];
 }
 
--(void) removeTable: (GPKGSTable *) table andPreserveOverlays: (BOOL) preserveOverlays{
-    GPKGSDatabase * database = [self.databases objectForKey:table.database];
+-(void) removeTable: (MCTable *) table andPreserveOverlays: (BOOL) preserveOverlays{
+    MCDatabase * database = [self.databases objectForKey:table.database];
     if(database != nil){
         [database remove:table];
         [self removeTableFromPreferences:table];
@@ -138,12 +138,12 @@ static GPKGSDatabases * instance;
         }
         if(!preserveOverlays && [table getType] == GPKGS_TT_FEATURE){
             NSMutableArray * deleteFeatureOverlays = [[NSMutableArray alloc] init];
-            for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
+            for(MCFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
                 if([featureOverlay.featureTable isEqualToString:table.name]){
                     [deleteFeatureOverlays addObject:featureOverlay];
                 }
             }
-            for(GPKGSFeatureOverlayTable * featureOverlay in deleteFeatureOverlays){
+            for(MCFeatureOverlayTable * featureOverlay in deleteFeatureOverlays){
                 [self removeTable:featureOverlay];
             }
         }
@@ -157,7 +157,7 @@ static GPKGSDatabases * instance;
 
 -(int) getTableCount{
     int count = 0;
-    for(GPKGSDatabase * database in [self.databases allValues]){
+    for(MCDatabase * database in [self.databases allValues]){
         count += [database getTableCount];
     }
     return count;
@@ -165,7 +165,7 @@ static GPKGSDatabases * instance;
 
 -(int) getActiveTableCount{
     int count = 0;
-    for(GPKGSDatabase * database in [self.databases allValues]){
+    for(MCDatabase * database in [self.databases allValues]){
         count += [database getActiveTableCount];
     }
     return count;
@@ -175,8 +175,8 @@ static GPKGSDatabases * instance;
     NSMutableArray * allDatabases = [[NSMutableArray alloc] init];
     [allDatabases addObjectsFromArray:[self.databases allKeys]];
     for(NSString * database in allDatabases){
-        GPKGSDatabase * db = [self.databases objectForKey:database];
-        for(GPKGSTable * table in [db getFeatureOverlays]){
+        MCDatabase * db = [self.databases objectForKey:database];
+        for(MCTable * table in [db getFeatureOverlays]){
             if(table.active){
                 table.active = false;
                 [self addTable:table andUpdatePreferences:true];
@@ -193,13 +193,13 @@ static GPKGSDatabases * instance;
 }
 
 -(void) renameDatabase: (NSString *) database asNewDatabase: (NSString *) newDatabase{
-    GPKGSDatabase * geoPackageDatabase = [self.databases objectForKey:database];
+    MCDatabase * geoPackageDatabase = [self.databases objectForKey:database];
     if(geoPackageDatabase != nil){
         [self.databases removeObjectForKey:database];
         geoPackageDatabase.name = newDatabase;
         [self.databases setObject:geoPackageDatabase forKey:newDatabase];
         [self removeDatabaseFromPreferences:database andPreserveOverlays:false];
-        for(GPKGSTable * table in [geoPackageDatabase getTables]){
+        for(MCTable * table in [geoPackageDatabase getTables]){
             table.database = newDatabase;
             [self addTableToPreferences:table];
         }
@@ -217,17 +217,17 @@ static GPKGSDatabases * instance;
         
         if(tiles != nil){
             for(NSString * tile in tiles){
-                [self addTable:[[GPKGSTileTable alloc] initWithDatabase:database andName:tile andCount:0] andUpdatePreferences:false];
+                [self addTable:[[MCTileTable alloc] initWithDatabase:database andName:tile andCount:0] andUpdatePreferences:false];
             }
         }
         if(features != nil){
             for(NSString * feature in features){
-                [self addTable:[[GPKGSFeatureTable alloc] initWithDatabase:database andName:feature andGeometryType:SF_NONE andCount:0] andUpdatePreferences:false];
+                [self addTable:[[MCFeatureTable alloc] initWithDatabase:database andName:feature andGeometryType:SF_NONE andCount:0] andUpdatePreferences:false];
             }
         }
         if(featureOverlays != nil){
             for(NSString * featureOverlay in featureOverlays){
-                GPKGSFeatureOverlayTable * featureOverlayTable = [self readFeatureOverlayTable:featureOverlay withDatabase:database];
+                MCFeatureOverlayTable * featureOverlayTable = [self readFeatureOverlayTable:featureOverlay withDatabase:database];
                 if(featureOverlayTable != nil){
                     [self addTable:featureOverlayTable andUpdatePreferences:false];
                 }
@@ -257,7 +257,7 @@ static GPKGSDatabases * instance;
     [self.settings synchronize];
 }
 
--(void) removeTableFromPreferences: (GPKGSTable *) table{
+-(void) removeTableFromPreferences: (MCTable *) table{
     
     switch([table getType]){
         case GPKGS_TT_FEATURE:
@@ -301,7 +301,7 @@ static GPKGSDatabases * instance;
     [self.settings synchronize];
 }
 
--(void) addTableToPreferences: (GPKGSTable *) table{
+-(void) addTableToPreferences: (MCTable *) table{
     
     NSArray * databases = [self.settings stringArrayForKey:GPKGS_DATABASES_PREFERENCE];
     if(databases == nil || ![databases containsObject:table.database]){
@@ -365,7 +365,7 @@ static GPKGSDatabases * instance;
     [self.settings synchronize];
 }
 
--(NSString *) getTileTablesPreferenceKeyForTable: (GPKGSTable *) table{
+-(NSString *) getTileTablesPreferenceKeyForTable: (MCTable *) table{
     return [self getTileTablesPreferenceKeyForDatabase:table.database];
 }
 
@@ -373,7 +373,7 @@ static GPKGSDatabases * instance;
     return [NSString stringWithFormat:@"%@%@", database, GPKGS_TILE_TABLES_PREFERENCE_SUFFIX];
 }
 
--(NSString *) getFeatureTablesPreferenceKeyForTable: (GPKGSTable *) table{
+-(NSString *) getFeatureTablesPreferenceKeyForTable: (MCTable *) table{
     return [self getFeatureTablesPreferenceKeyForDatabase:table.database];
 }
 
@@ -381,7 +381,7 @@ static GPKGSDatabases * instance;
     return [NSString stringWithFormat:@"%@%@", database, GPKGS_FEATURE_TABLES_PREFERENCE_SUFFIX];
 }
 
--(NSString *) getFeatureOverlayTablesPreferenceKeyForTable: (GPKGSTable *) table{
+-(NSString *) getFeatureOverlayTablesPreferenceKeyForTable: (MCTable *) table{
     return [self getFeatureOverlayTablesPreferenceKeyForDatabase:table.database];
 }
 
@@ -389,7 +389,7 @@ static GPKGSDatabases * instance;
     return [NSString stringWithFormat:@"%@%@", database, GPKGS_FEATURE_OVERLAY_TABLES_PREFERENCE_SUFFIX];
 }
 
--(void) writeTableValues: (GPKGSTable *) table{
+-(void) writeTableValues: (MCTable *) table{
     
     NSDictionary * values = [table getValues];
     
@@ -397,10 +397,10 @@ static GPKGSDatabases * instance;
     [self.settings synchronize];
 }
 
--(GPKGSFeatureOverlayTable *) readFeatureOverlayTable: (NSString *) table withDatabase: (NSString *) database{
+-(MCFeatureOverlayTable *) readFeatureOverlayTable: (NSString *) table withDatabase: (NSString *) database{
     
     NSDictionary * tableValues = [self readTableValues:table withDatabase:database];
-    GPKGSFeatureOverlayTable * featureOverlayTable = [[GPKGSFeatureOverlayTable alloc] initWithValues:tableValues];
+    MCFeatureOverlayTable * featureOverlayTable = [[MCFeatureOverlayTable alloc] initWithValues:tableValues];
     
     return featureOverlayTable;
 }
@@ -412,7 +412,7 @@ static GPKGSDatabases * instance;
     return tableValues;
 }
 
--(void) deleteTableValues: (GPKGSTable *) table{
+-(void) deleteTableValues: (MCTable *) table{
     [self deleteTableValues:table.name withDatabase:table.database];
 }
 
@@ -421,7 +421,7 @@ static GPKGSDatabases * instance;
     [self.settings synchronize];
 }
 
--(NSString *) getTableValuesPreferenceKeyForTable: (GPKGSTable *) table{
+-(NSString *) getTableValuesPreferenceKeyForTable: (MCTable *) table{
     return [self getTableValuesPreferenceKeyForTable:table.name withDatabase:table.database];
 }
 

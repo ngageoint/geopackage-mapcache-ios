@@ -9,11 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "NGADrawerCoordinator.h"
-#import "GPKGSDatabases.h"
-#import "GPKGSDatabase.h"
+#import "MCDatabases.h"
+#import "MCDatabase.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGGeoPackageFactory.h"
-#import "GPKGSUtils.h"
+#import "MCUtils.h"
 #import "GPKGUtils.h"
 #import "GPKGMapUtils.h"
 #import "GPKGTileBoundingBoxUtils.h"

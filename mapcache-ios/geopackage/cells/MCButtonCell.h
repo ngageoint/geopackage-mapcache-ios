@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "MCColorUtil.h"
-#import "GPKGSConstants.h"
+#import "MCConstants.h"
 
 @protocol MCButtonCellDelegate <NSObject>
 - (void) performButtonAction:(NSString *) action;

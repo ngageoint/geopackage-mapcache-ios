@@ -10,13 +10,13 @@
 #import <MapKit/MapKit.h>
 #import <GPKGGeoPackageManager.h>
 #import <GPKGGeoPackageFactory.h>
-#import "GPKGSUtils.h"
-#import "GPKGSConstants.h"
+#import "MCUtils.h"
+#import "MCConstants.h"
 #import "SFPProjectionConstants.h"
-#import "GPKGSProperties.h"
+#import "MCProperties.h"
 #import "MCButtonCell.h"
 #import "GPKGBoundingBox.h"
-#import "GPKGSDatabase.h"
+#import "MCDatabase.h"
 #import "MCDescriptionCell.h"
 #import "MCSectionTitleCell.h"
 #import "MCFieldWithTitleCell.h"
@@ -29,6 +29,6 @@
 @end
 
 @interface MCFeatureLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, MCButtonCellDelegate>
-@property (strong, nonatomic) GPKGSDatabase *database;
+@property (strong, nonatomic) MCDatabase *database;
 @property (weak, nonatomic) id<MCFeatureLayerCreationDelegate> delegate;
 @end

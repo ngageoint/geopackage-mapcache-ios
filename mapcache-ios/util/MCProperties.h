@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GPKGSProperties : NSObject
+@interface MCProperties : NSObject
 
 +(NSString *) getValueOfProperty: (NSString *) property;
 

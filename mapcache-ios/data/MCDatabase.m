@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSDatabase.h"
+#import "MCDatabase.h"
 
-@interface GPKGSDatabase ()
+@interface MCDatabase ()
 
 @property (nonatomic, strong) NSMutableOrderedSet *featuresSet;
 @property (nonatomic, strong) NSMutableOrderedSet *featureNamesSet;
@@ -19,7 +19,7 @@
 
 @end
 
-@implementation GPKGSDatabase
+@implementation MCDatabase
 
 -(instancetype) initWithName: (NSString *) name andExpanded: (BOOL) expanded{
     self = [super init];
@@ -54,7 +54,7 @@
 
 -(NSInteger) getActiveFeatureOverlayCount{
     int count = 0;
-    for(GPKGSTable * table in self.featureOverlaysSet){
+    for(MCTable * table in self.featureOverlaysSet){
         if(table.active){
             count++;
         }
@@ -73,7 +73,7 @@
 - (NSInteger) activeTileTableCount {
     NSInteger activeCount = 0;
     if ([self.tilesSet count] > 0) {
-        for (GPKGSTable *table in self.tilesSet.array) {
+        for (MCTable *table in self.tilesSet.array) {
             if (table.active) {
                 activeCount++;
             }
@@ -86,7 +86,7 @@
 - (NSInteger) activeFeatureTableCount {
     NSInteger activeCount = 0;
     if ([self.featuresSet count] > 0) {
-        for (GPKGSTable *table in self.tilesSet.array) {
+        for (MCTable *table in self.tilesSet.array) {
             if (table.active) {
                 activeCount++;
             }
@@ -112,22 +112,22 @@
     return [self getFeatureCount] + [self getTileCount] + [self getActiveFeatureOverlayCount];
 }
 
--(void) addFeature: (GPKGSTable *) table{
+-(void) addFeature: (MCTable *) table{
     [self.featuresSet addObject:table];
     [self.featureNamesSet addObject:table.name];
 }
 
--(void) addFeatureOverlay: (GPKGSTable *) table{
+-(void) addFeatureOverlay: (MCTable *) table{
     [self.featureOverlaysSet addObject:table];
     [self.featureOverlayNamesSet addObject:table.name];
 }
 
--(void) addTile: (GPKGSTable *) table{
+-(void) addTile: (MCTable *) table{
     [self.tilesSet addObject:table];
     [self.tileNamesSet addObject:table.name];
 }
 
--(void) removeFeature: (GPKGSTable *) table{
+-(void) removeFeature: (MCTable *) table{
     NSUInteger index = [self.featureNamesSet indexOfObject:table.name];
     if(index != NSNotFound){
         [self.featuresSet removeObjectAtIndex:index];
@@ -135,7 +135,7 @@
     }
 }
 
--(void) removeFeatureOverlay: (GPKGSTable *) table{
+-(void) removeFeatureOverlay: (MCTable *) table{
     NSUInteger index = [self.featureOverlayNamesSet indexOfObject:table.name];
     if(index != NSNotFound){
         [self.featureOverlaysSet removeObjectAtIndex:index];
@@ -143,7 +143,7 @@
     }
 }
 
--(void) removeTile: (GPKGSTable *) table{
+-(void) removeTile: (MCTable *) table{
     NSUInteger index = [self.tileNamesSet indexOfObject:table.name];
     if(index != NSNotFound){
         [self.tilesSet removeObjectAtIndex:index];
@@ -151,7 +151,7 @@
     }
 }
 
--(BOOL) exists: (GPKGSTable *) table{
+-(BOOL) exists: (MCTable *) table{
     return [self existsWithTable:table.name ofType:[table getType]];
 }
 
@@ -176,7 +176,7 @@
     return exists;
 }
 
--(void) add:(GPKGSTable *) table{
+-(void) add:(MCTable *) table{
     switch([table getType]){
         case GPKGS_TT_FEATURE:
             [self addFeature:table];
@@ -192,7 +192,7 @@
     }
 }
 
--(void) remove:(GPKGSTable *) table{
+-(void) remove:(MCTable *) table{
     switch([table getType]){
         case GPKGS_TT_FEATURE:
             [self removeFeature:table];

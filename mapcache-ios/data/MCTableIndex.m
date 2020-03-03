@@ -6,11 +6,11 @@
 //  Copyright © 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSTableIndex.h"
+#import "MCTableIndex.h"
 
-@implementation GPKGSTableIndex
+@implementation MCTableIndex
 
--(instancetype) initWithTable: (GPKGSTable *) table andIndexLocation: (enum GPKGFeatureIndexType) indexLocation{
+-(instancetype) initWithTable: (MCTable *) table andIndexLocation: (enum GPKGFeatureIndexType) indexLocation{
     self = [super init];
     if(self != nil){
         self.table = table;

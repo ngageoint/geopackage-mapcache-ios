@@ -7,13 +7,13 @@
 //
 
 #import "GPKGSCreateFeaturesViewController.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
-#import "GPKGSDecimalValidator.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
+#import "MCDecimalValidator.h"
 #import "GPKGGeoPackage.h"
 #import "SFPProjectionConstants.h"
 #import "GPKGSBoundingBoxViewController.h"
-#import "GPKGSUtils.h"
+#import "MCUtils.h"
 
 NSString * const GPKGS_CREATE_FEATURES_SEG_BOUNDING_BOX = @"boundingBox";
 
@@ -33,10 +33,10 @@ NSString * const GPKGS_CREATE_FEATURES_SEG_BOUNDING_BOX = @"boundingBox";
     [super viewDidLoad];
     
     [self.databaseValue setText:self.database.name];
-    self.geometryTypes = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
+    self.geometryTypes = [MCProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
     [self.geometryTypeButton setTitle:[self.geometryTypes objectAtIndex:0] forState:UIControlStateNormal];
 
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.nameValue.inputAccessoryView = keyboardToolbar;
 }
@@ -115,7 +115,7 @@ NSString * const GPKGS_CREATE_FEATURES_SEG_BOUNDING_BOX = @"boundingBox";
 - (IBAction)geometryType:(id)sender {
     
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPE_LABEL]
+                          initWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPE_LABEL]
                           message:nil
                           delegate:self
                           cancelButtonTitle:nil
@@ -124,7 +124,7 @@ NSString * const GPKGS_CREATE_FEATURES_SEG_BOUNDING_BOX = @"boundingBox";
     for (NSString *geometryType in self.geometryTypes) {
         [alert addButtonWithTitle:geometryType];
     }
-    alert.cancelButtonIndex = [alert addButtonWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
+    alert.cancelButtonIndex = [alert addButtonWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
     
     alert.tag = TAG_GEOMETRY_TYPES;
     

@@ -9,19 +9,19 @@
 #import "GPKGSManagerViewController.h"
 #import <objc/runtime.h>
 #import "GPKGGeoPackageFactory.h"
-#import "GPKGSFeatureTable.h"
-#import "GPKGSTileTable.h"
-#import "GPKGSDatabase.h"
+#import "MCFeatureTable.h"
+#import "MCTileTable.h"
+#import "MCDatabase.h"
 #import "GPKGSTableCell.h"
 #import "GPKGSDatabaseCell.h"
-#import "GPKGSConstants.h"
+#import "MCConstants.h"
 #import "GPKGSActiveTableSwitch.h"
-#import "GPKGSProperties.h"
-#import "GPKGSUtils.h"
+#import "MCProperties.h"
+#import "MCUtils.h"
 #import "GPKGSDisplayTextViewController.h"
-#import "GPKGSFeatureOverlayTable.h"
-#import "GPKGSDatabases.h"
-#import "GPKGSIndexerTask.h"
+#import "MCFeatureOverlayTable.h"
+#import "MCDatabases.h"
+#import "MCIndexerTask.h"
 #import "GPKGSCreateFeaturesViewController.h"
 #import "GPKGSManagerCreateTilesViewController.h"
 #import "GPKGSManagerLoadTilesViewController.h"
@@ -31,7 +31,7 @@
 #import "GPKGSAddTileOverlayViewController.h"
 #import "GPKGSManagerEditTileOverlayViewController.h"
 #import "GPKGFeatureIndexManager.h"
-#import "GPKGSTableIndex.h"
+#import "MCTableIndex.h"
 #import "GPKGSLinkedTablesViewController.h"
 
 NSString * const GPKGS_MANAGER_SEG_DOWNLOAD_FILE = @"downloadFile";
@@ -55,7 +55,7 @@ const char ConstantKey;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) NSMutableDictionary *databases;
 @property (nonatomic, strong) NSMutableArray *tableCells;
-@property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic, strong) NSUserDefaults * settings;
 @property (nonatomic) BOOL retainModifiedForMap;
 @property (nonatomic, strong) UIDocumentInteractionController *shareDocumentController;
@@ -86,12 +86,12 @@ const char ConstantKey;
                                                object:nil];
     
     self.manager = [GPKGGeoPackageFactory getManager];
-    self.active = [GPKGSDatabases getInstance];
+    self.active = [MCDatabases getInstance];
     self.settings = [NSUserDefaults standardUserDefaults];
     NSArray * expandedDatabases = [self.settings stringArrayForKey:GPKGS_EXPANDED_PREFERENCE];
     self.databases = [[NSMutableDictionary alloc] init];
     for(NSString * expandedDatabase in expandedDatabases){
-        [self.databases setObject:[[GPKGSDatabase alloc] initWithName:expandedDatabase andExpanded:true] forKey:expandedDatabase];
+        [self.databases setObject:[[MCDatabase alloc] initWithName:expandedDatabase andExpanded:true] forKey:expandedDatabase];
     }
     self.retainModifiedForMap = false;
     [self update];
@@ -131,13 +131,13 @@ const char ConstantKey;
             geoPackage = [self.manager open:database];
             BOOL expanded = false;
             if(previousDatabases != nil){
-                GPKGSDatabase * previousDatabase = [previousDatabases objectForKey:database];
+                MCDatabase * previousDatabase = [previousDatabases objectForKey:database];
                 if(previousDatabase != nil){
                     expanded = previousDatabase.expanded;
                 }
             }
             
-            GPKGSDatabase * theDatabase = [[GPKGSDatabase alloc] initWithName:database andExpanded:expanded];
+            MCDatabase * theDatabase = [[MCDatabase alloc] initWithName:database andExpanded:expanded];
             [self.databases setObject:theDatabase forKey:database];
             [self.tableCells addObject:theDatabase];
             NSMutableArray * tables = [[NSMutableArray alloc] init];
@@ -151,7 +151,7 @@ const char ConstantKey;
                 GPKGGeometryColumns * geometryColumns = [contentsDao getGeometryColumns:contents];
                 enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
                 
-                GPKGSFeatureTable * table = [[GPKGSFeatureTable alloc] initWithDatabase:database andName:tableName andGeometryType:geometryType andCount:count];
+                MCFeatureTable * table = [[MCFeatureTable alloc] initWithDatabase:database andName:tableName andGeometryType:geometryType andCount:count];
                 [table setActive:[self.active exists:table]];
                 
                 [tables addObject:table];
@@ -165,7 +165,7 @@ const char ConstantKey;
                 GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName: tableName];
                 int count = [tileDao count];
                 
-                GPKGSTileTable * table = [[GPKGSTileTable alloc] initWithDatabase:database andName:tableName andCount:count];
+                MCTileTable * table = [[MCTileTable alloc] initWithDatabase:database andName:tableName andCount:count];
                 [table setActive:[self.active exists:table]];
                 
                 [tables addObject:table];
@@ -175,7 +175,7 @@ const char ConstantKey;
                 }
             }
             
-            for(GPKGSFeatureOverlayTable * table in [self.active featureOverlays:database]){
+            for(MCFeatureOverlayTable * table in [self.active featureOverlays:database]){
                 GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:table.featureTable];
                 int count = [featureDao count];
                 [table setCount:count];
@@ -221,29 +221,29 @@ const char ConstantKey;
     UITableViewCell *cell = nil;
     
     NSObject * cellObject = [self.tableCells objectAtIndex:indexPath.row];
-    if([cellObject isKindOfClass:[GPKGSDatabase class]]){
+    if([cellObject isKindOfClass:[MCDatabase class]]){
         cell = [tableView dequeueReusableCellWithIdentifier:GPKGS_CELL_DATABASE forIndexPath:indexPath];
         GPKGSDatabaseCell * dbCell = (GPKGSDatabaseCell *) cell;
-        GPKGSDatabase * database = (GPKGSDatabase *) cellObject;
+        MCDatabase * database = (MCDatabase *) cellObject;
         [dbCell.database setText:database.name];
-        NSString *expandImage = database.expanded ? [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_UP] : [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_DOWN];
+        NSString *expandImage = database.expanded ? [MCProperties getValueOfProperty:GPKGS_PROP_ICON_UP] : [MCProperties getValueOfProperty:GPKGS_PROP_ICON_DOWN];
         [dbCell.expandImage setImage:[UIImage imageNamed:expandImage]];
         [dbCell.optionsButton setDatabase:database];
     }else{
         cell = [tableView dequeueReusableCellWithIdentifier:GPKGS_CELL_TABLE forIndexPath:indexPath];
         GPKGSTableCell * tableCell = (GPKGSTableCell *) cell;
-        GPKGSTable * table = (GPKGSTable *) cellObject;
+        MCTable * table = (MCTable *) cellObject;
         NSString * typeImage = nil;
-        if([cellObject isKindOfClass:[GPKGSFeatureOverlayTable class]]){
-            typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_PAINT];
-        }else if([cellObject isKindOfClass:[GPKGSFeatureTable class]]){
-            GPKGSFeatureTable * featureTable = (GPKGSFeatureTable *) cellObject;
-            typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
+        if([cellObject isKindOfClass:[MCFeatureOverlayTable class]]){
+            typeImage = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_PAINT];
+        }else if([cellObject isKindOfClass:[MCFeatureTable class]]){
+            MCFeatureTable * featureTable = (MCFeatureTable *) cellObject;
+            typeImage = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
             if(featureTable.geometryType != SF_NONE){
                 switch(featureTable.geometryType){
                     case SF_POINT:
                     case SF_MULTIPOINT:
-                        typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_POINT];
+                        typeImage = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_POINT];
                         break;
                     case SF_LINESTRING:
                     case SF_MULTILINESTRING:
@@ -251,7 +251,7 @@ const char ConstantKey;
                     case SF_COMPOUNDCURVE:
                     case SF_CIRCULARSTRING:
                     case SF_MULTICURVE:
-                        typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_LINESTRING];
+                        typeImage = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_LINESTRING];
                         break;
                     case SF_POLYGON:
                     case SF_SURFACE:
@@ -261,17 +261,17 @@ const char ConstantKey;
                     case SF_TIN:
                     case SF_MULTIPOLYGON:
                     case SF_MULTISURFACE:
-                        typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_POLYGON];
+                        typeImage = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_POLYGON];
                         break;
                     case SF_GEOMETRY:
                     case SF_GEOMETRYCOLLECTION:
                     case SF_NONE:
-                        typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
+                        typeImage = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
                         break;
                 }
             }
-        }else if([cellObject isKindOfClass:[GPKGSTileTable class]]){
-            typeImage = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_TILES];
+        }else if([cellObject isKindOfClass:[MCTileTable class]]){
+            typeImage = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILES];
         }
         tableCell.active.on = table.active;
         if(typeImage != nil){
@@ -289,8 +289,8 @@ const char ConstantKey;
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSObject * cellObject = [self.tableCells objectAtIndex:indexPath.row];
-    if([cellObject isKindOfClass:[GPKGSDatabase class]]){
-        GPKGSDatabase * database = (GPKGSDatabase *) cellObject;
+    if([cellObject isKindOfClass:[MCDatabase class]]){
+        MCDatabase * database = (MCDatabase *) cellObject;
         [self expandOrCollapseDatabase:database atIndexPath:indexPath];
         
 //        MCGeoPackageCoordinator *coordinator = [[MCGeoPackageCoordinator alloc] initWithDelegate:self andDatabase:database]; 
@@ -310,12 +310,12 @@ const char ConstantKey;
 }
 
 
--(void) expandOrCollapseDatabase: (GPKGSDatabase *) database atIndexPath:(NSIndexPath *)indexPath{
+-(void) expandOrCollapseDatabase: (MCDatabase *) database atIndexPath:(NSIndexPath *)indexPath{
     
     if(database.expanded){
         for(NSInteger i = indexPath.row + 1; i < self.tableCells.count;){
             NSObject * cellObject = [self.tableCells objectAtIndex:i];
-            if([cellObject isKindOfClass:[GPKGSDatabase class]]){
+            if([cellObject isKindOfClass:[MCDatabase class]]){
                 break;
             }else{
                 [self.tableCells removeObjectAtIndex:i];
@@ -336,7 +336,7 @@ const char ConstantKey;
 }
 
 - (IBAction)tableActiveChanged:(GPKGSActiveTableSwitch *)sender {
-    GPKGSTable * table = sender.table;
+    MCTable * table = sender.table;
     table.active = sender.on;
     
     if([table getType] == GPKGS_TT_FEATURE_OVERLAY){
@@ -396,14 +396,14 @@ const char ConstantKey;
                           initWithTitle:sender.database.name
                           message:nil
                           delegate:self
-                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
-                          otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_VIEW_LABEL],
-                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_DELETE_LABEL],
-                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL],
-                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL],
-                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_SHARE_LABEL],
-                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL],
-                          [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL],
+                          cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          otherButtonTitles:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_VIEW_LABEL],
+                          [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_DELETE_LABEL],
+                          [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL],
+                          [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL],
+                          [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_SHARE_LABEL],
+                          [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL],
+                          [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL],
                           nil];
     
     alert.tag = TAG_DATABASE_OPTIONS;
@@ -416,7 +416,7 @@ const char ConstantKey;
 - (void) handleDatabaseOptionsWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex > 0){
         
-        GPKGSDatabase *database = objc_getAssociatedObject(alertView, &ConstantKey);
+        MCDatabase *database = objc_getAssociatedObject(alertView, &ConstantKey);
         switch (buttonIndex) {
             case 1:
                 [self viewDatabaseOption:database];
@@ -448,25 +448,25 @@ const char ConstantKey;
 - (IBAction)tableOptions:(GPKGSTableOptionsButton *)sender {
     
     NSMutableArray * options = [[NSMutableArray alloc] init];
-    [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_VIEW_LABEL]];
-    [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_EDIT_LABEL]];
-    [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL]];
+    [options addObject:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_VIEW_LABEL]];
+    [options addObject:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_EDIT_LABEL]];
+    [options addObject:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL]];
     
     switch([sender.table getType]){
         case GPKGS_TT_FEATURE:
-            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_LABEL]];
-            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]];
-            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL]];
-            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_LINKED_TABLES_LABEL]];
+            [options addObject:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_LABEL]];
+            [options addObject:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]];
+            [options addObject:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL]];
+            [options addObject:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_LINKED_TABLES_LABEL]];
             break;
         case GPKGS_TT_TILE:
-            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
-            [options addObject:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_LINKED_TABLES_LABEL]];
+            [options addObject:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
+            [options addObject:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_LINKED_TABLES_LABEL]];
             break;
         case GPKGS_TT_FEATURE_OVERLAY:
             break;
         default:
-            [NSException raise:@"Unsupported" format:@"Unsupported table type: %@", [GPKGSTableTypes name:sender.table.getType]];
+            [NSException raise:@"Unsupported" format:@"Unsupported table type: %@", [MCTableTypes name:sender.table.getType]];
     }
     
     UIAlertView *alert = [[UIAlertView alloc]
@@ -479,7 +479,7 @@ const char ConstantKey;
     for (NSString *option in options) {
         [alert addButtonWithTitle:option];
     }
-    alert.cancelButtonIndex = [alert addButtonWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
+    alert.cancelButtonIndex = [alert addButtonWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
                           
     alert.tag = TAG_TABLE_OPTIONS;
     
@@ -491,7 +491,7 @@ const char ConstantKey;
 - (void) handleTableOptionsWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex >= 0){
         
-        GPKGSTable *table = objc_getAssociatedObject(alertView, &ConstantKey);
+        MCTable *table = objc_getAssociatedObject(alertView, &ConstantKey);
         switch(buttonIndex){
             case 0:
                 switch([table getType]){
@@ -511,7 +511,7 @@ const char ConstantKey;
                         [self editTilesTableOption:table];
                         break;
                     case GPKGS_TT_FEATURE_OVERLAY:
-                        [self editFeatureOverlayTableOption:(GPKGSFeatureOverlayTable *)table];
+                        [self editFeatureOverlayTableOption:(MCFeatureOverlayTable *)table];
                         break;
                 }
                 break;
@@ -573,17 +573,17 @@ const char ConstantKey;
     }
 }
 
--(void) viewDatabaseOption: (GPKGSDatabase *) database{
+-(void) viewDatabaseOption: (MCDatabase *) database{
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DISPLAY_TEXT sender:database];
 }
 
 -(void) deleteDatabaseOption: (NSString *) database{
-    NSString * label = [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_DELETE_LABEL];
+    NSString * label = [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_DELETE_LABEL];
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle:label
                           message:[NSString stringWithFormat:@"%@ %@?", label, database]
                           delegate:self
-                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
                           otherButtonTitles:label,
                           nil];
     alert.tag = TAG_DATABASE_DELETE;
@@ -602,11 +602,11 @@ const char ConstantKey;
 
 -(void) renameDatabaseOption: (NSString *) database{
     UIAlertView * alert = [[UIAlertView alloc]
-                           initWithTitle:[NSString stringWithFormat:@"%@ '%@'", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL], database]
+                           initWithTitle:[NSString stringWithFormat:@"%@ '%@'", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL], database]
                            message:nil
                            delegate:self
-                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
-                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                           cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                           otherButtonTitles:[MCProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
                            nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     [[alert textFieldAtIndex:0] setText:database];
@@ -625,13 +625,13 @@ const char ConstantKey;
                     [self.active renameDatabase:database asNewDatabase:newName];
                     [self updateAndReloadData];
                 }else{
-                    [GPKGSUtils showMessageWithDelegate:self
-                                               andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
+                    [MCUtils showMessageWithDelegate:self
+                                               andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
                                              andMessage:[NSString stringWithFormat:@"Rename from %@ to %@ was not successful", database, newName]];
                 }
             }
             @catch (NSException *exception) {
-                [GPKGSUtils showMessageWithDelegate:self
+                [MCUtils showMessageWithDelegate:self
                                            andTitle:[NSString stringWithFormat:@"Rename %@ to %@", database, newName]
                                          andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
             }
@@ -641,14 +641,14 @@ const char ConstantKey;
 
 -(void) copyDatabaseOption: (NSString *) database{
     UIAlertView * alert = [[UIAlertView alloc]
-                           initWithTitle:[NSString stringWithFormat:@"%@ '%@'", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL], database]
+                           initWithTitle:[NSString stringWithFormat:@"%@ '%@'", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL], database]
                            message:nil
                            delegate:self
-                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
-                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                           cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                           otherButtonTitles:[MCProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
                            nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-    [[alert textFieldAtIndex:0] setText:[NSString stringWithFormat:@"%@%@", database, [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_SUFFIX]]];
+    [[alert textFieldAtIndex:0] setText:[NSString stringWithFormat:@"%@%@", database, [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_SUFFIX]]];
     alert.tag = TAG_DATABASE_COPY;
     objc_setAssociatedObject(alert, &ConstantKey, database, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [alert show];
@@ -663,13 +663,13 @@ const char ConstantKey;
                 if([self.manager copy:database to:newName]){
                     [self updateAndReloadData];
                 }else{
-                    [GPKGSUtils showMessageWithDelegate:self
-                                               andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL]
+                    [MCUtils showMessageWithDelegate:self
+                                               andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL]
                                              andMessage:[NSString stringWithFormat:@"Copy from %@ to %@ was not successful", database, newName]];
                 }
             }
             @catch (NSException *exception) {
-                [GPKGSUtils showMessageWithDelegate:self
+                [MCUtils showMessageWithDelegate:self
                                            andTitle:[NSString stringWithFormat:@"Copy %@ to %@", database, newName]
                                          andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
             }
@@ -686,45 +686,45 @@ const char ConstantKey;
         [self.shareDocumentController setUTI:@"public.database"];
         [self.shareDocumentController presentOpenInMenuFromRect:self.view.bounds inView:self.view animated:YES];
     }else{
-        [GPKGSUtils showMessageWithDelegate:self
+        [MCUtils showMessageWithDelegate:self
                                    andTitle:[NSString stringWithFormat:@"Share Database %@", database]
                                  andMessage:[NSString stringWithFormat:@"No path was found for database %@", database]];
     }
 }
 
--(void) createFeaturesDatabaseOption: (GPKGSDatabase *) database
+-(void) createFeaturesDatabaseOption: (MCDatabase *) database
 {
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_CREATE_FEATURES sender:database];
 }
 
--(void) createTilesDatabaseOption: (GPKGSDatabase *) database
+-(void) createTilesDatabaseOption: (MCDatabase *) database
 {
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_CREATE_TILES sender:database];
 }
 
--(void) viewTableOption: (GPKGSTable *) table{
+-(void) viewTableOption: (MCTable *) table{
         [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_DISPLAY_TEXT sender:table];
 }
 
--(void) editFeaturesTableOption: (GPKGSTable *) table{
+-(void) editFeaturesTableOption: (MCTable *) table{
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_EDIT_FEATURES sender:table];
 }
 
--(void) editTilesTableOption: (GPKGSTable *) table{
+-(void) editTilesTableOption: (MCTable *) table{
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_EDIT_TILES sender:table];
 }
 
--(void) editFeatureOverlayTableOption: (GPKGSFeatureOverlayTable *) table{
+-(void) editFeatureOverlayTableOption: (MCFeatureOverlayTable *) table{
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_EDIT_TILE_OVERLAY sender:table];
 }
 
--(void) deleteTableOption: (GPKGSTable *) table{
-    NSString * label = [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL];
+-(void) deleteTableOption: (MCTable *) table{
+    NSString * label = [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL];
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle:label
                           message:[NSString stringWithFormat:@"%@ %@ - %@?", label, table.database, table.name]
                           delegate:self
-                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
                           otherButtonTitles:label,
                           nil];
     alert.tag = TAG_TABLE_DELETE;
@@ -734,7 +734,7 @@ const char ConstantKey;
 
 - (void) handleDeleteTableWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex > 0){
-        GPKGSTable *table = objc_getAssociatedObject(alertView, &ConstantKey);
+        MCTable *table = objc_getAssociatedObject(alertView, &ConstantKey);
         
         switch([table getType]){
             case GPKGS_TT_FEATURE:
@@ -747,8 +747,8 @@ const char ConstantKey;
                         [self updateAndReloadData];
                     }
                     @catch (NSException *exception) {
-                        [GPKGSUtils showMessageWithDelegate:self
-                                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], table.database, table.name]
+                        [MCUtils showMessageWithDelegate:self
+                                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], table.database, table.name]
                                                  andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
                     }
                     @finally {
@@ -765,7 +765,7 @@ const char ConstantKey;
     }
 }
 
--(void) indexFeaturesOption: (GPKGSTable *) table{
+-(void) indexFeaturesOption: (MCTable *) table{
     
     BOOL geoPackageIndexed = false;
     BOOL metadataIndexed = false;
@@ -786,20 +786,20 @@ const char ConstantKey;
     }
     
     NSMutableString * geoPackageIndexLabel = [[NSMutableString alloc] initWithString:geoPackageIndexed ?
-                                              [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL] :
-                                              [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL]];
-    [geoPackageIndexLabel appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_GEOPACKAGE_LABEL]];
+                                              [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL] :
+                                              [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL]];
+    [geoPackageIndexLabel appendFormat:@" %@", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_GEOPACKAGE_LABEL]];
     
     NSMutableString * metadataIndexLabel = [[NSMutableString alloc] initWithString:metadataIndexed ?
-                                            [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL] :
-                                            [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL]];
-    [metadataIndexLabel appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_METADATA_LABEL]];
+                                            [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL] :
+                                            [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL]];
+    [metadataIndexLabel appendFormat:@" %@", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_METADATA_LABEL]];
     
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:[NSString stringWithFormat:@"%@ - %@ %@",table.database,table.name, [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]]
+                          initWithTitle:[NSString stringWithFormat:@"%@ - %@ %@",table.database,table.name, [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]]
                           message:nil
                           delegate:self
-                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
                           otherButtonTitles:geoPackageIndexLabel,
                             metadataIndexLabel,
                             nil];
@@ -814,7 +814,7 @@ const char ConstantKey;
 - (void) handleIndexFeaturesWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex > 0){
         
-        GPKGSTable *table = objc_getAssociatedObject(alertView, &ConstantKey);
+        MCTable *table = objc_getAssociatedObject(alertView, &ConstantKey);
         
         enum GPKGFeatureIndexType indexLocation = GPKG_FIT_NONE;
         switch(buttonIndex){
@@ -828,12 +828,12 @@ const char ConstantKey;
                 break;
         }
         
-        GPKGSTableIndex * tableIndex = [[GPKGSTableIndex alloc] initWithTable:table andIndexLocation:indexLocation];
+        MCTableIndex * tableIndex = [[MCTableIndex alloc] initWithTable:table andIndexLocation:indexLocation];
         [self createOrDeleteFeatureIndexWithTableIndex:tableIndex];
     }
 }
 
-- (void) createOrDeleteFeatureIndexWithTableIndex: (GPKGSTableIndex *) tableIndex{
+- (void) createOrDeleteFeatureIndexWithTableIndex: (MCTableIndex *) tableIndex{
     BOOL indexed = false;
     GPKGGeoPackage * geoPackage = [self.manager open:tableIndex.table.database];
     @try {
@@ -855,20 +855,20 @@ const char ConstantKey;
     }
 }
 
-- (void) deleteFeatureIndexWithTableIndex: (GPKGSTableIndex *) tableIndex{
-    NSString * title = [NSString stringWithFormat:@"%@ %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL],
-                        [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
+- (void) deleteFeatureIndexWithTableIndex: (MCTableIndex *) tableIndex{
+    NSString * title = [NSString stringWithFormat:@"%@ %@", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL],
+                        [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
     NSMutableString * message = [[NSMutableString alloc] initWithFormat:@"%@ %@ - %@ %@",
-                                 [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL],
+                                 [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_LABEL],
                                  tableIndex.table.database,
                                  tableIndex.table.name,
-                                 [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
+                                 [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
     switch(tableIndex.indexLocation){
         case GPKG_FIT_GEOPACKAGE:
-            [message appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_GEOPACKAGE_LABEL]];
+            [message appendFormat:@" %@", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_GEOPACKAGE_LABEL]];
             break;
         case GPKG_FIT_METADATA:
-            [message appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_METADATA_LABEL]];
+            [message appendFormat:@" %@", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_DELETE_METADATA_LABEL]];
             break;
         default:
             break;
@@ -877,8 +877,8 @@ const char ConstantKey;
                            initWithTitle:title
                            message:message
                            delegate:self
-                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
-                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                           cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                           otherButtonTitles:[MCProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
                            nil];
     alert.tag = TAG_DELETE_INDEX_FEATURES;
     objc_setAssociatedObject(alert, &ConstantKey, tableIndex, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -888,7 +888,7 @@ const char ConstantKey;
 - (void) handleDeleteIndexFeaturesWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex > 0){
         
-        GPKGSTableIndex *tableIndex = objc_getAssociatedObject(alertView, &ConstantKey);
+        MCTableIndex *tableIndex = objc_getAssociatedObject(alertView, &ConstantKey);
         
         GPKGGeoPackage * geoPackage = [self.manager open:tableIndex.table.database];
         @try {
@@ -907,20 +907,20 @@ const char ConstantKey;
     }
 }
 
-- (void) createFeatureIndexWithTableIndex: (GPKGSTableIndex *) tableIndex{
-    NSString * title = [NSString stringWithFormat:@"%@ %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL],
-                        [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
+- (void) createFeatureIndexWithTableIndex: (MCTableIndex *) tableIndex{
+    NSString * title = [NSString stringWithFormat:@"%@ %@", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL],
+                        [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
     NSMutableString * message = [[NSMutableString alloc] initWithFormat:@"%@ %@ - %@ %@",
-                                 [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL],
+                                 [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_LABEL],
                                  tableIndex.table.database,
                                  tableIndex.table.name,
-                                 [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
+                                 [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE]];
     switch(tableIndex.indexLocation){
         case GPKG_FIT_GEOPACKAGE:
-            [message appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_GEOPACKAGE_LABEL]];
+            [message appendFormat:@" %@", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_GEOPACKAGE_LABEL]];
             break;
         case GPKG_FIT_METADATA:
-            [message appendFormat:@" %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_METADATA_LABEL]];
+            [message appendFormat:@" %@", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_CREATE_METADATA_LABEL]];
             break;
         default:
             break;
@@ -929,8 +929,8 @@ const char ConstantKey;
                            initWithTitle:title
                            message:message
                            delegate:self
-                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
-                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                           cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                           otherButtonTitles:[MCProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
                            nil];
     alert.tag = TAG_CREATE_INDEX_FEATURES;
     objc_setAssociatedObject(alert, &ConstantKey, tableIndex, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -939,24 +939,24 @@ const char ConstantKey;
 
 - (void) handleCreateIndexFeaturesWithAlertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex > 0){
-        GPKGSTableIndex *tableIndex = objc_getAssociatedObject(alertView, &ConstantKey);
-        [GPKGSIndexerTask indexFeaturesWithCallback:self andDatabase:tableIndex.table.database andTable:tableIndex.table.name andFeatureIndexType:tableIndex.indexLocation];
+        MCTableIndex *tableIndex = objc_getAssociatedObject(alertView, &ConstantKey);
+        [MCIndexerTask indexFeaturesWithCallback:self andDatabase:tableIndex.table.database andTable:tableIndex.table.name andFeatureIndexType:tableIndex.indexLocation];
     }
 }
 
--(void) linkedTablesOption: (GPKGSTable *) table{
+-(void) linkedTablesOption: (MCTable *) table{
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_LINKED_TABLES sender:table];
 }
 
--(void) loadTilesTableOption: (GPKGSTable *) table{
+-(void) loadTilesTableOption: (MCTable *) table{
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_LOAD_TILES sender:table];
 }
 
--(void) createFeatureTilesTableOption: (GPKGSTable *) table{
+-(void) createFeatureTilesTableOption: (MCTable *) table{
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_CREATE_FEATURE_TILES sender:table];
 }
 
--(void) addFeatureOverlayTableOption: (GPKGSTable *) table{
+-(void) addFeatureOverlayTableOption: (MCTable *) table{
     [self performSegueWithIdentifier:GPKGS_MANAGER_SEG_ADD_TILE_OVERLAY sender:table];
 }
 
@@ -979,11 +979,11 @@ const char ConstantKey;
 
 - (IBAction)create:(id)sender {
     UIAlertView * alert = [[UIAlertView alloc]
-                           initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_LABEL]
+                           initWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_LABEL]
                            message:nil
                            delegate:self
-                           cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
-                           otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                           cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                           otherButtonTitles:[MCProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
                            nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     alert.tag = TAG_DATABASE_CREATE;
@@ -998,14 +998,14 @@ const char ConstantKey;
                 if([self.manager create:createName]){
                     [self updateAndReloadData];
                 }else{
-                    [GPKGSUtils showMessageWithDelegate:self
-                                               andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_LABEL]
+                    [MCUtils showMessageWithDelegate:self
+                                               andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_LABEL]
                                              andMessage:[NSString stringWithFormat:@"Failed to create GeoPackage: %@", createName]];
                 }
             }
             @catch (NSException *exception) {
-                [GPKGSUtils showMessageWithDelegate:self
-                                           andTitle:[NSString stringWithFormat:@"%@ %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_LABEL], createName]
+                [MCUtils showMessageWithDelegate:self
+                                           andTitle:[NSString stringWithFormat:@"%@ %@", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_LABEL], createName]
                                          andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
             }
         }
@@ -1013,7 +1013,7 @@ const char ConstantKey;
 }
 
 - (IBAction)expandAll:(id)sender {
-    for(GPKGSDatabase * database in [self.databases allValues]){
+    for(MCDatabase * database in [self.databases allValues]){
         database.expanded = true;
         [self addExpandedSetting:database.name];
     }
@@ -1021,7 +1021,7 @@ const char ConstantKey;
 }
 
 - (IBAction)collapseAll:(id)sender {
-    for(GPKGSDatabase * database in [self.databases allValues]){
+    for(MCDatabase * database in [self.databases allValues]){
         database.expanded = false;
     }
     [self clearExpandedSettings];
@@ -1031,10 +1031,10 @@ const char ConstantKey;
 - (IBAction)clearActive:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle:nil
-                          message:[NSString stringWithFormat:@"%@ - %d", [GPKGSProperties getValueOfProperty:GPKGS_PROP_CLEAR_ACTIVE_LABEL], [self.active getActiveTableCount]]
+                          message:[NSString stringWithFormat:@"%@ - %d", [MCProperties getValueOfProperty:GPKGS_PROP_CLEAR_ACTIVE_LABEL], [self.active getActiveTableCount]]
                           delegate:self
-                          cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
-                          otherButtonTitles:[GPKGSProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
+                          cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                          otherButtonTitles:[MCProperties getValueOfProperty:GPKGS_PROP_OK_LABEL],
                           nil];
     alert.tag = TAG_CLEAR_ACTIVE;
     [alert show];
@@ -1049,9 +1049,9 @@ const char ConstantKey;
 
 -(void) updateClearActiveButton{
     if([self.active getActiveTableCount] > 0){
-        [GPKGSUtils enableButton:self.clearActiveButton];
+        [MCUtils enableButton:self.clearActiveButton];
     }else{
-        [GPKGSUtils disableButton:self.clearActiveButton];
+        [MCUtils disableButton:self.clearActiveButton];
     }
 }
 
@@ -1060,8 +1060,8 @@ const char ConstantKey;
         [self updateAndReloadData];
     }
     if(error != nil){
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_IMPORT_URL_ERROR]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_IMPORT_URL_ERROR]
                                  andMessage:[NSString stringWithFormat:@"Error downloading '%@' at:\n%@\n\nError: %@", controller.nameTextField.text, controller.urlTextField.text, error]];
     }
 }
@@ -1071,8 +1071,8 @@ const char ConstantKey;
         [self updateAndReloadData];
     }
     if(error != nil){
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_FEATURES_LABEL]
                                  andMessage:[NSString stringWithFormat:@"Error creating features table '%@' in database: '%@'\n\nError: %@", controller.nameValue.text, controller.database.name, error]];
     }
 }
@@ -1084,8 +1084,8 @@ const char ConstantKey;
         [self.active setModified:true];
     }
     if(error != nil){
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]
                                  andMessage:[NSString stringWithFormat:@"Error creating tiles table '%@' in database: '%@'\n\nError: %@", controller.data.name, controller.database.name, error]];
     }
 }
@@ -1097,8 +1097,8 @@ const char ConstantKey;
         [self.active setModified:true];
     }
     if(error != nil){
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]
                                  andMessage:[NSString stringWithFormat:@"Error loading tiles into table '%@' in database: '%@'\n\nError: %@", controller.table.name, controller.table.database, error]];
     }
 }
@@ -1124,16 +1124,16 @@ const char ConstantKey;
         [self.active setModified:true];
     }
     if(error != nil){
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]
                                  andMessage:[NSString stringWithFormat:@"Error creating feature tiles table '%@' for feature table '%@' in database: '%@'\n\nError: %@", controller.nameValue.text, controller.name, controller.database, error]];
     }
 }
 
-- (void)addTileOverlayViewController:(GPKGSAddTileOverlayViewController *)controller featureOverlayTable:(GPKGSFeatureOverlayTable *)featureOverlayTable{
+- (void)addTileOverlayViewController:(GPKGSAddTileOverlayViewController *)controller featureOverlayTable:(MCFeatureOverlayTable *)featureOverlayTable{
     if([self.active exists:featureOverlayTable]){
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_ADD_FEATURE_OVERLAY_LABEL]
                                  andMessage:[NSString stringWithFormat:@"Feature overlay '%@' already exists in database '%@'. Could not create for feature table '%@'", controller.nameValue.text, controller.table.database, controller.table.name]];
     }else{
         self.retainModifiedForMap = true;
@@ -1142,7 +1142,7 @@ const char ConstantKey;
     }
 }
 
-- (void)editTileOverlayViewController:(GPKGSManagerEditTileOverlayViewController *)controller featureOverlayTable:(GPKGSFeatureOverlayTable *)featureOverlayTable{
+- (void)editTileOverlayViewController:(GPKGSManagerEditTileOverlayViewController *)controller featureOverlayTable:(MCFeatureOverlayTable *)featureOverlayTable{
     self.retainModifiedForMap = true;
     [self.active removeTable:featureOverlayTable];
     [self.active addTable:featureOverlayTable];
@@ -1155,8 +1155,8 @@ const char ConstantKey;
         [self.active setModified:true];
     }
     if(error != nil){
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_LINKED_TABLES_LABEL]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_LINKED_TABLES_LABEL]
                                  andMessage:[NSString stringWithFormat:@"Error editing linked tables for table '%@' in database: '%@'\n\nError: %@", controller.table.name, controller.table.database, error]];
     }
 }
@@ -1170,48 +1170,48 @@ const char ConstantKey;
         
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_DISPLAY_TEXT]){
         GPKGSDisplayTextViewController *displayTextViewController = segue.destinationViewController;
-        if([sender isKindOfClass:[GPKGSDatabase class]]){
-            GPKGSDatabase * database = (GPKGSDatabase *)sender;
+        if([sender isKindOfClass:[MCDatabase class]]){
+            MCDatabase * database = (MCDatabase *)sender;
             displayTextViewController.database = database;
-        }else if([sender isKindOfClass:[GPKGSTable class]]){
-            GPKGSTable * table = (GPKGSTable *)sender;
+        }else if([sender isKindOfClass:[MCTable class]]){
+            MCTable * table = (MCTable *)sender;
             displayTextViewController.table = table;
         }
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_CREATE_FEATURES]){
         GPKGSCreateFeaturesViewController *createFeaturesViewController = segue.destinationViewController;
-        GPKGSDatabase * database = (GPKGSDatabase *)sender;
+        MCDatabase * database = (MCDatabase *)sender;
         createFeaturesViewController.delegate = self;
         createFeaturesViewController.database = database;
         createFeaturesViewController.manager = self.manager;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_CREATE_TILES]){
         GPKGSManagerCreateTilesViewController *createTilesViewController = segue.destinationViewController;
-        GPKGSDatabase * database = (GPKGSDatabase *)sender;
+        MCDatabase * database = (MCDatabase *)sender;
         createTilesViewController.delegate = self;
         createTilesViewController.database = database;
         createTilesViewController.manager = self.manager;
         createTilesViewController.data = [[GPKGSCreateTilesData alloc] init];
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_LOAD_TILES]){
         GPKGSManagerLoadTilesViewController *loadTilesViewController = segue.destinationViewController;
-        GPKGSTable * table = (GPKGSTable *)sender;
+        MCTable * table = (MCTable *)sender;
         loadTilesViewController.delegate = self;
         loadTilesViewController.table = table;
         loadTilesViewController.manager = self.manager;
         loadTilesViewController.data = [[GPKGSLoadTilesData alloc] init];
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_EDIT_FEATURES]){
         GPKGSEditFeaturesViewController *editFeaturesViewController = segue.destinationViewController;
-        GPKGSTable * table = (GPKGSTable *)sender;
+        MCTable * table = (MCTable *)sender;
         editFeaturesViewController.table = table;
         editFeaturesViewController.manager = self.manager;
         editFeaturesViewController.delegate = self;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_EDIT_TILES]){
         GPKGSEditTilesViewController *editTilesViewController = segue.destinationViewController;
-        GPKGSTable * table = (GPKGSTable *)sender;
+        MCTable * table = (MCTable *)sender;
         editTilesViewController.delegate = self;
         editTilesViewController.table = table;
         editTilesViewController.manager = self.manager;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_CREATE_FEATURE_TILES]){
         GPKGSCreateFeatureTilesViewController *createFeatureTilesViewController = segue.destinationViewController;
-        GPKGSTable * table = (GPKGSTable *)sender;
+        MCTable * table = (MCTable *)sender;
         createFeatureTilesViewController.delegate = self;
         createFeatureTilesViewController.database = table.database;
         createFeatureTilesViewController.name = table.name;
@@ -1220,19 +1220,19 @@ const char ConstantKey;
         createFeatureTilesViewController.generateTilesData =  [[GPKGSGenerateTilesData alloc] init];
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_ADD_TILE_OVERLAY]){
         GPKGSAddTileOverlayViewController *addTileOverlayViewController = segue.destinationViewController;
-        GPKGSTable * table = (GPKGSTable *)sender;
+        MCTable * table = (MCTable *)sender;
         addTileOverlayViewController.delegate = self;
         addTileOverlayViewController.table = table;
         addTileOverlayViewController.manager = self.manager;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_EDIT_TILE_OVERLAY]){
         GPKGSManagerEditTileOverlayViewController *editTileOverlayViewController = segue.destinationViewController;
-        GPKGSFeatureOverlayTable * table = (GPKGSFeatureOverlayTable *)sender;
+        MCFeatureOverlayTable * table = (MCFeatureOverlayTable *)sender;
         editTileOverlayViewController.delegate = self;
         editTileOverlayViewController.table = table;
         editTileOverlayViewController.manager = self.manager;
     }else if([segue.identifier isEqualToString:GPKGS_MANAGER_SEG_LINKED_TABLES]){
         GPKGSLinkedTablesViewController *linkedTablesViewController = segue.destinationViewController;
-        GPKGSTable * table = (GPKGSTable *)sender;
+        MCTable * table = (MCTable *)sender;
         linkedTablesViewController.delegate = self;
         linkedTablesViewController.table = table;
         linkedTablesViewController.manager = self.manager;

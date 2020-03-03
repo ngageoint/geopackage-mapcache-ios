@@ -12,14 +12,14 @@
 #import "MCLayerViewController.h"
 #import "MCFeatureLayerOperationsCell.h"
 #import "MCTileLayerOperationsCell.h"
-#import "GPKGSDatabase.h"
+#import "MCDatabase.h"
 #import "GPKGUserDao.h"
-#import "GPKGSUtils.h"
-#import "GPKGSProperties.h"
+#import "MCUtils.h"
+#import "MCProperties.h"
 
 
 @interface MCLayerCoordinator : NSObject <MCLayerOperationsDelegate>
-- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDatabase:(GPKGSDatabase *) database
+- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDatabase:(MCDatabase *) database
                                        andDao:(GPKGUserDao *) dao;
 - (void) start;
 @end

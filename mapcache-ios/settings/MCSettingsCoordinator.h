@@ -11,7 +11,7 @@
 #import "MCNoticeAndAttributionViewController.h"
 #import "MCTileServerURLManagerViewController.h"
 #import "MCNewTileServerViewController.h"
-#import "GPKGSConstants.h"
+#import "MCConstants.h"
 
 
 @interface MCSettingsCoordinator : NSObject <MCSettingsDelegate, MCTileServerManagerDelegate, MCSaveTileServerDelegate>

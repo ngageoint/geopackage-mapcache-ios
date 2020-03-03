@@ -6,14 +6,14 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSTableTypes.h"
+#import "MCTableTypes.h"
 #import "GPKGUtils.h"
 
 NSString * const GPKGS_TT_FEATURE_NAME = @"FEATURE";
 NSString * const GPKGS_TT_TILE_NAME = @"TILE";
 NSString * const GPKGS_TT_FEATURE_OVERLAY_NAME = @"FEATURE_OVERLAY";
 
-@implementation GPKGSTableTypes
+@implementation MCTableTypes
 
 +(NSString *) name: (enum GPKGSTableType) tableType{
     NSString * name = nil;

@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSFeatureTable.h"
+#import "MCFeatureTable.h"
 
 NSString * const GPKGS_FEATURE_TABLE_GEOMETRY_TYPE = @"geometry_type";
 
-@implementation GPKGSFeatureTable
+@implementation MCFeatureTable
 
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andGeometryType: (enum SFGeometryType) geometryType andCount: (int) count{
     self = [super initWithDatabase:database andName:name andCount:count];

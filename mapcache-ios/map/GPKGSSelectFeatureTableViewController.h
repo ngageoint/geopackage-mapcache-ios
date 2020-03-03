@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GPKGGeoPackageManager.h"
-#import "GPKGSDatabases.h"
+#import "MCDatabases.h"
 
 @class GPKGSSelectFeatureTableViewController;
 
@@ -20,7 +20,7 @@
 
 @property (nonatomic, weak) id <GPKGSSelectFeatureTableDelegate> delegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic, strong) NSString *request;
 @property (weak, nonatomic) IBOutlet UIPickerView *databasePicker;
 @property (weak, nonatomic) IBOutlet UIPickerView *featurePicker;

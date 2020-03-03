@@ -135,13 +135,13 @@
                     [self initCellArray];
                     [self.tableView reloadData];
                 }else{
-                    [GPKGSUtils showMessageWithDelegate:self
-                                               andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
+                    [MCUtils showMessageWithDelegate:self
+                                               andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
                                              andMessage:[NSString stringWithFormat:@"Rename from %@ to %@ was not successful", @"OLDNAME", newName]];
                 }
             }
             @catch (NSException *exception) {
-                [GPKGSUtils showMessageWithDelegate:self
+                [MCUtils showMessageWithDelegate:self
                                            andTitle:[NSString stringWithFormat:@"Rename %@ to %@", @"OLDNAME", newName]
                                          andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
             }

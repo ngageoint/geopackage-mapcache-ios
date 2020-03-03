@@ -20,8 +20,8 @@
 @property (nonatomic, strong) MCTileLayerDetailsViewController *tileDetailsController;
 @property (nonatomic, strong) MCBoundingBoxGuideView *boundingBoxGuideViewController;
 @property (nonatomic, strong) MCZoomAndQualityViewController *zoomAndQualityViewController;
-@property (nonatomic, strong) GPKGSDatabases *active;
-@property (nonatomic, strong) GPKGSDatabase *database;
+@property (nonatomic, strong) MCDatabases *active;
+@property (nonatomic, strong) MCDatabase *database;
 @property (nonatomic, strong) GPKGSCreateTilesData * tileData;
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
 @end
@@ -29,7 +29,7 @@
 
 @implementation MCGeoPackageCoordinator
 
-- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(GPKGSDatabase *) database {
+- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(MCDatabase *) database {
     self = [super init];
     
     _childCoordinators = [[NSMutableArray alloc] init];
@@ -38,7 +38,7 @@
     _drawerDelegate = drawerDelegate;
     _mapDelegate = mapDelegate;
     _database = database;
-    _active = [GPKGSDatabases getInstance];
+    _active = [MCDatabases getInstance];
     
     return self;
 }
@@ -77,7 +77,7 @@
 
 - (void) updateDatabase {
     GPKGGeoPackage *geoPackage = nil;
-    GPKGSDatabase *updatedDatabase = nil;
+    MCDatabase *updatedDatabase = nil;
     
     @try {
         geoPackage = [_manager open:_database.name];
@@ -85,7 +85,7 @@
         GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
         NSMutableArray *tables = [[NSMutableArray alloc] init];
         
-        updatedDatabase = [[GPKGSDatabase alloc] initWithName:_database.name andExpanded:false];
+        updatedDatabase = [[MCDatabase alloc] initWithName:_database.name andExpanded:false];
         
         // Handle the Feature Layers
         for (NSString *tableName in [geoPackage getFeatureTables]) {
@@ -94,7 +94,7 @@
             GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
             GPKGGeometryColumns *geometryColumns = [contentsDao getGeometryColumns:contents];
             enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
-            GPKGSFeatureTable *table = [[GPKGSFeatureTable alloc] initWithDatabase:_database.name andName:tableName andGeometryType:geometryType andCount:count];
+            MCFeatureTable *table = [[MCFeatureTable alloc] initWithDatabase:_database.name andName:tableName andGeometryType:geometryType andCount:count];
             
             [tables addObject:table];
             [updatedDatabase addFeature:table];
@@ -105,7 +105,7 @@
             GPKGTileDao *tileDao = [geoPackage getTileDaoWithTableName:tableName];
             int count = [tileDao count];
             
-            GPKGSTileTable *table = [[GPKGSTileTable alloc] initWithDatabase:_database.name andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
+            MCTileTable *table = [[MCTileTable alloc] initWithDatabase:_database.name andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
             
             [tables addObject:table];
             [updatedDatabase addTile:table];
@@ -151,7 +151,7 @@
 }
 
 
-- (void) deleteLayer:(GPKGSTable *) table {
+- (void) deleteLayer:(MCTable *) table {
     GPKGGeoPackage *geoPackage = nil;
     
     @try {
@@ -162,8 +162,8 @@
         [_mapDelegate updateMapLayers];
     }
     @catch (NSException *exception) {
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], _database.name, table.name]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], _database.name, table.name]
                                  andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
     }
     @finally {
@@ -172,11 +172,11 @@
 }
 
 
-- (void) toggleLayer:(GPKGSTable *) table; {
+- (void) toggleLayer:(MCTable *) table; {
     if ([_database exists:table]) {
         
         if ([_active isActive:_database]) {
-            GPKGSDatabase *activeDatabase = [_active getDatabaseWithName:_database.name];
+            MCDatabase *activeDatabase = [_active getDatabaseWithName:_database.name];
             if ([activeDatabase existsWithTable:table.name ofType:table.getType]) {
                 [_active removeTable:table];
             } else {
@@ -280,7 +280,7 @@
 
 
 - (BOOL) isLayerNameAvailable: (NSString *) layerName {
-    for (GPKGSTable *table in [_database getTables]) {
+    for (MCTable *table in [_database getTables]) {
         if ([layerName isEqualToString:table.name]){
             return NO;
         }
@@ -377,23 +377,23 @@
 #pragma mark - MCNewLayerWizardDelegate methods
 - (void) createTileLayer:(GPKGSCreateTilesData *) tileData {
     NSLog(@"Coordinator attempting to create tiles");
-    GPKGTileScaling *scaling = [GPKGSLoadTilesTask tileScaling];
+    GPKGTileScaling *scaling = [MCLoadTilesTask tileScaling];
     
-    [GPKGSLoadTilesTask loadTilesWithCallback:self
+    [MCLoadTilesTask loadTilesWithCallback:self
                                   andDatabase:_database.name
                                      andTable:tileData.name
                                        andUrl:tileData.loadTiles.url
                                    andMinZoom:[tileData.loadTiles.generateTiles.minZoom intValue]
                                    andMaxZoom:[tileData.loadTiles.generateTiles.maxZoom intValue]
                             andCompressFormat:GPKG_CF_NONE // TODO: let user set this
-                           andCompressQuality:[[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT] intValue]
+                           andCompressQuality:[[MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT] intValue]
                              andCompressScale:100 // TODO: let user set this
                             andStandardFormat:tileData.loadTiles.generateTiles.standardWebMercatorFormat
                                andBoundingBox:tileData.loadTiles.generateTiles.boundingBox
                                andTileScaling:scaling
                                  andAuthority:PROJ_AUTHORITY_EPSG
                                       andCode:[NSString stringWithFormat:@"%d",tileData.loadTiles.epsg]
-                                     andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
+                                     andLabel:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
 
 }
 

@@ -7,21 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSTable.h"
+#import "MCTable.h"
 #import "GPKGGeoPackageManager.h"
-#import "GPKGSFeatureOverlayTable.h"
+#import "MCFeatureOverlayTable.h"
 
 @class GPKGSAddTileOverlayViewController;
 
 @protocol GPKGSAddTileOverlayDelegate <NSObject>
-- (void)addTileOverlayViewController:(GPKGSAddTileOverlayViewController *)controller featureOverlayTable:(GPKGSFeatureOverlayTable *)featureOverlayTable;
+- (void)addTileOverlayViewController:(GPKGSAddTileOverlayViewController *)controller featureOverlayTable:(MCFeatureOverlayTable *)featureOverlayTable;
 @end
 
 @interface GPKGSAddTileOverlayViewController : UIViewController
 
 @property (nonatomic, weak) id <GPKGSAddTileOverlayDelegate> delegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) GPKGSTable *table;
+@property (nonatomic, strong) MCTable *table;
 @property (weak, nonatomic) IBOutlet UITextField *databaseValue;
 @property (weak, nonatomic) IBOutlet UITextField *nameValue;
 

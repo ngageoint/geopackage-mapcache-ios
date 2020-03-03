@@ -10,7 +10,7 @@
 
 @interface MCGeoPackageList()
 @property (strong, nonatomic) NSMutableArray *childCoordinators;
-@property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic) BOOL haveScrolled;
 @end
 
@@ -21,7 +21,7 @@
     self = [super initAsFullView:fullView];
     _geoPackages = geoPackages;
     _geopackageListViewDelegate = delegate;
-    _active = [GPKGSDatabases getInstance];
+    _active = [MCDatabases getInstance];
     
     return self;
 }
@@ -157,7 +157,7 @@
             cell = [[MCGeoPackageCell alloc] init];
         }
         
-        GPKGSDatabase *database = [_geoPackages objectAtIndex:indexPath.row];
+        MCDatabase *database = [_geoPackages objectAtIndex:indexPath.row];
         
         cell.geoPackageNameLabel.text = database.name;
         
@@ -212,7 +212,7 @@
     } else if([cell isKindOfClass:[MCTutorialCell class]]){
         return;
     } else {
-        GPKGSDatabase *selectedGeoPackage = [_geoPackages objectAtIndex:indexPath.row];
+        MCDatabase *selectedGeoPackage = [_geoPackages objectAtIndex:indexPath.row];
         NSLog(@"didSelectRowAtIndexPath for %@", selectedGeoPackage.name);
         [_geopackageListViewDelegate didSelectGeoPackage:selectedGeoPackage];
     }

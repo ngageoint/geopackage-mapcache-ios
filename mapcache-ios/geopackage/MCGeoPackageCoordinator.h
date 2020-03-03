@@ -11,10 +11,10 @@
 #import <GPKGTileBoundingBoxUtils.h>
 #import <GPKGTileGrid.h>
 #import "SFPProjectionFactory.h"
-#import "GPKGSLoadTilesTask.h"
+#import "MCLoadTilesTask.h"
 #import "MCGeopackageSingleViewController.h"
-#import "GPKGSDatabase.h"
-#import "GPKGSDatabases.h"
+#import "MCDatabase.h"
+#import "MCDatabases.h"
 #import "GPKGSCreateTilesData.h"
 #import "GPKGSLoadTilesData.h"
 #import "GPKGSGenerateTilesData.h"
@@ -40,6 +40,6 @@
 @end
 
 @interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCBoundingBoxGuideDelegate, MCZoomAndQualityDelegate, MCCreateLayerDelegate, GPKGSLoadTilesProtocol, MCSelectTileServerDelegate>
-- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(GPKGSDatabase *) database;
+- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(MCDatabase *) database;
 - (void) start;
 @end

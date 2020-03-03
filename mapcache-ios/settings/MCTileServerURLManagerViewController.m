@@ -77,7 +77,7 @@
     [testURL1 setName:@"GEOINT Services OSM"];
     [testURL1 setDetails:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
     [testURL1 activeIndicatorOff];
-    [testURL1.layerTypeImage setImage:[UIImage imageNamed:[GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
+    [testURL1.layerTypeImage setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
     [self.cellArray addObject:testURL1];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -90,7 +90,7 @@
             [tileServerCell setName: serverName];
             [tileServerCell setDetails: [serverUrls objectForKey:serverName]];
             [tileServerCell activeIndicatorOff];
-            [tileServerCell.layerTypeImage setImage:[UIImage imageNamed:[GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
+            [tileServerCell.layerTypeImage setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
             [self.cellArray addObject:tileServerCell];
         }
     }

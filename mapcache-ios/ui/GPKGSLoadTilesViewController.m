@@ -8,10 +8,10 @@
 
 #import "GPKGSLoadTilesViewController.h"
 #import "GPKGSGenerateTilesViewController.h"
-#import "GPKGSUtils.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
-#import "GPKGSDecimalValidator.h"
+#import "MCUtils.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
+#import "MCDecimalValidator.h"
 
 NSString * const GPKGS_LOAD_TILES_SEG_GENERATE_TILES = @"generateTiles";
 
@@ -19,7 +19,7 @@ NSString * const GPKGS_LOAD_TILES_SEG_GENERATE_TILES = @"generateTiles";
 
 @property (nonatomic, strong) NSArray * urls;
 @property (nonatomic, strong) GPKGSGenerateTilesViewController *generateTilesViewController;
-@property (nonatomic, strong) GPKGSDecimalValidator * epsgValidator;
+@property (nonatomic, strong) MCDecimalValidator * epsgValidator;
 
 @end
 
@@ -30,12 +30,12 @@ NSString * const GPKGS_LOAD_TILES_SEG_GENERATE_TILES = @"generateTiles";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.urls = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_TILE_URLS];
+    self.urls = [MCProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_TILE_URLS];
     
-    self.epsgValidator = [[GPKGSDecimalValidator alloc] initWithMinimumInt:-1 andMaximumInt:99999];
+    self.epsgValidator = [[MCDecimalValidator alloc] initWithMinimumInt:-1 andMaximumInt:99999];
     [self.epsgTextField setDelegate:self.epsgValidator];
     
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.urlTextField.inputAccessoryView = keyboardToolbar;
     self.epsgTextField.inputAccessoryView = keyboardToolbar;
@@ -95,7 +95,7 @@ NSString * const GPKGS_LOAD_TILES_SEG_GENERATE_TILES = @"generateTiles";
     }
     
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_LOAD_TILES_PRELOADED_LABEL]
+                          initWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_LOAD_TILES_PRELOADED_LABEL]
                           message:nil
                           delegate:self
                           cancelButtonTitle:nil
@@ -104,7 +104,7 @@ NSString * const GPKGS_LOAD_TILES_SEG_GENERATE_TILES = @"generateTiles";
     for (NSString *urlLabel in urlLabels) {
         [alert addButtonWithTitle:urlLabel];
     }
-    alert.cancelButtonIndex = [alert addButtonWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
+    alert.cancelButtonIndex = [alert addButtonWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
     
     alert.tag = TAG_PRELOADED_URLS;
     

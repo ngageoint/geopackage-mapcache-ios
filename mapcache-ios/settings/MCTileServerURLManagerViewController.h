@@ -14,7 +14,7 @@
 #import "MCButtonCell.h"
 #import "MCTitleCell.h"
 #import "MCLayerCell.h"
-#import "GPKGSProperties.h"
+#import "MCProperties.h"
 
 
 NS_ASSUME_NONNULL_BEGIN

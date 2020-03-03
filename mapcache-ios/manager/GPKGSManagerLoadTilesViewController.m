@@ -12,9 +12,9 @@
 #import "SFPProjectionTransform.h"
 #import "SFPProjectionConstants.h"
 #import "GPKGTileBoundingBoxUtils.h"
-#import "GPKGSLoadTilesTask.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
+#import "MCLoadTilesTask.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
 #import "SFPProjectionFactory.h"
 #import "GPKGTileTableScaling.h"
 
@@ -67,7 +67,7 @@ NSString * const GPKGS_MANAGER_LOAD_TILES_SEG_LOAD_TILES = @"loadTiles";
                 GPKGSpatialReferenceSystem * srs = [srsDao getOrCreateWithEpsg:[NSNumber numberWithInt:loadTiles.epsg]];
                 // Create the tile table
                 SFPProjection * projection = [SFPProjectionFactory projectionWithEpsgInt:loadTiles.epsg];
-                GPKGBoundingBox * bbox = [GPKGSLoadTilesTask transformBoundingBox:boundingBox withProjection:projection];
+                GPKGBoundingBox * bbox = [MCLoadTilesTask transformBoundingBox:boundingBox withProjection:projection];
                 [geoPackage createTileTableWithTableName:name andContentsBoundingBox:bbox andContentsSrsId:srs.srsId andTileMatrixSetBoundingBox:bbox andTileMatrixSetSrsId:srs.srsId];
             }
             @finally {
@@ -81,7 +81,7 @@ NSString * const GPKGS_MANAGER_LOAD_TILES_SEG_LOAD_TILES = @"loadTiles";
             
         }else{
             // Load tiles
-            [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:self.table.database andTable:name andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:nil andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",loadTiles.epsg] andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
+            [MCLoadTilesTask loadTilesWithCallback:self andDatabase:self.table.database andTable:name andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:nil andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",loadTiles.epsg] andLabel:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_TILES_LOAD_LABEL]];
         }
         
     }

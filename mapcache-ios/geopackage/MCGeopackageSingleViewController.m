@@ -13,7 +13,7 @@
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIDocumentInteractionController *shareDocumentController;
-@property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic) BOOL haveScrolled;
 @end
 
@@ -22,7 +22,7 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
     self.manager = [GPKGGeoPackageFactory getManager];
-    self.active = [GPKGSDatabases getInstance];
+    self.active = [MCDatabases getInstance];
     
     CGRect bounds = self.view.bounds;
     CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
@@ -90,16 +90,16 @@
     _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, layersTitleCell, newLayerButtonCell, nil];
     NSArray *tables = [_database getTables];
     
-    for (GPKGSTable *table in tables) {
+    for (MCTable *table in tables) {
         MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
         NSString *typeImageName = @"";
         
-        if ([table isMemberOfClass:[GPKGSFeatureTable class]]) {
-            typeImageName = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
-            [layerCell.detailLabel setText: [NSString stringWithFormat:@"%d features", [(GPKGSFeatureTable *)table count]]];
-        } else if ([table isMemberOfClass:[GPKGSTileTable class]]) {
-            typeImageName = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_TILES];
-            [layerCell.detailLabel setText:[NSString stringWithFormat:@"Zoom levels %d - %d",  [(GPKGSTileTable *)table minZoom], [(GPKGSTileTable *)table maxZoom]]];
+        if ([table isMemberOfClass:[MCFeatureTable class]]) {
+            typeImageName = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
+            [layerCell.detailLabel setText: [NSString stringWithFormat:@"%d features", [(MCFeatureTable *)table count]]];
+        } else if ([table isMemberOfClass:[MCTileTable class]]) {
+            typeImageName = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILES];
+            [layerCell.detailLabel setText:[NSString stringWithFormat:@"Zoom levels %d - %d",  [(MCTileTable *)table minZoom], [(MCTileTable *)table maxZoom]]];
         }
         
         layerCell.table = table;
@@ -277,7 +277,7 @@
         [_shareDocumentController setUTI:@"public.database"];
         [_shareDocumentController presentOpenInMenuFromRect:self.view.bounds inView:self.view animated:YES];
     }else{
-        [GPKGSUtils showMessageWithDelegate:self
+        [MCUtils showMessageWithDelegate:self
                                    andTitle:[NSString stringWithFormat:@"Share Database %@", _database]
                                  andMessage:[NSString stringWithFormat:@"No path was found for database %@", _database]];
     }
@@ -305,13 +305,13 @@
                     [self initCellArray];
                     [self.tableView reloadData];
                 }else{
-                    [GPKGSUtils showMessageWithDelegate:self
-                                               andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
+                    [MCUtils showMessageWithDelegate:self
+                                               andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
                                              andMessage:[NSString stringWithFormat:@"Rename from %@ to %@ was not successful", self.database.name, newName]];
                 }
             }
             @catch (NSException *exception) {
-                [GPKGSUtils showMessageWithDelegate:self
+                [MCUtils showMessageWithDelegate:self
                                            andTitle:[NSString stringWithFormat:@"Rename %@ to %@", self.database.name, newName]
                                          andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
             }
@@ -350,13 +350,13 @@
                         [self.delegate copyGeoPackage];
                     });
                 }else{
-                    [GPKGSUtils showMessageWithDelegate:self
-                                               andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL]
+                    [MCUtils showMessageWithDelegate:self
+                                               andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL]
                                              andMessage:[NSString stringWithFormat:@"Copy from %@ to %@ was not successful", database, newName]];
                 }
             }
             @catch (NSException *exception) {
-                [GPKGSUtils showMessageWithDelegate:self
+                [MCUtils showMessageWithDelegate:self
                                            andTitle:[NSString stringWithFormat:@"Copy %@ to %@", database, newName]
                                          andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
             }

@@ -8,11 +8,11 @@
 
 #import "GPKGSAddTileOverlayViewController.h"
 #import "GPKGSEditTileOverlayData.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
-#import "GPKGSUtils.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
+#import "MCUtils.h"
 #import "GPKGSEditTileOverlayViewController.h"
-#import "GPKGSFeatureOverlayTable.h"
+#import "MCFeatureOverlayTable.h"
 #import "GPKGFeatureIndexManager.h"
 
 NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverlay";
@@ -31,9 +31,9 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
     [self.databaseValue setText:self.table.database];
     
     // Set a default name
-    [self.nameValue setText:[NSString stringWithFormat:@"%@%@", self.table.name, [GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_OVERLAY_TILES_NAME_SUFFIX]]];
+    [self.nameValue setText:[NSString stringWithFormat:@"%@%@", self.table.name, [MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_OVERLAY_TILES_NAME_SUFFIX]]];
     
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.nameValue.inputAccessoryView = keyboardToolbar;
 }
@@ -48,7 +48,7 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
 
 - (IBAction)addButton:(id)sender {
     
-    GPKGSFeatureOverlayTable * overlayTable = [[GPKGSFeatureOverlayTable alloc] initWithDatabase:self.table.database andName:self.nameValue.text andFeatureTable:self.table.name andGeometryType:SF_NONE andCount:0];
+    MCFeatureOverlayTable * overlayTable = [[MCFeatureOverlayTable alloc] initWithDatabase:self.table.database andName:self.nameValue.text andFeatureTable:self.table.name andGeometryType:SF_NONE andCount:0];
     
     [overlayTable setMinZoom:[self.editTileOverlayData.minZoom intValue]];
     [overlayTable setMaxZoom:[self.editTileOverlayData.maxZoom intValue]];
@@ -110,10 +110,10 @@ NSString * const GPKGS_ADD_TILE_OVERLAY_SEG_EDIT_TILE_OVERLAY = @"editTileOverla
                     NSNumber * maxFeatures = nil;
                     switch([featureDao getGeometryType]){
                         case SF_POINT:
-                            maxFeatures = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_OVERLAY_MAX_POINTS_PER_TILE_DEFAULT];
+                            maxFeatures = [MCProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_OVERLAY_MAX_POINTS_PER_TILE_DEFAULT];
                             break;
                         default:
-                            maxFeatures = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_OVERLAY_MAX_FEATURES_PER_TILE_DEFAULT];
+                            maxFeatures = [MCProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_OVERLAY_MAX_FEATURES_PER_TILE_DEFAULT];
                             break;
                     }
                     [self.editTileOverlayData setMaxFeaturesPerTile:maxFeatures];

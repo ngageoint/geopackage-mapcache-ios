@@ -9,8 +9,8 @@
 #import "AppDelegate.h"
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGSManagerViewController.h"
-#import "GPKGSConstants.h"
-#import "GPKGSProperties.h"
+#import "MCConstants.h"
+#import "MCProperties.h"
 #import "MBFingerTipWindow.h"
 
 @interface AppDelegate ()
@@ -22,7 +22,7 @@
 @implementation AppDelegate
 
 - (UIWindow *)window {
-    if ([GPKGSProperties getBoolOfProperty:GPKGS_ANIMATE_SCREEN_TOUCHES] && !_window) {
+    if ([MCProperties getBoolOfProperty:GPKGS_ANIMATE_SCREEN_TOUCHES] && !_window) {
         MBFingerTipWindow * fingerTip = [[MBFingerTipWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
         fingerTip.alwaysShowTouches = YES;
         _window = fingerTip;

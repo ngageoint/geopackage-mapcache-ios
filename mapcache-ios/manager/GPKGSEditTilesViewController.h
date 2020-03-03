@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSTable.h"
+#import "MCTable.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGSEditContentsData.h"
 
@@ -21,7 +21,7 @@
 
 @property (nonatomic, weak) id <GPKGSEditTilesDelegate> delegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) GPKGSTable *table;
+@property (nonatomic, strong) MCTable *table;
 @property (weak, nonatomic) IBOutlet UITextField *minYTextField;
 @property (weak, nonatomic) IBOutlet UITextField *maxYTextField;
 @property (weak, nonatomic) IBOutlet UITextField *minXTextField;

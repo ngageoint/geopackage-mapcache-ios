@@ -6,20 +6,20 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSLoadTilesTask.h"
+#import "MCLoadTilesTask.h"
 #import "GPKGTileGenerator.h"
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGUrlTileGenerator.h"
 #import "GPKGFeatureTileGenerator.h"
-#import "GPKGSUtils.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
+#import "MCUtils.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
 #import "SFPProjectionFactory.h"
 #import "SFPProjectionTransform.h"
 #import "SFPProjectionConstants.h"
 #import "GPKGTileBoundingBoxUtils.h"
 
-@interface GPKGSLoadTilesTask ()
+@interface MCLoadTilesTask ()
 
 @property (nonatomic, strong) NSNumber *maxTiles;
 @property (nonatomic) int progress;
@@ -32,7 +32,7 @@
 
 @end
 
-@implementation GPKGSLoadTilesTask
+@implementation MCLoadTilesTask
 
 +(void) loadTilesWithCallback: (NSObject<GPKGSLoadTilesProtocol> *) callback
                   andDatabase: (NSString *) database
@@ -129,7 +129,7 @@
 
 +(void) loadTilesWithCallback:(NSObject<GPKGSLoadTilesProtocol> *)callback andGeoPackage:(GPKGGeoPackage *)geoPackage andTable:(NSString *)tableName andTileGenerator: (GPKGTileGenerator *) tileGenerator andLabel: (NSString *) label{
     
-    GPKGSLoadTilesTask * loadTilesTask = [[GPKGSLoadTilesTask alloc] initWithCallback:callback];
+    MCLoadTilesTask * loadTilesTask = [[MCLoadTilesTask alloc] initWithCallback:callback];
     
     [tileGenerator setProgress:loadTilesTask];
     
@@ -139,9 +139,9 @@
                               initWithTitle:[NSString stringWithFormat:@"%@ for %@ into layer: %@", label, geoPackage.name, tableName]
                               message:@""
                               delegate:loadTilesTask
-                              cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_STOP_LABEL]
+                              cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_STOP_LABEL]
                               otherButtonTitles:nil];
-    UIProgressView *progressView = [GPKGSUtils buildProgressBarView];
+    UIProgressView *progressView = [MCUtils buildProgressBarView];
     [alertView setValue:progressView forKey:@"accessoryView"];
     
     loadTilesTask.alertView = alertView;

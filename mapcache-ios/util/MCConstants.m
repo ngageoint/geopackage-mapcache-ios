@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSConstants.h"
+#import "MCConstants.h"
 
 NSString * const GPKGS_MAPCACHE_RESOURCES_PROPERTIES = @"mapcache";
 NSString * const GPKGS_ANIMATE_SCREEN_TOUCHES = @"animate_screen_touches";
@@ -190,6 +190,6 @@ NSString * const GPKGS_ACTION_SHARE = @"action_share";
 NSString * const GPKGS_ACTION_NEW_LAYER = @"action_new_layer";
 NSString * const GPKGS_ACTION_NEW_FEATURE_LAYER = @"action_new_feature_layer";
 
-@implementation GPKGSConstants
+@implementation MCConstants
 
 @end

@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
 #import "GPKGIOUtils.h"
 
 static NSDictionary * properties;
 
-@implementation GPKGSProperties
+@implementation MCProperties
 
 +(NSString *) getValueOfProperty: (NSString *) property{
     

@@ -18,7 +18,7 @@ extern NSString * const GPKGS_TT_FEATURE_NAME;
 extern NSString * const GPKGS_TT_TILE_NAME;
 extern NSString * const GPKGS_TT_FEATURE_OVERLAY_NAME;
 
-@interface GPKGSTableTypes : NSObject
+@interface MCTableTypes : NSObject
 
 +(NSString *) name: (enum GPKGSTableType) tableType;
 

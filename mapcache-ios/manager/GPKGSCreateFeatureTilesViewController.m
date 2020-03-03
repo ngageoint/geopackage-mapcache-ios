@@ -9,13 +9,13 @@
 #import "GPKGSCreateFeatureTilesViewController.h"
 #import "GPKGSGenerateTilesViewController.h"
 #import "GPKGSFeatureTilesDrawViewController.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
 #import "SFPProjectionTransform.h"
 #import "SFPProjectionConstants.h"
 #import "GPKGTileBoundingBoxUtils.h"
-#import "GPKGSLoadTilesTask.h"
-#import "GPKGSUtils.h"
+#import "MCLoadTilesTask.h"
+#import "MCUtils.h"
 #import "SFPProjectionFactory.h"
 #import "GPKGNumberFeaturesTile.h"
 
@@ -43,10 +43,10 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
         @try{
             self.indexed = [indexer isIndexed];
             if(self.indexed){
-                [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_INDEX_VALIDATION]];
+                [self.warningLabel setText:[MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_INDEX_VALIDATION]];
                 [self.warningLabel setTextColor:[UIColor greenColor]];
             }else{
-                [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_INDEX_WARNING]];
+                [self.warningLabel setText:[MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_INDEX_WARNING]];
             }
         }@finally{
             [indexer close];
@@ -57,9 +57,9 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
     }
     
     // Set a default name
-    [self.nameValue setText:[NSString stringWithFormat:@"%@%@", self.name, [GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_NAME_SUFFIX]]];
+    [self.nameValue setText:[NSString stringWithFormat:@"%@%@", self.name, [MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_NAME_SUFFIX]]];
     
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.nameValue.inputAccessoryView = keyboardToolbar;
 }
@@ -144,9 +144,9 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
         
         [featureTiles calculateDrawOverlap];
         
-        GPKGTileScaling *scaling = [GPKGSLoadTilesTask tileScaling];
+        GPKGTileScaling *scaling = [MCLoadTilesTask tileScaling];
         
-        [GPKGSLoadTilesTask loadTilesWithCallback:self andGeoPackage:geoPackage andTable:tableName andFeatureTiles:featureTiles andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:scaling andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",PROJ_EPSG_WEB_MERCATOR] andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]];
+        [MCLoadTilesTask loadTilesWithCallback:self andGeoPackage:geoPackage andTable:tableName andFeatureTiles:featureTiles andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:scaling andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",PROJ_EPSG_WEB_MERCATOR] andLabel:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_CREATE_FEATURE_TILES_LABEL]];
         
     }
     @catch (NSException *e) {
@@ -202,7 +202,7 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
             
             // Try to find a good zoom starting point
             int zoomLevel = [GPKGTileBoundingBoxUtils getZoomLevelWithWebMercatorBoundingBox:webMercatorBoundingBox];
-            int maxZoomLevel = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MAX_ZOOM_DEFAULT] intValue];
+            int maxZoomLevel = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MAX_ZOOM_DEFAULT] intValue];
             zoomLevel = MAX(0, MIN(zoomLevel, maxZoomLevel - 1));
             self.generateTilesData.minZoom = [NSNumber numberWithInt:zoomLevel];
             self.generateTilesData.maxZoom = [NSNumber numberWithInt:maxZoomLevel];
@@ -214,7 +214,7 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
                 BOOL indexed = [indexer isIndexed];
                 self.generateTilesData.supportsMaxFeatures = true;
                 if(indexed){
-                    NSNumber * maxFeaturesPerTile = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_LOAD_MAX_FEATURES_PER_TILE_DEFAULT];
+                    NSNumber * maxFeaturesPerTile = [MCProperties getNumberValueOfProperty:GPKGS_PROP_FEATURE_TILES_LOAD_MAX_FEATURES_PER_TILE_DEFAULT];
                     if([maxFeaturesPerTile intValue] >= 0){
                         self.generateTilesData.maxFeaturesPerTile = maxFeaturesPerTile;
                     }

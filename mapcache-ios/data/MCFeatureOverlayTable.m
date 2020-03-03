@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSFeatureOverlayTable.h"
+#import "MCFeatureOverlayTable.h"
 #import "GPKGUtils.h"
 
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_FEATURE_TABLE = @"feature_table";
@@ -40,7 +40,7 @@ NSString * const GPKGS_FEATURE_OVERLAY_TABLE_COLOR_SUFFIX_BLUE = @"_blue";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_COLOR_SUFFIX_WHITE = @"_white";
 NSString * const GPKGS_FEATURE_OVERLAY_TABLE_COLOR_SUFFIX_ALPHA = @"_alpha";
 
-@implementation GPKGSFeatureOverlayTable
+@implementation MCFeatureOverlayTable
 
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andFeatureTable: (NSString *) featureTable andGeometryType: (enum SFGeometryType) geometryType andCount: (int) count{
     self = [super initWithDatabase:database andName:name andGeometryType:geometryType andCount:count];

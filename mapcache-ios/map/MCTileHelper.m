@@ -12,7 +12,7 @@
 @interface MCTileHelper()
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) GPKGBoundingBox * tilesBoundingBox;
-@property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic, strong) MCDatabases *active;
 @end
 
 
@@ -20,7 +20,7 @@
 
 - (instancetype) init {
     self = [super init];
-    self.active = [GPKGSDatabases getInstance];
+    self.active = [MCDatabases getInstance];
     self.manager = [GPKGGeoPackageFactory getManager];
     
     return self;
@@ -30,7 +30,7 @@
 - (instancetype) initWithTileHelperDelegate: (id<MCTileHelperDelegate>) delegate {
     self = [super init];
     self.tileHelperDelegate = delegate;
-    self.active = [GPKGSDatabases getInstance];
+    self.active = [MCDatabases getInstance];
     self.manager = [GPKGGeoPackageFactory getManager];
     
     return self;
@@ -40,11 +40,11 @@
 - (void) prepareTiles {
     NSArray *activeDatabases = [[NSArray alloc] initWithArray: [self.active getDatabases]];
 
-    for (GPKGSDatabase *database in activeDatabases) {
+    for (MCDatabase *database in activeDatabases) {
         GPKGGeoPackage *geoPackage = [self.manager open:database.name];
         
         if (geoPackage != nil) {
-            for (GPKGSTileTable *tiles in [database getTiles]) {
+            for (MCTileTable *tiles in [database getTiles]) {
                 @try {
                     MKTileOverlay *tileOverlay = [self createOverlayForTiles:tiles fromGeoPacakge:geoPackage];
                     [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay];
@@ -57,8 +57,8 @@
 }
 
 
-- (void) prepareTilesForGeoPackage: (GPKGGeoPackage *) geoPackage andDatabase:(GPKGSDatabase *) database {
-    for (GPKGSTileTable *tiles in [database getTiles]) {
+- (void) prepareTilesForGeoPackage: (GPKGGeoPackage *) geoPackage andDatabase:(MCDatabase *) database {
+    for (MCTileTable *tiles in [database getTiles]) {
         @try {
             MKTileOverlay *tileOverlay = [self createOverlayForTiles:tiles fromGeoPacakge:geoPackage];
             [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay];
@@ -70,7 +70,7 @@
 
 
 // MCTileHelper version of -(void) displayTiles: (GPKGSTileTable *)
--(MKTileOverlay *) createOverlayForTiles: (GPKGSTileTable *) tiles fromGeoPacakge:(GPKGGeoPackage *) geoPackage {
+-(MKTileOverlay *) createOverlayForTiles: (MCTileTable *) tiles fromGeoPacakge:(GPKGGeoPackage *) geoPackage {
     GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName:tiles.name];
     GPKGTileTableScaling *tileTableScaling = [[GPKGTileTableScaling alloc] initWithGeoPackage:geoPackage andTileDao:tileDao];
     GPKGTileScaling *tileScaling = [tileTableScaling get];

@@ -64,7 +64,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
-- (void) toggleGeoPackage:(GPKGSDatabase *) geoPackage {
+- (void) toggleGeoPackage:(MCDatabase *) geoPackage {
     NSLog(@"In MCMapCoordinator, going to toggle %@", geoPackage.name);
 }
 

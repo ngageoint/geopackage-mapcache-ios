@@ -10,7 +10,7 @@
 #import "GPKGSBoundingBoxViewController.h"
 #import "GPKGSEditTileOverlayData.h"
 #import "GPKGGeoPackageManager.h"
-#import "GPKGSTable.h"
+#import "MCTable.h"
 
 @interface GPKGSEditTileOverlayViewController : UIViewController <GPKGSBoundingBoxDelegate>
 

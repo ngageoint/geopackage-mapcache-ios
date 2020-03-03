@@ -10,11 +10,11 @@
 #import "GPKGSMapPointData.h"
 #import <GPKGGeoPackageManager.h>
 #import <GPKGGeoPackageFactory.h>
-#import "GPKGSUtils.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
+#import "MCUtils.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
 #import "SFGeometryPrinter.h"
-#import "GPKGSFeatureOverlayTable.h"
+#import "MCFeatureOverlayTable.h"
 
 @interface GPKGSDisplayTextViewController ()
 
@@ -79,7 +79,7 @@
     return (GPKGSMapPointData *) mapPoint.data;
 }
 
--(NSString *) buildTextForDatabase: (GPKGSDatabase *) database{
+-(NSString *) buildTextForDatabase: (MCDatabase *) database{
     NSMutableString * info = [[NSMutableString alloc] init];
     GPKGGeoPackage * geoPackage = [self.manager open:database.name];
     @try {
@@ -106,7 +106,7 @@
     return info;
 }
 
--(NSString *) buildTextForTable: (GPKGSTable *) table{
+-(NSString *) buildTextForTable: (MCTable *) table{
     NSMutableString * info = [[NSMutableString alloc] init];
     GPKGGeoPackage * geoPackage = [self.manager open:table.database];
     @try {
@@ -118,7 +118,7 @@
         
         switch([table getType]){
             case GPKGS_TT_FEATURE_OVERLAY:
-                tableName = ((GPKGSFeatureOverlayTable *) table).featureTable;
+                tableName = ((MCFeatureOverlayTable *) table).featureTable;
             case GPKGS_TT_FEATURE:
             {
                 featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
@@ -312,8 +312,8 @@
         
     }
     @catch (NSException *e) {
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_DELETE_LABEL]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_DELETE_LABEL]
                                  andMessage:[NSString stringWithFormat:@"%@", [e description]]];
     }
     @finally {

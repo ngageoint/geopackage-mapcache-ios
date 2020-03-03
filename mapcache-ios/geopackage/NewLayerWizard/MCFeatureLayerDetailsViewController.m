@@ -28,8 +28,8 @@
     [super viewDidLoad];
     
     _manager = [GPKGGeoPackageFactory getManager];
-    _geometryTypes = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
-    _geometryTypesDictionary = [GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES_DICTIONARY];
+    _geometryTypes = [MCProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
+    _geometryTypesDictionary = [MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES_DICTIONARY];
     
     [self registerCellTypes];
     [self initCellArray];

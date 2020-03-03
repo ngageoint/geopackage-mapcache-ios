@@ -12,15 +12,15 @@
 #import "MCTutorialCell.h"
 #import "NGADrawerViewController.h"
 #import "GPKGGeoPackageFactory.h"
-#import "GPKGSDatabase.h"
-#import "GPKGSDatabases.h"
+#import "MCDatabase.h"
+#import "MCDatabases.h"
 
 
 @protocol MCGeoPacakageListViewDelegate <NSObject>
-- (void) didSelectGeoPackage: (GPKGSDatabase*) database;
+- (void) didSelectGeoPackage: (MCDatabase*) database;
 - (void) downloadGeopackageWithExample:(BOOL) prefillExample;
-- (void) toggleActive:(GPKGSDatabase *) database;
-- (void) deleteGeoPackage:(GPKGSDatabase *) database;
+- (void) toggleActive:(MCDatabase *) database;
+- (void) deleteGeoPackage:(MCDatabase *) database;
 - (void) showNewGeoPackageView;
 @end
 

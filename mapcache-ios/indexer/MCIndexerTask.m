@@ -6,16 +6,16 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSIndexerTask.h"
+#import "MCIndexerTask.h"
 #import "GPKGGeoPackage.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGGeoPackageFactory.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
-#import "GPKGSUtils.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
+#import "MCUtils.h"
 #import "GPKGFeatureIndexManager.h"
 
-@interface GPKGSIndexerTask ()
+@interface MCIndexerTask ()
 
 @property (nonatomic, strong) NSNumber *maxIndex;
 @property (nonatomic, strong) GPKGGeoPackage *geoPackage;
@@ -29,7 +29,7 @@
 
 @end
 
-@implementation GPKGSIndexerTask
+@implementation MCIndexerTask
 
 +(void) indexFeaturesWithCallback: (NSObject<GPKGSIndexerProtocol> *) callback
                                      andDatabase: (NSString *) database
@@ -50,19 +50,19 @@
     GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
     [indexer setIndexLocation:indexLocation];
     
-    GPKGSIndexerTask * indexTask = [[GPKGSIndexerTask alloc] initWithCallback:callback andGeoPackage:geoPackage andIndexer:indexer];
+    MCIndexerTask * indexTask = [[MCIndexerTask alloc] initWithCallback:callback andGeoPackage:geoPackage andIndexer:indexer];
     
     int max = [featureDao count];
     [indexTask setMax:max];
     [indexer setProgress:indexTask];
     
     UIAlertView *alertView = [[UIAlertView alloc]
-                              initWithTitle:[NSString stringWithFormat:@"%@ %@ - %@", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE], database, tableName]
+                              initWithTitle:[NSString stringWithFormat:@"%@ %@ - %@", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_INDEX_FEATURES_INDEX_TITLE], database, tableName]
                               message:@""
                               delegate:indexTask
-                              cancelButtonTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
+                              cancelButtonTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]
                               otherButtonTitles:nil];
-    UIProgressView *progressView = [GPKGSUtils buildProgressBarView];
+    UIProgressView *progressView = [MCUtils buildProgressBarView];
     [alertView setValue:progressView forKey:@"accessoryView"];
     
     indexTask.alertView = alertView;

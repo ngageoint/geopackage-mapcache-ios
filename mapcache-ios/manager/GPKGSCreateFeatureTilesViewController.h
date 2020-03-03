@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSTable.h"
+#import "MCTable.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGSGenerateTilesData.h"
 #import "GPKGSFeatureTilesDrawData.h"

@@ -11,7 +11,7 @@
 #import "GPKGSIndexerProtocol.h"
 #import "GPKGFeatureIndexTypes.h"
 
-@interface GPKGSIndexerTask : NSObject<GPKGProgress>
+@interface MCIndexerTask : NSObject<GPKGProgress>
 
 +(void) indexFeaturesWithCallback: (NSObject<GPKGSIndexerProtocol> *) callback
                       andDatabase: (NSString *) database

@@ -14,7 +14,7 @@
 @property (nonatomic, strong) MCGeoPackageCoordinator *geoPackageCoordinator;
 @property (nonatomic, strong) MCGeoPackageList *geoPackageListView;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic, strong) NSMutableArray *databases;
 @property (nonatomic, strong) GPKGGeoPackageCache *geoPacakageCache;
 @end
@@ -29,7 +29,7 @@
     _databases = [[NSMutableArray alloc] init];
     _manager = [GPKGGeoPackageFactory getManager];
     _geoPacakageCache = [[GPKGGeoPackageCache alloc] initWithManager:_manager];
-    self.active = [GPKGSDatabases getInstance];
+    self.active = [MCDatabases getInstance];
     
     return self;
 }
@@ -55,7 +55,7 @@
         @try {
             geoPackage = [self.manager open:databaseName];
             
-            GPKGSDatabase * theDatabase = [[GPKGSDatabase alloc] initWithName:databaseName andExpanded:NO];
+            MCDatabase * theDatabase = [[MCDatabase alloc] initWithName:databaseName andExpanded:NO];
             [self.databases addObject:theDatabase];
             NSMutableArray * tables = [[NSMutableArray alloc] init];
             
@@ -68,7 +68,7 @@
                 GPKGGeometryColumns * geometryColumns = [contentsDao getGeometryColumns:contents];
                 enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
                 
-                GPKGSFeatureTable * table = [[GPKGSFeatureTable alloc] initWithDatabase:databaseName andName:tableName andGeometryType:geometryType andCount:count];
+                MCFeatureTable * table = [[MCFeatureTable alloc] initWithDatabase:databaseName andName:tableName andGeometryType:geometryType andCount:count];
                 
                 [tables addObject:table];
                 [theDatabase addFeature:table];
@@ -77,14 +77,14 @@
             for(NSString * tableName in [geoPackage getTileTables]){
                 GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName: tableName];
                 int count = [tileDao count];
-                GPKGSTileTable * table = [[GPKGSTileTable alloc] initWithDatabase:databaseName andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
+                MCTileTable * table = [[MCTileTable alloc] initWithDatabase:databaseName andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
                 [table setActive: [self.active exists:table]];
                 
                 [tables addObject:table];
                 [theDatabase addTile:table];
             }
             
-            for(GPKGSFeatureOverlayTable * table in [self.active featureOverlays:databaseName]){
+            for(MCFeatureOverlayTable * table in [self.active featureOverlays:databaseName]){
                 GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:table.featureTable];
                 int count = [featureDao count];
                 [table setCount:count];
@@ -118,7 +118,7 @@
 
 
 #pragma mark - MCGeoPackageListViewDelegate method
--(void) didSelectGeoPackage:(GPKGSDatabase *)database {
+-(void) didSelectGeoPackage:(MCDatabase *)database {
     _geoPackageCoordinator = [[MCGeoPackageCoordinator alloc] initWithDelegate:self andDrawerDelegate:_drawerViewDelegate andMapDelegate:self.mcMapDelegate andDatabase:database];
     [_childCoordinators addObject:_geoPackageCoordinator];
     [_geoPackageCoordinator start];
@@ -141,13 +141,13 @@
 }
 
 
--(void) toggleActive:(GPKGSDatabase *)database {
+-(void) toggleActive:(MCDatabase *)database {
     NSLog(@"Toggling layers for GeoPackage: %@", database.name);
 
     BOOL switchOn = ![_active isActive:database];
     NSArray *tables = [database getTables];
     
-    for (GPKGSTable *table in tables) {
+    for (MCTable *table in tables) {
         if (switchOn){
             [_active addTable:table];
         } else {
@@ -164,7 +164,7 @@
 }
 
 
-- (void)deleteGeoPackage:(GPKGSDatabase *)database {
+- (void)deleteGeoPackage:(MCDatabase *)database {
     [self.manager delete:database.name];
     [self.active removeDatabase:database.name andPreserveOverlays:NO];
     [_databases removeObjectIdenticalTo:database];

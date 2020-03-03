@@ -14,7 +14,7 @@
 #import "MCFieldWithTitleCell.h"
 #import "MCSwitchCell.h"
 #import "MCButtonCell.h"
-#import "GPKGSProperties.h"
+#import "MCProperties.h"
 #import <MapKit/MapKit.h>
 
 /* Settings that change the state of the map, or the controls that are shown are handled here */

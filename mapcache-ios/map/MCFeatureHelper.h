@@ -24,8 +24,8 @@
 #import "GPKGFeatureIndexManager.h"
 #import "GPKGFeatureIndexResults.h"
 #import "GPKGMultipleFeatureIndexResults.h"
-#import "GPKGSDatabase.h"
-#import "GPKGSDatabases.h"
+#import "MCDatabase.h"
+#import "MCDatabases.h"
 #import "GPKGGeoPackage.h"
 #import "GPKGSMapPointData.h"
 #import "GPKGStyleCache.h"
@@ -50,7 +50,7 @@
 - (int)getNewFeatureUpdateId;
 - (void)prepareFeaturesWithUpdateId:(int) updateId andFeatureUpdateId:(int) featureUpdateId andZoom:(int) zoom andMaxFeatures:(int) maxFeatures andMapViewBoundingBox:(GPKGBoundingBox *) mapViewBoudingBox andToleranceDistance:(double) toleranceDistance andFilter:(BOOL) filter;
 
-- (void)prepareFeaturesWithGeoPackage:(GPKGGeoPackage *) geoPackage andDatabase:(GPKGSDatabase *) database andUpdateId:(int) updateId andFeatureUpdateId:(int) featureUpdateId andZoom:(int) zoom andMaxFeatures:(int) maxFeatures andMapViewBoundingBox:(GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance:(double) toleranceDistance andFilter:(BOOL) filter;
+- (void)prepareFeaturesWithGeoPackage:(GPKGGeoPackage *) geoPackage andDatabase:(MCDatabase *) database andUpdateId:(int) updateId andFeatureUpdateId:(int) featureUpdateId andZoom:(int) zoom andMaxFeatures:(int) maxFeatures andMapViewBoundingBox:(GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance:(double) toleranceDistance andFilter:(BOOL) filter;
 
 -(void) addMapPointShapeWithFeatureId: (int) featureId andDatabase: (NSString *) database andTableName: (NSString *) tableName andMapShape: (GPKGMapShape *) shape;
 

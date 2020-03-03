@@ -6,10 +6,10 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSFeatureTable.h"
+#import "MCFeatureTable.h"
 #import <UIKit/UIKit.h>
 
-@interface GPKGSFeatureOverlayTable : GPKGSFeatureTable
+@interface MCFeatureOverlayTable : MCFeatureTable
 
 @property (nonatomic, strong) NSString *featureTable;
 @property (nonatomic) int minZoom;

@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSDecimalValidator.h"
+#import "MCDecimalValidator.h"
 
-@interface GPKGSDecimalValidator ()
+@interface MCDecimalValidator ()
 
 @end
 
-@implementation GPKGSDecimalValidator
+@implementation MCDecimalValidator
 
 -(instancetype) initWithMinimum: (NSDecimalNumber *) minimum andMaximum: (NSDecimalNumber *) maximum{
     self = [super init];

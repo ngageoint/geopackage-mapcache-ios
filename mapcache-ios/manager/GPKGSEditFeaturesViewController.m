@@ -8,17 +8,17 @@
 
 #import "GPKGSEditFeaturesViewController.h"
 #import "GPKGSEditContentsViewController.h"
-#import "GPKGSUtils.h"
-#import "GPKGSDecimalValidator.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
+#import "MCUtils.h"
+#import "MCDecimalValidator.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
 
 NSString * const GPKGS_MANAGER_EDIT_FEATURES_SEG_EDIT_CONTENTS = @"editContents";
 
 @interface GPKGSEditFeaturesViewController ()
 
 @property (nonatomic, strong) GPKGSEditContentsData *data;
-@property (nonatomic, strong) GPKGSDecimalValidator * zAndMValidator;
+@property (nonatomic, strong) MCDecimalValidator * zAndMValidator;
 @property (nonatomic, strong) NSArray * geometryTypes;
 
 @end
@@ -30,13 +30,13 @@ NSString * const GPKGS_MANAGER_EDIT_FEATURES_SEG_EDIT_CONTENTS = @"editContents"
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.geometryTypes = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
+    self.geometryTypes = [MCProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
     
-    self.zAndMValidator = [[GPKGSDecimalValidator alloc] initWithMinimumInt:0 andMaximumInt:2];
+    self.zAndMValidator = [[MCDecimalValidator alloc] initWithMinimumInt:0 andMaximumInt:2];
     [self.zTextField setDelegate:self.zAndMValidator];
     [self.mTextField setDelegate:self.zAndMValidator];
     
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.zTextField.inputAccessoryView = keyboardToolbar;
     self.zTextField.inputAccessoryView = keyboardToolbar;
@@ -93,7 +93,7 @@ NSString * const GPKGS_MANAGER_EDIT_FEATURES_SEG_EDIT_CONTENTS = @"editContents"
         }
     }
     @catch (NSException *e) {
-        [GPKGSUtils showMessageWithDelegate:self
+        [MCUtils showMessageWithDelegate:self
                                    andTitle:@"Edit Features"
                                  andMessage:[NSString stringWithFormat:@"Error editing features table '%@' in database: '%@'\n\nError: %@", self.table.name, self.table.database, [e description]]];
     }
@@ -123,7 +123,7 @@ NSString * const GPKGS_MANAGER_EDIT_FEATURES_SEG_EDIT_CONTENTS = @"editContents"
 - (IBAction)geometryType:(id)sender {
     
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPE_LABEL]
+                          initWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPE_LABEL]
                           message:nil
                           delegate:self
                           cancelButtonTitle:nil
@@ -132,7 +132,7 @@ NSString * const GPKGS_MANAGER_EDIT_FEATURES_SEG_EDIT_CONTENTS = @"editContents"
     for (NSString *geometryType in self.geometryTypes) {
         [alert addButtonWithTitle:geometryType];
     }
-    alert.cancelButtonIndex = [alert addButtonWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
+    alert.cancelButtonIndex = [alert addButtonWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
     
     alert.tag = TAG_GEOMETRY_TYPES;
     

@@ -190,6 +190,6 @@ extern NSString * const GPKGS_ACTION_SHARE;
 extern NSString * const GPKGS_ACTION_NEW_LAYER;
 extern NSString * const GPKGS_ACTION_NEW_FEATURE_LAYER;
 
-@interface GPKGSConstants : NSObject
+@interface MCConstants : NSObject
 
 @end

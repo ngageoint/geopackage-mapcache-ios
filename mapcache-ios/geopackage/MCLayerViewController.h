@@ -10,13 +10,13 @@
 #import "GPKGUserDao.h"
 #import "GPKGFeatureDao.h"
 #import "GPKGTileDao.h"
-#import "GPKGSFeatureTable.h"
-#import "GPKGSTileTable.h"
+#import "MCFeatureTable.h"
+#import "MCTileTable.h"
 #import "MCButtonCell.h"
 #import "MCSectionTitleCell.h"
 #import "MCHeaderCell.h"
-#import "GPKGSUtils.h"
-#import "GPKGSProperties.h"
+#import "MCUtils.h"
+#import "MCProperties.h"
 #import <GPKGGeoPackageManager.h>
 #import <SFPProjectionTransform.h>
 #import "MCFeatureLayerOperationsCell.h"

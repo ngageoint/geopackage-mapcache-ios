@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GPKGSDecimalValidator : NSObject<UITextFieldDelegate>
+@interface MCDecimalValidator : NSObject<UITextFieldDelegate>
 
 @property (nonatomic, strong) NSDecimalNumber *min;
 @property (nonatomic, strong) NSDecimalNumber *max;

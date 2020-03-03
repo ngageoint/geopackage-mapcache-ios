@@ -9,14 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "GPKGProgress.h"
 #import "GPKGSLoadTilesProtocol.h"
-#import "GPKGSDatabases.h"
+#import "MCDatabases.h"
 #import "GPKGCompressFormats.h"
 #import "GPKGBoundingBox.h"
 #import "GPKGGeoPackage.h"
 #import "GPKGFeatureTiles.h"
 #import "GPKGTileScaling.h"
 
-@interface GPKGSLoadTilesTask : NSObject<GPKGProgress>
+@interface MCLoadTilesTask : NSObject<GPKGProgress>
 
 +(void) loadTilesWithCallback: (NSObject<GPKGSLoadTilesProtocol> *) callback
                   andDatabase: (NSString *) database

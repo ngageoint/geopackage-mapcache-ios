@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSDatabase.h"
+#import "MCDatabase.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGSCreateTilesData.h"
 #import "GPKGSLoadTilesProtocol.h"
@@ -22,7 +22,7 @@
 
 @property (nonatomic, weak) id <GPKGSManagerCreateTilesDelegate> delegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) GPKGSDatabase *database;
+@property (nonatomic, strong) MCDatabase *database;
 @property (nonatomic, strong) GPKGSCreateTilesData *data;
 @property (weak, nonatomic) IBOutlet UITextField *databaseValue;
 

@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSTable.h"
+#import "MCTable.h"
 #import "SFGeometryTypes.h"
 
 extern NSString * const GPKGS_FEATURE_TABLE_GEOMETRY_TYPE;
 
-@interface GPKGSFeatureTable : GPKGSTable
+@interface MCFeatureTable : MCTable
 
 @property (nonatomic) enum SFGeometryType geometryType;
 

@@ -12,14 +12,14 @@
 @property (strong, nonatomic) MCLayerViewController *layerViewController;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
 @property (strong, nonatomic) GPKGUserDao *dao;
-@property (strong, nonatomic) GPKGSDatabase *database;
+@property (strong, nonatomic) MCDatabase *database;
 @property (strong, nonatomic) UINavigationController *navigationController;
 @end
 
 
 @implementation MCLayerCoordinator
 
-- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDatabase:(GPKGSDatabase *) database
+- (instancetype) initWithNavigationController:(UINavigationController *) navigationController andDatabase:(MCDatabase *) database
                                        andDao:(GPKGUserDao *) dao {
     self = [super init];
     _navigationController = navigationController;
@@ -55,8 +55,8 @@
         [_navigationController popViewControllerAnimated:YES];
     }
     @catch (NSException *exception) {
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], _database.name, _dao.tableName]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], _database.name, _dao.tableName]
                                  andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
     }
     @finally {

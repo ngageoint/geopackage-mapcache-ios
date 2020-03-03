@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSDatabase.h"
+#import "MCDatabase.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGSBoundingBoxViewController.h"
 
@@ -21,7 +21,7 @@
 
 @property (nonatomic, weak) id <GPKGSCreateFeaturesDelegate> delegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) GPKGSDatabase *database;
+@property (nonatomic, strong) MCDatabase *database;
 @property (weak, nonatomic) IBOutlet UITextField *databaseValue;
 @property (weak, nonatomic) IBOutlet UITextField *nameValue;
 @property (weak, nonatomic) IBOutlet UIButton *geometryTypeButton;

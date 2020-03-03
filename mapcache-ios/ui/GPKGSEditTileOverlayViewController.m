@@ -8,10 +8,10 @@
 
 #import "GPKGSEditTileOverlayViewController.h"
 #import "GPKGSBoundingBoxViewController.h"
-#import "GPKGSUtils.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
-#import "GPKGSDecimalValidator.h"
+#import "MCUtils.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
+#import "MCDecimalValidator.h"
 #import "GPKGGeoPackage.h"
 #import "GPKGSFeatureTilesDrawViewController.h"
 #import "SFPProjectionTransform.h"
@@ -24,7 +24,7 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
 
 @interface GPKGSEditTileOverlayViewController ()
 
-@property (nonatomic, strong) GPKGSDecimalValidator * zoomValidator;
+@property (nonatomic, strong) MCDecimalValidator * zoomValidator;
 @property (nonatomic, strong) NSNumberFormatter * numberFormatter;
 
 @end
@@ -45,10 +45,10 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
         @try{
             self.data.indexed = [indexer isIndexed];
             if(self.data.indexed){
-                [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURE_OVERLAY_INDEX_VALIDATION]];
+                [self.warningLabel setText:[MCProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURE_OVERLAY_INDEX_VALIDATION]];
                 [self.warningLabel setTextColor:[UIColor greenColor]];
             }else{
-                [self.warningLabel setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURE_OVERLAY_INDEX_WARNING]];
+                [self.warningLabel setText:[MCProperties getValueOfProperty:GPKGS_PROP_EDIT_FEATURE_OVERLAY_INDEX_WARNING]];
             }
         }@finally{
             [indexer close];
@@ -58,9 +58,9 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
         [geoPackage close];
     }
     
-    NSNumber * minZoomValidation = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MIN_ZOOM_DEFAULT];
-    NSNumber * maxZoomValidation = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MAX_ZOOM_DEFAULT];
-    self.zoomValidator = [[GPKGSDecimalValidator alloc] initWithMinimumNumber:minZoomValidation andMaximumNumber:maxZoomValidation];
+    NSNumber * minZoomValidation = [MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MIN_ZOOM_DEFAULT];
+    NSNumber * maxZoomValidation = [MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MAX_ZOOM_DEFAULT];
+    self.zoomValidator = [[MCDecimalValidator alloc] initWithMinimumNumber:minZoomValidation andMaximumNumber:maxZoomValidation];
     
     [self.minZoomTextField setDelegate:self.zoomValidator];
     [self.maxZoomTextField setDelegate:self.zoomValidator];
@@ -85,7 +85,7 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
         }
     }
     
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.minZoomTextField.inputAccessoryView = keyboardToolbar;
     self.maxZoomTextField.inputAccessoryView = keyboardToolbar;

@@ -10,7 +10,7 @@
 
 @interface MCMapViewController ()
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
-@property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic, strong) NSUserDefaults *settings;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) NSMutableDictionary *geoPackages;
@@ -79,7 +79,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.featureShapes = [[GPKGFeatureShapes alloc] init];
     self.featureDaos = [[NSMutableDictionary alloc] init];
     self.manager = [GPKGGeoPackageFactory getManager];
-    self.active = [GPKGSDatabases getInstance];
+    self.active = [MCDatabases getInstance];
     self.needsInitialZoom = true;
     self.updateCountId = 0;
     self.featureUpdateCountId = 0;
@@ -128,9 +128,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.tempMapPoints = [[NSMutableArray alloc] init];
     
     NSString *mapType = [self.settings stringForKey:GPKGS_PROP_MAP_TYPE];
-    if (mapType == nil || [mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
+    if (mapType == nil || [mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
         [self.mapView setMapType:MKMapTypeStandard];
-    } else if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
+    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
         [self.mapView setMapType:MKMapTypeSatellite];
     } else {
         [self.mapView setMapType:MKMapTypeHybrid];
@@ -275,10 +275,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (void)setMapType:(NSString *)mapType {
     NSLog(@"In MCMapViewController handing setting map change");
     
-    if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
+    if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
         [self.mapView setMapType:MKMapTypeStandard];
         [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
-    } else if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
+    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
         [self.mapView setMapType:MKMapTypeSatellite];
         [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
     } else {
@@ -495,7 +495,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
          if (self.active != nil) {
-                    for (GPKGSDatabase *database in [self.active getDatabases]) {
+                    for (MCDatabase *database in [self.active getDatabases]) {
                         GPKGGeoPackage *geoPacakge;
                         @try {
                             geoPacakge = [self.manager open:database.name];
@@ -552,7 +552,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
          if (self.active != nil) {
-             for (GPKGSDatabase *database in [self.active getDatabases]) {
+             for (MCDatabase *database in [self.active getDatabases]) {
                  GPKGGeoPackage *geoPacakge;
                  @try {
                      geoPacakge = [self.manager open:database.name];
@@ -606,12 +606,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         bbox = self.tilesBoundingBox;
         tileBox = true;
         if(self.featureOverlayTiles){
-            paddingPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURE_TILES_ZOOM_PADDING_PERCENTAGE] intValue] * .01;
+            paddingPercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURE_TILES_ZOOM_PADDING_PERCENTAGE] intValue] * .01;
         }else{
-            paddingPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_ZOOM_PADDING_PERCENTAGE] intValue] * .01;
+            paddingPercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_ZOOM_PADDING_PERCENTAGE] intValue] * .01;
         }
     }else{
-        paddingPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_PADDING_PERCENTAGE] intValue] * .01f;
+        paddingPercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_PADDING_PERCENTAGE] intValue] * .01f;
     }
     
     if(bbox != nil){
@@ -636,9 +636,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     
                     double zoomAlreadyVisiblePercentage;
                     if (tileBox) {
-                        zoomAlreadyVisiblePercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
+                        zoomAlreadyVisiblePercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
                     }else{
-                        zoomAlreadyVisiblePercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
+                        zoomAlreadyVisiblePercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
                     }
                     
                     if(longitudeRatio >= zoomAlreadyVisiblePercentage && latitudeRatio >= zoomAlreadyVisiblePercentage){
@@ -679,19 +679,19 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     // Pre zoom
     NSMutableArray *activeDatabase = [[NSMutableArray alloc] init];
     [activeDatabase addObjectsFromArray:[self.active getDatabases]];
-    for(GPKGSDatabase *database in activeDatabase){
+    for(MCDatabase *database in activeDatabase){
         GPKGGeoPackage *geoPackage = [self.manager open:database.name];
         if (geoPackage != nil) {
             
             NSMutableSet<NSString *> *featureTableDaos = [[NSMutableSet alloc] init];
             NSArray *features = [database getFeatures];
             if(features.count > 0){
-                for(GPKGSTable *featureTable in features){
+                for(MCTable *featureTable in features){
                     [featureTableDaos addObject:featureTable.name];
                 }
             }
             
-            for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
+            for(MCFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
                 if(featureOverlay.active){
                     [featureTableDaos addObject:featureOverlay.featureTable];
                 }
@@ -730,7 +730,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 
                 GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
                 
-                for(GPKGSTileTable *tileTable in tileTables){
+                for(MCTileTable *tileTable in tileTables){
                     
                     @try {
                         GPKGTileMatrixSet *tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:tileTable.name];
@@ -761,44 +761,44 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(int) getMaxFeatures{
     int maxFeatures = (int)[self.settings integerForKey:GPKGS_PROP_MAP_MAX_FEATURES];
     if(maxFeatures == 0){
-        maxFeatures = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
+        maxFeatures = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
     }
     return maxFeatures;
 }
 
 
 - (void) setupColors {
-    self.boundingBoxColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_COLOR]];
-    self.boundingBoxLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_LINE_WIDTH] doubleValue];
-    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL]){
-        self.boundingBoxFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
+    self.boundingBoxColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_COLOR]];
+    self.boundingBoxLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_LINE_WIDTH] doubleValue];
+    if([MCProperties getBoolOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL]){
+        self.boundingBoxFillColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
     }
     
-    self.defaultPolylineColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_COLOR]];
-    self.defaultPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_LINE_WIDTH] doubleValue];
+    self.defaultPolylineColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_COLOR]];
+    self.defaultPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_LINE_WIDTH] doubleValue];
     
-    self.defaultPolygonColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_COLOR]];
-    self.defaultPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYGON_LINE_WIDTH] doubleValue];
-    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL]){
-        self.defaultPolygonFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL_COLOR]];
+    self.defaultPolygonColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_COLOR]];
+    self.defaultPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYGON_LINE_WIDTH] doubleValue];
+    if([MCProperties getBoolOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL]){
+        self.defaultPolygonFillColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL_COLOR]];
     }
     
-    self.editPolylineColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYLINE_COLOR]];
-    self.editPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYLINE_LINE_WIDTH] doubleValue];
+    self.editPolylineColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYLINE_COLOR]];
+    self.editPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYLINE_LINE_WIDTH] doubleValue];
     
-    self.editPolygonColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_COLOR]];
-    self.editPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYGON_LINE_WIDTH] doubleValue];
-    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL]){
-        self.editPolygonFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL_COLOR]];
+    self.editPolygonColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_COLOR]];
+    self.editPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYGON_LINE_WIDTH] doubleValue];
+    if([MCProperties getBoolOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL]){
+        self.editPolygonFillColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL_COLOR]];
     }
     
-    self.drawPolylineColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYLINE_COLOR]];
-    self.drawPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYLINE_LINE_WIDTH] doubleValue];
+    self.drawPolylineColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYLINE_COLOR]];
+    self.drawPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYLINE_LINE_WIDTH] doubleValue];
     
-    self.drawPolygonColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_COLOR]];
-    self.drawPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYGON_LINE_WIDTH] doubleValue];
-    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL]){
-        self.drawPolygonFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
+    self.drawPolygonColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_COLOR]];
+    self.drawPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYGON_LINE_WIDTH] doubleValue];
+    if([MCProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL]){
+        self.drawPolygonFillColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
     }
 }
 

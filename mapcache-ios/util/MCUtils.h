@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface GPKGSUtils : NSObject
+@interface MCUtils : NSObject
 
 +(void) showMessageWithDelegate: (id) delegate andTitle: (NSString *) title andMessage: (NSString *) message;
 

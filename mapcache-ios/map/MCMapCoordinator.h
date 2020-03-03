@@ -20,7 +20,7 @@
 
 @protocol MCMapDelegate <NSObject>
 - (void) updateMapLayers;
-- (void) toggleGeoPackage:(GPKGSDatabase *) geoPackage;
+- (void) toggleGeoPackage:(MCDatabase *) geoPackage;
 - (void) zoomToSelectedGeoPackage:(NSString *) geoPackageName;
 - (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView;
 - (void) removeTileBoundingBoxGuide;

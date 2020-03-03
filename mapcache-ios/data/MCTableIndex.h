@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GPKGSTable.h"
+#import "MCTable.h"
 #import "GPKGFeatureIndexTypes.h"
 
-@interface GPKGSTableIndex : NSObject
+@interface MCTableIndex : NSObject
 
-@property (nonatomic, strong) GPKGSTable *table;
+@property (nonatomic, strong) MCTable *table;
 @property (nonatomic) enum GPKGFeatureIndexType indexLocation;
 
--(instancetype) initWithTable: (GPKGSTable *) table andIndexLocation: (enum GPKGFeatureIndexType) indexLocation;
+-(instancetype) initWithTable: (MCTable *) table andIndexLocation: (enum GPKGFeatureIndexType) indexLocation;
 
 @end

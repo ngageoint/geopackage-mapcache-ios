@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 NGA. All rights reserved.
 //
 
-#import "GPKGSTable.h"
+#import "MCTable.h"
 
-@interface GPKGSTileTable : GPKGSTable
+@interface MCTileTable : MCTable
 
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count;
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count andMinZoom: (int) minZoom andMaxZoom: (int) maxZoom;

@@ -73,16 +73,16 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     _baseMapSelector = [_tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
     _baseMapSelector.label.text = @"Base Map Type";
     _baseMapSelector.delegate = self;
-    NSArray *maps = [[NSArray alloc] initWithObjects: [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD],
-                     [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE],
-                     [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_HYBRID], nil];
+    NSArray *maps = [[NSArray alloc] initWithObjects: [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD],
+                     [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE],
+                     [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_HYBRID], nil];
     
     [_baseMapSelector setItems:maps];
     
     NSString *mapType = [self.settings stringForKey:GPKGS_PROP_MAP_TYPE];
-    if (mapType == nil || [mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
+    if (mapType == nil || [mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
         [_baseMapSelector.segmentedControl setSelectedSegmentIndex:0];
-    } else if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
+    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
         [_baseMapSelector.segmentedControl setSelectedSegmentIndex:1];
     } else {
         [_baseMapSelector.segmentedControl setSelectedSegmentIndex:2];
@@ -94,7 +94,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     _maxFeaturesCell.title.text = @"Maximum number of features";
     int maxFeatures = (int)[self.settings integerForKey:GPKGS_PROP_MAP_MAX_FEATURES];
     if(maxFeatures == 0){
-        maxFeatures = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
+        maxFeatures = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
     }
     _maxFeaturesCell.field.text = [NSString stringWithFormat:@"%d", maxFeatures];
     [_maxFeaturesCell setTextFielDelegate:self];

@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GPKGSTable.h"
+#import "MCTable.h"
 
-@interface GPKGSDatabase : NSObject
+@interface MCDatabase : NSObject
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic) BOOL expanded;
@@ -36,19 +36,19 @@
 
 -(NSInteger) getActiveTableCount;
 
--(void) addFeature: (GPKGSTable *) table;
+-(void) addFeature: (MCTable *) table;
 
--(void) addFeatureOverlay: (GPKGSTable *) table;
+-(void) addFeatureOverlay: (MCTable *) table;
 
--(void) addTile: (GPKGSTable *) table;
+-(void) addTile: (MCTable *) table;
 
--(BOOL) exists: (GPKGSTable *) table;
+-(BOOL) exists: (MCTable *) table;
 
 -(BOOL) existsWithTable: (NSString *) table ofType: (enum GPKGSTableType) tableType;
 
--(void) add:(GPKGSTable *) table;
+-(void) add:(MCTable *) table;
 
--(void) remove:(GPKGSTable *) table;
+-(void) remove:(MCTable *) table;
 
 -(BOOL) isEmpty;
 
