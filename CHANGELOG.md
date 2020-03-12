@@ -4,13 +4,13 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## [1.23 Legacy](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.23) (03-12-2020)
+## [1.23 - Legacy](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.23) (03-12-2020)
 
 * geopackage-ios version 4.0.0
 * XYZ tile rebranding, previously referred to as Standard
 * Queries by specified columns
 
-## [1.22 Legacy](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.22.legacy) (10-15-2019)
+## [1.22 - Legacy](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.22.legacy) (10-15-2019)
 
 * geopackage-ios version 3.3.0
 
