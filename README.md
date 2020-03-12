@@ -25,6 +25,8 @@ The MapCache app provides read and write access to GeoPackage files, including f
 
 ### Build ###
 
+[![Build Archive](https://github.com/ngageoint/geopackage-mapcache-ios/workflows/Build%20Archive/badge.svg)](https://github.com/ngageoint/geopackage-mapcache-ios/actions?query=workflow%3A%22Build+Archive%22)
+
 Build this repository using Xcode and/or CocoaPods:
 
     pod repo update
