@@ -27,7 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _manager = [GPKGGeoPackageFactory getManager];
+    _manager = [GPKGGeoPackageFactory manager];
     _geometryTypes = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
     _geometryTypesDictionary = [GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES_DICTIONARY];
     

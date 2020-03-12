@@ -27,7 +27,7 @@
             andCompressFormat: (enum GPKGCompressFormat) compressFormat
            andCompressQuality: (int) compressQuality
              andCompressScale: (int) compressScale
-            andStandardFormat: (BOOL) standardWebMercatorFormat
+                  andXyzTiles: (BOOL) xyzTiles
                andBoundingBox: (GPKGBoundingBox *) boundingBox
                andTileScaling: (GPKGTileScaling *) scaling
                  andAuthority: (NSString *) authority
@@ -43,7 +43,7 @@
             andCompressFormat: (enum GPKGCompressFormat) compressFormat
            andCompressQuality: (int) compressQuality
              andCompressScale: (int) compressScale
-            andStandardFormat: (BOOL) standardWebMercatorFormat
+                  andXyzTiles: (BOOL) xyzTiles
                andBoundingBox: (GPKGBoundingBox *) boundingBox
                andTileScaling: (GPKGTileScaling *) scaling
                  andAuthority: (NSString *) authority

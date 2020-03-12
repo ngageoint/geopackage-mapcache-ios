@@ -84,8 +84,8 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
             GPKGGeoPackage * geoPackage = [self.manager open:self.database.name];
             @try {
                 // Create the srs if needed
-                GPKGSpatialReferenceSystemDao * srsDao = [geoPackage getSpatialReferenceSystemDao];
-                GPKGSpatialReferenceSystem * srs = [srsDao getOrCreateWithEpsg:[NSNumber numberWithInt:loadTiles.epsg]];
+                GPKGSpatialReferenceSystemDao * srsDao = [geoPackage spatialReferenceSystemDao];
+                GPKGSpatialReferenceSystem * srs = [srsDao srsWithEpsg:[NSNumber numberWithInt:loadTiles.epsg]];
                 // Create the tile table
                 SFPProjection * projection = [SFPProjectionFactory projectionWithEpsgInt:loadTiles.epsg];
                 GPKGBoundingBox * bbox = [GPKGSLoadTilesTask transformBoundingBox:boundingBox withProjection:projection];
@@ -105,7 +105,7 @@ NSString * const GPKGS_MANAGER_CREATE_TILES_SEG_CREATE_TILES = @"createTiles";
             
         }else{
             // Load tiles
-            [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:self.database.name andTable:name andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andStandardFormat:generateTiles.standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:scaling andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",loadTiles.epsg] andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
+            [GPKGSLoadTilesTask loadTilesWithCallback:self andDatabase:self.database.name andTable:name andUrl:url andMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:generateTiles.compressFormat andCompressQuality:[generateTiles.compressQuality intValue] andCompressScale:[generateTiles.compressScale intValue] andXyzTiles:generateTiles.xyzTiles andBoundingBox:boundingBox andTileScaling:scaling andAuthority:PROJ_AUTHORITY_EPSG andCode:[NSString stringWithFormat:@"%d",loadTiles.epsg] andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
         }
     
     }

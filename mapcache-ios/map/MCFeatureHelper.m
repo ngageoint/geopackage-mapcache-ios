@@ -31,7 +31,7 @@
     self.locationDecimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     self.locationDecimalFormatter.maximumFractionDigits = 4;
     self.active = [GPKGSDatabases getInstance];
-    self.manager = [GPKGGeoPackageFactory getManager];
+    self.manager = [GPKGGeoPackageFactory manager];
     self.geoPackages = [[NSMutableDictionary alloc] init];
     self.featureDaos = [[NSMutableDictionary alloc] init];
     self.featureUpdateCountId = 0;
@@ -72,7 +72,7 @@
                 NSMutableDictionary * databaseFeatureDaos = [[NSMutableDictionary alloc] init];
                 [self.featureDaos setObject:databaseFeatureDaos forKey:database.name];
                 for(NSString *featureTable in featureTableDaos){
-                    GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:featureTable];
+                    GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:featureTable];
                     [databaseFeatureDaos setObject:featureDao forKey:featureTable];
                 }
             }
@@ -106,7 +106,7 @@
             NSMutableDictionary * databaseFeatureDaos = [[NSMutableDictionary alloc] init];
             [self.featureDaos setObject:databaseFeatureDaos forKey:database.name];
             for(NSString *featureTable in featureTableDaos){
-                GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:featureTable];
+                GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:featureTable];
                 [databaseFeatureDaos setObject:featureDao forKey:featureTable];
             }
         }
@@ -211,13 +211,15 @@
         
         SFPProjection *mapViewProjection = [SFPProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
         
+        NSArray<NSString *> *columns = [featureDao idAndGeometryColumnNames];
+        
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         if(filter && [indexer isIndexed]){
             
-            GPKGFeatureIndexResults *indexResults = [indexer queryWithBoundingBox:mapViewBoundingBox inProjection:mapViewProjection];
+            GPKGFeatureIndexResults *indexResults = [indexer queryWithColumns:columns andBoundingBox:mapViewBoundingBox inProjection:mapViewProjection];
             GPKGBoundingBox *complementary = [mapViewBoundingBox complementaryWgs84];
             if(complementary != nil){
-                GPKGFeatureIndexResults *indexResults2 = [indexer queryWithBoundingBox:complementary inProjection:mapViewProjection];
+                GPKGFeatureIndexResults *indexResults2 = [indexer queryWithColumns:columns andBoundingBox:complementary inProjection:mapViewProjection];
                 indexResults = [[GPKGMultipleFeatureIndexResults alloc] initWithFeatureIndexResults1:indexResults andFeatureIndexResults2:indexResults2];
             }
             count = [self processFeatureIndexResults:indexResults withUpdateId:updateId andDatabase:database andCount:count andMaxFeatures:maxFeatures andEditable:editable andTableName:tableName andConverter:converter andStyleCache:styleCache andFilter:filter];
@@ -241,11 +243,11 @@
             }
             
             // Query for all rows
-            GPKGResultSet * results = [featureDao queryForAll];
+            GPKGResultSet * results = [featureDao queryWithColumns:columns];
             @try {
                 while(![self featureUpdateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
                     @try {
-                        GPKGFeatureRow * row = [featureDao getFeatureRow:results];
+                        GPKGFeatureRow * row = [featureDao featureRow:results];
                         GPKGMapShape *shape = [self processFeatureRow:row WithDatabase:database andTableName:tableName andConverter:converter andStyleCache:styleCache andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:filterBoundingBox andFilterMaxLongitude:filterMaxLongitude andFilter:filter];
                         
                         if (shape != nil && count++ < maxFeatures) {
@@ -275,7 +277,7 @@
                 break;
             }
             
-            if(![self.featureShapes existsWithFeatureId:[row getId] inDatabase:database withTable:tableName]){
+            if(![self.featureShapes existsWithFeatureId:[row id] inDatabase:database withTable:tableName]){
                 GPKGMapShape *shape = [self processFeatureRow:row WithDatabase:database andTableName:tableName andConverter:converter andStyleCache:styleCache andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:nil andFilterMaxLongitude:0 andFilter:filter];
                 
                 if (shape != nil && count++ < maxFeatures) {
@@ -505,7 +507,7 @@
 
 -(GPKGMapShape *) processFeatureRow: (GPKGFeatureRow *) row WithDatabase: (NSString *) database andTableName: (NSString *) tableName andConverter: (GPKGMapShapeConverter *) converter andStyleCache: (GPKGStyleCache *) styleCache andCount: (int) count andMaxFeatures: (int) maxFeatures andEditable: (BOOL) editable andFilterBoundingBox: (GPKGBoundingBox *) boundingBox andFilterMaxLongitude: (double) maxLongitude andFilter: (BOOL) filter {
     
-    GPKGGeometryData * geometryData = [row getGeometry];
+    GPKGGeometryData * geometryData = [row geometry];
     if(geometryData != nil && !geometryData.empty){
         SFGeometry * geometry = geometryData.geometry;
         
@@ -524,14 +526,14 @@
                         SFPoint *point = (SFPoint *) geometry;
                         passesFilter = [GPKGTileBoundingBoxUtils isPoint:point inBoundingBox:boundingBox withMaxLongitude:maxLongitude];
                     }else{
-                        GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithGeometryEnvelope:envelope];
+                        GPKGBoundingBox *geometryBoundingBox = [[GPKGBoundingBox alloc] initWithEnvelope:envelope];
                         passesFilter = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:boundingBox andBoundingBox:geometryBoundingBox withMaxLongitude:maxLongitude] != nil;
                     }
                 }
             }
             
             if(passesFilter){
-                NSNumber * featureId = [row getId];
+                NSNumber * featureId = [row id];
                 GPKGMapShape * shape = [converter toShapeWithGeometry:geometry];
                 [self updateFeaturesBoundingBox:shape];
                 [self prepareShapeOptionsWithShape:shape andStyleCache:styleCache andFeature:row andEditable:editable andTopLevel:true];

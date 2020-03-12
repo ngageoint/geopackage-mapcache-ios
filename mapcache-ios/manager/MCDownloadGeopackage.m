@@ -152,7 +152,7 @@
     [GPKGSUtils disableTextField:self.urlTextField];
     [GPKGSUtils disableTextField:self.nameTextField];
     
-    GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory getManager];
+    GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory manager];
     
     self.active = true;
     self.progress = [NSNumber numberWithInt:0];

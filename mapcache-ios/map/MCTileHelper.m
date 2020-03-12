@@ -21,7 +21,7 @@
 - (instancetype) init {
     self = [super init];
     self.active = [GPKGSDatabases getInstance];
-    self.manager = [GPKGGeoPackageFactory getManager];
+    self.manager = [GPKGGeoPackageFactory manager];
     
     return self;
 }
@@ -31,7 +31,7 @@
     self = [super init];
     self.tileHelperDelegate = delegate;
     self.active = [GPKGSDatabases getInstance];
-    self.manager = [GPKGGeoPackageFactory getManager];
+    self.manager = [GPKGGeoPackageFactory manager];
     
     return self;
 }
@@ -71,9 +71,9 @@
 
 // MCTileHelper version of -(void) displayTiles: (GPKGSTileTable *)
 -(MKTileOverlay *) createOverlayForTiles: (GPKGSTileTable *) tiles fromGeoPacakge:(GPKGGeoPackage *) geoPackage {
-    GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName:tiles.name];
+    GPKGTileDao * tileDao = [geoPackage tileDaoWithTableName:tiles.name];
     GPKGTileTableScaling *tileTableScaling = [[GPKGTileTableScaling alloc] initWithGeoPackage:geoPackage andTileDao:tileDao];
-    GPKGTileScaling *tileScaling = [tileTableScaling get];
+    GPKGTileScaling *tileScaling = [tileTableScaling tileScaling];
     GPKGBoundedOverlay * overlay = [GPKGOverlayFactory boundedOverlay:tileDao andScaling:tileScaling];
     overlay.canReplaceMapContent = false;
     
@@ -94,14 +94,14 @@
     //        [self.featureOverlayQueries addObject:featureOverlayQuery];
     //    }
     
-    GPKGBoundingBox *displayBoundingBox = [tileMatrixSet getBoundingBox];
-    GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
-    GPKGSpatialReferenceSystem *tileMatrixSetSrs = [tileMatrixSetDao getSrs:tileMatrixSet];
-    GPKGContents *contents = [tileMatrixSetDao getContents:tileMatrixSet];
-    GPKGBoundingBox *contentsBoundingBox = [contents getBoundingBox];
+    GPKGBoundingBox *displayBoundingBox = [tileMatrixSet boundingBox];
+    GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage tileMatrixSetDao];
+    GPKGSpatialReferenceSystem *tileMatrixSetSrs = [tileMatrixSetDao srs:tileMatrixSet];
+    GPKGContents *contents = [tileMatrixSetDao contents:tileMatrixSet];
+    GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
     if(contentsBoundingBox != nil){
-        GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
-        SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromProjection:[[contentsDao getSrs:contents] projection] andToProjection:[tileMatrixSetSrs projection]];
+        GPKGContentsDao *contentsDao = [geoPackage contentsDao];
+        SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromProjection:[[contentsDao srs:contents] projection] andToProjection:[tileMatrixSetSrs projection]];
         GPKGBoundingBox *transformedContentsBoundingBox = contentsBoundingBox;
         if(![transform isSameProjection]){
             transformedContentsBoundingBox = [transformedContentsBoundingBox transform:transform];

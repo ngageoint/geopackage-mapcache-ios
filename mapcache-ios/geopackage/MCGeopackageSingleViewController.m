@@ -21,7 +21,7 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    self.manager = [GPKGGeoPackageFactory getManager];
+    self.manager = [GPKGGeoPackageFactory manager];
     self.active = [GPKGSDatabases getInstance];
     
     CGRect bounds = self.view.bounds;

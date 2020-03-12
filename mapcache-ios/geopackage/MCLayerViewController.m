@@ -72,14 +72,14 @@
     if (_featureDao != nil) {
         MCFeatureLayerOperationsCell *featureButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"featureButtons"];
         featureButtonsCell.delegate = self;
-        layerBoundingBox = [_layerDao getBoundingBox];
+        layerBoundingBox = [_layerDao boundingBox];
         headerCell.featureDao = _featureDao;
         transformToWebMercator = [[SFPProjectionTransform alloc] initWithFromProjection:_featureDao.projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
         _cellArray = [[NSMutableArray alloc] initWithObjects:headerCell, featureButtonsCell, nil];
     } else if (_tileDao != nil) {
         MCTileLayerOperationsCell *tileButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileButtons"];
         tileButtonsCell.delegate = self;
-        layerBoundingBox = [_tileDao getBoundingBoxWithZoomLevel:_tileDao.minZoom];
+        layerBoundingBox = [_tileDao boundingBoxWithZoomLevel:_tileDao.minZoom];
         transformToWebMercator = [[SFPProjectionTransform alloc] initWithFromProjection:_tileDao.projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
         headerCell.tileOverlay = [GPKGOverlayFactory tileOverlayWithTileDao:_tileDao];
         _cellArray = [[NSMutableArray alloc] initWithObjects:headerCell, tileButtonsCell, nil];

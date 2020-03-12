@@ -28,7 +28,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     self = [super init];
     self.mcMapViewController = mapViewController;
     self.mcMapViewController.mapActionDelegate = self;
-    self.manager = [GPKGGeoPackageFactory getManager];
+    self.manager = [GPKGGeoPackageFactory manager];
     self.childCoordinators = [[NSMutableArray alloc] init];
     self.preferences = [NSUserDefaults standardUserDefaults];
     
@@ -71,7 +71,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 - (void)zoomToSelectedGeoPackage:(NSString *)geoPackageName {
     GPKGGeoPackage *geoPackage = [self.manager open:geoPackageName];
     GPKGBoundingBox *boundingBox = [geoPackage contentsBoundingBoxInProjection:[SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
-    CLLocationCoordinate2D center = [boundingBox getCenter];
+    CLLocationCoordinate2D center = [boundingBox center];
     
     if (center.latitude != 0 && center.longitude != 0) {
         [self.mcMapViewController zoomToPointWithOffset:center];
