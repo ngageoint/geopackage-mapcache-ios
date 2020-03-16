@@ -26,7 +26,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.manager = [GPKGGeoPackageFactory getManager];
+    self.manager = [GPKGGeoPackageFactory manager];
     
     if (self.mapPoint) {
         [self.titleButton setTitle:[self getTitleAndSubtitleWithMapPoint:self.mapPoint andDelimiter:@" "] forState:UIControlStateNormal];
@@ -83,16 +83,16 @@
     NSMutableString * info = [[NSMutableString alloc] init];
     GPKGGeoPackage * geoPackage = [self.manager open:database.name];
     @try {
-        GPKGSpatialReferenceSystemDao * srsDao = [geoPackage getSpatialReferenceSystemDao];
+        GPKGSpatialReferenceSystemDao * srsDao = [geoPackage spatialReferenceSystemDao];
         [info appendFormat:@"Size: %@", [self.manager readableSize:database.name]];
         [info appendFormat:@"\n\nPath: %@", [self.manager pathForDatabase:database.name]];
         [info appendFormat:@"\nDocuments Path: %@", [self.manager documentsPathForDatabase:database.name]];
-        [info appendFormat:@"\n\nFeature Tables: %d", [geoPackage getFeatureTableCount]];
-        [info appendFormat:@"\nTile Tables: %d", [geoPackage getTileTableCount]];
+        [info appendFormat:@"\n\nFeature Tables: %d", [geoPackage featureTableCount]];
+        [info appendFormat:@"\nTile Tables: %d", [geoPackage tileTableCount]];
         GPKGResultSet * results = [srsDao queryForAll];
         [info appendFormat:@"\nSpatial Reference Systems: %d", [results count]];
         while([results moveToNext]){
-            GPKGSpatialReferenceSystem * srs = (GPKGSpatialReferenceSystem *)[srsDao getObject:results];
+            GPKGSpatialReferenceSystem * srs = (GPKGSpatialReferenceSystem *)[srsDao object:results];
             [info appendString:@"\n"];
             [self addSrsToInfoString:info withSrs:srs];
         }
@@ -121,9 +121,9 @@
                 tableName = ((MCFeatureOverlayTable *) table).featureTable;
             case GPKGS_TT_FEATURE:
             {
-                featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
-                GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage getGeometryColumnsDao];
-                contents = [geometryColumnsDao getContents:featureDao.geometryColumns];
+                featureDao = [geoPackage featureDaoWithTableName:tableName];
+                GPKGGeometryColumnsDao * geometryColumnsDao = [geoPackage geometryColumnsDao];
+                contents = [geometryColumnsDao contents:featureDao.geometryColumns];
                 [info appendString:@"Feature Table"];
                 [info appendFormat:@"\nFeatures: %d", [featureDao count]];
                 userTable = featureDao.table;
@@ -131,9 +131,9 @@
                 break;
             case GPKGS_TT_TILE:
             {
-                tileDao = [geoPackage getTileDaoWithTableName:tableName];
-                GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
-                contents = [tileMatrixSetDao getContents:tileDao.tileMatrixSet];
+                tileDao = [geoPackage tileDaoWithTableName:tableName];
+                GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage tileMatrixSetDao];
+                contents = [tileMatrixSetDao contents:tileDao.tileMatrixSet];
                 [info appendString:@"Tile Table"];
                 [info appendFormat:@"\nZoom Levels: %lu", (unsigned long)[tileDao.tileMatrices count]];
                 [info appendFormat:@"\nTiles: %d", [tileDao count]];
@@ -144,8 +144,8 @@
                 [NSException raise:@"Unsupported" format:@"Unsupported table type: %d", [table getType]];
         }
         
-        GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
-        GPKGSpatialReferenceSystem * srs = [contentsDao getSrs:contents];
+        GPKGContentsDao * contentsDao = [geoPackage contentsDao];
+        GPKGSpatialReferenceSystem * srs = [contentsDao srs:contents];
         
         [info appendString:@"\n\nSpatial Reference System:"];
         [self addSrsToInfoString:info withSrs:srs];
@@ -174,8 +174,8 @@
         if(tileDao != nil){
             GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
             
-            GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
-            GPKGSpatialReferenceSystem * tileMatrixSetSrs = [tileMatrixSetDao getSrs:tileMatrixSet];
+            GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage tileMatrixSetDao];
+            GPKGSpatialReferenceSystem * tileMatrixSetSrs = [tileMatrixSetDao srs:tileMatrixSet];
             if(![tileMatrixSetSrs.srsId isEqualToNumber:srs.srsId]){
                 [info appendString:@"\n\nTile Matrix Set Spatial Reference System:"];
                 [self addSrsToInfoString:info withSrs:tileMatrixSetSrs];
@@ -203,7 +203,7 @@
         }
         
         [info appendFormat:@"\n\n%@ columns:", tableName];
-        GPKGDataColumnsDao *dataColumnsDao = [geoPackage getDataColumnsDao];
+        GPKGDataColumnsDao *dataColumnsDao = [geoPackage dataColumnsDao];
         for(GPKGUserColumn * userColumn in userTable.columns){
             [info appendFormat:@"\n\nIndex: %d", userColumn.index];
             [info appendFormat:@"\nName: %@", userColumn.name];
@@ -218,7 +218,7 @@
                 [info appendFormat:@"\nPrimary Key: %d", userColumn.primaryKey];
             }
             [info appendFormat:@"\nType: %@", userColumn.type];
-            GPKGDataColumns * dataColumn = [dataColumnsDao getDataColumnByTableName:tableName andColumnName:userColumn.name];
+            GPKGDataColumns * dataColumn = [dataColumnsDao dataColumnByTableName:tableName andColumnName:userColumn.name];
             if (dataColumn) {
                 [info appendFormat: @"\nData Column Information:"];
                 if ([dataColumn name]) {
@@ -265,14 +265,14 @@
     
     GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
     
-    self.manager = [GPKGGeoPackageFactory getManager];
+    self.manager = [GPKGGeoPackageFactory manager];
     
     GPKGGeoPackage * geoPackage = [self.manager open:data.database];
     @try {
         
-        GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:data.tableName];
+        GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:data.tableName];
         
-        GPKGDataColumnsDao * dataColumnsDao = [geoPackage getDataColumnsDao];
+        GPKGDataColumnsDao * dataColumnsDao = [geoPackage dataColumnsDao];
         
         NSNumber * featureId = [NSNumber numberWithInt:data.featureId];
         if(featureId != nil){
@@ -280,13 +280,13 @@
             
             if(featureRow != nil){
                 
-                int geometryColumn = [featureRow getGeometryColumnIndex];
+                int geometryColumn = [featureRow geometryColumnIndex];
                 for(int i = 0; i < featureRow.columnCount; i++){
                     if(i != geometryColumn){
-                        NSObject * value = [featureRow getValueWithIndex:i];
+                        NSObject * value = [featureRow valueWithIndex:i];
                         if(value != nil){
-                            GPKGDataColumns * dataColumn = [dataColumnsDao getDataColumnByTableName:data.tableName andColumnName:[featureRow getColumnWithIndex:i].name];
-                            NSString *columnName = [featureRow getColumnWithIndex:i].name;
+                            GPKGDataColumns * dataColumn = [dataColumnsDao dataColumnByTableName:data.tableName andColumnName:[featureRow columnWithIndex:i].name];
+                            NSString *columnName = [featureRow columnWithIndex:i].name;
                             if (dataColumn) {
                                 columnName = dataColumn.name;
                             }
@@ -295,7 +295,7 @@
                     }
                 }
                 
-                GPKGGeometryData * geomData = [featureRow getGeometry];
+                GPKGGeometryData * geomData = [featureRow geometry];
                 if(geomData != nil){
                     SFGeometry * geometry = geomData.geometry;
                     if(geometry != nil){

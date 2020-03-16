@@ -36,7 +36,7 @@
                                  andTable: (NSString *) tableName
                                     andFeatureIndexType: (enum GPKGFeatureIndexType) indexLocation{
     
-    GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory getManager];
+    GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory manager];
     GPKGGeoPackage * geoPackage = nil;
     @try {
         geoPackage = [manager open:database];
@@ -45,7 +45,7 @@
         [manager close];
     }
     
-    GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
+    GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:tableName];
     
     GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
     [indexer setIndexLocation:indexLocation];

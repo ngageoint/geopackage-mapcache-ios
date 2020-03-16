@@ -56,10 +56,10 @@ NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
     
     GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
     @try {
-        GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
-        GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
+        GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage tileMatrixSetDao];
+        GPKGContentsDao * contentsDao = [geoPackage contentsDao];
         GPKGTileMatrixSet * tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:self.table.name];
-        GPKGContents * contents = [tileMatrixSetDao getContents:tileMatrixSet];
+        GPKGContents * contents = [tileMatrixSetDao contents:tileMatrixSet];
         
         [contents setIdentifier:self.data.identifier];
         [contents setTheDescription:self.data.theDescription];
@@ -139,9 +139,9 @@ NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
     
     GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
     @try {
-        GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
+        GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage tileMatrixSetDao];
         GPKGTileMatrixSet * tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:self.table.name];
-        GPKGContents * contents = [tileMatrixSetDao getContents:tileMatrixSet];
+        GPKGContents * contents = [tileMatrixSetDao contents:tileMatrixSet];
         
         [self.data setIdentifier:contents.identifier];
         [self.data setTheDescription:contents.theDescription];

@@ -33,11 +33,11 @@
     GPKGResultSet * linkedTableResults = nil;
     switch([self.table getType]){
         case GPKGS_TT_FEATURE:
-            tables = [geoPackage getTileTables];
+            tables = [geoPackage tileTables];
             linkedTableResults = [linker queryForFeatureTable:self.table.name];
             break;
         case GPKGS_TT_TILE:
-            tables = [geoPackage getFeatureTables];
+            tables = [geoPackage featureTables];
             linkedTableResults = [linker queryForTileTable:self.table.name];
             break;
         default:
@@ -47,7 +47,7 @@
     // Build a set of currently linked tables
     self.linkedTableSet = [[NSMutableSet alloc] init];
     while([linkedTableResults moveToNext]){
-        GPKGFeatureTileLink * link = [linker getLinkFromResultSet:linkedTableResults];
+        GPKGFeatureTileLink * link = [linker linkFromResultSet:linkedTableResults];
         switch([self.table getType]){
             case GPKGS_TT_FEATURE:
                 [self.linkedTableSet addObject:link.tileTableName];

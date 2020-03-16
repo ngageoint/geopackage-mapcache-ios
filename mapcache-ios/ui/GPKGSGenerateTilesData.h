@@ -20,7 +20,7 @@
 @property (nonatomic) enum GPKGCompressFormat compressFormat;
 @property (nonatomic, strong) NSNumber * compressQuality;
 @property (nonatomic, strong) NSNumber * compressScale;
-@property (nonatomic) BOOL standardWebMercatorFormat;
+@property (nonatomic) BOOL xyzTiles;
 @property (nonatomic, strong) GPKGBoundingBox * boundingBox;
 
 -(instancetype) init;

@@ -43,14 +43,14 @@
             andCompressFormat: (enum GPKGCompressFormat) compressFormat
            andCompressQuality: (int) compressQuality
              andCompressScale: (int) compressScale
-            andStandardFormat: (BOOL) standardWebMercatorFormat
+                  andXyzTiles: (BOOL) xyzTiles
                andBoundingBox: (GPKGBoundingBox *) boundingBox
                andTileScaling: (GPKGTileScaling *) scaling
                  andAuthority: (NSString *) authority
                       andCode: (NSString *) code
                      andLabel: (NSString *) label{
     
-    GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory getManager];
+    GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory manager];
     GPKGGeoPackage * geoPackage = nil;
     @try {
         geoPackage = [manager open:database];
@@ -63,7 +63,7 @@
     GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
     
     GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andTileUrl:tileUrl andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
-    [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andStandardFormat:standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:scaling];
+    [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andXyzTiles:xyzTiles andBoundingBox:boundingBox andTileScaling:scaling];
     
     [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
 }
@@ -77,7 +77,7 @@
             andCompressFormat: (enum GPKGCompressFormat) compressFormat
            andCompressQuality: (int) compressQuality
              andCompressScale: (int) compressScale
-            andStandardFormat: (BOOL) standardWebMercatorFormat
+                  andXyzTiles: (BOOL) xyzTiles
                andBoundingBox: (GPKGBoundingBox *) boundingBox
                andTileScaling: (GPKGTileScaling *) scaling
                  andAuthority: (NSString *) authority
@@ -88,7 +88,7 @@
     GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
     
     GPKGTileGenerator * tileGenerator = [[GPKGFeatureTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andFeatureTiles:featureTiles andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
-    [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andStandardFormat:standardWebMercatorFormat andBoundingBox:boundingBox andTileScaling:scaling];
+    [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andXyzTiles:xyzTiles andBoundingBox:boundingBox andTileScaling:scaling];
     
     [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
 }
@@ -112,7 +112,7 @@
        andCompressFormat: (enum GPKGCompressFormat) compressFormat
       andCompressQuality: (int) compressQuality
         andCompressScale: (int) compressScale
-       andStandardFormat: (BOOL) standardWebMercatorFormat
+             andXyzTiles: (BOOL) xyzTiles
           andBoundingBox: (GPKGBoundingBox *) boundingBox
           andTileScaling: (GPKGTileScaling *) scaling{
     
@@ -123,7 +123,7 @@
     [tileGenerator setCompressFormat:compressFormat];
     [tileGenerator setCompressQualityAsIntPercentage:compressQuality];
     [tileGenerator setCompressScaleAsIntPercentage:compressScale];
-    [tileGenerator setStandardWebMercatorFormat:standardWebMercatorFormat];
+    [tileGenerator setXyzTiles:xyzTiles];
     [tileGenerator setScaling:scaling];
 }
 

@@ -133,10 +133,10 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
 - (IBAction)tileFormatChanged:(id)sender {
     switch (self.tileFormatSegmentedControl.selectedSegmentIndex){
         case 0:
-            self.data.standardWebMercatorFormat = false;
+            self.data.xyzTiles = false;
             break;
         case 1:
-            self.data.standardWebMercatorFormat = true;
+            self.data.xyzTiles = true;
             break;
     }
 }

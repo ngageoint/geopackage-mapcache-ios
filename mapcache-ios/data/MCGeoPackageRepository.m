@@ -32,7 +32,7 @@ static MCGeoPackageRepository *sharedRepository;
     self = [super init];
     
     _databaseList = [[NSMutableArray alloc] init];
-    _manager = [GPKGGeoPackageFactory getManager];
+    _manager = [GPKGGeoPackageFactory manager];
     _activeDatabases = [MCDatabases getInstance];
     
     return self;
@@ -57,13 +57,13 @@ static MCGeoPackageRepository *sharedRepository;
             [_databaseList addObject:theDatabase];
             NSMutableArray * tables = [[NSMutableArray alloc] init];
             
-            GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
-            for(NSString * tableName in [geoPackage getFeatureTables]){
-                GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
+            GPKGContentsDao * contentsDao = [geoPackage contentsDao];
+            for(NSString * tableName in [geoPackage featureTables]){
+                GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:tableName];
                 int count = [featureDao count];
                 
                 GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
-                GPKGGeometryColumns * geometryColumns = [contentsDao getGeometryColumns:contents];
+                GPKGGeometryColumns * geometryColumns = [contentsDao geometryColumns:contents];
                 enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
                 
                 MCFeatureTable * table = [[MCFeatureTable alloc] initWithDatabase:databaseName andName:tableName andGeometryType:geometryType andCount:count];
@@ -72,8 +72,8 @@ static MCGeoPackageRepository *sharedRepository;
                 [theDatabase addFeature:table];
             }
             
-            for(NSString * tableName in [geoPackage getTileTables]){
-                GPKGTileDao * tileDao = [geoPackage getTileDaoWithTableName: tableName];
+            for(NSString * tableName in [geoPackage tileTables]){
+                GPKGTileDao * tileDao = [geoPackage tileDaoWithTableName: tableName];
                 int count = [tileDao count];
                 MCTileTable * table = [[MCTileTable alloc] initWithDatabase:databaseName andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
                 [table setActive: [_activeDatabases exists:table]];
@@ -83,7 +83,7 @@ static MCGeoPackageRepository *sharedRepository;
             }
             
             for(MCFeatureOverlayTable * table in [_activeDatabases featureOverlays:databaseName]){
-                GPKGFeatureDao * featureDao = [geoPackage getFeatureDaoWithTableName:table.featureTable];
+                GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:table.featureTable];
                 int count = [featureDao count];
                 [table setCount:count];
                 

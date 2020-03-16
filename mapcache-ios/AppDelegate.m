@@ -52,7 +52,7 @@
         [_window.rootViewController presentViewController:disclaimer animated:YES completion:nil];
     }
     
-    _manager = [GPKGGeoPackageFactory getManager];
+    _manager = [GPKGGeoPackageFactory manager];
     _geoPackages = [[GPKGGeoPackageCache alloc] initWithManager:self.manager];
     
     return YES;
@@ -100,7 +100,7 @@
         NSString * fileUrl = [url path];
         
         BOOL imported = false;
-        GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory getManager];
+        GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory manager];
         @try {
             imported = [manager importGeoPackageFromPath:fileUrl andOverride:true andMove:true];
         }

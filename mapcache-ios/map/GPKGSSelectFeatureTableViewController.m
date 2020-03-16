@@ -125,7 +125,7 @@
     NSArray * tables = nil;
     GPKGGeoPackage * geopackage = [self.manager open:database];
     @try {
-        tables = [geopackage getFeatureTables];
+        tables = [geopackage featureTables];
     }
     @finally {
         [geopackage close];

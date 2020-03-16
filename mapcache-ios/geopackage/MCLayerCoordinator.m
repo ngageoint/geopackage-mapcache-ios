@@ -23,7 +23,7 @@
                                        andDao:(GPKGUserDao *) dao {
     self = [super init];
     _navigationController = navigationController;
-    _manager = [GPKGGeoPackageFactory getManager];
+    _manager = [GPKGGeoPackageFactory manager];
     _database = database;
     _dao = dao;
     return self;

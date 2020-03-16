@@ -78,7 +78,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.geoPackages = [[NSMutableDictionary alloc] init];
     self.featureShapes = [[GPKGFeatureShapes alloc] init];
     self.featureDaos = [[NSMutableDictionary alloc] init];
-    self.manager = [GPKGGeoPackageFactory getManager];
+    self.manager = [GPKGGeoPackageFactory manager];
     self.active = [MCDatabases getInstance];
     self.needsInitialZoom = true;
     self.updateCountId = 0;
@@ -653,7 +653,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             double expandedHeight = size.height + (2 * (size.height * paddingPercentage));
             double expandedWidth = size.width + (2 * (size.width * paddingPercentage));
             
-            CLLocationCoordinate2D center = [bbox getCenter];
+            CLLocationCoordinate2D center = [bbox center];
             MKCoordinateRegion expandedRegion = MKCoordinateRegionMakeWithDistance(center, expandedHeight, expandedWidth);
             
             double latitudeRange = expandedRegion.span.latitudeDelta / 2.0;
@@ -699,17 +699,17 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             
             if(featureTableDaos.count > 0){
                 
-                GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
+                GPKGContentsDao *contentsDao = [geoPackage contentsDao];
                 
                 for (NSString *featureTable in featureTableDaos) {
                     
                     @try {
                         GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:featureTable];
-                        GPKGBoundingBox *contentsBoundingBox = [contents getBoundingBox];
+                        GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
                         
                         if (contentsBoundingBox != nil) {
                             
-                            contentsBoundingBox = [self.tileHelper transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao getSrs:contents]];
+                            contentsBoundingBox = [self.tileHelper transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao srs:contents]];
                             
                             if (self.featuresBoundingBox != nil) {
                                 self.featuresBoundingBox = [self.featuresBoundingBox union:contentsBoundingBox];
@@ -728,15 +728,15 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             NSArray *tileTables = [database getTiles];
             if(tileTables.count > 0){
                 
-                GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
+                GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage tileMatrixSetDao];
                 
                 for(MCTileTable *tileTable in tileTables){
                     
                     @try {
                         GPKGTileMatrixSet *tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:tileTable.name];
-                        GPKGBoundingBox *tileMatrixSetBoundingBox = [tileMatrixSet getBoundingBox];
+                        GPKGBoundingBox *tileMatrixSetBoundingBox = [tileMatrixSet boundingBox];
                         
-                        tileMatrixSetBoundingBox = [self.tileHelper transformBoundingBoxToWgs84:tileMatrixSetBoundingBox withSrs:[tileMatrixSetDao getSrs:tileMatrixSet]];
+                        tileMatrixSetBoundingBox = [self.tileHelper transformBoundingBoxToWgs84:tileMatrixSetBoundingBox withSrs:[tileMatrixSetDao srs:tileMatrixSet]];
                         
                         if (self.tilesBoundingBox != nil) {
                             self.tilesBoundingBox = [self.tilesBoundingBox union:tileMatrixSetBoundingBox];
@@ -768,37 +768,37 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 
 - (void) setupColors {
-    self.boundingBoxColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_COLOR]];
+    self.boundingBoxColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_COLOR]];
     self.boundingBoxLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_LINE_WIDTH] doubleValue];
     if([MCProperties getBoolOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL]){
-        self.boundingBoxFillColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
+        self.boundingBoxFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
     }
     
-    self.defaultPolylineColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_COLOR]];
+    self.defaultPolylineColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_COLOR]];
     self.defaultPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_LINE_WIDTH] doubleValue];
     
-    self.defaultPolygonColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_COLOR]];
+    self.defaultPolygonColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_COLOR]];
     self.defaultPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYGON_LINE_WIDTH] doubleValue];
     if([MCProperties getBoolOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL]){
-        self.defaultPolygonFillColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL_COLOR]];
+        self.defaultPolygonFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL_COLOR]];
     }
     
-    self.editPolylineColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYLINE_COLOR]];
+    self.editPolylineColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYLINE_COLOR]];
     self.editPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYLINE_LINE_WIDTH] doubleValue];
     
-    self.editPolygonColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_COLOR]];
+    self.editPolygonColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_COLOR]];
     self.editPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYGON_LINE_WIDTH] doubleValue];
     if([MCProperties getBoolOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL]){
-        self.editPolygonFillColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL_COLOR]];
+        self.editPolygonFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL_COLOR]];
     }
     
-    self.drawPolylineColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYLINE_COLOR]];
+    self.drawPolylineColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYLINE_COLOR]];
     self.drawPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYLINE_LINE_WIDTH] doubleValue];
     
-    self.drawPolygonColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_COLOR]];
+    self.drawPolygonColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_COLOR]];
     self.drawPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYGON_LINE_WIDTH] doubleValue];
     if([MCProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL]){
-        self.drawPolygonFillColor = [GPKGUtils getColor:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
+        self.drawPolygonFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
     }
 }
 

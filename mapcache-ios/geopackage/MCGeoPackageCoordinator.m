@@ -33,7 +33,7 @@
     self = [super init];
     
     _childCoordinators = [[NSMutableArray alloc] init];
-    _manager = [GPKGGeoPackageFactory getManager];
+    _manager = [GPKGGeoPackageFactory manager];
     _geoPackageCoordinatorDelegate = geoPackageCoordinatorDelegate;
     _drawerDelegate = drawerDelegate;
     _mapDelegate = mapDelegate;
@@ -82,17 +82,17 @@
     @try {
         geoPackage = [_manager open:_database.name];
         
-        GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
+        GPKGContentsDao *contentsDao = [geoPackage contentsDao];
         NSMutableArray *tables = [[NSMutableArray alloc] init];
         
         updatedDatabase = [[MCDatabase alloc] initWithName:_database.name andExpanded:false];
         
         // Handle the Feature Layers
-        for (NSString *tableName in [geoPackage getFeatureTables]) {
-            GPKGFeatureDao *featureDao = [geoPackage getFeatureDaoWithTableName:tableName];
+        for (NSString *tableName in [geoPackage featureTables]) {
+            GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:tableName];
             int count = [featureDao count];
             GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
-            GPKGGeometryColumns *geometryColumns = [contentsDao getGeometryColumns:contents];
+            GPKGGeometryColumns *geometryColumns = [contentsDao geometryColumns:contents];
             enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
             MCFeatureTable *table = [[MCFeatureTable alloc] initWithDatabase:_database.name andName:tableName andGeometryType:geometryType andCount:count];
             
@@ -101,8 +101,8 @@
         }
         
         // Handle the tile layers
-        for (NSString *tableName in [geoPackage getTileTables]) {
-            GPKGTileDao *tileDao = [geoPackage getTileDaoWithTableName:tableName];
+        for (NSString *tableName in [geoPackage tileTables]) {
+            GPKGTileDao *tileDao = [geoPackage tileDaoWithTableName:tableName];
             int count = [tileDao count];
             
             MCTileTable *table = [[MCTileTable alloc] initWithDatabase:_database.name andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
@@ -357,7 +357,7 @@
     }
     
     for (int zoom = [minZoom intValue]; zoom <= [maxZoom intValue]; zoom++) {
-        GPKGTileGrid *tileGrid = [GPKGTileBoundingBoxUtils getTileGridWithWebMercatorBoundingBox:transformedBox andZoom:zoom];
+        GPKGTileGrid *tileGrid = [GPKGTileBoundingBoxUtils tileGridWithWebMercatorBoundingBox:transformedBox andZoom:zoom];
         count += [tileGrid count];
     }
     
@@ -388,7 +388,7 @@
                             andCompressFormat:GPKG_CF_NONE // TODO: let user set this
                            andCompressQuality:[[MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT] intValue]
                              andCompressScale:100 // TODO: let user set this
-                            andStandardFormat:tileData.loadTiles.generateTiles.standardWebMercatorFormat
+                                  andXyzTiles:tileData.loadTiles.generateTiles.xyzTiles
                                andBoundingBox:tileData.loadTiles.generateTiles.boundingBox
                                andTileScaling:scaling
                                  andAuthority:PROJ_AUTHORITY_EPSG
