@@ -21,6 +21,7 @@
 #import "MCConstants.h"
 #import "GPKGGeoPackageCache.h"
 #import "MCCreateGeoPacakgeViewController.h"
+#import "MCGeoPackageRepository.h"
 
 
 @protocol MCMapDelegate;

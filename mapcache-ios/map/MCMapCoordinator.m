@@ -20,6 +20,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
 @property (nonatomic, strong) NSUserDefaults *preferences;
 @property (nonatomic, strong) MCDrawingStatusViewController *drawingStatusViewController;
+@property (nonatomic, strong) MCGeoPackageRepository *repository;
 @end
 
 
@@ -32,6 +33,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     self.manager = [GPKGGeoPackageFactory getManager];
     self.childCoordinators = [[NSMutableArray alloc] init];
     self.preferences = [NSUserDefaults standardUserDefaults];
+    self.repository = [MCGeoPackageRepository sharedRepository];
     
     return self;
 }
@@ -127,7 +129,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     _drawingStatusViewController = [[MCDrawingStatusViewController alloc] init];
     _drawingStatusViewController.drawerViewDelegate = self.drawerViewDelegate;
     _drawingStatusViewController.drawingStatusDelegate = self;
-    _drawingStatusViewController.databases = [self.manager databases];
+    _drawingStatusViewController.databases = [_repository databaseList];
     [_drawerViewDelegate pushDrawer:_drawingStatusViewController];
 }
 

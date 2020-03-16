@@ -13,6 +13,7 @@
 #import "MCSettingsCoordinator.h"
 #import "MCBoundingBoxGuideView.h"
 #import "MCDrawingStatusViewController.h"
+#import "MCGeoPackageRepository.h"
 
 
 @class MCMapViewController;

@@ -17,6 +17,7 @@
 @property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic, strong) NSMutableArray *databases;
 @property (nonatomic, strong) GPKGGeoPackageCache *geoPacakageCache;
+@property (nonatomic, strong) MCGeoPackageRepository *repository;
 @end
 
 
@@ -28,6 +29,7 @@
     _childCoordinators = [[NSMutableArray alloc] init];
     _databases = [[NSMutableArray alloc] init];
     _manager = [GPKGGeoPackageFactory getManager];
+    _repository = [MCGeoPackageRepository sharedRepository];
     _geoPacakageCache = [[GPKGGeoPackageCache alloc] initWithManager:_manager];
     self.active = [MCDatabases getInstance];
     
@@ -36,7 +38,7 @@
 
 
 - (void) start {
-    [self update];
+    _databases = [_repository refreshDatabaseList];
     _geoPackageListView = [[MCGeoPackageList alloc] initWithGeoPackages:_databases asFullView:YES andDelegate:self];
     _geoPackageListView.drawerViewDelegate = _drawerViewDelegate;
     [_geoPackageListView.drawerViewDelegate pushDrawer:_geoPackageListView];
@@ -45,7 +47,6 @@
 }
 
 
-// TODO make a call to the list view controller to update with the new geopackages, maybe as an array
 - (void) update {
     self.databases = [[NSMutableArray alloc] init];
     NSArray *databaseNames = [self.manager databases];
@@ -195,7 +196,7 @@
 - (void) createGeoPackage:(NSString *) geoPackageName {
     NSLog(@"Creating GeoPackage %@", geoPackageName);
     [_manager create:geoPackageName];
-    [self update];
+    _databases = [_repository refreshDatabaseList];
     [_geoPackageListView refreshWithGeoPackages:_databases];
 }
 
@@ -203,7 +204,7 @@
 #pragma mark - DownloadCoordinatorDelegate
 - (void) downloadCoordinatorCompletitonHandler:(bool) didDownload {
     NSLog(@"Downloaded geopakcage");
-    [self update];
+    _databases = [_repository refreshDatabaseList];
     [_geoPackageListView refreshWithGeoPackages:_databases];
     [_childCoordinators removeLastObject];
 }
@@ -215,7 +216,7 @@
         [self.manager delete:database];
     }
     
-    [self update];
+    _databases = [_repository refreshDatabaseList];
     self.geoPackageListView.geoPackages = self.databases;
     [self.geoPackageListView.tableView reloadData];
 }
