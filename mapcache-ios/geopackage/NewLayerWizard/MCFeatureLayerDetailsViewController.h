@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NGADrawerViewController.h"
 #import <MapKit/MapKit.h>
 #import <GPKGGeoPackageManager.h>
 #import <GPKGGeoPackageFactory.h>
@@ -25,10 +26,10 @@
 
 @protocol MCFeatureLayerCreationDelegate <NSObject>
 //- (void) featureLayerCreationComplete:(BOOL)layerCreated withError:(NSString *)error;
-- (void) createFeatueLayerIn:(NSString *)database with:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId;
+- (void) createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId;
 @end
 
-@interface MCFeatureLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, MCButtonCellDelegate>
+@interface MCFeatureLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, MCButtonCellDelegate>
 @property (strong, nonatomic) MCDatabase *database;
 @property (weak, nonatomic) id<MCFeatureLayerCreationDelegate> delegate;
 @end

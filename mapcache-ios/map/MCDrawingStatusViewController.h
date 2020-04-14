@@ -13,6 +13,9 @@
 #import "MCTitleCell.h"
 #import "MCGeoPackageCell.h"
 #import "MCLayerCell.h"
+#import "MCLayerCell.h"
+#import "MCDatabase.h"
+#import "MCDatabases.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -20,14 +23,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol MCDrawingStatusDelegate <NSObject>
 - (void)cancelDrawingFeatures;
-- (void)showSaveLocationView;
+- (void)showNewGeoPacakgeView;
+- (void)showNewLayerViewWithDatabase:(MCDatabase*) database;
+- (BOOL)savePointsToDatabase:(MCDatabase *)database andTable:(MCTable *) table;
 @end
 
 
 @interface MCDrawingStatusViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, MCDualButtonCellDelegate>
 @property (nonatomic, strong) id<MCDrawingStatusDelegate> drawingStatusDelegate;
 @property (nonatomic, strong) NSArray *databases;
+@property (nonatomic, strong) MCDatabase *selectedGeoPackage;
 - (void)updateStatusLabelWithString:(NSString *) string;
+- (void)refreshViewWithNewGeoPackageList:(NSArray *)databases;
+- (void)showLayerSelectionMode;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -48,6 +48,6 @@
 - (int)updateInBackgroundWithZoom: (BOOL) zoom;
 - (void)zoomToPointWithOffset:(CLLocationCoordinate2D) point;
 - (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;
-- (void) toggleMapControls;
+- (void)toggleMapControls;
 - (void)clearTempPoints;
 @end

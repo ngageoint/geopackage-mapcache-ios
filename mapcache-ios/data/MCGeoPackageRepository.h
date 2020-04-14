@@ -10,6 +10,10 @@
 #import <GPKGGeoPackageManager.h>
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGGeoPackageCache.h"
+#import "GPKGMultipleFeatureIndexResults.h"
+#import "GPKGFeatureIndexListResults.h"
+#import "GPKGFeatureIndexManager.h"
+#import "GPKGMapShapeConverter.h"
 #import "MCDatabase.h"
 #import "MCDatabases.h"
 #import "MCFeatureTable.h"
@@ -22,7 +26,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MCGeoPackageRepository : NSObject
 + (MCGeoPackageRepository *) sharedRepository;
 - (NSMutableArray *)databaseList;
-- (NSMutableArray *)refreshDatabaseList;
+- (NSMutableArray *)regenerateDatabaseList;
+- (MCDatabase *)databseNamed:(NSString *)databaseName;
+- (BOOL)exists:(NSString *)geoPackageName;
+- (BOOL)database:(MCDatabase *)database containsTableNamed:(NSString *)tableName;
+- (BOOL)createGeoPackage:(NSString *)geoPackageName;
+- (BOOL)copyGeoPacakge:(NSString *)geoPacakgeName to:(NSString *)newName;
+- (BOOL)savePoints:(NSArray<GPKGMapPoint *> *) points toDatabase:(MCDatabase *) database table:(MCTable *) table;
+- (BOOL) createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns boundingBox:(GPKGBoundingBox *)boundingBox srsId:(NSNumber *) srsId;
 @end
 
 NS_ASSUME_NONNULL_END

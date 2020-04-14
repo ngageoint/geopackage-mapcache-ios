@@ -44,7 +44,7 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
-- (NSMutableArray *)refreshDatabaseList {
+- (NSMutableArray *)regenerateDatabaseList {
     _databaseList = [[NSMutableArray alloc] init];
     NSArray *databaseNames = [_manager databases];
     
@@ -109,11 +109,111 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
+- (MCDatabase *)databseNamed:(NSString *)databaseName {
+    for (MCDatabase *database in _databaseList) {
+        if ([database.name isEqualToString:databaseName]) {
+            return database;
+        }
+    }
+    
+    return nil;
+}
+
+
+- (BOOL)database:(MCDatabase *) database containsTableNamed:(NSString *) tableName {
+    return [database hasTableNamed:tableName];
+}
+
+
+- (BOOL)createGeoPackage:(NSString *)geoPackageName {
+    return [_manager create:geoPackageName];
+}
+
+
+- (BOOL)copyGeoPacakge:(NSString *)geoPacakgeName to:(NSString *)newName {
+    return [_manager copy:geoPacakgeName to:newName];
+}
+
+
+- (BOOL)exists:(NSString *)geoPackageName {
+    return [_manager exists:geoPackageName];
+}
+
+
+
+
+
 - (void)deleteGeoPackage:(MCDatabase *)database {
     [self.manager delete:database.name];
     [_activeDatabases removeDatabase:database.name andPreserveOverlays:NO];
     [_databaseList removeObjectIdenticalTo:database];
 }
 
+
+- (BOOL)savePoints:(NSArray<GPKGMapPoint *> *) points toDatabase:(MCDatabase *) database table:(MCTable *) table {
+    GPKGGeoPackage *geoPackage = [_manager open:database.name];
+    GPKGFeatureIndexManager *indexer = nil;
+    
+    BOOL saved = YES;
+    
+    @try {
+        GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:table.name];
+        NSNumber *srsId = featureDao.geometryColumns.srsId;
+        indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+        NSArray<NSString *> *indexedTypes = [indexer indexedTypes];
+        GPKGMapShapeConverter *converter = [[GPKGMapShapeConverter alloc] initWithProjection:featureDao.projection];
+        
+        for (GPKGMapPoint *mapPoint in points) {
+            SFPoint *point = [converter toPointWithMapPoint:mapPoint];
+            GPKGFeatureRow *newPoint = [featureDao newRow];
+            GPKGGeometryData *pointGeomData = [[GPKGGeometryData alloc] initWithSrsId:srsId];
+            [pointGeomData setGeometry: point];
+            [newPoint setGeometry:pointGeomData];
+            [featureDao insert:newPoint];
+            // TODO expand the bounds of the geopackage
+            
+            if (indexedTypes.count > 0) {
+                [indexer indexWithFeatureRow:newPoint andFeatureIndexTypes:indexedTypes];
+            }
+        }
+        
+    } @catch (NSException *e) {
+        NSLog(@"Problem while saving points: %@", e.reason);
+        saved = NO;
+    } @finally {
+        if (indexer != nil) {
+            [indexer close];
+        }
+        
+        if (geoPackage != nil) {
+            [geoPackage close];
+        }
+        
+        return saved;
+    }
+}
+
+
+- (BOOL) createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns boundingBox:(GPKGBoundingBox *)boundingBox srsId:(NSNumber *) srsId {
+    GPKGGeoPackage * geoPackage;
+    BOOL didCreateLayer = YES;
+    
+    @try {
+        geoPackage = [_manager open:database];
+        [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:boundingBox andSrsId:srsId];
+    }
+    @catch (NSException *e) {
+        // TODO handle this
+        NSLog(@"There was a problem creating the layer, %@", e.reason);
+        didCreateLayer = NO;
+    }
+    @finally {
+        [geoPackage close];
+        [self regenerateDatabaseList];
+        return didCreateLayer;
+        //[_navigationController popToViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
+        //[self updateDatabase];
+    }
+}
 
 @end

@@ -38,81 +38,18 @@
 
 
 - (void) start {
-    _databases = [_repository refreshDatabaseList];
+    _databases = [_repository regenerateDatabaseList];
     _geoPackageListView = [[MCGeoPackageList alloc] initWithGeoPackages:_databases asFullView:YES andDelegate:self];
     _geoPackageListView.drawerViewDelegate = _drawerViewDelegate;
     [_geoPackageListView.drawerViewDelegate pushDrawer:_geoPackageListView];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(boundingBoxDrawn:) name:@"boundingBoxResults" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(geoPackageImported:) name:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(regenerateAndReload:) name:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(regenerateAndReload:) name:MC_RELOAD_GEOPACKAGE_LIST_NOTIFICATION object:nil];
 }
 
 
-- (void) update {
-    self.databases = [[NSMutableArray alloc] init];
-    NSArray *databaseNames = [self.manager databases];
-    
-    for(NSString * databaseName in databaseNames){
-        GPKGGeoPackage * geoPackage = nil;
-        @try {
-            geoPackage = [self.manager open:databaseName];
-            
-            MCDatabase * theDatabase = [[MCDatabase alloc] initWithName:databaseName andExpanded:NO];
-            [self.databases addObject:theDatabase];
-            NSMutableArray * tables = [[NSMutableArray alloc] init];
-            
-            GPKGContentsDao * contentsDao = [geoPackage contentsDao];
-            for(NSString * tableName in [geoPackage featureTables]){
-                GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:tableName];
-                int count = [featureDao count];
-                
-                GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
-                GPKGGeometryColumns * geometryColumns = [contentsDao geometryColumns:contents];
-                enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
-                
-                MCFeatureTable * table = [[MCFeatureTable alloc] initWithDatabase:databaseName andName:tableName andGeometryType:geometryType andCount:count];
-                
-                [tables addObject:table];
-                [theDatabase addFeature:table];
-            }
-            
-            for(NSString * tableName in [geoPackage tileTables]){
-                GPKGTileDao * tileDao = [geoPackage tileDaoWithTableName: tableName];
-                int count = [tileDao count];
-                MCTileTable * table = [[MCTileTable alloc] initWithDatabase:databaseName andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
-                [table setActive: [self.active exists:table]];
-                
-                [tables addObject:table];
-                [theDatabase addTile:table];
-            }
-            
-            for(MCFeatureOverlayTable * table in [self.active featureOverlays:databaseName]){
-                GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:table.featureTable];
-                int count = [featureDao count];
-                [table setCount:count];
-                
-                [tables addObject:table];
-                [theDatabase addFeatureOverlay:table];
-            }
-        }
-        @finally {
-            if(geoPackage == nil){
-                @try {
-                    [self.manager delete:geoPackage.name];
-                }
-                @catch (NSException *exception) {
-                    NSLog(@"Caught Exception trying to delete %@", exception.reason);
-                }
-            }else{
-                [geoPackage close];
-            }
-        }
-    }
-}
-
-
-- (void)geoPackageImported:(NSNotification *) notification {
-    [self update];
-    _geoPackageListView.geoPackages = _databases;
+- (void)regenerateAndReload:(NSNotification *) notification {
+    [_repository regenerateDatabaseList];
+    _geoPackageListView.geoPackages = [_repository databaseList];
     [_geoPackageListView.tableView reloadData];
     
 }
@@ -196,7 +133,7 @@
 - (void) createGeoPackage:(NSString *) geoPackageName {
     NSLog(@"Creating GeoPackage %@", geoPackageName);
     [_manager create:geoPackageName];
-    _databases = [_repository refreshDatabaseList];
+    _databases = [_repository regenerateDatabaseList];
     [_geoPackageListView refreshWithGeoPackages:_databases];
 }
 
@@ -204,7 +141,7 @@
 #pragma mark - DownloadCoordinatorDelegate
 - (void) downloadCoordinatorCompletitonHandler:(bool) didDownload {
     NSLog(@"Downloaded geopakcage");
-    _databases = [_repository refreshDatabaseList];
+    _databases = [_repository regenerateDatabaseList];
     [_geoPackageListView refreshWithGeoPackages:_databases];
     [_childCoordinators removeLastObject];
 }
@@ -216,7 +153,7 @@
         [self.manager delete:database];
     }
     
-    _databases = [_repository refreshDatabaseList];
+    _databases = [_repository regenerateDatabaseList];
     self.geoPackageListView.geoPackages = self.databases;
     [self.geoPackageListView.tableView reloadData];
 }

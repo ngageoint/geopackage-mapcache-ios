@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MCDatabase.h"
 
 @interface MCGeoPackageCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *visibilityStatusIndicator;
@@ -14,6 +15,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *tileLayerDetailsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *featureLayerDetailsLabel;
 @property (weak, nonatomic) IBOutlet UIView *contentView;
+@property (strong, nonatomic) MCDatabase *database;
+- (void)setContentWithDatabase: (MCDatabase *) database;
 - (void)activeLayersIndicatorOn;
 - (void)activeLayersIndicatorOff;
 - (void)toggleActiveIndicator;

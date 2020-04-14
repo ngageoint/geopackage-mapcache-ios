@@ -92,19 +92,7 @@
     
     for (MCTable *table in tables) {
         MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
-        NSString *typeImageName = @"";
-        
-        if ([table isMemberOfClass:[MCFeatureTable class]]) {
-            typeImageName = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
-            [layerCell.detailLabel setText: [NSString stringWithFormat:@"%d features", [(MCFeatureTable *)table count]]];
-        } else if ([table isMemberOfClass:[MCTileTable class]]) {
-            typeImageName = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILES];
-            [layerCell.detailLabel setText:[NSString stringWithFormat:@"Zoom levels %d - %d",  [(MCTileTable *)table minZoom], [(MCTileTable *)table maxZoom]]];
-        }
-        
-        layerCell.table = table;
-        layerCell.layerNameLabel.text = table.name;
-        [layerCell.layerTypeImage setImage:[UIImage imageNamed:typeImageName]];
+        [layerCell setContentsWithTable:table];
         
         if ([_active exists:table]) {
             [layerCell activeIndicatorOn];

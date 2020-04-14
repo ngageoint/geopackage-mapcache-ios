@@ -155,6 +155,17 @@
     return [self existsWithTable:table.name ofType:[table getType]];
 }
 
+
+- (BOOL) hasTableNamed: (NSString *) tableName {
+    for (MCTable* table in [self getTables]) {
+        if ([table.name isEqualToString:tableName]) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 -(BOOL) existsWithTable: (NSString *) table ofType: (enum GPKGSTableType) tableType{
     
     BOOL exists = false;

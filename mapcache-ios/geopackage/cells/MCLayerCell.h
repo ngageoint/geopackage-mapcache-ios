@@ -7,6 +7,10 @@
 //
 
 #import "MCTable.h"
+#import "MCFeatureTable.h"
+#import "MCTileTable.h"
+#import "MCConstants.h"
+#import "MCProperties.h"
 #import <UIKit/UIKit.h>
 
 
@@ -21,4 +25,5 @@
 - (void)toggleActiveIndicator;
 - (void) setDetails: (NSString *) details;
 - (void) setName: (NSString *) name;
+- (void)setContentsWithTable:(MCTable *) table;
 @end

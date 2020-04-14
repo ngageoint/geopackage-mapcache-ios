@@ -96,27 +96,6 @@
 
 - (IBAction)createGeoPackage:(id)sender {
     [self.geopackageListViewDelegate showNewGeoPackageView];
-    
-    /*UIAlertController *newGeoPackageAlert = [UIAlertController alertControllerWithTitle:@"New GeoPackage" message:@"" preferredStyle:UIAlertControllerStyleAlert];
-    [newGeoPackageAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.text = @"";
-    }];
-    
-    UIAlertAction *confirmCreate = [UIAlertAction actionWithTitle:@"Create" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSLog(@"Name: %@", newGeoPackageAlert.textFields[0].text);
-        
-        NSString * newName = newGeoPackageAlert.textFields[0].text;
-        [self.geopackageListViewDelegate createGeoPackage:newName];
-    }];
-    
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        [newGeoPackageAlert dismissViewControllerAnimated:YES completion:nil];
-    }];
-    
-    [newGeoPackageAlert addAction:confirmCreate];
-    [newGeoPackageAlert addAction:cancel];
-    
-    [self presentViewController:newGeoPackageAlert animated:YES completion:nil];*/
 }
 
 
@@ -158,20 +137,7 @@
         }
         
         MCDatabase *database = [_geoPackages objectAtIndex:indexPath.row];
-        
-        cell.geoPackageNameLabel.text = database.name;
-        
-        if ([database getFeatures].count == 1) {
-            cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layer", (long)[database getFeatures].count];
-        } else {
-            cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layers", (long)[database getFeatures].count];
-        }
-        
-        if ([database getTileCount] == 1) {
-            cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layer", (long)[database getTileCount]];
-        } else {
-            cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layers", (long)[database getTileCount]];
-        }
+        [cell setContentWithDatabase:database];
         
         if ([_active isActive:database]) {
             [cell activeLayersIndicatorOn];

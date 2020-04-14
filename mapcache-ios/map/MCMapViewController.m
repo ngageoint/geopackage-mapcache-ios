@@ -22,6 +22,7 @@
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic) BOOL showingUserLocation;
 @property (nonatomic) BOOL featureOverlayTiles;
+@property (nonatomic) BOOL ignoreRegionChange;
 @property (atomic) int updateCountId;
 @property (atomic) int featureUpdateCountId;
 @property (nonatomic, strong) GPKGFeatureShapes *featureShapes;
@@ -94,6 +95,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.locationManager.delegate = self;
     self.showingUserLocation = NO;
     self.settingsDrawerVisible = NO;
+    self.ignoreRegionChange = YES;
     self.currentZoom = -1;
     self.currentCenter = self.mapView.centerCoordinate;
     
@@ -143,7 +145,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if (self.active.modified) {
         [self.active setModified:NO];
-        [self updateInBackgroundWithZoom:YES];
+        [self updateInBackgroundWithZoom:NO];
     }
     
     // iOS 13 dark mode support
@@ -461,6 +463,16 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
+    
+    if (_active == nil) {
+        return;
+    }
+    
+    if (self.ignoreRegionChange) {
+        self.ignoreRegionChange = NO;
+        return;
+    }
+    
     CLLocationCoordinate2D previousCenter = self.currentCenter;
     self.currentCenter = self.mapView.centerCoordinate;
     int previousZoom = self.currentZoom;
@@ -469,10 +481,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     if (self.currentCenter.latitude == previousCenter.latitude && self.currentCenter.longitude == previousCenter.longitude && self.currentZoom == previousZoom) {
         return;
     }
-    
-    int updateId = ++self.featureUpdateCountId;
-    int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];
-    [self.featureHelper resetFeatureCount];
     
     if (self.expandedZoomDetails) {
         [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", self.currentZoom] forState:UIControlStateNormal];
@@ -488,10 +496,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self.featureHelper.featureShapes removeShapesNotWithinMapView:mapView];
     }
     
+    int updateId = [self.featureHelper getNewUpdateId];
+    int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];
+    [self.featureHelper resetFeatureCount];
+
     GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:mapView];
     double toleranceDistance = [GPKGMapUtils toleranceDistanceInMapView:mapView];
     int maxFeatures = [self getMaxFeatures];
-    
+
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
          if (self.active != nil) {
@@ -500,17 +512,17 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                         @try {
                             geoPacakge = [self.manager open:database.name];
                             [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
-                            
+
                             [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)self.currentZoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter: YES];
-                            
+
                         } @catch (NSException *exception) {
                            NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
-                        } @finally {
-                            [geoPacakge close];
                         }
                     }
                 }
     });
+    
+    //[self updateInBackgroundWithZoom:NO];
 }
 
 
@@ -526,6 +538,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.featureHelper resetFeatureCount];
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
+    
     for(GPKGGeoPackage * geoPackage in [self.geoPackages allValues]){
         @try {
             [geoPackage close];
@@ -537,6 +550,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.featureDaos removeAllObjects];
     
     if(zoom){
+        self.ignoreRegionChange = YES;
         [self zoomToActiveBounds];
     }
     
@@ -544,8 +558,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.tilesBoundingBox = nil;
     self.featureOverlayTiles = false;
     [self.featureHelper.featureShapes clear];
-    int maxFeatures = [self getMaxFeatures];
     
+    int maxFeatures = [self getMaxFeatures];
     GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:self.mapView];
     double toleranceDistance = [GPKGMapUtils toleranceDistanceInMapView:self.mapView];
     
@@ -562,8 +576,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                      
                  } @catch (NSException *exception) {
                     NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
-                 } @finally {
-                     [geoPacakge close];
                  }
              }
          }
@@ -662,9 +674,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 expandedRegion = MKCoordinateRegionMake(self.mapView.centerCoordinate, MKCoordinateSpanMake(180, 360));
             }
             
-//            if(ignoreChange){
-//                self.ignoreRegionChange = true;
-//            }
+            if(ignoreChange){
+                self.ignoreRegionChange = YES;
+            }
             [self.mapView setRegion:expandedRegion animated:true];
         }
     }

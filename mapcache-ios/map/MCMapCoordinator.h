@@ -14,6 +14,8 @@
 #import "MCBoundingBoxGuideView.h"
 #import "MCDrawingStatusViewController.h"
 #import "MCGeoPackageRepository.h"
+#import "MCCreateGeoPacakgeViewController.h"
+#import "MCFeatureLayerDetailsViewController.h"
 
 
 @class MCMapViewController;
@@ -29,7 +31,7 @@
 @end
 
 
-@interface MCMapCoordinator : NSObject <MCMapDelegate, MCMapActionDelegate, MCDrawingStatusDelegate>
+@interface MCMapCoordinator : NSObject <MCMapDelegate, MCMapActionDelegate, MCDrawingStatusDelegate, MCCreateGeoPackageDelegate, MCFeatureLayerCreationDelegate>
 - (instancetype) initWithMapViewController:(MCMapViewController *) mapViewController;
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @end

@@ -72,6 +72,11 @@
                 NSMutableDictionary * databaseFeatureDaos = [[NSMutableDictionary alloc] init];
                 [self.featureDaos setObject:databaseFeatureDaos forKey:database.name];
                 for(NSString *featureTable in featureTableDaos){
+                    
+                    if([self updateCanceled:updateId]){
+                        break;
+                    }
+                    
                     GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:featureTable];
                     [databaseFeatureDaos setObject:featureDao forKey:featureTable];
                 }
@@ -81,7 +86,7 @@
         }
     }
     
-    count = [self addFeaturesWithId:featureUpdateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
+    count = [self addFeaturesWithFeaureUpdateId:featureUpdateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
 }
 
 
@@ -106,6 +111,11 @@
             NSMutableDictionary * databaseFeatureDaos = [[NSMutableDictionary alloc] init];
             [self.featureDaos setObject:databaseFeatureDaos forKey:database.name];
             for(NSString *featureTable in featureTableDaos){
+                
+                if([self updateCanceled:updateId]){
+                    break;
+                }
+                
                 GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:featureTable];
                 [databaseFeatureDaos setObject:featureDao forKey:featureTable];
             }
@@ -114,11 +124,11 @@
         [self.active removeDatabase:database.name andPreserveOverlays:false];
     }
     
-    [self addFeaturesWithId:featureUpdateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
+    [self addFeaturesWithFeaureUpdateId:featureUpdateId andMaxFeatures:maxFeatures andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
 }
 
 
--(int) addFeaturesWithId: (int) updateId andMaxFeatures: (int) maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance: (double) toleranceDistance andFilter: (BOOL) filter {
+-(int) addFeaturesWithFeaureUpdateId: (int) featureUpdateId andMaxFeatures: (int) maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *) mapViewBoundingBox andToleranceDistance: (double) toleranceDistance andFilter: (BOOL) filter {
     // Add features
     NSMutableDictionary * featureTables = [[NSMutableDictionary alloc] init];
     //    if(self.editFeaturesMode){
@@ -170,8 +180,8 @@
                 
                 if([[self.featureDaos objectForKey:databaseName] objectForKey:features] != nil){
                     
-                    self.featureCount = [self displayFeaturesWithId:updateId andGeoPackage:geoPackage andStyleCache:styleCache andFeatures:features andCount:self.featureCount andMaxFeatures:maxFeatures andEditable:NO andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
-                    if([self featureUpdateCanceled:updateId]){
+                    self.featureCount = [self displayFeaturesWithId:featureUpdateId andGeoPackage:geoPackage andStyleCache:styleCache andFeatures:features andCount:self.featureCount andMaxFeatures:maxFeatures andEditable:NO andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
+                    if([self featureUpdateCanceled:featureUpdateId]){
                         break;
                     } else if (self.featureCount >= maxFeatures) {
                         [self.featureHelperDelegate showMaxFeaturesWarning];
@@ -183,7 +193,7 @@
             [styleCache clear];
         }
         
-        if([self featureUpdateCanceled:updateId]){
+        if([self featureUpdateCanceled:featureUpdateId]){
             break;
         }
     }

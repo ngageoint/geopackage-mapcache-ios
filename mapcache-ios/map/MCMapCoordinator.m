@@ -20,6 +20,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
 @property (nonatomic, strong) NSUserDefaults *preferences;
 @property (nonatomic, strong) MCDrawingStatusViewController *drawingStatusViewController;
+@property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureLayerDetailsView;
 @property (nonatomic, strong) MCGeoPackageRepository *repository;
 @end
 
@@ -127,10 +128,44 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 - (void)showDrawingTools {
     _drawingStatusViewController = [[MCDrawingStatusViewController alloc] init];
-    _drawingStatusViewController.drawerViewDelegate = self.drawerViewDelegate;
+    _drawingStatusViewController.drawerViewDelegate = _drawerViewDelegate;
     _drawingStatusViewController.drawingStatusDelegate = self;
     _drawingStatusViewController.databases = [_repository databaseList];
     [_drawerViewDelegate pushDrawer:_drawingStatusViewController];
+}
+
+
+#pragma mark - MCDrawingStatusDelegate methods
+- (BOOL)savePointsToDatabase:(MCDatabase *)database andTable:(MCTable *) table {
+    if (self.mcMapViewController.tempMapPoints && self.mcMapViewController.tempMapPoints.count > 0) {
+        if ([_repository savePoints:self.mcMapViewController.tempMapPoints toDatabase:database table:table]) {
+            [_mcMapViewController setDrawing:NO];
+            [_mcMapViewController clearTempPoints];
+            [self updateMapLayers];
+            [[NSNotificationCenter defaultCenter] postNotificationName:MC_RELOAD_GEOPACKAGE_LIST_NOTIFICATION object:self];
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+
+- (void)showNewGeoPacakgeView {
+    MCCreateGeoPacakgeViewController *createGeoPackageView = [[MCCreateGeoPacakgeViewController alloc] initAsFullView:YES];
+    createGeoPackageView.drawerViewDelegate = self.drawerViewDelegate;
+    createGeoPackageView.createGeoPackageDelegate = self;
+    [createGeoPackageView.drawerViewDelegate pushDrawer:createGeoPackageView];
+}
+
+
+- (void)showNewLayerViewWithDatabase:(MCDatabase *)database {
+    _featureLayerDetailsView = [[MCFeatureLayerDetailsViewController alloc] initAsFullView:YES];
+    _featureLayerDetailsView.delegate = self;
+    _featureLayerDetailsView.drawerViewDelegate = _drawerViewDelegate;
+    _featureLayerDetailsView.database = database;
+    [_drawerViewDelegate pushDrawer:_featureLayerDetailsView];
+    
 }
 
 
@@ -139,16 +174,53 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
-#pragma mark - MCDrawingStatusDelegate
 - (void)cancelDrawingFeatures {
     [_mcMapViewController setDrawing:NO];
     [_mcMapViewController clearTempPoints];
 }
 
 
-- (void)showSaveLocationView {
-    
+#pragma mark - MCFeatureLayerCreationDelegate methods
+- (void) createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId {
+    NSLog(@"creating layer %@ in database %@ ", geometryColumns.tableName, database);
+
+    BOOL didCreateLayer = [_repository createFeatueLayerIn:database withGeomertyColumns:geometryColumns boundingBox:boundingBox srsId:srsId];
+    if (didCreateLayer) {
+        [_drawerViewDelegate popDrawer];
+        [_repository regenerateDatabaseList];
+        _drawingStatusViewController.selectedGeoPackage = [_repository databseNamed:database];
+        [_drawingStatusViewController showLayerSelectionMode];
+    } else {
+        //TODO handle the case where a new feature layer could not be created
+    }
 }
+
+
+#pragma mark - MCCreateGeoPackageDelegate methods
+- (BOOL) isValidGeoPackageName:(NSString *) name {
+    NSArray *databaseNames = [self.manager databases];
+    
+    if ([name isEqualToString: @""]) {
+        return NO;
+    }
+    
+    for (NSString * databaseName in databaseNames) {
+        if ([name isEqualToString:databaseName]) {
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
+
+- (void) createGeoPackage:(NSString *) geoPackageName {
+    NSLog(@"Creating GeoPackage %@", geoPackageName);
+    [_repository createGeoPackage:geoPackageName];
+    [_repository regenerateDatabaseList];
+    [_drawingStatusViewController refreshViewWithNewGeoPackageList:[_repository databaseList]];
+}
+
 
 
 -(CLLocationCoordinate2D *) getPolygonPointsWithPoint1: (CLLocationCoordinate2D) point1 andPoint2: (CLLocationCoordinate2D) point2{

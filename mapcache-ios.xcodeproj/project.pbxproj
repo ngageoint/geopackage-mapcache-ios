@@ -493,6 +493,7 @@
 				044D6B481B627AB400527745 /* load */,
 				045C949C1B5D89E80005CCD0 /* ui */,
 				E3A492021FA952C100FFE613 /* geopackage */,
+				E3E3846024352E6000DB7471 /* layer */,
 				045C94911B56DEFA0005CCD0 /* indexer */,
 				045C948A1B50785B0005CCD0 /* map */,
 				0446481B1B4C26BE0052913B /* util */,
@@ -905,6 +906,13 @@
 				E3CF687923DA6AC40005A6EF /* MCNewTileServerViewController.m */,
 			);
 			path = settings;
+			sourceTree = "<group>";
+		};
+		E3E3846024352E6000DB7471 /* layer */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = layer;
 			sourceTree = "<group>";
 		};
 		E3E9ED6723EA407E004C4530 /* mapcache-iosUITests */ = {
@@ -1416,6 +1424,8 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1436,6 +1446,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
+				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
