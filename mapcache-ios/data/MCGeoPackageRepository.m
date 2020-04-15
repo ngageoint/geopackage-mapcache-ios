@@ -140,9 +140,6 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
-
-
-
 - (void)deleteGeoPackage:(MCDatabase *)database {
     [self.manager delete:database.name];
     [_activeDatabases removeDatabase:database.name andPreserveOverlays:NO];
@@ -189,6 +186,7 @@ static MCGeoPackageRepository *sharedRepository;
             [geoPackage close];
         }
         
+        [self regenerateDatabaseList];
         return saved;
     }
 }
@@ -211,8 +209,6 @@ static MCGeoPackageRepository *sharedRepository;
         [geoPackage close];
         [self regenerateDatabaseList];
         return didCreateLayer;
-        //[_navigationController popToViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
-        //[self updateDatabase];
     }
 }
 

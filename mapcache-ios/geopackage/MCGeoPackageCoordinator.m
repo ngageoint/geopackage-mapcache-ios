@@ -23,6 +23,7 @@
 @property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic, strong) MCDatabase *database;
 @property (nonatomic, strong) GPKGSCreateTilesData * tileData;
+@property (nonatomic, strong) MCGeoPackageRepository *repository;
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
 @end
 
@@ -34,6 +35,7 @@
     
     _childCoordinators = [[NSMutableArray alloc] init];
     _manager = [GPKGGeoPackageFactory manager];
+    _repository = [MCGeoPackageRepository sharedRepository];
     _geoPackageCoordinatorDelegate = geoPackageCoordinatorDelegate;
     _drawerDelegate = drawerDelegate;
     _mapDelegate = mapDelegate;
@@ -51,8 +53,15 @@
     _geoPackageViewController.delegate = self;
     _geoPackageViewController.drawerViewDelegate = _drawerDelegate;
     [_drawerDelegate pushDrawer:_geoPackageViewController];
-    
-    //[_navigationController pushViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAndReload:) name:MC_GEOPACKAGE_MODIFIED_NOTIFICATION object:nil];
+}
+
+
+- (void)updateAndReload:(NSNotification *) notification {
+    [_repository regenerateDatabaseList];
+    _database = [_repository databseNamed:_database.name];
+    _geoPackageViewController.database = _database;
+    [_geoPackageViewController update];
 }
 
 

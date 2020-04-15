@@ -32,6 +32,7 @@
 #import "MCTileServerHelpViewController.h"
 #import "MCSettingsCoordinator.h"
 #import "MCTileServerURLManagerViewController.h"
+#import "MCGeoPackageRepository.h"
 
 
 @protocol MCMapDelegate;

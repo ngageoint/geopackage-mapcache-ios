@@ -43,7 +43,7 @@
     _geoPackageListView.drawerViewDelegate = _drawerViewDelegate;
     [_geoPackageListView.drawerViewDelegate pushDrawer:_geoPackageListView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(regenerateAndReload:) name:GPKGS_IMPORT_GEOPACKAGE_NOTIFICATION object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(regenerateAndReload:) name:MC_RELOAD_GEOPACKAGE_LIST_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(regenerateAndReload:) name:MC_GEOPACKAGE_MODIFIED_NOTIFICATION object:nil];
 }
 
 

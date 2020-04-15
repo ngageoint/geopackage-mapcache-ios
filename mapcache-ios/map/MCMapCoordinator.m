@@ -142,7 +142,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
             [_mcMapViewController setDrawing:NO];
             [_mcMapViewController clearTempPoints];
             [self updateMapLayers];
-            [[NSNotificationCenter defaultCenter] postNotificationName:MC_RELOAD_GEOPACKAGE_LIST_NOTIFICATION object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:MC_GEOPACKAGE_MODIFIED_NOTIFICATION object:self];
             return YES;
         }
     }
@@ -177,6 +177,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 - (void)cancelDrawingFeatures {
     [_mcMapViewController setDrawing:NO];
     [_mcMapViewController clearTempPoints];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MC_GEOPACKAGE_MODIFIED_NOTIFICATION object:self];
 }
 
 
