@@ -2269,7 +2269,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 }
                 
                 // Query for all rows
-                GPKGResultSet * results = [featureDao query];
+                GPKGResultSet * results = [featureDao queryWithColumns:columns];
                 @try {
                     while(![self featureUpdateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
                         @try {
