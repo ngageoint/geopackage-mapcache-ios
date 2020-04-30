@@ -16,7 +16,7 @@
 #import "MCLayerCell.h"
 #import "MCDatabase.h"
 #import "MCDatabases.h"
-
+#import "GPKGUserRow.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

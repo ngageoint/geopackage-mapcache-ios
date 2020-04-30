@@ -16,6 +16,7 @@
 #import "MCGeoPackageRepository.h"
 #import "MCCreateGeoPacakgeViewController.h"
 #import "MCFeatureLayerDetailsViewController.h"
+#import "MCMapPointDataViewController.h"
 
 
 @class MCMapViewController;
@@ -31,7 +32,7 @@
 @end
 
 
-@interface MCMapCoordinator : NSObject <MCMapDelegate, MCMapActionDelegate, MCDrawingStatusDelegate, MCCreateGeoPackageDelegate, MCFeatureLayerCreationDelegate>
+@interface MCMapCoordinator : NSObject <MCMapDelegate, MCMapActionDelegate, MCDrawingStatusDelegate, MCCreateGeoPackageDelegate, MCFeatureLayerCreationDelegate, MCMapPointDataDelegate>
 - (instancetype) initWithMapViewController:(MCMapViewController *) mapViewController;
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @end

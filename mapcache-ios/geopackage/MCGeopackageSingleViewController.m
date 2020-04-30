@@ -38,7 +38,7 @@
     [self initCellArray];
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
+    //self.automaticallyAdjustsScrollViewInsets = NO;
     
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
@@ -371,6 +371,16 @@
     }
 }
 
+
+- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
+    CGPoint point = [recognizer locationInView:self.view];
+    
+    if (CGRectContainsPoint(self.tableView.frame, point)) {
+        return true;
+    }
+    
+    return false;
+}
 
 // Override this method to make the drawer and the scrollview play nice
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

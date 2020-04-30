@@ -44,6 +44,9 @@
 }
 
 
+/**
+    Change the return key to be a done button for the text field. 
+ */
 - (void) useReturnKeyDone {
     [self.field setReturnKeyType:UIReturnKeyDone];
 }

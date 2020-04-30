@@ -16,7 +16,7 @@
 - (void) showTopDrawer;
 @end
 
-@interface NGADrawerViewController : UIViewController <UIGestureRecognizerDelegate>
+@interface NGADrawerViewController : UIViewController <UIGestureRecognizerDelegate, UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (nonatomic) BOOL swipeEnabled;
 @property (nonatomic) BOOL isFullView;

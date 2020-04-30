@@ -75,6 +75,8 @@
 		E308FBC61FBFA7CA00348577 /* MCHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E308FBC51FBFA7CA00348577 /* MCHeaderCell.m */; };
 		E3100EAF203CAF1E00FFA56E /* MCZoomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */; };
 		E312A3381FAA416500C088FB /* MCDownloadCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E312A3371FAA416500C088FB /* MCDownloadCoordinator.m */; };
+		E31BD62D244E2E2600C18609 /* MCKeyValueDisplayCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E31BD62C244E2E2600C18609 /* MCKeyValueDisplayCell.xib */; };
+		E31BD630244E340300C18609 /* MCKeyValueDisplayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E31BD62F244E340300C18609 /* MCKeyValueDisplayCell.m */; };
 		E331C8ED20FE7645006EFED1 /* MCLayerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E331C8EC20FE7645006EFED1 /* MCLayerCoordinator.m */; };
 		E331C8F0210110B3006EFED1 /* MCTileLayerOperationsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E331C8EF210110B3006EFED1 /* MCTileLayerOperationsCell.m */; };
 		E33F55721FC4A1C000F252FD /* MCSectionTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F55711FC4A1C000F252FD /* MCSectionTitleCell.xib */; };
@@ -86,6 +88,7 @@
 		E33FB474202506B500AF509B /* MCBoundingBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33FB473202506B500AF509B /* MCBoundingBoxView.xib */; };
 		E3463DE921545F4B00D64FFC /* MCTileHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E3463DE821545F4B00D64FFC /* MCTileHelper.m */; };
 		E346590F202BB20B001E6E81 /* MCZoomAndQualityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E346590E202BB20B001E6E81 /* MCZoomAndQualityViewController.m */; };
+		E346EC7E2448C23C001A646A /* MCMapPointDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E346EC7D2448C23C001A646A /* MCMapPointDataViewController.m */; };
 		E3470CC72020E67E0098D783 /* MCColorUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CC62020E67D0098D783 /* MCColorUtil.m */; };
 		E3470CC9202126140098D783 /* MCSegmentedControlCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3470CC8202126140098D783 /* MCSegmentedControlCell.xib */; };
 		E3470CCC2021962D0098D783 /* MCSegmentedControlCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3470CCB2021962D0098D783 /* MCSegmentedControlCell.m */; };
@@ -310,6 +313,9 @@
 		E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCZoomCell.xib; sourceTree = "<group>"; };
 		E312A3361FAA416500C088FB /* MCDownloadCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDownloadCoordinator.h; sourceTree = "<group>"; };
 		E312A3371FAA416500C088FB /* MCDownloadCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDownloadCoordinator.m; sourceTree = "<group>"; };
+		E31BD62C244E2E2600C18609 /* MCKeyValueDisplayCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCKeyValueDisplayCell.xib; sourceTree = "<group>"; };
+		E31BD62E244E340300C18609 /* MCKeyValueDisplayCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCKeyValueDisplayCell.h; sourceTree = "<group>"; };
+		E31BD62F244E340300C18609 /* MCKeyValueDisplayCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCKeyValueDisplayCell.m; sourceTree = "<group>"; };
 		E331C8EB20FE7645006EFED1 /* MCLayerCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCLayerCoordinator.h; sourceTree = "<group>"; };
 		E331C8EC20FE7645006EFED1 /* MCLayerCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCLayerCoordinator.m; sourceTree = "<group>"; };
 		E331C8EF210110B3006EFED1 /* MCTileLayerOperationsCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTileLayerOperationsCell.m; sourceTree = "<group>"; };
@@ -328,6 +334,8 @@
 		E3463DE821545F4B00D64FFC /* MCTileHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTileHelper.m; sourceTree = "<group>"; };
 		E346590D202BB20B001E6E81 /* MCZoomAndQualityViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCZoomAndQualityViewController.h; sourceTree = "<group>"; };
 		E346590E202BB20B001E6E81 /* MCZoomAndQualityViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCZoomAndQualityViewController.m; sourceTree = "<group>"; };
+		E346EC7C2448C23C001A646A /* MCMapPointDataViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMapPointDataViewController.h; sourceTree = "<group>"; };
+		E346EC7D2448C23C001A646A /* MCMapPointDataViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCMapPointDataViewController.m; sourceTree = "<group>"; };
 		E3470CC52020E67D0098D783 /* MCColorUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCColorUtil.h; sourceTree = "<group>"; };
 		E3470CC62020E67D0098D783 /* MCColorUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCColorUtil.m; sourceTree = "<group>"; };
 		E3470CC8202126140098D783 /* MCSegmentedControlCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCSegmentedControlCell.xib; sourceTree = "<group>"; };
@@ -668,6 +676,8 @@
 				E3D80E9E23FF3DA0006F1014 /* MCDrawingCoordinator.m */,
 				E3D80EA023FF59E3006F1014 /* MCDrawingStatusViewController.h */,
 				E3D80EA123FF59E3006F1014 /* MCDrawingStatusViewController.m */,
+				E346EC7C2448C23C001A646A /* MCMapPointDataViewController.h */,
+				E346EC7D2448C23C001A646A /* MCMapPointDataViewController.m */,
 			);
 			path = map;
 			sourceTree = "<group>";
@@ -869,9 +879,12 @@
 				E35B630D21BC24E9004E5BB0 /* MCTitleCell.xib */,
 				E34F32E72204E93C0098ED45 /* MCEmptyStateCell.xib */,
 				E3500E6422B7F36500164ABF /* MCTutorialCell.xib */,
+				E3D80EA6240076CC006F1014 /* MCDualButtonCell.xib */,
 				E3D80EA3240076AD006F1014 /* MCDualButtonCell.h */,
 				E3D80EA4240076AD006F1014 /* MCDualButtonCell.m */,
-				E3D80EA6240076CC006F1014 /* MCDualButtonCell.xib */,
+				E31BD62C244E2E2600C18609 /* MCKeyValueDisplayCell.xib */,
+				E31BD62E244E340300C18609 /* MCKeyValueDisplayCell.h */,
+				E31BD62F244E340300C18609 /* MCKeyValueDisplayCell.m */,
 			);
 			path = DisplayCells;
 			sourceTree = "<group>";
@@ -1076,6 +1089,7 @@
 				E3FB857121349C32002F012E /* MCMapView.xib in Resources */,
 				E3A651AB2003E1B700B8AB27 /* MCCreateLayerView.xib in Resources */,
 				E3CF687423DA5FF20005A6EF /* MCTextViewCell.xib in Resources */,
+				E31BD62D244E2E2600C18609 /* MCKeyValueDisplayCell.xib in Resources */,
 				E308FBC11FBE400500348577 /* MCSingleGeoPackageView.xib in Resources */,
 				040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */,
 				E33F55721FC4A1C000F252FD /* MCSectionTitleCell.xib in Resources */,
@@ -1204,6 +1218,7 @@
 				E3A651A82003DDC800B8AB27 /* MCCreateLayerViewController.m in Sources */,
 				04CCC8711B6122480001296D /* GPKGSCreateTilesViewController.m in Sources */,
 				E35B631121BC26F9004E5BB0 /* MCTitleCell.m in Sources */,
+				E31BD630244E340300C18609 /* MCKeyValueDisplayCell.m in Sources */,
 				046877F81C68FE9400967470 /* GPKGSLinkedTablesViewController.m in Sources */,
 				04CCC85C1B5FF1830001296D /* GPKGSManagerCreateTilesViewController.m in Sources */,
 				E354DB3622BAD89D00FFD477 /* MCSwitchCell.m in Sources */,
@@ -1243,6 +1258,7 @@
 				045C94981B5D384A0005CCD0 /* GPKGSCreateFeaturesViewController.m in Sources */,
 				0446480B1B4AFC100052913B /* MCDatabase.m in Sources */,
 				04E1D8D91B66D4CA002BD947 /* GPKGSEditContentsData.m in Sources */,
+				E346EC7E2448C23C001A646A /* MCMapPointDataViewController.m in Sources */,
 				E34C378F203CD8BC00287CF9 /* MCZoomCell.m in Sources */,
 				E3A651B0200563AF00B8AB27 /* MCTileLayerDetailsViewController.m in Sources */,
 				E355935020F3E3EF00FC1288 /* MCFeatureLayerOperationsCell.m in Sources */,

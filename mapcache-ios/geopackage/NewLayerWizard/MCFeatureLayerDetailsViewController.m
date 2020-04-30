@@ -154,6 +154,12 @@
 }
 
 
+- (void) closeDrawer {
+    [self.drawerViewDelegate popDrawer];
+}
+
+
+
 #pragma mark - GPKGSButtonCellDelegate
 - (void) performButtonAction:(NSString *) action {
     if ([action isEqualToString:GPKGS_ACTION_NEW_FEATURE_LAYER]) {

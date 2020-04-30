@@ -28,7 +28,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _openView = 160;
+    _openView = 200; // 160?
     _collapsedView = [UIScreen mainScreen].bounds.size.height - 160; //120
     NSLog(@"Screen height: %f", [UIScreen mainScreen].bounds.size.height);
     

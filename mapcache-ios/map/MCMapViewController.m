@@ -526,6 +526,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+    NSLog(@"Tapped map point");
+    [self zoomToPointWithOffset:view.annotation.coordinate];
+    [self.mapActionDelegate showDetailsForAnnotation:(GPKGMapPoint *)view.annotation];
+}
+
+
 #pragma mark - Zoom and map state
 -(int) updateInBackgroundWithZoom: (BOOL) zoom{
     return [self updateInBackgroundWithZoom:zoom andFilter:false];
@@ -609,7 +616,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 
 -(void) zoomToActiveIfNothingVisible: (BOOL) nothingVisible andIgnoreRegionChange: (BOOL) ignoreChange{
-    
     GPKGBoundingBox * bbox = self.featuresBoundingBox;
     BOOL tileBox = false;
     
@@ -684,7 +690,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 
 -(void) zoomToActiveBounds{
-    
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
     

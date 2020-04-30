@@ -32,6 +32,7 @@
 - (void)showMapInfoDrawer;
 - (void)showDrawingTools;
 - (void)updateDrawingStatus;
+- (void)showDetailsForAnnotation:(GPKGMapPoint *)mapPoint;
 @end
 
 

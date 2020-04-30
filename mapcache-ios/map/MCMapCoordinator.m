@@ -20,6 +20,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
 @property (nonatomic, strong) NSUserDefaults *preferences;
 @property (nonatomic, strong) MCDrawingStatusViewController *drawingStatusViewController;
+@property (nonatomic, strong) MCMapPointDataViewController *mapPointDataViewController;
 @property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureLayerDetailsView;
 @property (nonatomic, strong) MCGeoPackageRepository *repository;
 @end
@@ -135,6 +136,19 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+- (void)updateDrawingStatus {
+    [_drawingStatusViewController updateStatusLabelWithString:[NSString stringWithFormat:@"%d new points", (int)self.mcMapViewController.tempMapPoints.count]];
+}
+
+
+- (void)showDetailsForAnnotation:(GPKGMapPoint *)mapPoint {
+    GPKGSMapPointData *pointData = (GPKGSMapPointData *)mapPoint.data;
+    GPKGUserRow *userRow = [_repository queryRow:pointData.featureId fromTableNamed:pointData.tableName inDatabase:pointData.database];
+    _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:userRow asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+    [_drawerViewDelegate pushDrawer:_mapPointDataViewController];
+}
+
+
 #pragma mark - MCDrawingStatusDelegate methods
 - (BOOL)savePointsToDatabase:(MCDatabase *)database andTable:(MCTable *) table {
     if (self.mcMapViewController.tempMapPoints && self.mcMapViewController.tempMapPoints.count > 0) {
@@ -169,15 +183,18 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
-- (void)updateDrawingStatus {
-    [_drawingStatusViewController updateStatusLabelWithString:[NSString stringWithFormat:@"%d new points", (int)self.mcMapViewController.tempMapPoints.count]];
-}
-
-
 - (void)cancelDrawingFeatures {
     [_mcMapViewController setDrawing:NO];
     [_mcMapViewController clearTempPoints];
     [[NSNotificationCenter defaultCenter] postNotificationName:MC_GEOPACKAGE_MODIFIED_NOTIFICATION object:self];
+}
+
+
+#pragma mark - MCMapPointDataDelegate
+- (BOOL)saveRow:(GPKGUserRow *)row {
+    // TODO implement save
+    
+    return YES;
 }
 
 

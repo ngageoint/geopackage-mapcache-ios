@@ -166,6 +166,7 @@ static MCGeoPackageRepository *sharedRepository;
             GPKGGeometryData *pointGeomData = [[GPKGGeometryData alloc] initWithSrsId:srsId];
             [pointGeomData setGeometry: point];
             [newPoint setGeometry:pointGeomData];
+            
             [featureDao insert:newPoint];
             // TODO expand the bounds of the geopackage
             
@@ -197,8 +198,14 @@ static MCGeoPackageRepository *sharedRepository;
     BOOL didCreateLayer = YES;
     
     @try {
+        
+        GPKGFeatureColumn *titleColumn = [GPKGFeatureColumn createColumnWithName:@"title" andDataType:GPKG_DT_TEXT];
+        
+        GPKGFeatureColumn *descriptionColumn = [GPKGFeatureColumn createColumnWithName:@"description" andDataType:GPKG_DT_TEXT];
+        
         geoPackage = [_manager open:database];
-        [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:boundingBox andSrsId:srsId];
+        
+        [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andAdditionalColumns:@[titleColumn, descriptionColumn] andBoundingBox:boundingBox andSrsId:srsId];
     }
     @catch (NSException *e) {
         // TODO handle this
@@ -210,6 +217,16 @@ static MCGeoPackageRepository *sharedRepository;
         [self regenerateDatabaseList];
         return didCreateLayer;
     }
+}
+
+
+- (GPKGUserRow *)queryRow:(int)rowId fromTableNamed:(NSString *)tableName inDatabase:(NSString *)databaseName {
+    GPKGGeoPackage *geoPacakge = [_manager open:databaseName];
+    GPKGFeatureDao* featureDao = [geoPacakge featureDaoWithTableName:tableName];
+    
+    GPKGUserRow* userRow = [featureDao queryForIdRow:rowId];
+    
+    return userRow;
 }
 
 @end

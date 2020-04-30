@@ -14,5 +14,6 @@
 - (void)textAlignCenter;
 - (void)textAlignRight;
 - (void)textAlignLeft;
+- (void)useSecondaryAppearance;
 @end
  

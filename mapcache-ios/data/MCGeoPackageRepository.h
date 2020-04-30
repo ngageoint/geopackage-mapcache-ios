@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)copyGeoPacakge:(NSString *)geoPacakgeName to:(NSString *)newName;
 - (BOOL)savePoints:(NSArray<GPKGMapPoint *> *) points toDatabase:(MCDatabase *) database table:(MCTable *) table;
 - (BOOL)createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns boundingBox:(GPKGBoundingBox *)boundingBox srsId:(NSNumber *) srsId;
+- (GPKGUserRow *)queryRow:(int)rowId fromTableNamed:(NSString *)tableName inDatabase:(NSString *)databaseName;
 @end
 
 NS_ASSUME_NONNULL_END

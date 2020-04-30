@@ -30,16 +30,24 @@
     [self.descriptionLabel layoutIfNeeded];
  }
 
+
 - (void)textAlignCenter {
     self.descriptionLabel.textAlignment = NSTextAlignmentCenter;
 }
+
 
 - (void)textAlignRight {
     self.descriptionLabel.textAlignment = NSTextAlignmentRight;
 }
 
+
 - (void)textAlignLeft {
     self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
+}
+
+
+- (void)useSecondaryAppearance {
+    [self.descriptionLabel setTextColor:[UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0]];
 }
 
 @end
