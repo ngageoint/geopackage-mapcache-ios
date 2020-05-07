@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MCProperties.h"
 
 @protocol NGADrawerViewDelegate <NSObject>
 - (void) drawerAddAnimationComplete: (UIViewController *) viewController;
@@ -16,7 +17,8 @@
 - (void) showTopDrawer;
 @end
 
-@interface NGADrawerViewController : UIViewController <UIGestureRecognizerDelegate, UITableViewDelegate, UITableViewDataSource>
+
+@interface NGADrawerViewController : UIViewController <UIGestureRecognizerDelegate>
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (nonatomic) BOOL swipeEnabled;
 @property (nonatomic) BOOL isFullView;
@@ -27,7 +29,10 @@
 - (void) removeDrawerFromSuperview;
 - (void) addDragHandle;
 - (void) addCloseButton;
+- (void)addAndConstrainSubview:(UIView *) view;
 - (void) closeDrawer;
+- (void) drawerWasCollapsed;
+- (void) drawerWasMadeFull;
 - (void) slideDown;
 - (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer;
 - (void) panGesture:(UIPanGestureRecognizer *) recognizer;

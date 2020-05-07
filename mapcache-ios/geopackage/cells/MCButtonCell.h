@@ -23,5 +23,6 @@
 - (void) enableButton;
 - (void) disableButton;
 - (void) useSecondaryColors;
+- (void) useRedColor;
 - (void) setButtonLabel: (NSString *) text;
 @end

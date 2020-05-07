@@ -16,14 +16,16 @@
 #import "MCKeyValueDisplayCell.h"
 #import "GPKGMapUtils.h"
 #import "GPKGUserRow.h"
+#import "GPKGFeatureRow.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol MCMapPointDataDelegate <NSObject>
-- (BOOL)saveRow:(GPKGUserRow *)row;
+- (BOOL)saveRow:(GPKGUserRow *)row toDatabase:(NSString *)database;
+- (int)deleteRow:(GPKGUserRow *)row fromDatabase:(NSString *)database andRemoveMapPoint:(GPKGMapPoint *)mapPoint;
 @end
 
-@interface MCMapPointDataViewController : NGADrawerViewController <UITableViewDataSource, UITableViewDelegate, MCDualButtonCellDelegate, MCButtonCellDelegate>
+@interface MCMapPointDataViewController : NGADrawerViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, MCDualButtonCellDelegate, MCButtonCellDelegate>
 @property (nonatomic, strong) id<MCMapPointDataDelegate>mapPointDataDelegate;
 @property (nonatomic, strong) GPKGMapPoint *mapPoint;
 @property (nonatomic) BOOL isInEditMode;

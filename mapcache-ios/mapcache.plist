@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>nga_drawer_view_space_from_top</key>
+	<integer>200</integer>
 	<key>animate_screen_touches</key>
 	<false/>
 	<key>icon_geometry</key>

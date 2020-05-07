@@ -198,14 +198,8 @@ static MCGeoPackageRepository *sharedRepository;
     BOOL didCreateLayer = YES;
     
     @try {
-        
-        GPKGFeatureColumn *titleColumn = [GPKGFeatureColumn createColumnWithName:@"title" andDataType:GPKG_DT_TEXT];
-        
-        GPKGFeatureColumn *descriptionColumn = [GPKGFeatureColumn createColumnWithName:@"description" andDataType:GPKG_DT_TEXT];
-        
         geoPackage = [_manager open:database];
-        
-        [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andAdditionalColumns:@[titleColumn, descriptionColumn] andBoundingBox:boundingBox andSrsId:srsId];
+        [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:boundingBox andSrsId:srsId];
     }
     @catch (NSException *e) {
         // TODO handle this
@@ -227,6 +221,48 @@ static MCGeoPackageRepository *sharedRepository;
     GPKGUserRow* userRow = [featureDao queryForIdRow:rowId];
     
     return userRow;
+}
+
+
+- (BOOL)saveRow:(GPKGFeatureRow *)featureRow toDatabase:(NSString *)databaseName {
+    GPKGGeoPackage *geoPackage = [_manager open:databaseName];
+    BOOL saved = YES;
+    
+    @try {
+        GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:featureRow.table.tableName];
+        [featureDao update:featureRow];
+    } @catch (NSException *e) {
+        NSLog(@"Problem while saving point data: %@", e.reason);
+        saved = NO;
+    } @finally {
+        if (geoPackage != nil) {
+            [geoPackage close];
+        }
+        
+        [self regenerateDatabaseList];
+        return saved;
+    }
+}
+
+
+- (int)deleteRow:(GPKGUserRow *)featureRow fromDatabase:(NSString *)databaseName {
+    GPKGGeoPackage *geoPackage = [_manager open:databaseName];
+    int rowsDeleted = 0;
+    
+    @try {
+        GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:featureRow.table.tableName];
+        rowsDeleted = [featureDao delete:featureRow] > 0;
+    } @catch (NSException *e) {
+        NSLog(@"Problem while deleting point data: %@", e.reason);
+        rowsDeleted = 0;
+    } @finally {
+        if (geoPackage != nil) {
+            [geoPackage close];
+        }
+        
+        [self regenerateDatabaseList];
+        return rowsDeleted;
+    }
 }
 
 @end

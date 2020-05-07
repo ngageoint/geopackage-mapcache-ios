@@ -188,6 +188,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
+- (void) removeMapPoint:(GPKGMapPoint *) mapPoint {
+    [self.mapView removeAnnotation:mapPoint];
+}
+
+
+
 #pragma mark - Button actions
 - (IBAction)showInfo:(id)sender {
     NSLog(@"Showing info drawer.");
@@ -421,7 +427,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     MKAnnotationView * view = nil;
     
     if ([annotation isKindOfClass:[GPKGMapPoint class]]){
-        
         GPKGMapPoint * mapPoint = (GPKGMapPoint *) annotation;
         
         if(mapPoint.options.image != nil){
@@ -435,7 +440,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             mapPointImageView.centerOffset = mapPoint.options.imageCenterOffset;
             
             view = mapPointImageView;
-            
+            mapPoint.view = view;
         }else{
             MKPinAnnotationView *mapPointPinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointPinReuseIdentifier];
             if(mapPointPinView == nil){
@@ -507,19 +512,19 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
          if (self.active != nil) {
-                    for (MCDatabase *database in [self.active getDatabases]) {
-                        GPKGGeoPackage *geoPacakge;
-                        @try {
-                            geoPacakge = [self.manager open:database.name];
-                            [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
+            for (MCDatabase *database in [self.active getDatabases]) {
+                GPKGGeoPackage *geoPacakge;
+                @try {
+                    geoPacakge = [self.manager open:database.name];
+                    [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
 
-                            [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)self.currentZoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter: YES];
+                    [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)self.currentZoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter: YES];
 
-                        } @catch (NSException *exception) {
-                           NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
-                        }
-                    }
+                } @catch (NSException *exception) {
+                   NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
                 }
+            }
+        }
     });
     
     //[self updateInBackgroundWithZoom:NO];

@@ -43,6 +43,11 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
+    self.tableView.contentInset = tabBarInsets;
+    self.tableView.scrollIndicatorInsets = tabBarInsets;
+    [self.view addSubview:self.tableView];
+    
     [self registerCellTypes];
     
     if (self.isInEditMode) {
@@ -55,10 +60,6 @@
     self.extendedLayoutIncludesOpaqueBars = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
-    self.tableView.contentInset = tabBarInsets;
-    self.tableView.scrollIndicatorInsets = tabBarInsets;
-    [self.view addSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
 }
@@ -104,14 +105,26 @@
         }
     }
     
+    if (_queriedRow.columnCount == 2) {
+        
+    }
+    
     MCButtonCell *buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     buttonCell.delegate = self;
     [buttonCell setAction:@"edit"];
     [buttonCell setButtonLabel:@"Edit"];
-    
     [_cellArray addObject:buttonCell];
+    
+    MCButtonCell *deleteButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
+    [deleteButtonCell useRedColor];
+    deleteButtonCell.delegate = self;
+    [deleteButtonCell setAction:@"delete"];
+    [deleteButtonCell setButtonLabel:@"Delete"];
+    [_cellArray addObject:deleteButtonCell];
+    
     [_tableView reloadData];
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+    self.isInEditMode = NO;
     // TODO add empty state
 }
 
@@ -130,6 +143,7 @@
                 MCFieldWithTitleCell *fieldWithTitle = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
                 [fieldWithTitle setTitleText:columnName];
                 fieldWithTitle.columnName = columnName;
+                [fieldWithTitle setTextFielDelegate:self];
                 
                 if (_queriedRow.columns.columns[i].dataType == GPKG_DT_TEXT) {
                     [fieldWithTitle setFieldText:_queriedRow.values[i]];
@@ -155,6 +169,7 @@
     [_cellArray addObject:_buttonsCell];
     [_tableView reloadData];
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+    self.isInEditMode = YES;
 }
 
 
@@ -174,6 +189,23 @@
 }
 
 
+#pragma mark- UITextFieldDelegate methods
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    for (UITableViewCell *cell in self.cellArray) {
+        if ([cell isKindOfClass:MCFieldWithTitleCell.class]) {
+            MCFieldWithTitleCell *fieldWithTitleCell = (MCFieldWithTitleCell *)cell;
+            if (fieldWithTitleCell.field == textField) {
+                for (int i = 0; i < self.queriedRow.columns.columns.count; i++) {
+                    if ([fieldWithTitleCell.columnName isEqualToString:self.queriedRow.columns.columns[i].name]) {
+                        self.queriedRow.values[i] = [fieldWithTitleCell fieldValue];
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
@@ -184,17 +216,21 @@
 - (void)performDualButtonAction:(NSString *)action {
     if ([action isEqualToString:@"save"]) {
         NSLog(@"Saving point data");
-        [_mapPointDataDelegate saveRow:_queriedRow];
+        NSString *databaseName = [self.mapPoint.data valueForKey:@"database"];
+        BOOL saved = [_mapPointDataDelegate saveRow:_queriedRow toDatabase:databaseName];
+        
+        if (saved) {
+            [self showDisplayMode];
+        }
+        
     } else if ([action isEqualToString:@"edit"]) {
         // TODO Add switch to edit mode
         NSLog(@"Editing point");
         
         if (self.isInEditMode == NO) {
             [self showEditMode];
-            self.isInEditMode = YES;
         } else {
             [self showDisplayMode];
-            self.isInEditMode = NO;
         }
     } else if ([action isEqualToString:@"cancel"]) {
         NSLog(@"Canceling point edit");
@@ -214,6 +250,12 @@
         } else {
             [self showDisplayMode];
             self.isInEditMode = NO;
+        }
+    } else if ([action isEqualToString:@"delete"]) {
+        NSString *databaseName = [self.mapPoint.data valueForKey:@"database"];
+        int rowsDeleted = [_mapPointDataDelegate deleteRow:_queriedRow fromDatabase:databaseName andRemoveMapPoint:_mapPoint];
+        if (rowsDeleted > 0) {
+            [self.drawerViewDelegate popDrawer];
         }
     }
 }

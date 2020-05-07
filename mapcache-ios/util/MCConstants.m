@@ -190,6 +190,7 @@ NSString * const GPKGS_ACTION_DELETE = @"action_delete";
 NSString * const GPKGS_ACTION_SHARE = @"action_share";
 NSString * const GPKGS_ACTION_NEW_LAYER = @"action_new_layer";
 NSString * const GPKGS_ACTION_NEW_FEATURE_LAYER = @"action_new_feature_layer";
+NSString * const NGA_DRAWER_VIEW_SPACE_FROM_TOP = @"nga_drawer_view_space_from_top";
 
 @implementation MCConstants
 

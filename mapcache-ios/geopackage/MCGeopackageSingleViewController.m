@@ -15,6 +15,7 @@
 @property (nonatomic, strong) UIDocumentInteractionController *shareDocumentController;
 @property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic) BOOL haveScrolled;
+@property (nonatomic) CGFloat contentOffset;
 @end
 
 @implementation MCGeopackageSingleViewController
@@ -28,24 +29,28 @@
     CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
     self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    self.tableView.estimatedRowHeight = 390.0;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.estimatedRowHeight = 141.0;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.contentOffset = 0;
+    
     [self registerCellTypes];
     [self initCellArray];
+    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
-    //self.automaticallyAdjustsScrollViewInsets = NO;
-    
+    self.automaticallyAdjustsScrollViewInsets = NO;
+
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
     self.haveScrolled = NO;
+    [self addAndConstrainSubview:self.tableView];
     
-    [self.view addSubview:self.tableView];
+    //[self.view addSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
 }
@@ -146,8 +151,21 @@
 
 
 - (void) closeDrawer {
+    [super closeDrawer];
     [self.drawerViewDelegate popDrawer];
     [self.delegate callCompletionHandler];
+}
+
+
+- (void) drawerWasCollapsed {
+    [super drawerWasCollapsed];
+    [self.tableView setScrollEnabled:NO];
+}
+
+
+- (void) drawerWasMadeFull {
+    [super drawerWasMadeFull];
+    [self.tableView setScrollEnabled:YES];
 }
 
 
@@ -381,6 +399,7 @@
     
     return false;
 }
+
 
 // Override this method to make the drawer and the scrollview play nice
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

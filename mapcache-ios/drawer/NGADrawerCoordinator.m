@@ -68,7 +68,8 @@
     _width = self.backgroundViewController.view.frame.size.width;
     
     // The height of the screen minus the bit at the top where the map shows through
-    childViewController.view.frame = CGRectMake(0, CGRectGetMaxY(self.backgroundViewController.view.frame), _width, CGRectGetMaxY(self.backgroundViewController.view.frame) - 160);
+    int heightFromTop = [[MCProperties getNumberValueOfProperty:@"nga_drawer_view_space_from_top"] intValue];
+    childViewController.view.frame = CGRectMake(0, CGRectGetMaxY(self.backgroundViewController.view.frame), _width, CGRectGetMaxY(self.backgroundViewController.view.frame) - heightFromTop);
 }
 
 

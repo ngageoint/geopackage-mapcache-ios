@@ -47,8 +47,10 @@
 @property (nonatomic, strong) NSMutableArray *tempMapPoints;
 
 - (int)updateInBackgroundWithZoom: (BOOL) zoom;
+-(int) updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter;
 - (void)zoomToPointWithOffset:(CLLocationCoordinate2D) point;
 - (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;
 - (void)toggleMapControls;
 - (void)clearTempPoints;
+- (void) removeMapPoint:(GPKGMapPoint *) mapPoint;
 @end

@@ -64,7 +64,8 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 #pragma mark - MCMapDelegate methods
 - (void) updateMapLayers {
     NSLog(@"In MapCoordinator, going to update layers");
-    [self.mcMapViewController updateInBackgroundWithZoom:NO];
+    //[self.mcMapViewController updateInBackgroundWithZoom:NO];
+    [self.mcMapViewController updateInBackgroundWithZoom:NO andFilter:YES];
 }
 
 
@@ -191,10 +192,19 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 
 #pragma mark - MCMapPointDataDelegate
-- (BOOL)saveRow:(GPKGUserRow *)row {
-    // TODO implement save
+- (BOOL)saveRow:(GPKGUserRow *)row toDatabase:(NSString *)database{
+    return [_repository saveRow:row toDatabase:database];
+}
+
+
+- (int)deleteRow:(GPKGUserRow *)row fromDatabase:(NSString *)database andRemoveMapPoint:(nonnull GPKGMapPoint *)mapPoint {
+    int rowsRemoved = [_repository deleteRow:row fromDatabase:database];
     
-    return YES;
+    if (rowsRemoved == 1) {
+        [self.mcMapViewController removeMapPoint:mapPoint];
+    }
+    
+    return rowsRemoved;
 }
 
 

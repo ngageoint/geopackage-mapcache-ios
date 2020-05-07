@@ -190,6 +190,7 @@ extern NSString * const GPKGS_ACTION_DELETE;
 extern NSString * const GPKGS_ACTION_SHARE;
 extern NSString * const GPKGS_ACTION_NEW_LAYER;
 extern NSString * const GPKGS_ACTION_NEW_FEATURE_LAYER;
+extern NSString * const NGA_DRAWER_VIEW_SPACE_FROM_TOP;
 
 @interface MCConstants : NSObject
 

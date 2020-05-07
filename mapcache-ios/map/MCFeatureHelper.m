@@ -102,8 +102,8 @@
         NSMutableSet * featureTableDaos = [[NSMutableSet alloc] init];
         NSArray * features = [database getFeatures];
         if([features count] > 0){
-            for(MCTable * features in [database getFeatures]){
-                [featureTableDaos addObject:features.name];
+            for(MCTable * featureTable in features){
+                [featureTableDaos addObject:featureTable.name];
             }
         }
         
@@ -177,7 +177,6 @@
             GPKGStyleCache *styleCache = [[GPKGStyleCache alloc] initWithGeoPackage:geoPackage];
             
             for(NSString * features in databaseFeatures){
-                
                 if([[self.featureDaos objectForKey:databaseName] objectForKey:features] != nil){
                     
                     self.featureCount = [self displayFeaturesWithId:featureUpdateId andGeoPackage:geoPackage andStyleCache:styleCache andFeatures:features andCount:self.featureCount andMaxFeatures:maxFeatures andEditable:NO andMapViewBoundingBox:mapViewBoundingBox andToleranceDistance:toleranceDistance andFilter:filter];
@@ -208,7 +207,6 @@
     GPKGFeatureDao * featureDao = [[self.featureDaos objectForKey:database] objectForKey:features];
     NSString * tableName = featureDao.tableName;
     GPKGMapShapeConverter * converter = [[GPKGMapShapeConverter alloc] initWithProjection:featureDao.projection];
-    
     [converter setSimplifyToleranceAsDouble:toleranceDistance];
     
     if(![[styleCache featureStyleExtension] hasWithTable:features]){
@@ -218,14 +216,11 @@
     count += [self.featureShapes featureIdsCountInDatabase:database withTable:tableName];
     
     if(![self featureUpdateCanceled:updateId] && count < maxFeatures){
-        
         SFPProjection *mapViewProjection = [SFPProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
-        
         NSArray<NSString *> *columns = [featureDao idAndGeometryColumnNames];
-        
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+        
         if(filter && [indexer isIndexed]){
-            
             GPKGFeatureIndexResults *indexResults = [indexer queryWithColumns:columns andBoundingBox:mapViewBoundingBox inProjection:mapViewProjection];
             GPKGBoundingBox *complementary = [mapViewBoundingBox complementaryWgs84];
             if(complementary != nil){
@@ -258,10 +253,13 @@
                 while(![self featureUpdateCanceled:updateId] && count < maxFeatures && [results moveToNext]){
                     @try {
                         GPKGFeatureRow * row = [featureDao featureRow:results];
-                        GPKGMapShape *shape = [self processFeatureRow:row WithDatabase:database andTableName:tableName andConverter:converter andStyleCache:styleCache andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:filterBoundingBox andFilterMaxLongitude:filterMaxLongitude andFilter:filter];
                         
-                        if (shape != nil && count++ < maxFeatures) {
-                            [self.featureHelperDelegate addShapeToMapView:shape withCount:count];
+                        if (![self.featureShapes existsWithFeatureId:[row id] inDatabase:database withTable:[row tableName]]) {
+                            GPKGMapShape *shape = [self processFeatureRow:row WithDatabase:database andTableName:tableName andConverter:converter andStyleCache:styleCache andCount:count andMaxFeatures:maxFeatures andEditable:editable andFilterBoundingBox:filterBoundingBox andFilterMaxLongitude:filterMaxLongitude andFilter:filter];
+                            
+                            if (shape != nil && count++ < maxFeatures) {
+                                [self.featureHelperDelegate addShapeToMapView:shape withCount:count];
+                            }
                         }
                     } @catch (NSException *exception) {
                         NSLog(@"Failed to display feature. database: %@, feature table: %@, error: %@", database, features, [exception description]);

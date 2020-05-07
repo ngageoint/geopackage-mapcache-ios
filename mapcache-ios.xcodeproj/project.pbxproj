@@ -71,7 +71,6 @@
 		E300A93623313DCE002336A0 /* MCBoundingBoxGuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = E300A93523313DCE002336A0 /* MCBoundingBoxGuideView.m */; };
 		E300A93923315B9D002336A0 /* MCBoundingBoxPassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = E300A93823315B9D002336A0 /* MCBoundingBoxPassthroughView.m */; };
 		E307AD5A23C52AE200771D29 /* MCTileServerHelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E307AD5923C52AE200771D29 /* MCTileServerHelpViewController.m */; };
-		E308FBC11FBE400500348577 /* MCSingleGeoPackageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E308FBC01FBE400500348577 /* MCSingleGeoPackageView.xib */; };
 		E308FBC61FBFA7CA00348577 /* MCHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E308FBC51FBFA7CA00348577 /* MCHeaderCell.m */; };
 		E3100EAF203CAF1E00FFA56E /* MCZoomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */; };
 		E312A3381FAA416500C088FB /* MCDownloadCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E312A3371FAA416500C088FB /* MCDownloadCoordinator.m */; };
@@ -307,7 +306,6 @@
 		E300A93823315B9D002336A0 /* MCBoundingBoxPassthroughView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCBoundingBoxPassthroughView.m; sourceTree = "<group>"; };
 		E307AD5823C52AE200771D29 /* MCTileServerHelpViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCTileServerHelpViewController.h; sourceTree = "<group>"; };
 		E307AD5923C52AE200771D29 /* MCTileServerHelpViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTileServerHelpViewController.m; sourceTree = "<group>"; };
-		E308FBC01FBE400500348577 /* MCSingleGeoPackageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCSingleGeoPackageView.xib; sourceTree = "<group>"; };
 		E308FBC41FBFA7CA00348577 /* MCHeaderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCHeaderCell.h; sourceTree = "<group>"; };
 		E308FBC51FBFA7CA00348577 /* MCHeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCHeaderCell.m; sourceTree = "<group>"; };
 		E3100EAE203CAF1E00FFA56E /* MCZoomCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCZoomCell.xib; sourceTree = "<group>"; };
@@ -825,7 +823,6 @@
 				E3A651A92003DDE800B8AB27 /* NewLayerWizard */,
 				E3A4920C1FA9885B00FFE613 /* MCDownloadGeopackage.xib */,
 				E3FB85752134A9D8002F012E /* MCGeoPackageList.xib */,
-				E308FBC01FBE400500348577 /* MCSingleGeoPackageView.xib */,
 				E3FB857021349C31002F012E /* MCMapView.xib */,
 				E3500E5F22B455C800164ABF /* MCDisclaimerView.xib */,
 				E300A93223313D77002336A0 /* MCBoundingBoxGuideView.xib */,
@@ -1090,7 +1087,6 @@
 				E3A651AB2003E1B700B8AB27 /* MCCreateLayerView.xib in Resources */,
 				E3CF687423DA5FF20005A6EF /* MCTextViewCell.xib in Resources */,
 				E31BD62D244E2E2600C18609 /* MCKeyValueDisplayCell.xib in Resources */,
-				E308FBC11FBE400500348577 /* MCSingleGeoPackageView.xib in Resources */,
 				040136861AF94FB200C92AFC /* LaunchScreen.xib in Resources */,
 				E33F55721FC4A1C000F252FD /* MCSectionTitleCell.xib in Resources */,
 				E3FB85782134A9E4002F012E /* MCGeoPackageCell.xib in Resources */,

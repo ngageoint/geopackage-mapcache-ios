@@ -28,9 +28,10 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     [super viewDidLoad];
     
     self.haveScrolled = NO;
-    CGRect bounds = self.view.bounds;
-    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
-    self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
+//    CGRect bounds = self.view.bounds;
+//    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
+    //self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] init];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -41,13 +42,14 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     [self registerCellTypes];
     [self initCellArray];
     
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.extendedLayoutIncludesOpaqueBars = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
-    self.tableView.contentInset = tabBarInsets;
-    self.tableView.scrollIndicatorInsets = tabBarInsets;
-    [self.view addSubview:self.tableView];
+//    self.edgesForExtendedLayout = UIRectEdgeNone;
+//    self.extendedLayoutIncludesOpaqueBars = NO;
+//    self.automaticallyAdjustsScrollViewInsets = NO;
+//    UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
+//    self.tableView.contentInset = tabBarInsets;
+//    self.tableView.scrollIndicatorInsets = tabBarInsets;
+    //[self.view addSubview:self.tableView];
+    [self addAndConstrainSubview:self.tableView];
     
     [self addDragHandle];
     [self addCloseButton];
