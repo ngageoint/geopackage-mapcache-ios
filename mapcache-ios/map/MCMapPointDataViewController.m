@@ -1,4 +1,4 @@
-//
+ //
 //  MCMapPointDataViewController.m
 //  mapcache-ios
 //
@@ -15,7 +15,6 @@
 @property (nonatomic, strong) MCFieldWithTitleCell *titleCell;
 @property (nonatomic, strong) MCTextViewCell *descriptionCell;
 @property (nonatomic, strong) MCDualButtonCell *buttonsCell;
-@property (nonatomic, strong) GPKGUserRow *queriedRow;
 @end
 
 @implementation MCMapPointDataViewController
@@ -110,6 +109,7 @@
     }
     
     MCButtonCell *buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
+    [buttonCell usePrimaryColors];
     buttonCell.delegate = self;
     [buttonCell setAction:@"edit"];
     [buttonCell setButtonLabel:@"Edit"];
@@ -170,6 +170,13 @@
     [_tableView reloadData];
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     self.isInEditMode = YES;
+}
+
+
+- (void)reloadWith:(GPKGUserRow *)row mapPoint:(GPKGMapPoint *)mapPoint {
+    self.queriedRow = row;
+    self.mapPoint = mapPoint;
+    [self showDisplayMode];
 }
 
 
@@ -264,6 +271,7 @@
 #pragma mark - NGADrawerView methods
 - (void) closeDrawer {
     [self.drawerViewDelegate popDrawer];
+    [self.mapPointDataDelegate mapPointDataViewClosed];
 }
 
 

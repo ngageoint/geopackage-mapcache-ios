@@ -145,8 +145,13 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 - (void)showDetailsForAnnotation:(GPKGMapPoint *)mapPoint {
     GPKGSMapPointData *pointData = (GPKGSMapPointData *)mapPoint.data;
     GPKGUserRow *userRow = [_repository queryRow:pointData.featureId fromTableNamed:pointData.tableName inDatabase:pointData.database];
-    _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:userRow asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
-    [_drawerViewDelegate pushDrawer:_mapPointDataViewController];
+    
+    if (_mapPointDataViewController == nil) {
+        _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:userRow asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+        [_drawerViewDelegate pushDrawer:_mapPointDataViewController];
+    } else {
+        [_mapPointDataViewController reloadWith:userRow mapPoint:mapPoint];
+    }
 }
 
 
@@ -205,6 +210,13 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     }
     
     return rowsRemoved;
+}
+
+
+- (void)mapPointDataViewClosed {
+    [self.mcMapViewController.mapView deselectAnnotation:_mapPointDataViewController.mapPoint animated:YES];
+    _mapPointDataViewController = nil;
+    // TODO remove annotation popup from the map point
 }
 
 

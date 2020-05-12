@@ -23,12 +23,15 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol MCMapPointDataDelegate <NSObject>
 - (BOOL)saveRow:(GPKGUserRow *)row toDatabase:(NSString *)database;
 - (int)deleteRow:(GPKGUserRow *)row fromDatabase:(NSString *)database andRemoveMapPoint:(GPKGMapPoint *)mapPoint;
+- (void)mapPointDataViewClosed;
 @end
 
 @interface MCMapPointDataViewController : NGADrawerViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, MCDualButtonCellDelegate, MCButtonCellDelegate>
 @property (nonatomic, strong) id<MCMapPointDataDelegate>mapPointDataDelegate;
 @property (nonatomic, strong) GPKGMapPoint *mapPoint;
+@property (nonatomic, strong) GPKGUserRow *queriedRow;
 @property (nonatomic) BOOL isInEditMode;
+- (void)reloadWith:(GPKGUserRow *)row mapPoint:(GPKGMapPoint *)mapPoint;
 - (instancetype) initWithMapPoint:(GPKGMapPoint *)mapPoint row:(GPKGUserRow *)row asFullView:(BOOL)fullView drawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate pointDataDelegate:(id<MCMapPointDataDelegate>) pointDataDelegate;
 @end
 

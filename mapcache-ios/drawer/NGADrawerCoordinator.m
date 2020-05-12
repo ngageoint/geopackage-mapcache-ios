@@ -44,6 +44,10 @@
 
 
 #pragma mark - NGADrawerViewDelegate methods
+/**
+    Handle state once a drawer finishes it's animation.
+    This hides the drawers behind the top drawer so if you swipe the view down you see the map not the next drawer down in the stack.
+ */
 - (void) drawerAddAnimationComplete: (NGADrawerViewController *) viewController {
     if (_drawerStack.count > 1) {
         NGADrawerViewController *currentTopDrawer = [_drawerStack objectAtIndex:_drawerStack.count -2];
@@ -53,6 +57,9 @@
 }
 
 
+/**
+    Add a new frawer to the stack.
+ */
 - (void) pushDrawer:(NGADrawerViewController *) childViewController {
     if ([_drawerStack count] > 0) {
         NGADrawerViewController *drawer = [_drawerStack lastObject];
@@ -73,7 +80,9 @@
 }
 
 
-
+/**
+    Remove the top drawer from the stack.
+ */
 - (void) popDrawer {
     if ([_drawerStack count] > 1) {
         NGADrawerViewController *oldTopDrawer = [_drawerStack objectAtIndex:_drawerStack.count -1];
@@ -86,6 +95,10 @@
 }
 
 
+/**
+    Remove the top drawer from the stack and hide the new top drawer.
+    Used in cases where you need to see the whole map such as the new tile layer bounding box.
+ */
 - (void) popDrawerAndHide {
     if ([_drawerStack count] > 1) {
         NGADrawerViewController *oldTopDrawer = [_drawerStack objectAtIndex:_drawerStack.count -1];
@@ -98,12 +111,27 @@
 }
 
 
+/**
+    Set the top drawer to be visible and animate it to show it's full view.
+ */
 - (void) showTopDrawer {
     if ([_drawerStack count] > 1) {
         NGADrawerViewController *topDrawer = [_drawerStack objectAtIndex:_drawerStack.count - 1];
         [topDrawer makeFullView];
         [topDrawer.view setHidden:NO];
     }
+}
+
+
+/**
+    Get the top drawer of the drawer stack.
+ */
+- (NGADrawerViewController *)topDrawer {
+    if (self.drawerStack.count > 0) {
+        return [self.drawerStack objectAtIndex:self.drawerStack.count -1];
+    }
+    
+    return nil;
 }
 
 @end

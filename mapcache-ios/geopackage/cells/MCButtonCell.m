@@ -32,6 +32,13 @@
 }
 
 
+- (void) usePrimaryColors {
+    [self.button setBackgroundColor:[UIColor colorWithRed:79.0/255.0 green:188.0/255.0 blue:194.0/255.0 alpha:1.0]];
+    self.button.clipsToBounds = YES;
+    [self.button setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
+}
+
+
 - (void) useSecondaryColors {
     [self.button setBackgroundColor:[UIColor clearColor]];
     self.button.clipsToBounds = YES;
