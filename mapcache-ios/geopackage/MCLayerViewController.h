@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NGADrawerViewController.h"
 #import "GPKGUserDao.h"
 #import "GPKGFeatureDao.h"
 #import "GPKGTileDao.h"
@@ -15,14 +16,21 @@
 #import "MCButtonCell.h"
 #import "MCSectionTitleCell.h"
 #import "MCHeaderCell.h"
+#import "MCLayerCell.h"
 #import "MCUtils.h"
 #import "MCProperties.h"
 #import <GPKGGeoPackageManager.h>
 #import <SFPProjectionTransform.h>
 #import "MCFeatureLayerOperationsCell.h"
 #import "MCTileLayerOperationsCell.h"
+#import "MCDescriptionCell.h"
+#import "MCTitleCell.h"
 #import "SFPProjectionConstants.h"
 #import "GPKGOverlayFactory.h"
+#import "MCTable.h"
+#import "MCTileTable.h"
+#import "MCFeatureTable.h"
+
 
 @protocol MCLayerOperationsDelegate <NSObject>
 - (void) deleteLayer;
@@ -34,7 +42,9 @@
 @end
 
 
-@interface MCLayerViewController : UITableViewController <MCFeatureLayerOperationsCellDelegate, MCTileLayerOperationsCellDelegate>
+@interface MCLayerViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, MCFeatureLayerOperationsCellDelegate, MCTileLayerOperationsCellDelegate, MCButtonCellDelegate>
 @property (strong, nonatomic) GPKGUserDao *layerDao;
+@property (strong, nonatomic) MCTable* table;
+@property (strong, nonatomic) NSArray *columns;
 @property (weak, nonatomic) id<MCLayerOperationsDelegate> delegate;
 @end

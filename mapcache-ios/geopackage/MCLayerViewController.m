@@ -10,9 +10,13 @@
 
 @interface MCLayerViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
-@property (strong, nonatomic) GPKGFeatureDao *featureDao;
 @property (strong, nonatomic) GPKGTileDao *tileDao;
+@property (strong, nonatomic) MCFeatureTable *featureTable;
+@property (strong, nonatomic) MCTileTable *tileTable;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
+@property (strong, nonatomic) UITableView *tableView;
+@property (nonatomic) BOOL haveScrolled;
+@property (nonatomic) CGFloat contentOffset;
 @end
 
 @implementation MCLayerViewController
@@ -20,20 +24,29 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if ([_layerDao isKindOfClass:GPKGFeatureDao.class]) {
-        _featureDao = (GPKGFeatureDao *) _layerDao;
-        _tileDao = nil;
-    } else if ([_layerDao isKindOfClass:GPKGTileDao.class]) {
-        _tileDao = (GPKGTileDao *) _layerDao;
-        _featureDao = nil;
+    if ([self.table isKindOfClass:MCTileTable.class]) {
+        self.tileTable = (MCTileTable *) self.table;
+    } else if ([self.table isKindOfClass:MCFeatureTable.class]) {
+        self.featureTable = (MCFeatureTable *) self.table;
     }
+    
+    if ([_layerDao isKindOfClass:GPKGTileDao.class]) {
+        _tileDao = (GPKGTileDao *) _layerDao;
+    }
+    
+    CGRect bounds = self.view.bounds;
+    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
+    self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.estimatedRowHeight = 141.0;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
     
     [self registerCellTypes];
     [self initCellArray];
-    
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.allowsMultipleSelection = NO;
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
@@ -42,12 +55,11 @@
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self addAndConstrainSubview:self.tableView];
+    [self addDragHandle];
+    [self addCloseButton];
+    self.contentOffset = 0;
+    self.haveScrolled = NO;
 }
 
 
@@ -55,42 +67,80 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCHeaderCellDisplay" bundle:nil] forCellReuseIdentifier:@"header"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCFeatureLayerOperationsCell" bundle:nil] forCellReuseIdentifier:@"featureButtons"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCTileLayerOperationsCell" bundle:nil] forCellReuseIdentifier:@"tileButtons"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCLayerCell" bundle: nil] forCellReuseIdentifier:@"field"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle: nil] forCellReuseIdentifier:@"button"];
 }
 
 
 - (void) initCellArray {
-    if ([_cellArray count] > 0) {
-        [_cellArray removeAllObjects];
-    }
+    _cellArray = [[NSMutableArray alloc] init];
     
     MCHeaderCell *headerCell = [self.tableView dequeueReusableCellWithIdentifier:@"header"];
-    headerCell.nameLabel.text = _layerDao.tableName;
+    headerCell.nameLabel.text = self.table.name;
     
-    GPKGBoundingBox *layerBoundingBox;
-    SFPProjectionTransform *transformToWebMercator;
-    
-    if (_featureDao != nil) {
+    if (_featureTable != nil) {
+        [headerCell setDetailLabelOneText:[NSString stringWithFormat:@"feature layer in %@", _featureTable.database]];
+        [headerCell setDetailLabelTwoText:[NSString stringWithFormat:@"%d features", _featureTable.count]];
+        [headerCell setDetailLabelThreeText:@""];
+        [_cellArray addObject:headerCell];
+        
         MCFeatureLayerOperationsCell *featureButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"featureButtons"];
         featureButtonsCell.delegate = self;
-        layerBoundingBox = [_layerDao boundingBox];
-        headerCell.featureDao = _featureDao;
-        transformToWebMercator = [[SFPProjectionTransform alloc] initWithFromProjection:_featureDao.projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
-        _cellArray = [[NSMutableArray alloc] initWithObjects:headerCell, featureButtonsCell, nil];
-    } else if (_tileDao != nil) {
+        [_cellArray addObject:featureButtonsCell];
+        
+        MCDescriptionCell *featureAddDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+        [featureAddDescription setDescription:@"Long press the map to add points to this layer."];
+        [featureAddDescription textAlignCenter];
+        [_cellArray addObject:featureAddDescription];
+        
+        MCTitleCell *fieldsTitle = [self.tableView dequeueReusableCellWithIdentifier:@"title"];
+        [fieldsTitle setLabelText:@"Fields"];
+        [_cellArray addObject:fieldsTitle];
+        
+        MCButtonCell *addFieldsButton = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
+        [addFieldsButton setButtonLabel:@"Add fields"];
+        addFieldsButton.action = @"add-fields";
+        addFieldsButton.delegate = self;
+        [_cellArray addObject:addFieldsButton];
+        
+        if (self.columns.count == 2) {
+            
+        }
+        
+        for (GPKGUserColumn *column in self.columns) {
+            if (![column.name isEqualToString:@"id"] && ![column.name isEqualToString:@"geom"]) {
+                MCLayerCell *fieldCell = [self.tableView dequeueReusableCellWithIdentifier:@"field"];
+                [fieldCell setName:column.name];
+                [fieldCell setDetails:column.type];
+                [fieldCell activeIndicatorOff];
+                
+                if (column.dataType == GPKG_DT_TEXT) {
+                    [fieldCell.layerTypeImage setImage:[UIImage imageNamed:@"text"]];
+                } else if (column.dataType == GPKG_DT_INTEGER || column.dataType == GPKG_DT_REAL) {
+                    [fieldCell.layerTypeImage setImage:[UIImage imageNamed:@"number"]];
+                }
+                
+                [_cellArray addObject:fieldCell];
+            }
+        }
+        
+    } else if (_tileTable != nil) {
         MCTileLayerOperationsCell *tileButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileButtons"];
+        [headerCell setDetailLabelOneText: [NSString stringWithFormat:@"tile layer in %@", _tileTable.database]];
+        [headerCell setDetailLabelTwoText: [NSString stringWithFormat:@"Zoom levels %d - %d",  _tileTable.minZoom, _tileTable.maxZoom]];
+        [headerCell setDetailLabelThreeText:[NSString stringWithFormat:@"%d tiles", _tileTable.count]];
         tileButtonsCell.delegate = self;
-        layerBoundingBox = [_tileDao boundingBoxWithZoomLevel:_tileDao.minZoom];
-        transformToWebMercator = [[SFPProjectionTransform alloc] initWithFromProjection:_tileDao.projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
-        headerCell.tileOverlay = [GPKGOverlayFactory tileOverlayWithTileDao:_tileDao];
         _cellArray = [[NSMutableArray alloc] initWithObjects:headerCell, tileButtonsCell, nil];
     }
     
-    if (layerBoundingBox != nil) {
+    /*if (layerBoundingBox != nil) {
         GPKGBoundingBox *webMercatorBoundingBox = [layerBoundingBox transform:transformToWebMercator];
         SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
         layerBoundingBox = [webMercatorBoundingBox transform:transform];
         // [headerCell.mapView setRegion:layerBoundingBox.getCoordinateRegion]; // TODO sort this out for the new map
-    }
+    }*/
 }
 
 
@@ -180,34 +230,44 @@
 
 
 #pragma mark - MCFeatureLayerOperationsCellDelegate methods
+// TODO pass these up to be done in the repository
 - (void) renameFeatureLayer {
     NSLog(@"MCLayerOperationsDelegate editLayer");
-    [self renameLayer: _featureDao];
+    //[self renameLayer: _featureDao];
 }
 
 
 - (void) indexFeatures {
     NSLog(@"MCLayerOperationsDelegate indexLayer");
-    [_delegate indexLayer];
+    //[_delegate indexLayer];
 }
 
 
 - (void) createTiles {
     NSLog(@"MCLayerOperationsDelegate createTiles");
-    [_delegate createTiles];
+    //[_delegate createTiles];
 }
 
 
 - (void) createOverlay {
     NSLog(@"MCLayerOperationsDelegate createOverlay");
-    [_delegate createOverlay];
+    //[_delegate createOverlay];
 }
 
 
 - (void) deleteFeatureLayer {
-    NSLog(@"MCFeatureButtonsCellDelegate deleteLayer %@", _featureDao.tableName);
+    NSLog(@"MCFeatureButtonsCellDelegate deleteLayer %@", _table.name);
     [self deleteLayer];
     
+}
+
+
+#pragma mark - MCButtonCellDelegate methods
+- (void)performButtonAction:(NSString *)action {
+    if ([action isEqualToString:@"add-fields"]) {
+        // TODO show field creation view
+        NSLog(@"show create fields view");
+    }
 }
 
 
@@ -220,13 +280,62 @@
 
 - (void) showScalingOptions {
     NSLog(@"MCTileButtonsDelegate showScalingOptions");
-    [_delegate showTileScalingOptions];
+    //[_delegate showTileScalingOptions];
 }
 
 
 - (void) deleteTileLayer {
     NSLog(@"MCTileButtonsDelegate deleteTileLayer");
     [self deleteLayer];
+}
+
+
+- (void)closeDrawer {
+    [self.drawerViewDelegate popDrawer];
+}
+
+
+- (void) drawerWasCollapsed {
+    [super drawerWasCollapsed];
+    [self.tableView setScrollEnabled:NO];
+}
+
+
+- (void) drawerWasMadeFull {
+    [super drawerWasMadeFull];
+    [self.tableView setScrollEnabled:YES];
+}
+
+
+- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
+    CGPoint point = [recognizer locationInView:self.view];
+    
+    if (CGRectContainsPoint(self.tableView.frame, point)) {
+        return true;
+    }
+    
+    return false;
+}
+
+
+// Override this method to make the drawer and the scrollview play nice
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.haveScrolled) {
+        [self rollUpPanGesture:scrollView.panGestureRecognizer withScrollView:scrollView];
+    }
+}
+
+
+// If the table view is scrolling rollup the gesture to the drawer and handle accordingly.
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.haveScrolled = YES;
+    
+    if (!self.isFullView) {
+        scrollView.scrollEnabled = NO;
+        scrollView.scrollEnabled = YES;
+    } else {
+        scrollView.scrollEnabled = YES;
+    }
 }
 
 

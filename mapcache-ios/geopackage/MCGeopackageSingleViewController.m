@@ -86,9 +86,8 @@
     MCSectionTitleCell *layersTitleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
     layersTitleCell.sectionTitleLabel.text = @"Layers";
 
-    // TODO: Convert new layer wizard to work with drawer system for a future release
     MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
-    [newLayerButtonCell.button setTitle:@"New Layer" forState:UIControlStateNormal];
+    [newLayerButtonCell.button setTitle:@"Download an offline map" forState:UIControlStateNormal];
     newLayerButtonCell.action = GPKGS_ACTION_NEW_LAYER;
     newLayerButtonCell.delegate = self;
     
@@ -195,22 +194,11 @@
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     
-    // TODO add layer details view
-    /*if([cellObject isKindOfClass:[MCLayerCell class]]){
+    
+    if([cellObject isKindOfClass:[MCLayerCell class]]){
         layerCell = (MCLayerCell *) cellObject;
-        NSString *layerName = layerCell.layerNameLabel.text;
-        GPKGGeoPackage *geoPackage = [_manager open:_database.name];
-        
-        if ([geoPackage isFeatureTable:layerName]) {
-            GPKGFeatureDao *featureDao =  [geoPackage getFeatureDaoWithTableName:layerName];
-            [_delegate showLayerDetails:featureDao];
-            [geoPackage close];
-        } else if ([geoPackage isTileTable:layerName]) {
-            GPKGTileDao *tileDao =  [geoPackage getTileDaoWithTableName:layerName];
-            [_delegate showLayerDetails:tileDao];
-            [geoPackage close];
-        }
-    }*/
+        [_delegate showLayerDetails:layerCell.table];
+    }
 }
 
 
@@ -240,8 +228,8 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        MCLayerCell *cell = [_cellArray objectAtIndex:indexPath.row];
-        [_delegate deleteLayer:cell.table];
+        MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
+        [self.delegate deleteLayer:cell.table];
         completionHandler(YES);
     }];
     
@@ -421,7 +409,7 @@
 }
 
 
-/* Chekcing */
+/* Checking */
 - (void)alertTextFieldDidChange:(UITextField *)sender
 {
     UIAlertController *alertController = (UIAlertController *)self.presentedViewController;

@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (GPKGUserRow *)queryRow:(int)rowId fromTableNamed:(NSString *)tableName inDatabase:(NSString *)databaseName;
 - (BOOL)saveRow:(GPKGUserRow *)row toDatabase:(NSString *)databaseName;
 - (int)deleteRow:(GPKGUserRow *)featureRow fromDatabase:(NSString *)databaseName;
+- (NSArray *)columnsForTable:(MCTable *) table;
 @end
 
 NS_ASSUME_NONNULL_END

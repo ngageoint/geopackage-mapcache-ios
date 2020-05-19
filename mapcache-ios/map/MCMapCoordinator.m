@@ -23,6 +23,8 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 @property (nonatomic, strong) MCMapPointDataViewController *mapPointDataViewController;
 @property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureLayerDetailsView;
 @property (nonatomic, strong) MCGeoPackageRepository *repository;
+@property (nonatomic, strong) NSString *selectedGeoPacakge;
+@property (nonatomic, strong) NSString *selectedLayer;
 @end
 
 
@@ -42,7 +44,6 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 
 - (void) loadPreferences {
-    
     [self.preferences stringForKey:MC_MAP_TYPE_PREFERENCE];
     [self.preferences integerForKey:MC_MAX_FEATURES_PREFERENCE];
     // check for a map prefenrence, if there isnt one, use the standard map
@@ -62,9 +63,11 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 
 #pragma mark - MCMapDelegate methods
+/**
+    Update the data on the map.
+ */
 - (void) updateMapLayers {
     NSLog(@"In MapCoordinator, going to update layers");
-    //[self.mcMapViewController updateInBackgroundWithZoom:NO];
     [self.mcMapViewController updateInBackgroundWithZoom:NO andFilter:YES];
 }
 
@@ -74,6 +77,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+/**
+    React to a GeoPackage being selected from the list. Set the map region to have the selected GeoPackage in view.
+ */
 - (void)zoomToSelectedGeoPackage:(NSString *)geoPackageName {
     GPKGGeoPackage *geoPackage = [self.manager open:geoPackageName];
     GPKGBoundingBox *boundingBox = [geoPackage contentsBoundingBoxInProjection:[SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
@@ -87,6 +93,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+/**
+    Get the map view ready to select an area where you would like to download tiles.
+ */
 - (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView {
     self.boundingBoxGuideView = boudingBoxGuideView;
     self.boundingBoxGuideView.alpha = 0.0;
@@ -100,6 +109,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+/**
+    Clear the tile drawing bounding box and bring back the drawer and map controls.
+ */
 - (void) removeTileBoundingBoxGuide {
     if  (self.boundingBoxGuideView != nil) {
         
@@ -118,7 +130,26 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+/**
+    Called when a GeoPackage is selected from the list. If the user long presses on the map, this will be the GeoPackage a new point will be created in but the user will need to select a layer.
+ */
+-(void)updateSelectedGeoPackage:(NSString *)geoPacakgeName {
+    self.selectedGeoPacakge = geoPacakgeName;
+}
+
+
+/**
+    Called when a layer is selected in a GeoPackage. When a user long presses on the map, the selected layer and GeoPacakge will be used to save any features the user creates.
+ */
+-(void)updateSelectedLayer:(NSString *)layerName {
+    self.selectedLayer = layerName;
+}
+
+
 #pragma mark - MCMapActionDelegate
+/**
+    When the info button on the map is pressed show the info/settings drawer.
+ */
 - (void)showMapInfoDrawer {
     MCSettingsCoordinator *settingsCoordinator = [[MCSettingsCoordinator alloc] init];
     [self.childCoordinators addObject:settingsCoordinator];
@@ -128,6 +159,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+/**
+    When the user long presses on the map, show the drawing tools.
+ */
 - (void)showDrawingTools {
     _drawingStatusViewController = [[MCDrawingStatusViewController alloc] init];
     _drawingStatusViewController.drawerViewDelegate = _drawerViewDelegate;
@@ -137,11 +171,18 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+/**
+    Update the status label on the drawing tools view. This will show the number of points that will be added.
+ */
 - (void)updateDrawingStatus {
     [_drawingStatusViewController updateStatusLabelWithString:[NSString stringWithFormat:@"%d new points", (int)self.mcMapViewController.tempMapPoints.count]];
 }
 
 
+/**
+    A map point was pressed, Query the GeoPackage's feature table for that row and show the details view. By default there are two columns, id and geom. If threre are additional columns they will be shown in this view.
+    If the drawer was already displaying data from another point, pass the data to the drawer and it will reload and update.
+ */
 - (void)showDetailsForAnnotation:(GPKGMapPoint *)mapPoint {
     GPKGSMapPointData *pointData = (GPKGSMapPointData *)mapPoint.data;
     GPKGUserRow *userRow = [_repository queryRow:pointData.featureId fromTableNamed:pointData.tableName inDatabase:pointData.database];
@@ -156,6 +197,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 
 #pragma mark - MCDrawingStatusDelegate methods
+/**
+    The user has long pressed and added one or more points to the map, and gone through the drawing status wizard that lets them choose where to save the points, ask the repository to save the points to the selected GeoPackage and table.
+ */
 - (BOOL)savePointsToDatabase:(MCDatabase *)database andTable:(MCTable *) table {
     if (self.mcMapViewController.tempMapPoints && self.mcMapViewController.tempMapPoints.count > 0) {
         if ([_repository savePoints:self.mcMapViewController.tempMapPoints toDatabase:database table:table]) {
@@ -171,6 +215,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+/**
+    Show the view that allows the user to create a new GeoPackage. This can happen from the map when the user has long pressed to create new points, and would like to save them to a new geopackage.
+ */
 - (void)showNewGeoPacakgeView {
     MCCreateGeoPacakgeViewController *createGeoPackageView = [[MCCreateGeoPacakgeViewController alloc] initAsFullView:YES];
     createGeoPackageView.drawerViewDelegate = self.drawerViewDelegate;
@@ -179,6 +226,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+/**
+    Show the new layer view. This can happen when the user is going to save new points and would like to save them to a new layer.
+ */
 - (void)showNewLayerViewWithDatabase:(MCDatabase *)database {
     _featureLayerDetailsView = [[MCFeatureLayerDetailsViewController alloc] initAsFullView:YES];
     _featureLayerDetailsView.delegate = self;
@@ -189,6 +239,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+/**
+    Cancel adding new points. Clean up the map and remove the drawing status view.
+ */
 - (void)cancelDrawingFeatures {
     [_mcMapViewController setDrawing:NO];
     [_mcMapViewController clearTempPoints];
@@ -197,11 +250,17 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 
 #pragma mark - MCMapPointDataDelegate
+/**
+    Save the data from a map point, which is a row in a geopackage feature table.
+ */
 - (BOOL)saveRow:(GPKGUserRow *)row toDatabase:(NSString *)database{
     return [_repository saveRow:row toDatabase:database];
 }
 
 
+/**
+    Delete the row (map point) from the GeoPackage's feature table.
+ */
 - (int)deleteRow:(GPKGUserRow *)row fromDatabase:(NSString *)database andRemoveMapPoint:(nonnull GPKGMapPoint *)mapPoint {
     int rowsRemoved = [_repository deleteRow:row fromDatabase:database];
     
@@ -213,14 +272,19 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+/**
+    The user has closed the map point details. Setting the drawer to nil cleans it up so a new drawer can be used next time a point is tapped.
+ */
 - (void)mapPointDataViewClosed {
     [self.mcMapViewController.mapView deselectAnnotation:_mapPointDataViewController.mapPoint animated:YES];
     _mapPointDataViewController = nil;
-    // TODO remove annotation popup from the map point
 }
 
 
 #pragma mark - MCFeatureLayerCreationDelegate methods
+/**
+    Add a new feature layer to the GeoPackage.
+ */
 - (void) createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId {
     NSLog(@"creating layer %@ in database %@ ", geometryColumns.tableName, database);
 
@@ -237,6 +301,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 
 #pragma mark - MCCreateGeoPackageDelegate methods
+/**
+    When the user is creating a new GeoPackage check to make sure the name is not already in use or invalid.
+ */
 - (BOOL) isValidGeoPackageName:(NSString *) name {
     NSArray *databaseNames = [self.manager databases];
     
@@ -254,13 +321,15 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+/**
+    Create a new GeoPackage.
+ */
 - (void) createGeoPackage:(NSString *) geoPackageName {
     NSLog(@"Creating GeoPackage %@", geoPackageName);
     [_repository createGeoPackage:geoPackageName];
     [_repository regenerateDatabaseList];
     [_drawingStatusViewController refreshViewWithNewGeoPackageList:[_repository databaseList]];
 }
-
 
 
 -(CLLocationCoordinate2D *) getPolygonPointsWithPoint1: (CLLocationCoordinate2D) point1 andPoint2: (CLLocationCoordinate2D) point2{

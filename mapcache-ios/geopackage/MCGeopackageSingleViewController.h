@@ -31,7 +31,7 @@
 - (void) copyGeoPackage;
 - (void) callCompletionHandler;
 - (void) deleteLayer:(MCTable *) table;
-- (void) showLayerDetails:(GPKGUserDao *) layerDao;
+- (void) showLayerDetails:(MCTable *) table;
 - (void) toggleLayer:(MCTable *) table;
 - (void) updateDatabase;
 @end

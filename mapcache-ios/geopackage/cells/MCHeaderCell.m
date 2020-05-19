@@ -23,4 +23,26 @@
     [super setSelected:selected animated:animated];
 }
 
+
+- (void)setNameLabelText:(NSString *) text {
+    [self.nameLabel setText:text];
+}
+
+
+- (void)setDetailLabelOneText:(NSString *) text {
+    [self.detailLabelOne setText:text];
+}
+
+
+- (void)setDetailLabelTwoText:(NSString *) text {
+    [self.detailLabelTwo setText:text];
+}
+
+
+- (void)setDetailLabelThreeText:(NSString *) text {
+    [self.detailLabelThree setText:text];
+}
+
+
+
 @end

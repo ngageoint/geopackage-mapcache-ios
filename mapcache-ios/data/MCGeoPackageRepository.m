@@ -18,7 +18,9 @@ static MCGeoPackageRepository *sharedRepository;
 
 
 @implementation MCGeoPackageRepository
-
+/**
+    This class is a singleton.
+ */
 + (MCGeoPackageRepository *) sharedRepository {
     if (sharedRepository == nil) {
         sharedRepository = [[self alloc] init];
@@ -39,6 +41,9 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
+/**
+    Get an array of the available GeoPackage databases.
+ */
 - (NSMutableArray *)databaseList {
     return _databaseList;
 }
@@ -109,6 +114,10 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
+/**
+  Get a  database by name.
+  @return the database you were looking for
+ */
 - (MCDatabase *)databseNamed:(NSString *)databaseName {
     for (MCDatabase *database in _databaseList) {
         if ([database.name isEqualToString:databaseName]) {
@@ -120,6 +129,13 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
+/**
+ Check to see if the database has a table with a specific name.
+ @param database The MCDatabase you want to search.
+ @param tableName The table you are looking for
+ @return a boolean, yes if the table was found, no if it was not.
+ @return
+ */
 - (BOOL)database:(MCDatabase *) database containsTableNamed:(NSString *) tableName {
     return [database hasTableNamed:tableName];
 }
@@ -215,12 +231,21 @@ static MCGeoPackageRepository *sharedRepository;
 
 
 - (GPKGUserRow *)queryRow:(int)rowId fromTableNamed:(NSString *)tableName inDatabase:(NSString *)databaseName {
-    GPKGGeoPackage *geoPacakge = [_manager open:databaseName];
-    GPKGFeatureDao* featureDao = [geoPacakge featureDaoWithTableName:tableName];
+    GPKGUserRow *userRow = nil;
+    GPKGGeoPackage *geoPackage = [_manager open:databaseName];
     
-    GPKGUserRow* userRow = [featureDao queryForIdRow:rowId];
-    
-    return userRow;
+    @try {
+        GPKGFeatureDao* featureDao = [geoPackage featureDaoWithTableName:tableName];
+        userRow = [featureDao queryForIdRow:rowId];
+    } @catch(NSException *e) {
+        NSLog(@"Problem querying row: %@", e.reason);
+    } @finally {
+        if (geoPackage != nil) {
+            [geoPackage close];
+        }
+        
+        return userRow;
+    }
 }
 
 
@@ -264,5 +289,26 @@ static MCGeoPackageRepository *sharedRepository;
         return rowsDeleted;
     }
 }
+
+
+- (NSArray *)columnsForTable:(MCTable *) table {
+    NSArray *columns = nil;
+    GPKGGeoPackage *geoPackage = [_manager open:table.database];
+    
+    @try {
+        GPKGFeatureDao* featureDao = [geoPackage featureDaoWithTableName:table.name];
+        columns = [featureDao columns];
+    } @catch(NSException *e) {
+        NSLog(@"Problem querying row: %@", e.reason);
+    } @finally {
+        if (geoPackage != nil) {
+            [geoPackage close];
+        }
+        
+        return columns;
+    }
+}
+
+
 
 @end

@@ -200,9 +200,23 @@
 }
 
 
-- (void) showLayerDetails:(GPKGUserDao *) layerDao {
-    NSLog(@"In showLayerDetails with %@", layerDao.tableName);
-    // TODO: Update to show the layerDetailsView in a drawer
+- (void) showLayerDetails:(MCTable *) table {
+    NSLog(@"In showLayerDetails with %@", table.name);
+    
+    GPKGGeoPackage *geoPackage = [_manager open:table.database];
+    MCLayerViewController *layerViewController = [[MCLayerViewController alloc] initAsFullView:YES];
+    layerViewController.drawerViewDelegate = _drawerDelegate;
+    layerViewController.table = table;
+    
+    if ([table isKindOfClass:MCTileTable.class]) {
+        GPKGTileDao *tileDao = [geoPackage tileDaoWithTableName:table.name];
+        layerViewController.layerDao = tileDao;
+    } else if ([table isKindOfClass:MCFeatureTable.class]) {
+        layerViewController.columns = [_repository columnsForTable:table];
+    }
+    
+    [layerViewController.drawerViewDelegate pushDrawer:layerViewController];
+    [self.mapDelegate updateSelectedLayer:table.name];
 }
 
 

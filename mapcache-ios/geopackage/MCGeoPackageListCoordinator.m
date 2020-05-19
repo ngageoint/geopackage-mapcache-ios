@@ -60,6 +60,7 @@
     _geoPackageCoordinator = [[MCGeoPackageCoordinator alloc] initWithDelegate:self andDrawerDelegate:_drawerViewDelegate andMapDelegate:self.mcMapDelegate andDatabase:database];
     [_childCoordinators addObject:_geoPackageCoordinator];
     [_geoPackageCoordinator start];
+    [self.mcMapDelegate updateSelectedGeoPackage:database.name];
     [self.mcMapDelegate zoomToSelectedGeoPackage:database.name];
 }
 
