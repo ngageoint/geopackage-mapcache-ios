@@ -29,12 +29,13 @@
 - (void) removeDrawerFromSuperview;
 - (void) addDragHandle;
 - (void) addCloseButton;
-- (void)addAndConstrainSubview:(UIView *) view;
+- (void) addAndConstrainSubview:(UIView *) view;
 - (void) closeDrawer;
 - (void) drawerWasCollapsed;
 - (void) drawerWasMadeFull;
 - (void) slideDown;
-- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer;
+- (BOOL) gestureIsInConflict:(UIPanGestureRecognizer *) recognizer;
 - (void) panGesture:(UIPanGestureRecognizer *) recognizer;
 - (void) rollUpPanGesture:(UIPanGestureRecognizer *) recognizer withScrollView:(UIScrollView *) scrollView;
+- (void) pushOntoStack;
 @end

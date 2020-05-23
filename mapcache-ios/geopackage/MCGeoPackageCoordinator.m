@@ -7,6 +7,7 @@
 //
 
 #import "MCGeoPackageCoordinator.h"
+#import "mapcache_ios-Swift.h"
 
 
 @interface MCGeoPackageCoordinator()
@@ -15,7 +16,6 @@
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerDelegate;
 @property (nonatomic, strong) id<MCMapDelegate> mapDelegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureDetailsController;
 @property (nonatomic, strong) MCTileLayerDetailsViewController *tileDetailsController;
 @property (nonatomic, strong) MCBoundingBoxGuideView *boundingBoxGuideViewController;
@@ -202,21 +202,13 @@
 
 - (void) showLayerDetails:(MCTable *) table {
     NSLog(@"In showLayerDetails with %@", table.name);
+    _repository.selectedLayerName = table.name;
     
-    GPKGGeoPackage *geoPackage = [_manager open:table.database];
-    MCLayerViewController *layerViewController = [[MCLayerViewController alloc] initAsFullView:YES];
-    layerViewController.drawerViewDelegate = _drawerDelegate;
-    layerViewController.table = table;
+    MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerDelegate];
+    [self.childCoordinators addObject:layerCoordinator];
+    [layerCoordinator start];
     
-    if ([table isKindOfClass:MCTileTable.class]) {
-        GPKGTileDao *tileDao = [geoPackage tileDaoWithTableName:table.name];
-        layerViewController.layerDao = tileDao;
-    } else if ([table isKindOfClass:MCFeatureTable.class]) {
-        layerViewController.columns = [_repository columnsForTable:table];
-    }
     
-    [layerViewController.drawerViewDelegate pushDrawer:layerViewController];
-    [self.mapDelegate updateSelectedLayer:table.name];
 }
 
 
@@ -386,9 +378,6 @@
     
     return [NSString stringWithFormat: @"Continue to donwload %d tiles for min zoom %@ and max zoom %@.", count, minZoom, maxZoom];
 }
-
-
-
 
 
 - (void) cancelZoomAndQuality {

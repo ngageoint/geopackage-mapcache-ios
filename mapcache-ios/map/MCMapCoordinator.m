@@ -23,8 +23,6 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 @property (nonatomic, strong) MCMapPointDataViewController *mapPointDataViewController;
 @property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureLayerDetailsView;
 @property (nonatomic, strong) MCGeoPackageRepository *repository;
-@property (nonatomic, strong) NSString *selectedGeoPacakge;
-@property (nonatomic, strong) NSString *selectedLayer;
 @end
 
 
@@ -130,22 +128,6 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
-/**
-    Called when a GeoPackage is selected from the list. If the user long presses on the map, this will be the GeoPackage a new point will be created in but the user will need to select a layer.
- */
--(void)updateSelectedGeoPackage:(NSString *)geoPacakgeName {
-    self.selectedGeoPacakge = geoPacakgeName;
-}
-
-
-/**
-    Called when a layer is selected in a GeoPackage. When a user long presses on the map, the selected layer and GeoPacakge will be used to save any features the user creates.
- */
--(void)updateSelectedLayer:(NSString *)layerName {
-    self.selectedLayer = layerName;
-}
-
-
 #pragma mark - MCMapActionDelegate
 /**
     When the info button on the map is pressed show the info/settings drawer.
@@ -163,6 +145,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     When the user long presses on the map, show the drawing tools.
  */
 - (void)showDrawingTools {
+    
+    
+    
     _drawingStatusViewController = [[MCDrawingStatusViewController alloc] init];
     _drawingStatusViewController.drawerViewDelegate = _drawerViewDelegate;
     _drawingStatusViewController.drawingStatusDelegate = self;

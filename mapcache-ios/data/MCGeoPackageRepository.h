@@ -24,6 +24,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MCGeoPackageRepository : NSObject
+@property (nonatomic, strong) NSString *selectedGeoPackageName;
+@property (nonatomic, strong) NSString *selectedLayerName;
+
 + (MCGeoPackageRepository *) sharedRepository;
 - (NSMutableArray *)databaseList;
 - (NSMutableArray *)regenerateDatabaseList;
@@ -38,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)saveRow:(GPKGUserRow *)row toDatabase:(NSString *)databaseName;
 - (int)deleteRow:(GPKGUserRow *)featureRow fromDatabase:(NSString *)databaseName;
 - (NSArray *)columnsForTable:(MCTable *) table;
+- (BOOL)addColumn:(GPKGFeatureColumn *)featureColumn to:(MCTable *)table;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -60,7 +60,7 @@
     _geoPackageCoordinator = [[MCGeoPackageCoordinator alloc] initWithDelegate:self andDrawerDelegate:_drawerViewDelegate andMapDelegate:self.mcMapDelegate andDatabase:database];
     [_childCoordinators addObject:_geoPackageCoordinator];
     [_geoPackageCoordinator start];
-    [self.mcMapDelegate updateSelectedGeoPackage:database.name];
+    _repository.selectedGeoPackageName = database.name;
     [self.mcMapDelegate zoomToSelectedGeoPackage:database.name];
 }
 
@@ -153,6 +153,7 @@
         [self.manager delete:database];
     }
     
+    _repository.selectedGeoPackageName = nil;
     _databases = [_repository regenerateDatabaseList];
     self.geoPackageListView.geoPackages = self.databases;
     [self.geoPackageListView.tableView reloadData];

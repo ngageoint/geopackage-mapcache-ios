@@ -29,8 +29,6 @@
 - (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView;
 - (void) removeTileBoundingBoxGuide;
 - (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;
-- (void) updateSelectedGeoPackage:(NSString *)geoPacakgeName;
-- (void) updateSelectedLayer:(NSString *)layerName;
 @end
 
 

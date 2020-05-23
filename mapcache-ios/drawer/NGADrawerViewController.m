@@ -241,6 +241,11 @@
 }
 
 
+- (void) pushOntoStack {
+    [self.drawerViewDelegate pushDrawer:self];
+}
+
+
 /**
     Called when the close button is pressed. Override in subclasses to perform any work needed before removing the drwer from the stack.
  */

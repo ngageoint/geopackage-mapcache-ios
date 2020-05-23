@@ -88,7 +88,7 @@
             MCKeyValueDisplayCell *displayCell = [self.tableView dequeueReusableCellWithIdentifier:@"keyValue"];
             
             if (_queriedRow.columns.columns[i].dataType == GPKG_DT_TEXT) {
-                if (!_queriedRow.values[i] || [_queriedRow.values[i] isEqualToString:@""]) {
+                if (!_queriedRow.values[i] || [_queriedRow.values[i] isKindOfClass:NSNull.class] || [_queriedRow.values[i] isEqualToString:@""]) {
                     [displayCell setValueLabelText:@"none"];
                 } else {
                     [displayCell setValueLabelText: _queriedRow.values[i]];
@@ -146,7 +146,10 @@
                 [fieldWithTitle setTextFielDelegate:self];
                 
                 if (_queriedRow.columns.columns[i].dataType == GPKG_DT_TEXT) {
-                    [fieldWithTitle setFieldText:_queriedRow.values[i]];
+                    if (![_queriedRow.values[i] isKindOfClass:NSNull.class]) {
+                        [fieldWithTitle setFieldText:_queriedRow.values[i]];
+                    }
+                    
                     [fieldWithTitle useReturnKeyDone];
                     [_cellArray addObject:fieldWithTitle];
                 } else if (_queriedRow.columns.columns[i].dataType == GPKG_DT_INTEGER || _queriedRow.columns.columns[i].dataType == GPKG_DT_REAL) {

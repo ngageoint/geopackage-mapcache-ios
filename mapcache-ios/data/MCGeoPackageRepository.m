@@ -310,5 +310,23 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
+- (BOOL)addColumn:(GPKGFeatureColumn *)featureColumn to:(MCTable *)table {
+    BOOL didAdd = YES;
+    GPKGGeoPackage *geoPackage = [_manager open:table.database];
+    
+    @try {
+        GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:table.name];
+        [featureDao addColumn:featureColumn];
+    } @catch(NSException *e) {
+        NSLog(@"Problem creating column %@ in %@ table in %@", featureColumn.name, table.name, table.database);
+        didAdd = NO;
+    } @finally {
+        if (geoPackage != nil) {
+            [geoPackage close];
+        }
+    }
+    
+    return didAdd;
+}
 
 @end

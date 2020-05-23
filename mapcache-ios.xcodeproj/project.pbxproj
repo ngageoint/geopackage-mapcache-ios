@@ -76,7 +76,6 @@
 		E312A3381FAA416500C088FB /* MCDownloadCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E312A3371FAA416500C088FB /* MCDownloadCoordinator.m */; };
 		E31BD62D244E2E2600C18609 /* MCKeyValueDisplayCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E31BD62C244E2E2600C18609 /* MCKeyValueDisplayCell.xib */; };
 		E31BD630244E340300C18609 /* MCKeyValueDisplayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E31BD62F244E340300C18609 /* MCKeyValueDisplayCell.m */; };
-		E331C8ED20FE7645006EFED1 /* MCLayerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E331C8EC20FE7645006EFED1 /* MCLayerCoordinator.m */; };
 		E331C8F0210110B3006EFED1 /* MCTileLayerOperationsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E331C8EF210110B3006EFED1 /* MCTileLayerOperationsCell.m */; };
 		E33F55721FC4A1C000F252FD /* MCSectionTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33F55711FC4A1C000F252FD /* MCSectionTitleCell.xib */; };
 		E33F55751FC4A25500F252FD /* MCSectionTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33F55741FC4A25500F252FD /* MCSectionTitleCell.m */; };
@@ -112,7 +111,6 @@
 		E35B631121BC26F9004E5BB0 /* MCTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E35B631021BC26F9004E5BB0 /* MCTitleCell.m */; };
 		E35F316221EE7FC2001B720F /* privacypolicy in Resources */ = {isa = PBXBuildFile; fileRef = E35F316121EE7FC2001B720F /* privacypolicy */; };
 		E35F316521EFEC7E001B720F /* MCNoticeAndAttributionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35F316421EFEC7E001B720F /* MCNoticeAndAttributionViewController.m */; };
-		E363F53B20EC24B200BBF91A /* MCLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E363F53A20EC24B200BBF91A /* MCLayerViewController.m */; };
 		E363F54320EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E363F54220EFD5A700BBF91A /* MCFeatureLayerOperationsCell.xib */; };
 		E363F54520F0177700BBF91A /* MCTileLayerOperationsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E363F54420F0177700BBF91A /* MCTileLayerOperationsCell.xib */; };
 		E36D2DCE2017BFBE0097A8DE /* MCPickerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E36D2DCD2017BFBE0097A8DE /* MCPickerViewCell.xib */; };
@@ -126,6 +124,8 @@
 		E3A651AD2004407600B8AB27 /* MCFieldWithTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A651AC2004407600B8AB27 /* MCFieldWithTitleCell.xib */; };
 		E3A651B0200563AF00B8AB27 /* MCTileLayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651AF200563AF00B8AB27 /* MCTileLayerDetailsViewController.m */; };
 		E3A651B32005652400B8AB27 /* MCFieldWithTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A651B22005652400B8AB27 /* MCFieldWithTitleCell.m */; };
+		E3B7DD502475F1ED00215EF5 /* MCCreateLayerFieldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B7DD4C2475F1EB00215EF5 /* MCCreateLayerFieldViewController.swift */; };
+		E3B7DD512475F1ED00215EF5 /* MCLayerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B7DD4E2475F1EC00215EF5 /* MCLayerCoordinator.swift */; };
 		E3B9753B1FB3DED400E33E0A /* MCHeaderCellDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3B9753A1FB3DED400E33E0A /* MCHeaderCellDisplay.xib */; };
 		E3BED1E0219116FA001AF654 /* MCSettingsCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3BED1DF219116FA001AF654 /* MCSettingsCoordinator.m */; };
 		E3BED1E321911712001AF654 /* MCSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3BED1E221911712001AF654 /* MCSettingsViewController.m */; };
@@ -140,6 +140,7 @@
 		E3DE0DEA23E2420D00CB27AF /* UITextView+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DE0DE923E2420D00CB27AF /* UITextView+Validators.m */; };
 		E3DE0DED23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DE0DEC23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m */; };
 		E3E9ED6923EA407E004C4530 /* mapcache_iosUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E9ED6823EA407E004C4530 /* mapcache_iosUITests.m */; };
+		E3F9A99C2475F52400DFD043 /* MCLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3B7DD4F2475F1EC00215EF5 /* MCLayerViewController.m */; };
 		E3FB856B2134955F002F012E /* NGADrawerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB85682134955D002F012E /* NGADrawerCoordinator.m */; };
 		E3FB856C2134955F002F012E /* NGADrawerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB85692134955D002F012E /* NGADrawerViewController.m */; };
 		E3FB856F21349B5E002F012E /* MCMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB856E21349B5E002F012E /* MCMapViewController.m */; };
@@ -395,6 +396,11 @@
 		E3A651AF200563AF00B8AB27 /* MCTileLayerDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTileLayerDetailsViewController.m; sourceTree = "<group>"; };
 		E3A651B12005652400B8AB27 /* MCFieldWithTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCFieldWithTitleCell.h; sourceTree = "<group>"; };
 		E3A651B22005652400B8AB27 /* MCFieldWithTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCFieldWithTitleCell.m; sourceTree = "<group>"; };
+		E3B7DD4A2475F1E900215EF5 /* mapcache-ios-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mapcache-ios-Bridging-Header.h"; sourceTree = "<group>"; };
+		E3B7DD4C2475F1EB00215EF5 /* MCCreateLayerFieldViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCCreateLayerFieldViewController.swift; sourceTree = "<group>"; };
+		E3B7DD4D2475F1EB00215EF5 /* MCLayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCLayerViewController.h; sourceTree = "<group>"; };
+		E3B7DD4E2475F1EC00215EF5 /* MCLayerCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCLayerCoordinator.swift; sourceTree = "<group>"; };
+		E3B7DD4F2475F1EC00215EF5 /* MCLayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCLayerViewController.m; sourceTree = "<group>"; };
 		E3B9753A1FB3DED400E33E0A /* MCHeaderCellDisplay.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCHeaderCellDisplay.xib; sourceTree = "<group>"; };
 		E3BED1DE219116FA001AF654 /* MCSettingsCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCSettingsCoordinator.h; sourceTree = "<group>"; };
 		E3BED1DF219116FA001AF654 /* MCSettingsCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCSettingsCoordinator.m; sourceTree = "<group>"; };
@@ -921,6 +927,11 @@
 		E3E3846024352E6000DB7471 /* layer */ = {
 			isa = PBXGroup;
 			children = (
+				E3B7DD4A2475F1E900215EF5 /* mapcache-ios-Bridging-Header.h */,
+				E3B7DD4C2475F1EB00215EF5 /* MCCreateLayerFieldViewController.swift */,
+				E3B7DD4E2475F1EC00215EF5 /* MCLayerCoordinator.swift */,
+				E3B7DD4D2475F1EB00215EF5 /* MCLayerViewController.h */,
+				E3B7DD4F2475F1EC00215EF5 /* MCLayerViewController.m */,
 			);
 			path = layer;
 			sourceTree = "<group>";
@@ -1025,6 +1036,7 @@
 					0401366E1AF94FB200C92AFC = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = ZL8G5D9G2H;
+						LastSwiftMigration = 1140;
 					};
 					0401368A1AF94FB200C92AFC = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -1160,6 +1172,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3F9A99C2475F52400DFD043 /* MCLayerViewController.m in Sources */,
 				E3D651D3240D90340082FF10 /* MCGeoPackageRepository.m in Sources */,
 				04E1D8CD1B66814A002BD947 /* GPKGSManagerLoadTilesViewController.m in Sources */,
 				E354EEDE2006BB9500B062BE /* MCDescriptionCell.m in Sources */,
@@ -1167,6 +1180,7 @@
 				04E0EE0E1B691AD10095E53E /* GPKGSManagerEditTileOverlayViewController.m in Sources */,
 				E36D2DD12017C0A70097A8DE /* MCPickerViewCell.m in Sources */,
 				E308FBC61FBFA7CA00348577 /* MCHeaderCell.m in Sources */,
+				E3B7DD502475F1ED00215EF5 /* MCCreateLayerFieldViewController.swift in Sources */,
 				043A458B1B7E21E3001B8FC5 /* GPKGSMapPointData.m in Sources */,
 				E331C8F0210110B3006EFED1 /* MCTileLayerOperationsCell.m in Sources */,
 				E3FB856F21349B5E002F012E /* MCMapViewController.m in Sources */,
@@ -1193,6 +1207,7 @@
 				E3A651B32005652400B8AB27 /* MCFieldWithTitleCell.m in Sources */,
 				04E0EE0B1B691A3C0095E53E /* GPKGSEditTileOverlayData.m in Sources */,
 				045C94891B5026E00005CCD0 /* MCDatabases.m in Sources */,
+				E3B7DD512475F1ED00215EF5 /* MCLayerCoordinator.swift in Sources */,
 				044D6B4B1B627B0000527745 /* MCLoadTilesTask.m in Sources */,
 				E3FB856C2134955F002F012E /* NGADrawerViewController.m in Sources */,
 				04CCC8681B6114EE0001296D /* GPKGSGenerateTilesData.m in Sources */,
@@ -1208,7 +1223,6 @@
 				E354EEE320091BCD00B062BE /* MCFeatureLayerDetailsViewController.m in Sources */,
 				E33F557A1FC4FF1E00F252FD /* MCLayerCell.m in Sources */,
 				E3A492051FA952F200FFE613 /* MCGeoPackageCoordinator.m in Sources */,
-				E363F53B20EC24B200BBF91A /* MCLayerViewController.m in Sources */,
 				0446481E1B4C26DF0052913B /* MCConstants.m in Sources */,
 				E3FB85742134A9B5002F012E /* MCGeoPackageList.m in Sources */,
 				E3A651A82003DDC800B8AB27 /* MCCreateLayerViewController.m in Sources */,
@@ -1225,7 +1239,6 @@
 				04CCC85F1B60225C0001296D /* GPKGSKeyboardConstraint.m in Sources */,
 				040136781AF94FB200C92AFC /* AppDelegate.m in Sources */,
 				04E1D8D01B66D366002BD947 /* GPKGSEditContentsViewController.m in Sources */,
-				E331C8ED20FE7645006EFED1 /* MCLayerCoordinator.m in Sources */,
 				E3500E6322B4653B00164ABF /* MCDisclaimerViewController.m in Sources */,
 				044648021B4AF4250052913B /* MCTableTypes.m in Sources */,
 				E35F316521EFEC7E001B720F /* MCNoticeAndAttributionViewController.m in Sources */,
@@ -1432,6 +1445,7 @@
 			baseConfigurationReference = C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 35;
@@ -1445,6 +1459,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.mapcache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "mapcache-ios/layer/mapcache-ios-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1454,6 +1471,7 @@
 			baseConfigurationReference = 317A64B2FA9FC9C408272041 /* Pods-mapcache-ios.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 35;
@@ -1466,6 +1484,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.mapcache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "mapcache-ios/layer/mapcache-ios-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -1473,6 +1493,7 @@
 		040136991AF94FB200C92AFC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -1493,6 +1514,7 @@
 		0401369A1AF94FB200C92AFC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -1509,6 +1531,7 @@
 		E3E9ED6E23EA407E004C4530 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1534,6 +1557,7 @@
 		E3E9ED6F23EA407E004C4530 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
