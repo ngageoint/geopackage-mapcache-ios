@@ -63,6 +63,12 @@
 }
 
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.delegate setSelectedLayerName];
+}
+
+
 - (void) registerCellTypes {
     [self.tableView registerNib:[UINib nibWithNibName:@"MCHeaderCellDisplay" bundle:nil] forCellReuseIdentifier:@"header"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCFeatureLayerOperationsCell" bundle:nil] forCellReuseIdentifier:@"featureButtons"];
@@ -100,7 +106,7 @@
         [_cellArray addObject:fieldsTitle];
         
         MCButtonCell *addFieldsButton = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
-        [addFieldsButton setButtonLabel:@"Add fields"];
+        [addFieldsButton setButtonLabel:@"Add a field"];
         addFieldsButton.action = @"add-fields";
         addFieldsButton.delegate = self;
         [_cellArray addObject:addFieldsButton];
@@ -146,6 +152,12 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+
+- (void) update {
+    [self initCellArray];
+    [self.tableView reloadData];
 }
 
 

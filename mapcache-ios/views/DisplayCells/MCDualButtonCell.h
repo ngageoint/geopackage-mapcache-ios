@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)enableLeftButton;
 - (void)enableRightButton;
 - (void)disableLeftButton;
-- (void)dissableRightButton;
+- (void)disableRightButton;
 - (void)disableButtons;
 - (void)enableButtons;
 @end

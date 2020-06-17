@@ -56,6 +56,12 @@
 }
 
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.delegate setSelectedDatabaseName];
+}
+
+
 - (void) didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -73,28 +79,54 @@
     headerCell.detailLabelOne.text = [self.manager readableSize:_database.name]; // TODO look into threading this
     
     NSInteger tileCount = [_database getTileCount];
-    NSString *tileText = tileCount == 1 ? @"tile layer" : @"tile layers";
+    NSString *tileText = tileCount == 1 ? @"offline map" : @"offline maps";
     headerCell.detailLabelTwo.text = [NSString stringWithFormat:@"%ld %@", tileCount, tileText];
     
     NSInteger featureCount = [_database getFeatureCount];
-    NSString *featureText = featureCount == 1 ? @"feature layer" : @"feature layers";
+    NSString *featureText = featureCount == 1 ? @"location collection" : @"location collections";
     headerCell.detailLabelThree.text = [NSString stringWithFormat:@"%ld %@", featureCount, featureText];
     
     MCGeoPackageOperationsCell *geoPackageOperationsCell = [self.tableView dequeueReusableCellWithIdentifier:@"operations"];
     geoPackageOperationsCell.delegate = self;
     
+    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, nil];
+    
+    MCSectionTitleCell *offlineMapsTitleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
+    offlineMapsTitleCell.sectionTitleLabel.text = @"Offline Maps";
+    [_cellArray addObject:offlineMapsTitleCell];
+    
+    MCButtonCell *newOfflineMapButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
+    [newOfflineMapButtonCell.button setTitle:@"Download an offline map" forState:UIControlStateNormal];
+    newOfflineMapButtonCell.action = GPKGS_ACTION_NEW_LAYER;
+    newOfflineMapButtonCell.delegate = self;
+    [_cellArray addObject: newOfflineMapButtonCell];
+    
+    NSArray *tileTables = [_database getTiles];
+    for (MCTable *table in tileTables) {
+        MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
+        [layerCell setContentsWithTable:table];
+        
+        if ([_active exists:table]) {
+            [layerCell activeIndicatorOn];
+        } else {
+            [layerCell activeIndicatorOff];
+        }
+        
+        [_cellArray addObject:layerCell];
+    }
+    
     MCSectionTitleCell *layersTitleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
-    layersTitleCell.sectionTitleLabel.text = @"Layers";
-
+    layersTitleCell.sectionTitleLabel.text = @"Location Collections";
+    [_cellArray addObject:layersTitleCell];
+    
     MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
-    [newLayerButtonCell.button setTitle:@"Download an offline map" forState:UIControlStateNormal];
-    newLayerButtonCell.action = GPKGS_ACTION_NEW_LAYER;
+    [newLayerButtonCell.button setTitle:@"New collection" forState:UIControlStateNormal];
+    newLayerButtonCell.action = @"new-collection";
     newLayerButtonCell.delegate = self;
+    [_cellArray addObject:newLayerButtonCell];
     
-    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, layersTitleCell, newLayerButtonCell, nil];
-    NSArray *tables = [_database getTables];
-    
-    for (MCTable *table in tables) {
+    NSArray *featureTables = [_database getFeatures];
+    for (MCTable *table in featureTables) {
         MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
         [layerCell setContentsWithTable:table];
         
@@ -369,11 +401,12 @@
 
 
 - (void)performButtonAction:(NSString *) action {
-    NSLog(@"Button pressed, checking action...");
+    NSLog(@"Button pressed, handling action %@", action);
     
     if ([action isEqualToString:GPKGS_ACTION_NEW_LAYER]) {
-        NSLog(@"Button pressed, handling action %@", action);
-        [_delegate newLayer];
+        [_delegate newTileLayer];
+    } else if ([action isEqualToString:@"new-collection"]) {
+        [_delegate newFeatureLayer];
     }
 }
 

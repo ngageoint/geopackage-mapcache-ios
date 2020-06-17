@@ -41,10 +41,12 @@
 - (void) showTileScalingOptions;
 - (void) showFieldCreationView;
 - (void) layerViewDidClose;
+- (void) setSelectedLayerName;
 @end
 
 
 @interface MCLayerViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, MCFeatureLayerOperationsCellDelegate, MCTileLayerOperationsCellDelegate, MCButtonCellDelegate>
+- (void) update;
 @property (strong, nonatomic) GPKGUserDao *layerDao;
 @property (strong, nonatomic) MCTable* table;
 @property (strong, nonatomic) NSArray *columns;

@@ -29,8 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (MCGeoPackageRepository *) sharedRepository;
 - (NSMutableArray *)databaseList;
+- (MCDatabases *)activeDatabases;
 - (NSMutableArray *)regenerateDatabaseList;
-- (MCDatabase *)databseNamed:(NSString *)databaseName;
+- (MCDatabase *)databaseNamed:(NSString *)databaseName;
 - (BOOL)exists:(NSString *)geoPackageName;
 - (BOOL)database:(MCDatabase *)database containsTableNamed:(NSString *)tableName;
 - (BOOL)createGeoPackage:(NSString *)geoPackageName;
@@ -38,9 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)savePoints:(NSArray<GPKGMapPoint *> *) points toDatabase:(MCDatabase *) database table:(MCTable *) table;
 - (BOOL)createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns boundingBox:(GPKGBoundingBox *)boundingBox srsId:(NSNumber *) srsId;
 - (GPKGUserRow *)queryRow:(int)rowId fromTableNamed:(NSString *)tableName inDatabase:(NSString *)databaseName;
-- (BOOL)saveRow:(GPKGUserRow *)row toDatabase:(NSString *)databaseName;
+- (BOOL)saveRow:(GPKGUserRow *)row;
+- (GPKGFeatureRow *)newRowInTable:(NSString *) table database:(NSString *)database mapPoint:(GPKGMapPoint *)mapPoint;
 - (int)deleteRow:(GPKGUserRow *)featureRow fromDatabase:(NSString *)databaseName;
-- (NSArray *)columnsForTable:(MCTable *) table;
+- (NSArray *)columnsForTable:(NSString *) table database:(NSString *)database;
 - (BOOL)addColumn:(GPKGFeatureColumn *)featureColumn to:(MCTable *)table;
 @end
 

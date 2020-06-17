@@ -30,7 +30,6 @@
 
 @protocol MCMapActionDelegate <NSObject>
 - (void)showMapInfoDrawer;
-- (void)showDrawingTools;
 - (void)updateDrawingStatus;
 - (void)showDetailsForAnnotation:(GPKGMapPoint *)mapPoint;
 @end
@@ -45,6 +44,7 @@
 @property (nonatomic, strong) id<MCMapActionDelegate> mapActionDelegate;
 @property (nonatomic) BOOL drawing;
 @property (nonatomic, strong) NSMutableArray *tempMapPoints;
+@property (nonatomic, strong) MCDatabases *active;
 
 - (int)updateInBackgroundWithZoom: (BOOL) zoom;
 - (int) updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter;

@@ -49,6 +49,11 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
+- (MCDatabases *)activeDatabases {
+    return _activeDatabases;
+}
+
+
 - (NSMutableArray *)regenerateDatabaseList {
     _databaseList = [[NSMutableArray alloc] init];
     NSArray *databaseNames = [_manager databases];
@@ -118,7 +123,7 @@ static MCGeoPackageRepository *sharedRepository;
   Get a  database by name.
   @return the database you were looking for
  */
-- (MCDatabase *)databseNamed:(NSString *)databaseName {
+- (MCDatabase *)databaseNamed:(NSString *)databaseName {
     for (MCDatabase *database in _databaseList) {
         if ([database.name isEqualToString:databaseName]) {
             return database;
@@ -249,17 +254,45 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
-- (BOOL)saveRow:(GPKGFeatureRow *)featureRow toDatabase:(NSString *)databaseName {
-    GPKGGeoPackage *geoPackage = [_manager open:databaseName];
+- (BOOL)saveRow:(GPKGFeatureRow *)featureRow {
+    GPKGGeoPackage *geoPackage = [_manager open:self.selectedGeoPackageName];
+    GPKGFeatureIndexManager *indexer = nil;
     BOOL saved = YES;
     
     @try {
         GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:featureRow.table.tableName];
-        [featureDao update:featureRow];
+        
+        if (featureRow.values[0] && [featureRow.values[0] isKindOfClass:NSNull.class]) {
+            [featureDao insert:featureRow];
+            indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+            NSArray<NSString *> *indexedTypes = [indexer indexedTypes];
+            
+            if (indexedTypes.count > 0) {
+                [indexer indexWithFeatureRow:featureRow andFeatureIndexTypes:indexedTypes];
+            }
+            
+        } else {
+            [featureDao update:featureRow];
+        }
+        
+        MCDatabase *database = [self databaseNamed:geoPackage.name];
+        MCTable *table = [database tableNamed:featureRow.tableName];
+        
+        if (table != nil) {
+            [_activeDatabases addTable:table];
+        }
+        
+        self.selectedLayerName = @"";
+        self.selectedGeoPackageName = @"";
+        
     } @catch (NSException *e) {
         NSLog(@"Problem while saving point data: %@", e.reason);
         saved = NO;
     } @finally {
+        if (indexer != nil) {
+            [indexer close];
+        }
+        
         if (geoPackage != nil) {
             [geoPackage close];
         }
@@ -267,6 +300,39 @@ static MCGeoPackageRepository *sharedRepository;
         [self regenerateDatabaseList];
         return saved;
     }
+}
+
+
+- (GPKGFeatureRow *)newRowInTable:(NSString *) table database:(NSString *)database mapPoint:(GPKGMapPoint *)mapPoint {
+    GPKGFeatureRow *newRow = nil;
+    GPKGFeatureIndexManager *indexer = nil;
+    GPKGGeoPackage *geoPackage = [_manager open:database];
+    
+    @try {
+        GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:table];
+        newRow = [featureDao newRow];
+        NSNumber *srsId = featureDao.geometryColumns.srsId;
+        indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+        GPKGMapShapeConverter *converter = [[GPKGMapShapeConverter alloc] initWithProjection:featureDao.projection];
+
+        SFPoint *point = [converter toPointWithMapPoint:mapPoint];
+        GPKGGeometryData *pointGeomData = [[GPKGGeometryData alloc] initWithSrsId:srsId];
+        [pointGeomData setGeometry: point];
+        [newRow setGeometry:pointGeomData];
+        
+    } @catch (NSException *e) {
+        NSLog(@"Problem while deleting point data: %@", e.reason);
+        newRow = nil;
+    } @finally {
+        if (geoPackage != nil) {
+            [geoPackage close];
+        }
+        
+        [self regenerateDatabaseList];
+        return newRow;
+    }
+    
+    
 }
 
 
@@ -291,12 +357,12 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
-- (NSArray *)columnsForTable:(MCTable *) table {
+- (NSArray *)columnsForTable:(NSString *) table database:(NSString *)database {
     NSArray *columns = nil;
-    GPKGGeoPackage *geoPackage = [_manager open:table.database];
+    GPKGGeoPackage *geoPackage = [_manager open:database];
     
     @try {
-        GPKGFeatureDao* featureDao = [geoPackage featureDaoWithTableName:table.name];
+        GPKGFeatureDao* featureDao = [geoPackage featureDaoWithTableName:table];
         columns = [featureDao columns];
     } @catch(NSException *e) {
         NSLog(@"Problem querying row: %@", e.reason);

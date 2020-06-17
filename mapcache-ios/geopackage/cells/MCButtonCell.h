@@ -25,5 +25,6 @@
 - (void) usePrimaryColors;
 - (void) useSecondaryColors;
 - (void) useRedColor;
+- (void) useSecondaryRed;
 - (void) setButtonLabel: (NSString *) text;
 @end

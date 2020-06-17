@@ -26,7 +26,8 @@
 
 
 @protocol MCOperationsDelegate <NSObject>
-- (void) newLayer;
+- (void) newTileLayer;
+- (void) newFeatureLayer;
 - (void) deleteGeoPackage;
 - (void) copyGeoPackage;
 - (void) callCompletionHandler;
@@ -34,6 +35,7 @@
 - (void) showLayerDetails:(MCTable *) table;
 - (void) toggleLayer:(MCTable *) table;
 - (void) updateDatabase;
+- (void) setSelectedDatabaseName;
 @end
 
 

@@ -166,6 +166,18 @@
     return NO;
 }
 
+
+- (MCTable *) tableNamed:(NSString *)tableName {
+    for (MCTable* table in [self getTables]) {
+        if ([table.name isEqualToString:tableName]) {
+            return table;
+        }
+    }
+    
+    return nil;
+}
+
+
 -(BOOL) existsWithTable: (NSString *) table ofType: (enum GPKGSTableType) tableType{
     
     BOOL exists = false;

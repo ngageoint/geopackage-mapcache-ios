@@ -46,6 +46,8 @@
 
 - (BOOL) hasTableNamed:(NSString *)tableName;
 
+- (MCTable *) tableNamed:(NSString *)tableName;
+
 -(BOOL) existsWithTable: (NSString *) table ofType: (enum GPKGSTableType) tableType;
 
 -(void) add:(MCTable *) table;

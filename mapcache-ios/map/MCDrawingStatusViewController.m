@@ -80,7 +80,6 @@
 
 - (void)showGeoPackageSelectMode {
     NSMutableArray *switchModeCells = [[NSMutableArray alloc] init];
-    [switchModeCells addObject:[_cellArray objectAtIndex:0]];
     
     _buttonsCell = [_tableView dequeueReusableCellWithIdentifier:@"buttons"];
     _buttonsCell.dualButtonDelegate = self;
@@ -91,7 +90,7 @@
     [switchModeCells addObject:_buttonsCell];
     
     MCDescriptionCell *chooseGeoPackageHelp = [_tableView dequeueReusableCellWithIdentifier:@"description"];
-    [chooseGeoPackageHelp setDescription:@"To save your features, either create a new GeoPackage or select one from below."];
+    [chooseGeoPackageHelp setDescription:@"To save your new point, either create a new GeoPackage or select one from below."];
     [switchModeCells addObject:chooseGeoPackageHelp];
     
     for (MCDatabase *database in _databases) {
@@ -127,6 +126,11 @@
     [_buttonsCell setRightButtonAction:@"new-layer"];
     [layerSelectionModeCells addObject:_buttonsCell];
     
+    MCGeoPackageCell *geoPackageCell = [_tableView dequeueReusableCellWithIdentifier:@"geopackage"];
+    [geoPackageCell setContentWithDatabase:_selectedGeoPackage];
+    [geoPackageCell activeLayersIndicatorOff];
+    [layerSelectionModeCells addObject:geoPackageCell];
+
     MCDescriptionCell *chooselayerHelp = [_tableView dequeueReusableCellWithIdentifier:@"description"];
     [chooselayerHelp setDescription:@"Create a new layer or select one from below."];
     [layerSelectionModeCells addObject:chooselayerHelp];
@@ -192,10 +196,11 @@
     
     if ([cellObject isKindOfClass:[MCGeoPackageCell class]]) {
         _selectedGeoPackage = ((MCGeoPackageCell *)cellObject).database;
+        [self.drawingStatusDelegate didSelectGeoPackage:_selectedGeoPackage.name];
         [self showLayerSelectionMode];
     } else if ([cellObject isKindOfClass:[MCLayerCell class]]) {
         _selectedTable = ((MCLayerCell *)cellObject).table;
-        [self showSaveMode];
+        [self.drawingStatusDelegate didSelectLayer:_selectedTable.name];
     }
         
 }

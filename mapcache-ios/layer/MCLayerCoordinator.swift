@@ -11,22 +11,24 @@ import UIKit
 @objc class MCLayerCoordinator: NSObject, MCLayerOperationsDelegate, MCCreateLayerFieldDelegate {
     var table: MCTable
     var drawerViewDelegate: NGADrawerViewDelegate
+    var layerViewController: MCLayerViewController
+    var fieldViewController: MCCreateLayerFieldViewController
     
     @objc public init(table: MCTable, drawerDelegate: NGADrawerViewDelegate) {
         self.drawerViewDelegate = drawerDelegate
         self.table = table
+        self.layerViewController = MCLayerViewController(asFullView: true)
+        self.fieldViewController = MCCreateLayerFieldViewController(asFullView: true)
         super.init()
     }
     
     
     @objc public func start() {
-        if let layerViewController = MCLayerViewController(asFullView: true) {
-            layerViewController.table = self.table
-            layerViewController.delegate = self
-            layerViewController.columns = MCGeoPackageRepository.shared().columns(for: table)
-            layerViewController.drawerViewDelegate = self.drawerViewDelegate
-            layerViewController.pushOntoStack()
-        }
+        self.layerViewController.table = self.table
+        self.layerViewController.delegate = self
+        self.layerViewController.columns = MCGeoPackageRepository.shared().columns(forTable: table.name, database: table.database)
+        self.layerViewController.drawerViewDelegate = self.drawerViewDelegate
+        self.layerViewController.pushOntoStack()
     }
     
     
@@ -68,10 +70,9 @@ import UIKit
     
     
     func showFieldCreationView() {
-        let fieldViewController = MCCreateLayerFieldViewController(asFullView: true)
-        fieldViewController?.drawerViewDelegate = self.drawerViewDelegate
-        fieldViewController?.createLayerFieldDelegate = self
-        fieldViewController!.pushOntoStack()
+        self.fieldViewController.drawerViewDelegate = self.drawerViewDelegate
+        self.fieldViewController.createLayerFieldDelegate = self
+        self.fieldViewController.pushOntoStack()
     }
     
     
@@ -80,17 +81,23 @@ import UIKit
     }
     
     
+    func setSelectedLayerName() {
+        MCGeoPackageRepository.shared().selectedLayerName = self.table.name
+        MCGeoPackageRepository.shared().selectedGeoPackageName = self.table.database
+    }
+    
+    
     //MARK: MCCreateLayerFieldDelegate
     func createField(name: String, type: GPKGDataType) {
         if let column = GPKGFeatureColumn.createColumn(withName: name, andDataType: type) {
-            let didAdd = MCGeoPackageRepository.shared().add(column, to: table)
+            let didAdd = MCGeoPackageRepository.shared().add(column, to: self.table)
             
             if (didAdd) {
-                
+                MCGeoPackageRepository.shared().regenerateDatabaseList()
+                self.fieldViewController.closeDrawer()
+                self.layerViewController.columns = MCGeoPackageRepository.shared().columns(forTable: self.table.name, database: self.table.database)
+                self.layerViewController.update()
             }
-            
         }
-        
-        
     }
 }

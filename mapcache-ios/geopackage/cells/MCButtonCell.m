@@ -52,6 +52,14 @@
     [self.button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 }
 
+
+- (void) useSecondaryRed {
+    [self.button setBackgroundColor:[UIColor clearColor]];
+    self.button.clipsToBounds = YES;
+    [self.button setTitleColor: [UIColor redColor] forState:UIControlStateNormal];
+}
+
+
 - (void) enableButton {
     _button.userInteractionEnabled = YES;
     _button.backgroundColor = [MCColorUtil getAccent];

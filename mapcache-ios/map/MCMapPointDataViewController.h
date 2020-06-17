@@ -20,8 +20,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, MCMapPointViewMode) {
+    MCPointViewModeNew,
+    MCPointViewModeEdit,
+    MCPointViewModeDisplay
+};
+
 @protocol MCMapPointDataDelegate <NSObject>
-- (BOOL)saveRow:(GPKGUserRow *)row toDatabase:(NSString *)database;
+- (BOOL)saveRow:(GPKGUserRow *)row;
 - (int)deleteRow:(GPKGUserRow *)row fromDatabase:(NSString *)database andRemoveMapPoint:(GPKGMapPoint *)mapPoint;
 - (void)mapPointDataViewClosed;
 @end
@@ -29,10 +35,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MCMapPointDataViewController : NGADrawerViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, MCDualButtonCellDelegate, MCButtonCellDelegate>
 @property (nonatomic, strong) id<MCMapPointDataDelegate>mapPointDataDelegate;
 @property (nonatomic, strong) GPKGMapPoint *mapPoint;
-@property (nonatomic, strong) GPKGUserRow *queriedRow;
-@property (nonatomic) BOOL isInEditMode;
+@property (nonatomic, strong) GPKGUserRow *row;
+@property (nonatomic) MCMapPointViewMode mode;
+- (void)showEditMode;
+- (void)showDisplayMode;
 - (void)reloadWith:(GPKGUserRow *)row mapPoint:(GPKGMapPoint *)mapPoint;
-- (instancetype) initWithMapPoint:(GPKGMapPoint *)mapPoint row:(GPKGUserRow *)row asFullView:(BOOL)fullView drawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate pointDataDelegate:(id<MCMapPointDataDelegate>) pointDataDelegate;
+- (instancetype) initWithMapPoint:(GPKGMapPoint *)mapPoint row:(GPKGUserRow *)row mode:(MCMapPointViewMode)mode asFullView:(BOOL)fullView drawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate pointDataDelegate:(id<MCMapPointDataDelegate>) pointDataDelegate;
 @end
 
 NS_ASSUME_NONNULL_END

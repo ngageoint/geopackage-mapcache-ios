@@ -77,7 +77,7 @@ class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDele
         self.dualButtons?.leftButtonAction = "cancel"
         self.dualButtons?.setRightButtonLabel("Save")
         self.dualButtons?.rightButtonAction = "save"
-        //TODO: until we have a valid field name, don't enable the button
+        self.dualButtons?.disableRightButton() //TODO: until we have a valid field name, don't enable the button
         self.dualButtons?.dualButtonDelegate = self
         self.cellArray.append(dualButtons!)
     }
@@ -89,6 +89,15 @@ class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDele
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         // TODO: validate the name before making the button active
+        textField.resignFirstResponder()
+        self.dualButtons?.enableRightButton()
+    }
+    
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        self.dualButtons?.enableRightButton()
+        return true
     }
     
     
@@ -125,7 +134,7 @@ class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDele
         if (action == "save") {
             self.createLayerFieldDelegate?.createField(name: (self.fieldName?.fieldValue())!, type: GPKG_DT_TEXT)
         } else if (action == "cancel") {
-            
+            self.closeDrawer()
         }
     }
 }

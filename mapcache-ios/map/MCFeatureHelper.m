@@ -375,7 +375,7 @@
     CLLocationCoordinate2D coordinate = mapPoint.coordinate;
     NSString *lat = [self.locationDecimalFormatter stringFromNumber:[NSNumber numberWithDouble:coordinate.latitude]];
     NSString *lon = [self.locationDecimalFormatter stringFromNumber:[NSNumber numberWithDouble:coordinate.longitude]];
-    NSString * title = [NSString stringWithFormat:@"(lat=%@, lon=%@)", lat, lon];
+    NSString * title = [NSString stringWithFormat:@"lat: %@, lon: %@", lat, lon];
     
     return title;
 }

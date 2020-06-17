@@ -10,7 +10,6 @@
 
 @interface MCMapViewController ()
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
-@property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic, strong) NSUserDefaults *settings;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) NSMutableDictionary *geoPackages;
@@ -526,8 +525,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             }
         }
     });
-    
-    //[self updateInBackgroundWithZoom:NO];
 }
 
 
@@ -838,19 +835,22 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     CGPoint cgPoint = [longPressGestureRecognizer locationInView:self.mapView];
     CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
     
-    if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan) {
+    if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan && self.tempMapPoints.count == 0) {
+        UINotificationFeedbackGenerator *feedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
+        [feedbackGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
+        
         NSLog(@"Adding a pin");
         GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithLocation:point];
         [mapPoint.options setPinTintColor:[UIColor redColor]];
         
         [self.mapView addAnnotation: mapPoint];
         [self.tempMapPoints addObject:mapPoint];
-        
-        UINotificationFeedbackGenerator *feedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
-        [feedbackGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
-        
-        if (!_drawing) {
-            [self.mapActionDelegate showDrawingTools];
+     
+        if (!_drawing && self.tempMapPoints.count > 0) {
+            [self zoomToPointWithOffset: point];
+            [mapPoint setTitle:[_featureHelper buildLocationTitleWithMapPoint:mapPoint]];
+            [self.mapView selectAnnotation:mapPoint animated:YES];
+            
             _drawing = YES;
         } else {
             [self.mapActionDelegate updateDrawingStatus];
@@ -859,7 +859,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }
     
     // MKMapView workaround for unresponsiveness after a longpress https://forums.developer.apple.com/thread/126473
-    [self.mapView setCenterCoordinate:self.mapView.centerCoordinate animated:NO];
+    //[self.mapView setCenterCoordinate:self.mapView.centerCoordinate animated:NO];
 }
 
 

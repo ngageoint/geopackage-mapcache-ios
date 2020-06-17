@@ -15,19 +15,22 @@
 @property (nonatomic, strong) MCFieldWithTitleCell *titleCell;
 @property (nonatomic, strong) MCTextViewCell *descriptionCell;
 @property (nonatomic, strong) MCDualButtonCell *buttonsCell;
+@property (nonatomic) BOOL haveScrolled;
 @end
 
 @implementation MCMapPointDataViewController
 
-- (instancetype) initWithMapPoint:(GPKGMapPoint *)mapPoint row:(GPKGUserRow *)row asFullView:(BOOL)fullView drawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate pointDataDelegate:(id<MCMapPointDataDelegate>) pointDataDelegate {
+- (instancetype) initWithMapPoint:(GPKGMapPoint *)mapPoint row:(GPKGUserRow *)row mode:(MCMapPointViewMode)mode asFullView:(BOOL)fullView drawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate pointDataDelegate:(id<MCMapPointDataDelegate>) pointDataDelegate {
     self = [super initAsFullView:fullView];
     self.mapPoint = mapPoint;
     self.drawerViewDelegate = drawerDelegate;
     self.mapPointDataDelegate = pointDataDelegate;
-    self.queriedRow = row;
-    
+    self.mode = mode;
+    self.row = row;
+
     return self;
 }
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,10 +49,9 @@
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
     [self.view addSubview:self.tableView];
-    
     [self registerCellTypes];
     
-    if (self.isInEditMode) {
+    if (self.mode == MCPointViewModeEdit) {
         [self showEditMode];
     } else {
         [self showDisplayMode];
@@ -61,6 +63,7 @@
     
     [self addDragHandle];
     [self addCloseButton];
+    self.haveScrolled = NO;
 }
 
 
@@ -81,21 +84,21 @@
 - (void)showDisplayMode {
     _cellArray = [[NSMutableArray alloc] init];
     
-    for (int i = 0; i < _queriedRow.columnCount; i++) {
-        NSString *columnName = _queriedRow.columnNames[i];
+    for (int i = 0; i < _row.columnCount; i++) {
+        NSString *columnName = _row.columnNames[i];
         
         if (![columnName isEqualToString:@"id"] && ![columnName isEqualToString:@"geom"]) {
             MCKeyValueDisplayCell *displayCell = [self.tableView dequeueReusableCellWithIdentifier:@"keyValue"];
             
-            if (_queriedRow.columns.columns[i].dataType == GPKG_DT_TEXT) {
-                if (!_queriedRow.values[i] || [_queriedRow.values[i] isKindOfClass:NSNull.class] || [_queriedRow.values[i] isEqualToString:@""]) {
+            if (_row.columns.columns[i].dataType == GPKG_DT_TEXT) {
+                if (!_row.values[i] || [_row.values[i] isKindOfClass:NSNull.class] || [_row.values[i] isEqualToString:@""]) {
                     [displayCell setValueLabelText:@"none"];
                 } else {
-                    [displayCell setValueLabelText: _queriedRow.values[i]];
+                    [displayCell setValueLabelText: _row.values[i]];
                 }
-            } else if (_queriedRow.columns.columns[i].dataType == GPKG_DT_INTEGER || _queriedRow.columns.columns[i].dataType == GPKG_DT_REAL) {
-                [displayCell setValueLabelText: [_queriedRow.values[i] stringValue]];
-            } else if (_queriedRow.columns.columns[i].dataType == GPKG_DT_BLOB) {
+            } else if (_row.columns.columns[i].dataType == GPKG_DT_INTEGER || _row.columns.columns[i].dataType == GPKG_DT_REAL) {
+                [displayCell setValueLabelText: [_row.values[i] stringValue]];
+            } else if (_row.columns.columns[i].dataType == GPKG_DT_BLOB) {
                 [displayCell setValueLabelText: @"Binary data, unable to display"];
             }
             
@@ -104,7 +107,7 @@
         }
     }
     
-    if (_queriedRow.columnCount == 2) {
+    if (_row.columnCount == 2) {
         
     }
     
@@ -116,7 +119,7 @@
     [_cellArray addObject:buttonCell];
     
     MCButtonCell *deleteButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
-    [deleteButtonCell useRedColor];
+    [deleteButtonCell useSecondaryRed];
     deleteButtonCell.delegate = self;
     [deleteButtonCell setAction:@"delete"];
     [deleteButtonCell setButtonLabel:@"Delete"];
@@ -124,7 +127,7 @@
     
     [_tableView reloadData];
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-    self.isInEditMode = NO;
+    self.mode = MCPointViewModeDisplay;
     // TODO add empty state
 }
 
@@ -135,9 +138,9 @@
 - (void)showEditMode {
     _cellArray = [[NSMutableArray alloc] init];
     
-    if (_queriedRow) {
-        for (int i = 0; i < _queriedRow.columnCount; i++) {
-            NSString *columnName = _queriedRow.columnNames[i];
+    if (_row) {
+        for (int i = 0; i < _row.columnCount; i++) {
+            NSString *columnName = _row.columnNames[i];
             
             if (![columnName isEqualToString:@"id"] && ![columnName isEqualToString:@"geom"]) {
                 MCFieldWithTitleCell *fieldWithTitle = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
@@ -145,24 +148,21 @@
                 fieldWithTitle.columnName = columnName;
                 [fieldWithTitle setTextFielDelegate:self];
                 
-                if (_queriedRow.columns.columns[i].dataType == GPKG_DT_TEXT) {
-                    if (![_queriedRow.values[i] isKindOfClass:NSNull.class]) {
-                        [fieldWithTitle setFieldText:_queriedRow.values[i]];
+                if (_row.columns.columns[i].dataType == GPKG_DT_TEXT) {
+                    if (![_row.values[i] isKindOfClass:NSNull.class]) {
+                        [fieldWithTitle setFieldText:_row.values[i]];
                     }
                     
                     [fieldWithTitle useReturnKeyDone];
                     [_cellArray addObject:fieldWithTitle];
-                } else if (_queriedRow.columns.columns[i].dataType == GPKG_DT_INTEGER || _queriedRow.columns.columns[i].dataType == GPKG_DT_REAL) {
-                    [fieldWithTitle setFieldText:[_queriedRow.values[i] stringValue]];
+                } else if (_row.columns.columns[i].dataType == GPKG_DT_INTEGER || _row.columns.columns[i].dataType == GPKG_DT_REAL) {
+                    [fieldWithTitle setFieldText:[_row.values[i] stringValue]];
                     [fieldWithTitle setupNumericalKeyboard];
                     [_cellArray addObject:fieldWithTitle];
                 }
             }
         }
     }
-    
-    // TODO: Decide what happens for new feature layers. Default set of columns?
-    
     _buttonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttons"];
     [_buttonsCell setLeftButtonLabel:@"Cancel"];
     [_buttonsCell setLeftButtonAction:@"cancel"];
@@ -172,12 +172,12 @@
     [_cellArray addObject:_buttonsCell];
     [_tableView reloadData];
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-    self.isInEditMode = YES;
+    self.mode = MCPointViewModeEdit;
 }
 
 
 - (void)reloadWith:(GPKGUserRow *)row mapPoint:(GPKGMapPoint *)mapPoint {
-    self.queriedRow = row;
+    self.row = row;
     self.mapPoint = mapPoint;
     [self showDisplayMode];
 }
@@ -205,9 +205,9 @@
         if ([cell isKindOfClass:MCFieldWithTitleCell.class]) {
             MCFieldWithTitleCell *fieldWithTitleCell = (MCFieldWithTitleCell *)cell;
             if (fieldWithTitleCell.field == textField) {
-                for (int i = 0; i < self.queriedRow.columns.columns.count; i++) {
-                    if ([fieldWithTitleCell.columnName isEqualToString:self.queriedRow.columns.columns[i].name]) {
-                        self.queriedRow.values[i] = [fieldWithTitleCell fieldValue];
+                for (int i = 0; i < self.row.columns.columns.count; i++) {
+                    if ([fieldWithTitleCell.columnName isEqualToString:self.row.columns.columns[i].name]) {
+                        self.row.values[i] = [fieldWithTitleCell fieldValue];
                     }
                 }
             }
@@ -227,7 +227,7 @@
     if ([action isEqualToString:@"save"]) {
         NSLog(@"Saving point data");
         NSString *databaseName = [self.mapPoint.data valueForKey:@"database"];
-        BOOL saved = [_mapPointDataDelegate saveRow:_queriedRow toDatabase:databaseName];
+        BOOL saved = [_mapPointDataDelegate saveRow:_row];
         
         if (saved) {
             [self showDisplayMode];
@@ -237,13 +237,14 @@
         // TODO Add switch to edit mode
         NSLog(@"Editing point");
         
-        if (self.isInEditMode == NO) {
+        if (self.mode != MCPointViewModeEdit) {
             [self showEditMode];
         } else {
             [self showDisplayMode];
         }
     } else if ([action isEqualToString:@"cancel"]) {
         NSLog(@"Canceling point edit");
+        //TODO: remove temp point from map
         [self.drawerViewDelegate popDrawer];
     }
 }
@@ -254,19 +255,29 @@
         // TODO Add switch to edit mode
         NSLog(@"Editing point");
         
-        if (self.isInEditMode == NO) {
+        if (self.mode != MCPointViewModeEdit) {
             [self showEditMode];
-            self.isInEditMode = YES;
         } else {
             [self showDisplayMode];
-            self.isInEditMode = NO;
         }
     } else if ([action isEqualToString:@"delete"]) {
-        NSString *databaseName = [self.mapPoint.data valueForKey:@"database"];
-        int rowsDeleted = [_mapPointDataDelegate deleteRow:_queriedRow fromDatabase:databaseName andRemoveMapPoint:_mapPoint];
-        if (rowsDeleted > 0) {
-            [self.drawerViewDelegate popDrawer];
-        }
+        UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this point? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            NSString *databaseName = [self.mapPoint.data valueForKey:@"database"];
+            int rowsDeleted = [self.mapPointDataDelegate deleteRow:self.row fromDatabase:databaseName andRemoveMapPoint:self.mapPoint];
+            if (rowsDeleted > 0) {
+                [self.drawerViewDelegate popDrawer];
+            }
+        }];
+        
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [deleteAlert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+        [deleteAlert addAction:confirmDelete];
+        [deleteAlert addAction:cancel];
+        
+        [self presentViewController:deleteAlert animated:YES completion:nil];
     }
 }
 
@@ -275,6 +286,26 @@
 - (void) closeDrawer {
     [self.drawerViewDelegate popDrawer];
     [self.mapPointDataDelegate mapPointDataViewClosed];
+}
+
+
+// Override this method to make the drawer and the scrollview play nice
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.haveScrolled) {
+        [self rollUpPanGesture:scrollView.panGestureRecognizer withScrollView:scrollView];
+    }
+}
+
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.haveScrolled = YES;
+    
+    if (!self.isFullView) {
+        scrollView.scrollEnabled = NO;
+        scrollView.scrollEnabled = YES;
+    } else {
+        scrollView.scrollEnabled = YES;
+    }
 }
 
 

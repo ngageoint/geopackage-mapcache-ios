@@ -23,6 +23,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 @property (nonatomic, strong) MCMapPointDataViewController *mapPointDataViewController;
 @property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureLayerDetailsView;
 @property (nonatomic, strong) MCGeoPackageRepository *repository;
+@property (nonatomic, strong) GPKGMapPoint *mapPoint;
 @end
 
 
@@ -66,6 +67,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
  */
 - (void) updateMapLayers {
     NSLog(@"In MapCoordinator, going to update layers");
+    self.mcMapViewController.active = [_repository activeDatabases];
     [self.mcMapViewController updateInBackgroundWithZoom:NO andFilter:YES];
 }
 
@@ -142,21 +144,6 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 
 /**
-    When the user long presses on the map, show the drawing tools.
- */
-- (void)showDrawingTools {
-    
-    
-    
-    _drawingStatusViewController = [[MCDrawingStatusViewController alloc] init];
-    _drawingStatusViewController.drawerViewDelegate = _drawerViewDelegate;
-    _drawingStatusViewController.drawingStatusDelegate = self;
-    _drawingStatusViewController.databases = [_repository databaseList];
-    [_drawerViewDelegate pushDrawer:_drawingStatusViewController];
-}
-
-
-/**
     Update the status label on the drawing tools view. This will show the number of points that will be added.
  */
 - (void)updateDrawingStatus {
@@ -169,15 +156,54 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     If the drawer was already displaying data from another point, pass the data to the drawer and it will reload and update.
  */
 - (void)showDetailsForAnnotation:(GPKGMapPoint *)mapPoint {
-    GPKGSMapPointData *pointData = (GPKGSMapPointData *)mapPoint.data;
-    GPKGUserRow *userRow = [_repository queryRow:pointData.featureId fromTableNamed:pointData.tableName inDatabase:pointData.database];
-    
-    if (_mapPointDataViewController == nil) {
-        _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:userRow asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
-        [_drawerViewDelegate pushDrawer:_mapPointDataViewController];
-    } else {
-        [_mapPointDataViewController reloadWith:userRow mapPoint:mapPoint];
+    if (mapPoint.data == nil) { // this is a new point
+        // When you have selected a geopackage and a layer from the main list, when you longpress on the map we assume
+        // that is where you would like to save the new point. If you have not selected anything, then you will be
+        // presented with the existing geopackages and layers, or offered the ability to create a new one.
+        
+        self.mapPoint = mapPoint;
+        NSString *selectedGeoPackage = _repository.selectedGeoPackageName;
+        NSString *selectedLayer = _repository.selectedLayerName;
+        
+        // No GeoPackage or layer selected
+        if (selectedGeoPackage == nil || [selectedGeoPackage isEqualToString:@""] || selectedLayer == nil || [selectedLayer isEqualToString:@""]) {
+            _drawingStatusViewController = [[MCDrawingStatusViewController alloc] initAsFullView:YES];
+            _drawingStatusViewController.drawerViewDelegate = _drawerViewDelegate;
+            _drawingStatusViewController.drawingStatusDelegate = self;
+            
+            if (selectedGeoPackage == nil || [selectedGeoPackage isEqualToString:@""]) { // show the geopackage selection view
+                _drawingStatusViewController.databases = [_repository databaseList];
+                [_drawingStatusViewController pushOntoStack];
+                [_drawingStatusViewController showGeoPackageSelectMode];
+            } else if (selectedLayer == nil || [selectedLayer isEqualToString:@""]) { //show the layer selection view
+                _drawingStatusViewController.selectedGeoPackage = [_repository databaseNamed:_repository.selectedGeoPackageName];
+                [_drawingStatusViewController pushOntoStack];
+                [_drawingStatusViewController showLayerSelectionMode];
+            }
+            
+        } else { // Use the selected GeoPackage and layer to set the point data view
+            GPKGFeatureRow *newRow = [_repository newRowInTable:selectedLayer database:selectedGeoPackage mapPoint:mapPoint];
+            
+            _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:newRow mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+
+            [_mapPointDataViewController pushOntoStack];
+        }
+    } else { // this is an existing point, query it's data and show it
+        GPKGSMapPointData *pointData = (GPKGSMapPointData *)mapPoint.data;
+        GPKGUserRow *userRow = [_repository queryRow:pointData.featureId fromTableNamed:pointData.tableName inDatabase:pointData.database];
+        
+        if (_mapPointDataViewController == nil) {
+            _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:userRow mode:MCPointViewModeDisplay asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+            [_drawerViewDelegate pushDrawer:_mapPointDataViewController];
+        } else {
+            [_mapPointDataViewController reloadWith:userRow mapPoint:mapPoint];
+        }
     }
+}
+
+
+- (void)showDrawingStatusViewController {
+    
 }
 
 
@@ -234,12 +260,42 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+- (void)didSelectGeoPackage:(NSString *)geopackageName {
+    [_repository setSelectedGeoPackageName:geopackageName];
+}
+
+
+- (void)didSelectLayer:(NSString *)layerName {
+    [_repository setSelectedLayerName:layerName];
+    // query and show the point data view
+    
+    [_drawingStatusViewController.drawerViewDelegate popDrawer];
+    
+    if (self.mapPoint != nil) {
+        GPKGFeatureRow *newRow = [_repository newRowInTable:_repository.selectedLayerName database:_repository.selectedGeoPackageName mapPoint:self.mapPoint];
+        _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:self.mapPoint row:newRow mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+
+        [_mapPointDataViewController pushOntoStack];
+    }
+}
+
+
 #pragma mark - MCMapPointDataDelegate
 /**
     Save the data from a map point, which is a row in a geopackage feature table.
  */
-- (BOOL)saveRow:(GPKGUserRow *)row toDatabase:(NSString *)database{
-    return [_repository saveRow:row toDatabase:database];
+- (BOOL)saveRow:(GPKGUserRow *)row{
+    if (self.mcMapViewController.tempMapPoints && self.mcMapViewController.tempMapPoints.count > 0) {
+        if([_repository saveRow:row]) {
+            [_mcMapViewController setDrawing:NO];
+            [_mcMapViewController clearTempPoints];
+            [self updateMapLayers];
+            [[NSNotificationCenter defaultCenter] postNotificationName:MC_GEOPACKAGE_MODIFIED_NOTIFICATION object:self];
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 
@@ -277,7 +333,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     if (didCreateLayer) {
         [_drawerViewDelegate popDrawer];
         [_repository regenerateDatabaseList];
-        _drawingStatusViewController.selectedGeoPackage = [_repository databseNamed:database];
+        _drawingStatusViewController.selectedGeoPackage = [_repository databaseNamed:database];
         [_drawingStatusViewController showLayerSelectionMode];
     } else {
         //TODO handle the case where a new feature layer could not be created

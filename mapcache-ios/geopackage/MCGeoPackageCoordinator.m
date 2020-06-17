@@ -20,6 +20,7 @@
 @property (nonatomic, strong) MCTileLayerDetailsViewController *tileDetailsController;
 @property (nonatomic, strong) MCBoundingBoxGuideView *boundingBoxGuideViewController;
 @property (nonatomic, strong) MCZoomAndQualityViewController *zoomAndQualityViewController;
+@property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureLayerDetailsView;
 @property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic, strong) MCDatabase *database;
 @property (nonatomic, strong) GPKGSCreateTilesData * tileData;
@@ -59,28 +60,30 @@
 
 - (void)updateAndReload:(NSNotification *) notification {
     [_repository regenerateDatabaseList];
-    _database = [_repository databseNamed:_database.name];
+    _database = [_repository databaseNamed:_database.name];
     _geoPackageViewController.database = _database;
     [_geoPackageViewController update];
 }
 
 
 #pragma mark - GeoPackage View delegate methods
-- (void) newLayer {
+- (void) newTileLayer {
     NSLog(@"Coordinator handling new layer");
-    
-    // Future release will bring feature and tile layers, for now starting with just the tiles.
-//    MCCreateLayerViewController *createLayerViewControler = [[MCCreateLayerViewController alloc] initWithNibName:@"MCCreateLayerView" bundle:nil];
-//    createLayerViewControler.delegate = self;
-//    createLayerViewControler.drawerViewDelegate = _drawerDelegate;
-//    [createLayerViewControler.drawerViewDelegate pushDrawer:createLayerViewControler];
-    
     NSLog(@"Adding new tile layer");
     _tileData = [[GPKGSCreateTilesData alloc] init];
     _tileDetailsController = [[MCTileLayerDetailsViewController alloc] initAsFullView:YES];
     _tileDetailsController.delegate = self;
     _tileDetailsController.drawerViewDelegate = _drawerDelegate;
     [_tileDetailsController.drawerViewDelegate pushDrawer:_tileDetailsController];
+}
+
+
+- (void) newFeatureLayer {
+    _featureLayerDetailsView = [[MCFeatureLayerDetailsViewController alloc] initAsFullView:YES];
+    _featureLayerDetailsView.delegate = self;
+    _featureLayerDetailsView.drawerViewDelegate = _drawerDelegate;
+    _featureLayerDetailsView.database = self.database;
+    [_featureLayerDetailsView pushOntoStack];
 }
 
 
@@ -157,6 +160,7 @@
 - (void) callCompletionHandler {
     NSLog(@"Close pressed");
     [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
+    [_repository setSelectedGeoPackageName:@""];
 }
 
 
@@ -207,51 +211,30 @@
     MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerDelegate];
     [self.childCoordinators addObject:layerCoordinator];
     [layerCoordinator start];
-    
-    
 }
 
 
-#pragma mark - CreateLayerViewController delegate methods
-- (void) newFeatureLayer {
-    NSLog(@"Adding new feature layer");
-    _featureDetailsController = [[MCFeatureLayerDetailsViewController alloc] init];
-    _featureDetailsController.database = _database;
-    _featureDetailsController.delegate = self;
-    //[_navigationController pushViewController:_featureDetailsController animated:YES]; // TODO replace with drawer
+- (void) setSelectedDatabaseName {
+    [self.repository setSelectedGeoPackageName:self.database.name];
 }
 
 
-// Temporarily moving this to new layer since initially they can only make tile layers.
-- (void) newTileLayer {
-    NSLog(@"Adding new tile layer");
-    _tileData = [[GPKGSCreateTilesData alloc] init];
-    _tileDetailsController = [[MCTileLayerDetailsViewController alloc] init];
-    _tileDetailsController.delegate = self;
-    _tileDetailsController.drawerViewDelegate = _drawerDelegate;
-    // [_navigationController pushViewController:_tileDetailsController animated:YES]; // TODO replace with drawer
-}
+#pragma mark - MCFeatureLayerCreationDelegate methods
+/**
+    Add a new feature layer to the GeoPackage.
+ */
+- (void) createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId {
+    NSLog(@"creating layer %@ in database %@ ", geometryColumns.tableName, database);
 
-
-#pragma mark - GPKGSFeatureLayerCreationDelegate
-- (void) createFeatueLayerIn:(NSString *)database with:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId {
-    
-    GPKGGeoPackage * geoPackage;
-    @try {
-        geoPackage = [_manager open:database];
-        [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:boundingBox andSrsId:srsId];
+    BOOL didCreateLayer = [_repository createFeatueLayerIn:database withGeomertyColumns:geometryColumns boundingBox:boundingBox srsId:srsId];
+    if (didCreateLayer) {
+        [_drawerDelegate popDrawer];
+        [_repository regenerateDatabaseList];
+        _geoPackageViewController.database = [_repository databaseNamed:database];
+        [_geoPackageViewController update];
+    } else {
+        //TODO handle the case where a new feature layer could not be created
     }
-    @catch (NSException *e) {
-        // TODO handle this
-        NSLog(@"There was a problem creating the layer, %@", e.reason);
-    }
-    @finally {
-        [geoPackage close];
-        //[_navigationController popToViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
-        [self updateDatabase];
-    }
-    
-    // TODO handle dismissing the view controllers or displaying an error message
 }
 
 

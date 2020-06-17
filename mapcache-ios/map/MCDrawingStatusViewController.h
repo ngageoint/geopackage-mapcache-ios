@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)showNewGeoPacakgeView;
 - (void)showNewLayerViewWithDatabase:(MCDatabase*) database;
 - (BOOL)savePointsToDatabase:(MCDatabase *)database andTable:(MCTable *) table;
+- (void)didSelectGeoPackage:(NSString *)geopackageName;
+- (void)didSelectLayer:(NSString *)layerName;
 @end
 
 
@@ -35,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) MCDatabase *selectedGeoPackage;
 - (void)updateStatusLabelWithString:(NSString *) string;
 - (void)refreshViewWithNewGeoPackageList:(NSArray *)databases;
+- (void)showGeoPackageSelectMode;
 - (void)showLayerSelectionMode;
 @end
 
