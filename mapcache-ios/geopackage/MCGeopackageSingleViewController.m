@@ -56,12 +56,6 @@
 }
 
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [self.delegate setSelectedDatabaseName];
-}
-
-
 - (void) didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -79,11 +73,11 @@
     headerCell.detailLabelOne.text = [self.manager readableSize:_database.name]; // TODO look into threading this
     
     NSInteger tileCount = [_database getTileCount];
-    NSString *tileText = tileCount == 1 ? @"offline map" : @"offline maps";
+    NSString *tileText = tileCount == 1 ? @"downloaded map" : @"downloaded maps";
     headerCell.detailLabelTwo.text = [NSString stringWithFormat:@"%ld %@", tileCount, tileText];
     
     NSInteger featureCount = [_database getFeatureCount];
-    NSString *featureText = featureCount == 1 ? @"location collection" : @"location collections";
+    NSString *featureText = featureCount == 1 ? @"feature collection" : @"feature collections";
     headerCell.detailLabelThree.text = [NSString stringWithFormat:@"%ld %@", featureCount, featureText];
     
     MCGeoPackageOperationsCell *geoPackageOperationsCell = [self.tableView dequeueReusableCellWithIdentifier:@"operations"];
@@ -92,11 +86,11 @@
     _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, nil];
     
     MCSectionTitleCell *offlineMapsTitleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
-    offlineMapsTitleCell.sectionTitleLabel.text = @"Offline Maps";
+    offlineMapsTitleCell.sectionTitleLabel.text = @"Downloaded Maps";
     [_cellArray addObject:offlineMapsTitleCell];
     
     MCButtonCell *newOfflineMapButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
-    [newOfflineMapButtonCell.button setTitle:@"Download an offline map" forState:UIControlStateNormal];
+    [newOfflineMapButtonCell.button setTitle:@"Download a map" forState:UIControlStateNormal];
     newOfflineMapButtonCell.action = GPKGS_ACTION_NEW_LAYER;
     newOfflineMapButtonCell.delegate = self;
     [_cellArray addObject: newOfflineMapButtonCell];
@@ -116,11 +110,11 @@
     }
     
     MCSectionTitleCell *layersTitleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
-    layersTitleCell.sectionTitleLabel.text = @"Location Collections";
+    layersTitleCell.sectionTitleLabel.text = @"Feature Collections";
     [_cellArray addObject:layersTitleCell];
     
     MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
-    [newLayerButtonCell.button setTitle:@"New collection" forState:UIControlStateNormal];
+    [newLayerButtonCell.button setTitle:@"New feature collection" forState:UIControlStateNormal];
     newLayerButtonCell.action = @"new-collection";
     newLayerButtonCell.delegate = self;
     [_cellArray addObject:newLayerButtonCell];
@@ -153,7 +147,7 @@
 
 
 - (void) update {
-    [self initCellArray]; // May not need to call this, or may need to call it closer to the end
+    [self initCellArray];
     [self.tableView reloadData];
 }
 
@@ -199,6 +193,10 @@
     [self.tableView setScrollEnabled:YES];
 }
 
+
+- (void) becameTopDrawer {
+    [self.delegate setSelectedDatabaseName];
+}
 
 #pragma mark - TableView delegate methods
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
@@ -261,7 +259,20 @@
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
-        [self.delegate deleteLayer:cell.table];
+        
+        UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this layer? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self.delegate deleteLayer:cell.table];
+        }];
+        
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [deleteAlert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+        [deleteAlert addAction:confirmDelete];
+        [deleteAlert addAction:cancel];
+        [self presentViewController:deleteAlert animated:YES completion:nil];
+        
         completionHandler(YES);
     }];
     

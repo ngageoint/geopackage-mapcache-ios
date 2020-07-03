@@ -18,7 +18,8 @@
 @property (weak, nonatomic) id<MCSegmentedControlCellDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
-@property (strong, nonatomic) NSArray *items;
+@property (strong, nonatomic) NSArray *updateItems;
 
-- (void) setItems:(NSArray *)items;
+- (void) updateItems:(NSArray *)items;
+- (void) setLabelText:(NSString *)text;
 @end

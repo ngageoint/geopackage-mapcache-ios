@@ -148,7 +148,7 @@
 
 #pragma mark- UITextFieldDelegate methods
 - (void) textFieldDidEndEditing:(UITextField *)textField {
-    [textField trimWhiteSpace:textField];
+    [textField trimWhiteSpace];
     
     if (textField == _urlCell.field) {
         NSLog(@"URL Field ended editing");

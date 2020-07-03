@@ -15,10 +15,17 @@
     // Initialization code
 }
 
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
+
+
+- (void) useAsSpacer {
+    [self.logoImageView setHidden:YES];
+    [self.titleLabel setHidden:YES];
+    [self.detailLabel setHidden:YES];
+}
+ 
 
 @end

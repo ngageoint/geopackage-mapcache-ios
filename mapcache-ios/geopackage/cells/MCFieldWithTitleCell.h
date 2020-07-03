@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UITextField+Validators.h"
+#import "GPKGDataTypes.h"
 
 @interface MCFieldWithTitleCell : UITableViewCell
 
@@ -19,13 +20,18 @@
  */
 @property (strong, nonatomic) NSString *columnName;
 
-- (NSString *)fieldValue;
+/**
+    Optional value used when validating data input from MCPointDataViewController. 
+ */
+@property (nonatomic) enum GPKGDataType dataType;
+
+- (NSString *) fieldValue;
 - (void) setTitleText:(NSString *) titleText;
 - (void) setPlaceholder:(NSString *) placeholder;
 - (void) setFieldText:(NSString *) text;
-- (void)setTextFielDelegate: (id<UITextFieldDelegate>)delegate;
+- (void) setTextFielDelegate: (id<UITextFieldDelegate>)delegate;
 - (void) useReturnKeyDone;
-- (void)setupNumericalKeyboard;
+- (void) setupNumericalKeyboard;
 - (void) useNormalAppearance;
 - (void) useErrorAppearance;
 @end

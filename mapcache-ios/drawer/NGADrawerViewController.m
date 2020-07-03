@@ -271,6 +271,14 @@
 
 
 /**
+    Called when the drawer becomes the top drawer in the stack. Override in child classes to perform any setup or set state specific to becoming the top drawer.
+ */
+- (void) becameTopDrawer {
+    
+}
+
+
+/**
     Round the top corners of the drawer.
  */
 - (void) roundViews {

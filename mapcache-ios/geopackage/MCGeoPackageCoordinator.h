@@ -35,11 +35,12 @@
 
 
 @protocol MCMapDelegate;
+@protocol MCLayerCoordinatorDelegate;
 @protocol MCGeoPackageCoordinatorDelegate <NSObject>
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete;
 @end
 
-@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCBoundingBoxGuideDelegate, MCZoomAndQualityDelegate, GPKGSLoadTilesProtocol, MCSelectTileServerDelegate, MCFeatureLayerCreationDelegate>
+@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCBoundingBoxGuideDelegate, MCZoomAndQualityDelegate, GPKGSLoadTilesProtocol, MCSelectTileServerDelegate, MCFeatureLayerCreationDelegate, MCLayerCoordinatorDelegate>
 - (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(MCDatabase *) database;
 - (void) start;
 @end

@@ -13,7 +13,7 @@ protocol MCCreateLayerFieldDelegate: AnyObject {
 }
 
 
-class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCDualButtonCellDelegate {
+class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCDualButtonCellDelegate, MCSegmentedControlCellDelegate {
     
     var cellArray: Array<UITableViewCell> = []
     var featureTable: MCFeatureTable = MCFeatureTable()
@@ -22,7 +22,10 @@ class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDele
     var contentOffset: CGFloat = 0.0
     var fieldName: MCFieldWithTitleCell?
     var dualButtons: MCDualButtonCell?
+    var segmentedControl: MCSegmentedControlCell?
     weak var createLayerFieldDelegate:MCCreateLayerFieldDelegate?
+    let typeDictionary: NSDictionary = ["Checkbox": GPKG_DT_BOOLEAN, "Number": GPKG_DT_DOUBLE, "Text": GPKG_DT_TEXT]
+    var selectedType: GPKGDataType = GPKG_DT_TEXT
     
     
     override func viewDidLoad() {
@@ -37,9 +40,8 @@ class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDele
         self.tableView.dataSource = self
         self.tableView.estimatedRowHeight = 140
         self.tableView.rowHeight = UITableView.automaticDimension
-        // ??? self.edgesForExtendedLayout =
         self.extendedLayoutIncludesOpaqueBars = false
-        self.automaticallyAdjustsScrollViewInsets = false
+        
         
         addAndConstrainSubview(self.tableView)
         registerCellTypes()
@@ -70,7 +72,12 @@ class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDele
         self.fieldName?.setTextFielDelegate(self)
         self.cellArray.append(self.fieldName!)
         
-        //let segmentedControl = (self.tableView.dequeueReusableCell(withIdentifier: "segmentedControl") as! MCSegmentedControlCell)
+        
+        self.segmentedControl = (self.tableView.dequeueReusableCell(withIdentifier: "segmentedControl") as! MCSegmentedControlCell)
+        self.segmentedControl?.setLabelText("Type")
+        self.segmentedControl?.updateItems(typeDictionary.allKeys)
+        self.segmentedControl?.delegate = self
+        self.cellArray.append(self.segmentedControl!)
         
         self.dualButtons = (self.tableView.dequeueReusableCell(withIdentifier: "dualButtons") as! MCDualButtonCell)
         self.dualButtons?.setLeftButtonLabel("Cancel")
@@ -132,9 +139,14 @@ class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDele
     
     func performDualButtonAction(_ action: String) {
         if (action == "save") {
-            self.createLayerFieldDelegate?.createField(name: (self.fieldName?.fieldValue())!, type: GPKG_DT_TEXT)
+            self.createLayerFieldDelegate?.createField(name: (self.fieldName?.fieldValue())!, type: self.selectedType)
         } else if (action == "cancel") {
             self.closeDrawer()
         }
+    }
+    
+    // MARK: MCSegmentedControlCellDelegate methods
+    func selectionChanged(_ selection: String!) {
+        self.selectedType = self.typeDictionary.value(forKey: selection) as! GPKGDataType
     }
 }

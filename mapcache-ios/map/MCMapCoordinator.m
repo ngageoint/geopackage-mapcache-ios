@@ -184,19 +184,28 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
         } else { // Use the selected GeoPackage and layer to set the point data view
             GPKGFeatureRow *newRow = [_repository newRowInTable:selectedLayer database:selectedGeoPackage mapPoint:mapPoint];
             
-            _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:newRow mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+            if (_mapPointDataViewController == nil) {
+                _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:newRow databaseName:selectedGeoPackage layerName:selectedLayer mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
 
-            [_mapPointDataViewController pushOntoStack];
+                [_mapPointDataViewController pushOntoStack];
+            } else {
+                _mapPointDataViewController.databaseName = selectedGeoPackage;
+                _mapPointDataViewController.layerName = selectedLayer;
+                _mapPointDataViewController.mapPointDataDelegate = self;
+                [_mapPointDataViewController reloadWith:newRow mapPoint:mapPoint mode:MCPointViewModeEdit];
+            }
         }
     } else { // this is an existing point, query it's data and show it
         GPKGSMapPointData *pointData = (GPKGSMapPointData *)mapPoint.data;
+        [_repository setSelectedGeoPackageName: pointData.database];
+        [_repository setSelectedLayerName:pointData.tableName];
         GPKGUserRow *userRow = [_repository queryRow:pointData.featureId fromTableNamed:pointData.tableName inDatabase:pointData.database];
         
         if (_mapPointDataViewController == nil) {
-            _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:userRow mode:MCPointViewModeDisplay asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+            _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:userRow databaseName:_repository.selectedGeoPackageName layerName:_repository.selectedLayerName mode:MCPointViewModeDisplay asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
             [_drawerViewDelegate pushDrawer:_mapPointDataViewController];
         } else {
-            [_mapPointDataViewController reloadWith:userRow mapPoint:mapPoint];
+            [_mapPointDataViewController reloadWith:userRow mapPoint:mapPoint mode:MCPointViewModeDisplay];
         }
     }
 }
@@ -256,6 +265,8 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 - (void)cancelDrawingFeatures {
     [_mcMapViewController setDrawing:NO];
     [_mcMapViewController clearTempPoints];
+    [_repository setSelectedLayerName:@""];
+    [_repository setSelectedGeoPackageName:@""];
     [[NSNotificationCenter defaultCenter] postNotificationName:MC_GEOPACKAGE_MODIFIED_NOTIFICATION object:self];
 }
 
@@ -273,7 +284,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     
     if (self.mapPoint != nil) {
         GPKGFeatureRow *newRow = [_repository newRowInTable:_repository.selectedLayerName database:_repository.selectedGeoPackageName mapPoint:self.mapPoint];
-        _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:self.mapPoint row:newRow mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+        _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:self.mapPoint row:newRow databaseName:_repository.selectedGeoPackageName layerName:_repository.selectedLayerName mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
 
         [_mapPointDataViewController pushOntoStack];
     }
@@ -285,14 +296,12 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     Save the data from a map point, which is a row in a geopackage feature table.
  */
 - (BOOL)saveRow:(GPKGUserRow *)row{
-    if (self.mcMapViewController.tempMapPoints && self.mcMapViewController.tempMapPoints.count > 0) {
-        if([_repository saveRow:row]) {
-            [_mcMapViewController setDrawing:NO];
-            [_mcMapViewController clearTempPoints];
-            [self updateMapLayers];
-            [[NSNotificationCenter defaultCenter] postNotificationName:MC_GEOPACKAGE_MODIFIED_NOTIFICATION object:self];
-            return YES;
-        }
+    if([_repository saveRow:row]) {
+        [_mcMapViewController setDrawing:NO];
+        [_mcMapViewController clearTempPoints];
+        [self updateMapLayers];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MC_GEOPACKAGE_MODIFIED_NOTIFICATION object:self];
+        return YES;
     }
     
     return NO;
@@ -316,8 +325,16 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 /**
     The user has closed the map point details. Setting the drawer to nil cleans it up so a new drawer can be used next time a point is tapped.
  */
-- (void)mapPointDataViewClosed {
+- (void)mapPointDataViewClosedWithNewPoint:(BOOL)didCloseWithNewPoint {
     [self.mcMapViewController.mapView deselectAnnotation:_mapPointDataViewController.mapPoint animated:YES];
+    
+    if (didCloseWithNewPoint) {
+        [_mcMapViewController setDrawing:NO];
+        [_mcMapViewController clearTempPoints];
+        [_repository setSelectedLayerName:@""];
+        [_repository setSelectedGeoPackageName:@""];
+    }
+    
     _mapPointDataViewController = nil;
 }
 

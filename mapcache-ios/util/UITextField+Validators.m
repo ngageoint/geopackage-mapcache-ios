@@ -89,9 +89,45 @@
 }
 
 
-- (void)trimWhiteSpace:(UITextField *)textField {
-    textField.text = [textField.text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+- (void)trimWhiteSpace {
+    self.text = [self.text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
 }
 
+
+- (BOOL)fieldValueValidForType:(enum GPKGDataType) dataType {
+    BOOL isValid = YES;
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    NSDecimalNumber *dn;
+    
+    switch(dataType) {
+        case GPKG_DT_BOOLEAN:
+        case GPKG_DT_TINYINT:
+        case GPKG_DT_SMALLINT:
+        case GPKG_DT_MEDIUMINT:
+        case GPKG_DT_INT:
+        case GPKG_DT_INTEGER:
+            // NSNumber
+            isValid = [numberFormatter numberFromString:self.text] == nil ? NO : YES;
+            break;
+        case GPKG_DT_FLOAT:
+        case GPKG_DT_DOUBLE:
+        case GPKG_DT_REAL:
+            // NSDecimalNumber
+            dn = [[NSDecimalNumber alloc] initWithString:self.text];
+            isValid = dn == [NSDecimalNumber notANumber] ? NO : YES;
+            break;
+        case GPKG_DT_TEXT:
+            // NSString
+            isValid = self.text != nil;
+            break;
+        case GPKG_DT_BLOB: // not alowing editing for these types yet
+        case GPKG_DT_DATE:
+        case GPKG_DT_DATETIME:
+            // NSDate class
+            break;
+    }
+    
+    return isValid;
+}
 
 @end

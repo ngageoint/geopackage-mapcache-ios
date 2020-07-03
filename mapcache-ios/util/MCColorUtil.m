@@ -27,17 +27,22 @@
 
 
 + (UIColor *) getAccent {
-    return [UIColor colorWithRed:0.28f green:0.69f blue:0.71f alpha:1];
+    return [UIColor colorWithRed:0.09f green:0.53f blue:0.56f alpha:1];
 }
 
 
 + (UIColor *) getAccentLight {
-    return [UIColor colorWithRed:0.51f green:0.78f blue:0.8f alpha:1];
+    return [UIColor colorWithRed:0.51f green:0.78f blue:0.8f alpha:0.85];
 }
 
 
 + (UIColor *) getMediumGrey {
-    return [UIColor colorWithRed:(229/255.0) green:(230/255.0) blue:(230/255.0) alpha:1];
+    return [UIColor colorWithRed:(230/255.0) green:(230/255.0) blue:(230/255.0) alpha:1];
+}
+
+
++ (UIColor *) getLightGrey {
+    return [UIColor colorWithRed:(240/255.0) green:(240/255.0) blue:(240/255.0) alpha:1];
 }
 
 

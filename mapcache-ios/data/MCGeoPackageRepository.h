@@ -19,6 +19,7 @@
 #import "MCFeatureTable.h"
 #import "MCTileTable.h"
 #import "MCFeatureOverlayTable.h"
+#import "GPKGAlterTable.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -31,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSMutableArray *)databaseList;
 - (MCDatabases *)activeDatabases;
 - (NSMutableArray *)regenerateDatabaseList;
+- (MCDatabase *)refreshDatabaseAndUpdateList:(NSString *)databaseName;
 - (MCDatabase *)databaseNamed:(NSString *)databaseName;
 - (BOOL)exists:(NSString *)geoPackageName;
 - (BOOL)database:(MCDatabase *)database containsTableNamed:(NSString *)tableName;
@@ -38,12 +40,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)copyGeoPacakge:(NSString *)geoPacakgeName to:(NSString *)newName;
 - (BOOL)savePoints:(NSArray<GPKGMapPoint *> *) points toDatabase:(MCDatabase *) database table:(MCTable *) table;
 - (BOOL)createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns boundingBox:(GPKGBoundingBox *)boundingBox srsId:(NSNumber *) srsId;
+- (BOOL) renameTable:(MCTable *) table toNewName:(NSString *)newTableName;
 - (GPKGUserRow *)queryRow:(int)rowId fromTableNamed:(NSString *)tableName inDatabase:(NSString *)databaseName;
 - (BOOL)saveRow:(GPKGUserRow *)row;
 - (GPKGFeatureRow *)newRowInTable:(NSString *) table database:(NSString *)database mapPoint:(GPKGMapPoint *)mapPoint;
 - (int)deleteRow:(GPKGUserRow *)featureRow fromDatabase:(NSString *)databaseName;
 - (NSArray *)columnsForTable:(NSString *) table database:(NSString *)database;
 - (BOOL)addColumn:(GPKGFeatureColumn *)featureColumn to:(MCTable *)table;
+- (NSArray<GPKGUserColumn *> *)renameColumn:(GPKGUserColumn*)column newName:(NSString *)newColumnName table:(MCTable *)table;
+- (NSArray<GPKGUserColumn *> *)deleteColumn:(GPKGUserColumn*)column table:(MCTable *)table;
 @end
 
 NS_ASSUME_NONNULL_END

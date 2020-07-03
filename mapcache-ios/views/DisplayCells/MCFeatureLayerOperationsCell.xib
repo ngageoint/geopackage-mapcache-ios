@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,10 +18,10 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1sE-Wb-EIG">
-                            <rect key="frame" x="0.0" y="0.0" width="75" height="70"/>
+                            <rect key="frame" x="0.0" y="0.0" width="187.5" height="70"/>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <inset key="titleEdgeInsets" minX="-31" minY="0.0" maxX="0.0" maxY="-36"/>
-                            <inset key="imageEdgeInsets" minX="19" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <inset key="titleEdgeInsets" minX="-32" minY="0.0" maxX="0.0" maxY="-36"/>
+                            <inset key="imageEdgeInsets" minX="50" minY="-24" maxX="0.0" maxY="0.0"/>
                             <state key="normal" title="Rename" image="Edit">
                                 <color key="titleColor" red="0.29411764705882354" green="0.6705882352941176" blue="0.68627450980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
@@ -29,47 +29,11 @@
                                 <action selector="renameLayer:" destination="iN0-l3-epB" eventType="touchUpInside" id="7I8-m8-afC"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R5r-v9-hR0">
-                            <rect key="frame" x="75" y="0.0" width="75" height="70"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <inset key="titleEdgeInsets" minX="-34" minY="0.0" maxX="0.0" maxY="-36"/>
-                            <inset key="imageEdgeInsets" minX="16" minY="-24" maxX="0.0" maxY="0.0"/>
-                            <state key="normal" title="Index" image="Index">
-                                <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </state>
-                            <connections>
-                                <action selector="indexFeatures:" destination="iN0-l3-epB" eventType="touchUpInside" id="9Fo-Lg-v9B"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rEl-MV-YAY">
-                            <rect key="frame" x="150" y="0.0" width="75" height="70"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <inset key="titleEdgeInsets" minX="-34" minY="0.0" maxX="0.0" maxY="-36"/>
-                            <inset key="imageEdgeInsets" minX="14" minY="-24" maxX="0.0" maxY="0.0"/>
-                            <state key="normal" title="Create Tiles" image="Overlay">
-                                <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </state>
-                            <connections>
-                                <action selector="createTiles:" destination="iN0-l3-epB" eventType="touchUpInside" id="feZ-Eb-KGq"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="buZ-Lv-7gz">
-                            <rect key="frame" x="225" y="0.0" width="75" height="70"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <inset key="titleEdgeInsets" minX="-29" minY="0.0" maxX="0.0" maxY="-36"/>
-                            <inset key="imageEdgeInsets" minX="15" minY="-24" maxX="0.0" maxY="0.0"/>
-                            <state key="normal" title="Overlay" image="Overlay">
-                                <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </state>
-                            <connections>
-                                <action selector="createOverlay:" destination="iN0-l3-epB" eventType="touchUpInside" id="fUd-QC-bk4"/>
-                            </connections>
-                        </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Ij-kH-27S">
-                            <rect key="frame" x="300" y="0.0" width="75" height="70"/>
+                            <rect key="frame" x="187.5" y="0.0" width="187.5" height="70"/>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <inset key="titleEdgeInsets" minX="-31" minY="0.0" maxX="0.0" maxY="-35"/>
-                            <inset key="imageEdgeInsets" minX="15" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="40" minY="-24" maxX="0.0" maxY="0.0"/>
                             <state key="normal" title="Delete" image="Delete">
                                 <color key="titleColor" red="0.97575825449999998" green="0.38110277059999997" blue="0.28535854820000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
@@ -98,7 +62,5 @@
     <resources>
         <image name="Delete" width="33" height="33"/>
         <image name="Edit" width="33" height="32"/>
-        <image name="Index" width="33" height="33"/>
-        <image name="Overlay" width="33" height="33"/>
     </resources>
 </document>

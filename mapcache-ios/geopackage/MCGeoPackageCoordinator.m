@@ -59,8 +59,7 @@
 
 
 - (void)updateAndReload:(NSNotification *) notification {
-    [_repository regenerateDatabaseList];
-    _database = [_repository databaseNamed:_database.name];
+    _database = [_repository refreshDatabaseAndUpdateList:_database.name];
     _geoPackageViewController.database = _database;
     [_geoPackageViewController update];
 }
@@ -208,8 +207,9 @@
     NSLog(@"In showLayerDetails with %@", table.name);
     _repository.selectedLayerName = table.name;
     
-    MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerDelegate];
+    MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerDelegate layerCoordinatorDelegate:self];
     [self.childCoordinators addObject:layerCoordinator];
+    
     [layerCoordinator start];
 }
 
@@ -229,12 +229,20 @@
     BOOL didCreateLayer = [_repository createFeatueLayerIn:database withGeomertyColumns:geometryColumns boundingBox:boundingBox srsId:srsId];
     if (didCreateLayer) {
         [_drawerDelegate popDrawer];
-        [_repository regenerateDatabaseList];
-        _geoPackageViewController.database = [_repository databaseNamed:database];
+        _geoPackageViewController.database = [_repository refreshDatabaseAndUpdateList:_database.name];
         [_geoPackageViewController update];
     } else {
         //TODO handle the case where a new feature layer could not be created
     }
+}
+
+
+#pragma mark - MCLayerCoordinatorDelegate methods
+- (void) layerCoordinatorCompletionHandler {
+    // TODO update the geopackage view to reflect any changes
+    _geoPackageViewController.database = [_repository databaseNamed:_database.name];
+    [_geoPackageViewController update];
+    [self.childCoordinators removeAllObjects];
 }
 
 

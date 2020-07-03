@@ -77,6 +77,7 @@
     // The height of the screen minus the bit at the top where the map shows through
     int heightFromTop = [[MCProperties getNumberValueOfProperty:@"nga_drawer_view_space_from_top"] intValue];
     childViewController.view.frame = CGRectMake(0, CGRectGetMaxY(self.backgroundViewController.view.frame), _width, CGRectGetMaxY(self.backgroundViewController.view.frame) - heightFromTop);
+    [childViewController becameTopDrawer];
 }
 
 
@@ -90,6 +91,7 @@
         NGADrawerViewController *newTopDrawer = [_drawerStack objectAtIndex:_drawerStack.count -1];
         [newTopDrawer makeFullView];
         [newTopDrawer.view setHidden:NO];
+        [newTopDrawer becameTopDrawer];
         [oldTopDrawer removeDrawerFromSuperview];
     }
 }
@@ -105,6 +107,7 @@
         [_drawerStack removeLastObject];
         NGADrawerViewController *newTopDrawer = [_drawerStack objectAtIndex:_drawerStack.count -1];
         [newTopDrawer makeFullView];
+        [newTopDrawer becameTopDrawer];
         [newTopDrawer.view setHidden:YES];
         [oldTopDrawer removeDrawerFromSuperview];
     }
@@ -118,6 +121,7 @@
     if ([_drawerStack count] > 1) {
         NGADrawerViewController *topDrawer = [_drawerStack objectAtIndex:_drawerStack.count - 1];
         [topDrawer makeFullView];
+        [topDrawer becameTopDrawer];
         [topDrawer.view setHidden:NO];
     }
 }

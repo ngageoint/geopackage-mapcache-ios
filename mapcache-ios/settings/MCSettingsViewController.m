@@ -79,7 +79,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                      [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE],
                      [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_HYBRID], nil];
     
-    [_baseMapSelector setItems:maps];
+    [_baseMapSelector updateItems:maps];
     
     NSString *mapType = [self.settings stringForKey:GPKGS_PROP_MAP_TYPE];
     if (mapType == nil || [mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {

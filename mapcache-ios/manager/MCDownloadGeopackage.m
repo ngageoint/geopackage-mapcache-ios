@@ -220,7 +220,7 @@
 
 #pragma mark- UITextFieldDelegate methods
 - (void) textFieldDidEndEditing:(UITextField *)textField {
-    [textField trimWhiteSpace:textField];
+    [textField trimWhiteSpace];
     
     if (textField == self.urlTextField) {
         NSLog(@"URL Field ended editing");

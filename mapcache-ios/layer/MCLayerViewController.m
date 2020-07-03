@@ -10,7 +10,6 @@
 
 @interface MCLayerViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
-@property (strong, nonatomic) GPKGTileDao *tileDao;
 @property (strong, nonatomic) MCFeatureTable *featureTable;
 @property (strong, nonatomic) MCTileTable *tileTable;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
@@ -23,16 +22,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    if ([self.table isKindOfClass:MCTileTable.class]) {
-        self.tileTable = (MCTileTable *) self.table;
-    } else if ([self.table isKindOfClass:MCFeatureTable.class]) {
-        self.featureTable = (MCFeatureTable *) self.table;
-    }
-    
-    if ([_layerDao isKindOfClass:GPKGTileDao.class]) {
-        _tileDao = (GPKGTileDao *) _layerDao;
-    }
     
     CGRect bounds = self.view.bounds;
     CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
@@ -63,12 +52,6 @@
 }
 
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [self.delegate setSelectedLayerName];
-}
-
-
 - (void) registerCellTypes {
     [self.tableView registerNib:[UINib nibWithNibName:@"MCHeaderCellDisplay" bundle:nil] forCellReuseIdentifier:@"header"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCFeatureLayerOperationsCell" bundle:nil] forCellReuseIdentifier:@"featureButtons"];
@@ -82,6 +65,12 @@
 
 - (void) initCellArray {
     _cellArray = [[NSMutableArray alloc] init];
+    
+    if ([self.table isKindOfClass:MCTileTable.class]) {
+        self.tileTable = (MCTileTable *) self.table;
+    } else if ([self.table isKindOfClass:MCFeatureTable.class]) {
+        self.featureTable = (MCFeatureTable *) self.table;
+    }
     
     MCHeaderCell *headerCell = [self.tableView dequeueReusableCellWithIdentifier:@"header"];
     headerCell.nameLabel.text = self.table.name;
@@ -112,20 +101,24 @@
         [_cellArray addObject:addFieldsButton];
         
         if (self.columns.count == 2) {
-            
+            // TODO add empty state
         }
         
         for (GPKGUserColumn *column in self.columns) {
             if (![column.name isEqualToString:@"id"] && ![column.name isEqualToString:@"geom"]) {
                 MCLayerCell *fieldCell = [self.tableView dequeueReusableCellWithIdentifier:@"field"];
                 [fieldCell setName:column.name];
-                [fieldCell setDetails:column.type];
                 [fieldCell activeIndicatorOff];
                 
                 if (column.dataType == GPKG_DT_TEXT) {
                     [fieldCell.layerTypeImage setImage:[UIImage imageNamed:@"text"]];
-                } else if (column.dataType == GPKG_DT_INTEGER || column.dataType == GPKG_DT_REAL) {
+                    [fieldCell setDetails:@"Text"];
+                } else if (column.dataType == GPKG_DT_INTEGER || column.dataType == GPKG_DT_REAL || column.dataType == GPKG_DT_DOUBLE || column.dataType == GPKG_DT_INT || column.dataType == GPKG_DT_FLOAT || column.dataType == GPKG_DT_SMALLINT || column.dataType == GPKG_DT_TINYINT || column.dataType == GPKG_DT_MEDIUMINT) {
                     [fieldCell.layerTypeImage setImage:[UIImage imageNamed:@"number"]];
+                    [fieldCell setDetails:@"Number"];
+                } else if (column.dataType == GPKG_DT_BOOLEAN) {
+                    [fieldCell.layerTypeImage setImage:[UIImage imageNamed:@"boolean"]];
+                    [fieldCell setDetails:@"Checkbox"];
                 }
                 
                 [_cellArray addObject:fieldCell];
@@ -161,7 +154,7 @@
 }
 
 
-#pragma mark - Table view data source
+#pragma mark - Table view data source and delegate methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
@@ -177,12 +170,17 @@
 }
 
 
-- (void) renameLayer:(GPKGUserDao *) dao {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
+
+- (void) renameLayer {
     NSLog(@"Renaming Layer");
     
     UIAlertController *renameAlert = [UIAlertController alertControllerWithTitle:@"Rename Layer" message:@"" preferredStyle:UIAlertControllerStyleAlert];
     [renameAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.text = dao.tableName;
+        [textField setText:self.table.name];
     }];
     
     UIAlertAction *confirmRename = [UIAlertAction actionWithTitle:@"Rename" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
@@ -190,16 +188,19 @@
         
         NSString * newName = renameAlert.textFields[0].text;
         
-        if(newName != nil && [newName length] > 0 && ![newName isEqualToString:dao.tableName]){
+        bool validName = newName != nil && [newName length] > 0 && ![newName isEqualToString:self.table.name];
+        if(validName){
             @try {
-                if(newName != nil && [newName length] > 0 && ![newName isEqualToString:dao.tableName]){
-                    //self.database.name = newName;
+                NSString *originalName = self.table.name;
+                
+                if([self.delegate renameLayer:newName]){
+                    [self.table setName:newName];
                     [self initCellArray];
                     [self.tableView reloadData];
                 }else{
                     [MCUtils showMessageWithDelegate:self
                                                andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
-                                             andMessage:[NSString stringWithFormat:@"Rename from %@ to %@ was not successful", @"OLDNAME", newName]];
+                                             andMessage:[NSString stringWithFormat:@"Rename from %@ to %@ was not successful", originalName, newName]];
                 }
             }
             @catch (NSException *exception) {
@@ -241,11 +242,109 @@
 }
 
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([[_cellArray objectAtIndex:indexPath.row] isKindOfClass:[MCLayerCell class]]) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
+        GPKGUserColumn *columnToDelete = nil;
+        
+        for (GPKGUserColumn *column in self.columns) {
+            if ([cell.layerNameLabel.text isEqualToString:column.name]) {
+                columnToDelete = column;
+            }
+        }
+        
+        UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this field? Data saved in this field will be lost for all points in this layer. This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            @try {
+                [self.delegate deleteColumn:columnToDelete];
+            }
+            @catch (NSException *exception) {
+                [MCUtils showMessageWithDelegate:self
+                                           andTitle:[NSString stringWithFormat:@"Delete failed"]
+                                         andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
+            }
+        }];
+        
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [deleteAlert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+        [deleteAlert addAction:confirmDelete];
+        [deleteAlert addAction:cancel];
+        [self presentViewController:deleteAlert animated:YES completion:nil];
+        
+        completionHandler(YES);
+    }];
+    
+    
+    UIContextualAction *renameAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Rename" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
+        GPKGUserColumn *columnToRename = nil;
+        
+        for (GPKGUserColumn *column in self.columns) {
+            if ([cell.layerNameLabel.text isEqualToString:column.name]) {
+                columnToRename = column;
+            }
+        }
+        
+        UIAlertController *renameAlert = [UIAlertController alertControllerWithTitle:@"Rename" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+        [renameAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+            [textField setText:cell.layerNameLabel.text];
+        }];
+        
+        UIAlertAction *confirmRename = [UIAlertAction actionWithTitle:@"Rename" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            NSLog(@"New name is: %@", renameAlert.textFields[0].text);
+            NSString * newName = renameAlert.textFields[0].text;
+            
+            if(newName != nil && [newName length] > 0){
+                @try {
+                    [self.delegate renameColumn:columnToRename name:newName];
+                }
+                @catch (NSException *exception) {
+                    [MCUtils showMessageWithDelegate:self
+                                               andTitle:[NSString stringWithFormat:@"Rename failed"]
+                                             andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
+                }
+            }
+        }];
+        
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [renameAlert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+        [renameAlert addAction:confirmRename];
+        [renameAlert addAction:cancel];
+        [self presentViewController:renameAlert animated:YES completion:nil];
+        
+        completionHandler(YES);
+    }];
+    
+    
+    
+    deleteAction.backgroundColor = [UIColor redColor];
+    renameAction.backgroundColor = [UIColor orangeColor];
+    UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[deleteAction, renameAction]];
+    configuration.performsFirstActionWithFullSwipe = YES;
+    return configuration;
+}
+
+
+
 #pragma mark - MCFeatureLayerOperationsCellDelegate methods
 // TODO pass these up to be done in the repository
 - (void) renameFeatureLayer {
     NSLog(@"MCLayerOperationsDelegate editLayer");
-    //[self renameLayer: _featureDao];
+    [self renameLayer];
 }
 
 
@@ -287,7 +386,7 @@
 #pragma mark - MCTileButtonsDelegate methods
 - (void) renameTileLayer {
     NSLog(@"MCTileButtonsDelegate renameLayer");
-    [self renameLayer: _tileDao];
+    [self renameLayer];
 }
 
 
@@ -305,6 +404,7 @@
 
 - (void)closeDrawer {
     [self.drawerViewDelegate popDrawer];
+    [self.delegate layerViewCompletionHandler];
 }
 
 
@@ -317,6 +417,11 @@
 - (void) drawerWasMadeFull {
     [super drawerWasMadeFull];
     [self.tableView setScrollEnabled:YES];
+}
+
+
+- (void) becameTopDrawer {
+    [self.delegate setSelectedLayerName];
 }
 
 

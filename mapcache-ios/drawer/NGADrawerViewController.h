@@ -33,6 +33,7 @@
 - (void) closeDrawer;
 - (void) drawerWasCollapsed;
 - (void) drawerWasMadeFull;
+- (void) becameTopDrawer;
 - (void) slideDown;
 - (BOOL) gestureIsInConflict:(UIPanGestureRecognizer *) recognizer;
 - (void) panGesture:(UIPanGestureRecognizer *) recognizer;

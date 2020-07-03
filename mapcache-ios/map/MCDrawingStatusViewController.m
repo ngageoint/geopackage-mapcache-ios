@@ -226,7 +226,6 @@
         NSLog(@"Cancel tapped");
         [self.drawingStatusDelegate cancelDrawingFeatures];
         [self.drawerViewDelegate popDrawer];
-        // TODO call end delegate method
     }
 }
 

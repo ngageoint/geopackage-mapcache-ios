@@ -100,8 +100,9 @@ static MCGeoPackageRepository *sharedRepository;
                 [tables addObject:table];
                 [theDatabase addFeatureOverlay:table];
             }
-        }
-        @finally {
+        } @catch(NSException *e) {
+            NSLog(@"Problem regenerating database list:\n%@", e.reason);
+        } @finally {
             if(geoPackage == nil){
                 @try {
                     [self.manager delete:geoPackage.name];
@@ -119,6 +120,77 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
+- (MCDatabase *)refreshDatabaseAndUpdateList:(NSString *)databaseName {
+    GPKGGeoPackage * geoPackage = nil;
+    MCDatabase * theDatabase = nil;
+    
+    @try {
+        geoPackage = [_manager open:databaseName];
+        
+        theDatabase = [[MCDatabase alloc] initWithName:databaseName andExpanded:NO];
+        NSMutableArray * tables = [[NSMutableArray alloc] init];
+        
+        GPKGContentsDao * contentsDao = [geoPackage contentsDao];
+        for(NSString * tableName in [geoPackage featureTables]){
+            GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:tableName];
+            int count = [featureDao count];
+            
+            GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
+            GPKGGeometryColumns * geometryColumns = [contentsDao geometryColumns:contents];
+            enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
+            
+            MCFeatureTable * table = [[MCFeatureTable alloc] initWithDatabase:databaseName andName:tableName andGeometryType:geometryType andCount:count];
+            
+            [tables addObject:table];
+            [theDatabase addFeature:table];
+        }
+        
+        for(NSString * tableName in [geoPackage tileTables]){
+            GPKGTileDao * tileDao = [geoPackage tileDaoWithTableName: tableName];
+            int count = [tileDao count];
+            MCTileTable * table = [[MCTileTable alloc] initWithDatabase:databaseName andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
+            [table setActive: [_activeDatabases exists:table]];
+            
+            [tables addObject:table];
+            [theDatabase addTile:table];
+        }
+        
+        for(MCFeatureOverlayTable * table in [_activeDatabases featureOverlays:databaseName]){
+            GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:table.featureTable];
+            int count = [featureDao count];
+            [table setCount:count];
+            
+            [tables addObject:table];
+            [theDatabase addFeatureOverlay:table];
+        }
+        
+        for (int i = 0; i < _databaseList.count; i++) {
+            MCDatabase *database = [_databaseList objectAtIndex:i];
+            if ([database.name isEqualToString:databaseName]) {
+                [_databaseList replaceObjectAtIndex:i withObject:theDatabase];
+            }
+        }
+    } @catch(NSException *e) {
+        NSLog(@"Problem updating database list:\n%@", e.reason);
+    } @finally {
+        if(geoPackage == nil){
+            @try {
+                [self.manager delete:geoPackage.name];
+            }
+            @catch (NSException *exception) {
+                NSLog(@"Caught Exception trying to delete %@", exception.reason);
+            }
+        }else{
+            [geoPackage close];
+        }
+    }
+    
+    return theDatabase;
+}
+
+
+
+//MARK: GeoPackage aka Database operations
 /**
   Get a  database by name.
   @return the database you were looking for
@@ -214,6 +286,7 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
+//MARK: Table aka Layer operations
 - (BOOL) createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns boundingBox:(GPKGBoundingBox *)boundingBox srsId:(NSNumber *) srsId {
     GPKGGeoPackage * geoPackage;
     BOOL didCreateLayer = YES;
@@ -226,11 +299,52 @@ static MCGeoPackageRepository *sharedRepository;
         // TODO handle this
         NSLog(@"There was a problem creating the layer, %@", e.reason);
         didCreateLayer = NO;
-    }
-    @finally {
+    } @finally {
         [geoPackage close];
         [self regenerateDatabaseList];
         return didCreateLayer;
+    }
+}
+
+
+- (BOOL) renameTable:(MCTable *) table toNewName:(NSString *)newTableName {
+    GPKGGeoPackage *geoPackage;
+    BOOL didRenameTable = YES;
+    BOOL addToActive = NO;
+    
+    if ([self.activeDatabases exists:table]) {
+        [self.activeDatabases removeTable:table];
+        addToActive = YES;
+    }
+    
+    @try {
+        geoPackage = [_manager open:table.database];
+        NSLog(@"Tables before renaming");
+        
+        for(NSString *table in geoPackage.tables) {
+            NSLog(@"%@", table);
+        }
+        
+        [geoPackage renameTable:table.name toTable:newTableName];
+        //[GPKGAlterTable renameTable:table.name toTable:newTableName withConnection:geoPackage.database];
+        MCDatabase *updatedDatabase = [self refreshDatabaseAndUpdateList:table.database];;
+        
+        if (addToActive) {
+            [self.activeDatabases addTable:[updatedDatabase tableNamed:newTableName]];
+        }
+        
+        NSLog(@"Tables after renaming");
+        
+        for(NSString *table in geoPackage.tables) {
+            NSLog(@"%@", table);
+        }
+        didRenameTable = YES;
+    } @catch (NSException *e) {
+        NSLog(@"MCGeoPackageRepository - Probem renaiming table: %@", e.reason);
+        didRenameTable = NO;
+    } @finally {
+        [geoPackage close];
+        return didRenameTable;
     }
 }
 
@@ -262,7 +376,7 @@ static MCGeoPackageRepository *sharedRepository;
     @try {
         GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:featureRow.table.tableName];
         
-        if (featureRow.values[0] && [featureRow.values[0] isKindOfClass:NSNull.class]) {
+        if (featureRow.values[0] && [featureRow.values[0] isKindOfClass:NSNull.class]) { // new row
             [featureDao insert:featureRow];
             indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
             NSArray<NSString *> *indexedTypes = [indexer indexedTypes];
@@ -272,7 +386,10 @@ static MCGeoPackageRepository *sharedRepository;
             }
             
         } else {
-            [featureDao update:featureRow];
+            int update = [featureDao update:featureRow];
+            if (update == 0) {
+                saved = NO;
+            }
         }
         
         MCDatabase *database = [self databaseNamed:geoPackage.name];
@@ -394,5 +511,69 @@ static MCGeoPackageRepository *sharedRepository;
     
     return didAdd;
 }
+
+
+- (NSArray<GPKGUserColumn *> *)renameColumn:(GPKGUserColumn*)column newName:(NSString *)newColumnName table:(MCTable *)table {
+    GPKGGeoPackage *geoPackage = nil;
+    GPKGFeatureDao *featureDao = nil;
+    
+    BOOL addToActive = NO;
+    
+    if ([self.activeDatabases exists:table]) {
+        [self.activeDatabases removeTable:table];
+        addToActive = YES;
+    }
+    
+    @try {
+        geoPackage = [_manager open:table.database];
+        featureDao = [geoPackage featureDaoWithTableName:table.name];
+        [featureDao renameColumn:column toColumn:newColumnName];
+        MCDatabase *updatedDatabase = [self refreshDatabaseAndUpdateList:table.database];
+        
+        if (addToActive) {
+            [self.activeDatabases addTable:[updatedDatabase tableNamed:table.name]];
+        }
+    } @catch(NSException *e) {
+        NSLog(@"Problem querying row: %@", e.reason);
+    } @finally {
+        if (geoPackage != nil) {
+            [geoPackage close];
+        }
+        
+        return [featureDao columns];
+    }
+}
+
+
+- (NSArray<GPKGUserColumn *> *)deleteColumn:(GPKGUserColumn*)column table:(MCTable *)table {
+    GPKGGeoPackage *geoPackage;
+    GPKGFeatureDao *featureDao = nil;
+    BOOL addToActive = NO;
+    
+    if ([self.activeDatabases exists:table]) {
+        [self.activeDatabases removeTable:table];
+        addToActive = YES;
+    }
+    
+    @try {
+        geoPackage = [_manager open:table.database];
+        featureDao = [geoPackage featureDaoWithTableName:table.name];
+        [featureDao dropColumn:column];
+        MCDatabase *updatedDatabase = [self refreshDatabaseAndUpdateList:table.database];
+        
+        if (addToActive) {
+            [self.activeDatabases addTable:[updatedDatabase tableNamed:table.name]];
+        }
+    } @catch (NSException *e) {
+        NSLog(@"MCGeoPackageRepository - Probem renaiming table: %@", e.reason);
+    } @finally {
+        if (geoPackage != nil) {
+            [geoPackage close];
+        }
+        
+        return [featureDao columns];
+    }
+}
+
 
 @end

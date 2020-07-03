@@ -45,33 +45,41 @@
 
 - (void)enableLeftButton {
     [_leftButton setEnabled: YES];
+    [_leftButton setBackgroundColor:[MCColorUtil getMediumGrey]];
 }
 
 
 - (void)enableRightButton {
     [_rightButton setEnabled: YES];
+    [_rightButton setBackgroundColor:[MCColorUtil getAccent]];
 }
 
 
 - (void)disableLeftButton {
     [_leftButton setEnabled: NO];
+    [_leftButton setBackgroundColor:[MCColorUtil getLightGrey]];
 }
 
 
 - (void)disableRightButton {
     [_rightButton setEnabled: NO];
+    [_rightButton setBackgroundColor:[MCColorUtil getAccentLight]];
 }
 
 
 - (void)disableButtons {
     [_leftButton setEnabled: NO];
+    [_leftButton setBackgroundColor:[MCColorUtil getLightGrey]];
     [_rightButton setEnabled: NO];
+    [_rightButton setBackgroundColor:[MCColorUtil getAccentLight]];
 }
 
 
 - (void)enableButtons {
     [_leftButton setEnabled: YES];
+    [_leftButton setBackgroundColor:[MCColorUtil getMediumGrey]];
     [_rightButton setEnabled: YES];
+    [_rightButton setBackgroundColor:[MCColorUtil getAccent]];
 }
 
 

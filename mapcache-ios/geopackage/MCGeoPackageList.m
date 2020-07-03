@@ -225,7 +225,20 @@
     }
     
     UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        [self deleteGeoPackageAtIndexPath:indexPath];
+        
+        UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this GeoPackage? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self deleteGeoPackageAtIndexPath:indexPath];
+        }];
+        
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [deleteAlert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+        [deleteAlert addAction:confirmDelete];
+        [deleteAlert addAction:cancel];
+        [self presentViewController:deleteAlert animated:YES completion:nil];
+        
         completionHandler(YES);
     }];
     delete.backgroundColor = [UIColor redColor];

@@ -37,11 +37,14 @@
 - (void) createOverlay;
 - (void) indexLayer;
 - (void) createTiles;
-- (void) renameLayer:(NSString *) layerName;
+- (BOOL) renameLayer:(NSString *) newLayerName;
 - (void) showTileScalingOptions;
 - (void) showFieldCreationView;
 - (void) layerViewDidClose;
 - (void) setSelectedLayerName;
+- (void) renameColumn:(GPKGUserColumn *)column name:(NSString *)name;
+- (void) deleteColumn:(GPKGUserColumn *)column;
+- (void) layerViewCompletionHandler;
 @end
 
 

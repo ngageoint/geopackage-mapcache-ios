@@ -7,13 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GPKGDataTypes.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UITextField (Validators)
 - (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock;
 - (void)isValidGeoPackageURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock;
-- (void)trimWhiteSpace:(UITextField *)textField;
+- (void)trimWhiteSpace;
+- (BOOL)fieldValueValidForType:(enum GPKGDataType) dataType;
 @end
 
 NS_ASSUME_NONNULL_END
