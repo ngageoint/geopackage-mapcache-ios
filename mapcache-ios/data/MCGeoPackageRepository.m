@@ -7,6 +7,7 @@
 //
 
 #import "MCGeoPackageRepository.h"
+#import "mapcache_ios-Swift.h"
 
 static MCGeoPackageRepository *sharedRepository;
 
@@ -59,61 +60,7 @@ static MCGeoPackageRepository *sharedRepository;
     NSArray *databaseNames = [_manager databases];
     
     for(NSString * databaseName in databaseNames){
-        GPKGGeoPackage * geoPackage = nil;
-        @try {
-            geoPackage = [_manager open:databaseName];
-            
-            MCDatabase * theDatabase = [[MCDatabase alloc] initWithName:databaseName andExpanded:NO];
-            [_databaseList addObject:theDatabase];
-            NSMutableArray * tables = [[NSMutableArray alloc] init];
-            
-            GPKGContentsDao * contentsDao = [geoPackage contentsDao];
-            for(NSString * tableName in [geoPackage featureTables]){
-                GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:tableName];
-                int count = [featureDao count];
-                
-                GPKGContents * contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
-                GPKGGeometryColumns * geometryColumns = [contentsDao geometryColumns:contents];
-                enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
-                
-                MCFeatureTable * table = [[MCFeatureTable alloc] initWithDatabase:databaseName andName:tableName andGeometryType:geometryType andCount:count];
-                
-                [tables addObject:table];
-                [theDatabase addFeature:table];
-            }
-            
-            for(NSString * tableName in [geoPackage tileTables]){
-                GPKGTileDao * tileDao = [geoPackage tileDaoWithTableName: tableName];
-                int count = [tileDao count];
-                MCTileTable * table = [[MCTileTable alloc] initWithDatabase:databaseName andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
-                [table setActive: [_activeDatabases exists:table]];
-                
-                [tables addObject:table];
-                [theDatabase addTile:table];
-            }
-            
-            for(MCFeatureOverlayTable * table in [_activeDatabases featureOverlays:databaseName]){
-                GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:table.featureTable];
-                int count = [featureDao count];
-                [table setCount:count];
-                
-                [tables addObject:table];
-                [theDatabase addFeatureOverlay:table];
-            }
-        } @catch(NSException *e) {
-            NSLog(@"Problem regenerating database list:\n%@", e.reason);
-        } @finally {
-            if(geoPackage == nil){
-                @try {
-                    [self.manager delete:geoPackage.name];
-                }
-                @catch (NSException *exception) {
-                    NSLog(@"Caught Exception trying to delete %@", exception.reason);
-                }
-            }else{
-                [geoPackage close];
-            }
-        }
+        [_databaseList addObject: [self readGeoPacakgeIntoDatabase:databaseName]];
     }
     
     return _databaseList;
@@ -121,12 +68,25 @@ static MCGeoPackageRepository *sharedRepository;
 
 
 - (MCDatabase *)refreshDatabaseAndUpdateList:(NSString *)databaseName {
-    GPKGGeoPackage * geoPackage = nil;
+    MCDatabase * theDatabase = [self readGeoPacakgeIntoDatabase:databaseName];
+    
+    for (int i = 0; i < _databaseList.count; i++) {
+        MCDatabase *database = [_databaseList objectAtIndex:i];
+        if ([database.name isEqualToString:databaseName]) {
+            [_databaseList replaceObjectAtIndex:i withObject:theDatabase];
+        }
+    }
+    
+    return theDatabase;
+}
+
+
+- (MCDatabase *) readGeoPacakgeIntoDatabase:(NSString *) databaseName {
     MCDatabase * theDatabase = nil;
+    GPKGGeoPackage * geoPackage = nil;
     
     @try {
         geoPackage = [_manager open:databaseName];
-        
         theDatabase = [[MCDatabase alloc] initWithName:databaseName andExpanded:NO];
         NSMutableArray * tables = [[NSMutableArray alloc] init];
         
@@ -151,6 +111,19 @@ static MCGeoPackageRepository *sharedRepository;
             MCTileTable * table = [[MCTileTable alloc] initWithDatabase:databaseName andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
             [table setActive: [_activeDatabases exists:table]];
             
+            for (GPKGTileMatrix *tileMatrix in tileDao.tileMatrices) {
+                MCTileMatrix *mcTileMatrix = [[MCTileMatrix alloc] init];
+                mcTileMatrix.zoomLevel = tileMatrix.zoomLevel;
+                mcTileMatrix.tileCount = [NSNumber numberWithInt:[tileDao countWithZoomLevel:[tileMatrix.zoomLevel intValue]]];
+                mcTileMatrix.matrixWidth = tileMatrix.matrixWidth;
+                mcTileMatrix.matrixHeight = tileMatrix.matrixHeight;
+                mcTileMatrix.tileWidth = tileMatrix.tileWidth;
+                mcTileMatrix.tileHeight = tileMatrix.tileHeight;
+                mcTileMatrix.pixelXSize = tileMatrix.pixelXSize;
+                mcTileMatrix.pixelYSize = tileMatrix.pixelYSize;
+                [table.tileMatrices addObject:mcTileMatrix];
+            }
+            
             [tables addObject:table];
             [theDatabase addTile:table];
         }
@@ -163,22 +136,15 @@ static MCGeoPackageRepository *sharedRepository;
             [tables addObject:table];
             [theDatabase addFeatureOverlay:table];
         }
-        
-        for (int i = 0; i < _databaseList.count; i++) {
-            MCDatabase *database = [_databaseList objectAtIndex:i];
-            if ([database.name isEqualToString:databaseName]) {
-                [_databaseList replaceObjectAtIndex:i withObject:theDatabase];
-            }
-        }
     } @catch(NSException *e) {
-        NSLog(@"Problem updating database list:\n%@", e.reason);
+        NSLog(@"Problem reading database %@ :\n%@",databaseName, e.reason);
     } @finally {
         if(geoPackage == nil){
             @try {
                 [self.manager delete:geoPackage.name];
             }
             @catch (NSException *exception) {
-                NSLog(@"Caught Exception trying to delete %@", exception.reason);
+                NSLog(@"Caught Exception trying to delete %@ %@", databaseName, exception.reason);
             }
         }else{
             [geoPackage close];
@@ -187,7 +153,6 @@ static MCGeoPackageRepository *sharedRepository;
     
     return theDatabase;
 }
-
 
 
 //MARK: GeoPackage aka Database operations
@@ -326,7 +291,6 @@ static MCGeoPackageRepository *sharedRepository;
         }
         
         [geoPackage renameTable:table.name toTable:newTableName];
-        //[GPKGAlterTable renameTable:table.name toTable:newTableName withConnection:geoPackage.database];
         MCDatabase *updatedDatabase = [self refreshDatabaseAndUpdateList:table.database];;
         
         if (addToActive) {
@@ -345,6 +309,23 @@ static MCGeoPackageRepository *sharedRepository;
     } @finally {
         [geoPackage close];
         return didRenameTable;
+    }
+}
+
+
+- (NSArray *)tileMatricesForTableNamed:(NSString *) tableName inDatabase:(NSString *)databaseName {
+    GPKGGeoPackage *geoPackage = nil;
+    
+    @try {
+        geoPackage = [_manager open:databaseName];
+        GPKGTileDao *tileDao = [geoPackage tileDaoWithTableName:tableName];
+        return tileDao.tileMatrices;
+    } @catch(NSException *e) {
+        NSLog(@"Problem getting tile table details %@", e.reason);
+    } @finally {
+        if (geoPackage != nil) {
+            [geoPackage close];
+        }
     }
 }
 

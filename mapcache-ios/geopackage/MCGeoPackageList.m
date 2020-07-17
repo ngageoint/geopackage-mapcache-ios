@@ -38,6 +38,8 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCGeoPackageCell" bundle:nil] forCellReuseIdentifier:@"geopackage"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCEmptyStateCell" bundle:nil] forCellReuseIdentifier:@"emptyState"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCTutorialCell" bundle:nil] forCellReuseIdentifier:@"tutorialCell"];
+    self.downloadButton.backgroundColor = [MCColorUtil getAccent];
+    self.createButton.backgroundColor = [MCColorUtil getAccent];
     
     // iOS 13 dark mode support
     if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {

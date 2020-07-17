@@ -24,7 +24,7 @@
 
 
 @protocol MCTileHelperDelegate <NSObject>
-- (void) addTileOverlayToMapView: (MKTileOverlay *) tileOverlay;
+- (void) addTileOverlayToMapView:(MKTileOverlay *) tileOverlay withTable:(MCTileTable *)table;
 @end
 
 

@@ -103,7 +103,7 @@
 
 
 - (void)deleteGeoPackage:(MCDatabase *)database {
-    [self.manager delete:database.name];
+    [_repository deleteGeoPackage:database];
     [self.active removeDatabase:database.name andPreserveOverlays:NO];
     [_databases removeObjectIdenticalTo:database];
     
@@ -150,10 +150,10 @@
 #pragma mark - MCGeoPackageCoordinatorDelegate method
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete {
     if (didDelete) {
-        [self.manager delete:database];
+        [_repository deleteGeoPackage:[_repository databaseNamed:database]];
     }
     
-    _repository.selectedGeoPackageName = nil;
+    _repository.selectedGeoPackageName = @"";
     _databases = [_repository regenerateDatabaseList];
     self.geoPackageListView.geoPackages = self.databases;
     [self.geoPackageListView.tableView reloadData];

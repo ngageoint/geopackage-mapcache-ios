@@ -7,12 +7,12 @@
 //
 
 #import "MCLayerViewController.h"
+#import "mapcache_ios-Swift.h"
 
 @interface MCLayerViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
 @property (strong, nonatomic) MCFeatureTable *featureTable;
 @property (strong, nonatomic) MCTileTable *tileTable;
-@property (strong, nonatomic) GPKGGeoPackageManager *manager;
 @property (strong, nonatomic) UITableView *tableView;
 @property (nonatomic) BOOL haveScrolled;
 @property (nonatomic) CGFloat contentOffset;
@@ -58,7 +58,7 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCTileLayerOperationsCell" bundle:nil] forCellReuseIdentifier:@"tileButtons"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCTitleCell" bundle:nil] forCellReuseIdentifier:@"title"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"MCLayerCell" bundle: nil] forCellReuseIdentifier:@"field"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCLayerCell" bundle: nil] forCellReuseIdentifier:@"layerCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle: nil] forCellReuseIdentifier:@"button"];
 }
 
@@ -106,7 +106,7 @@
         
         for (GPKGUserColumn *column in self.columns) {
             if (![column.name isEqualToString:@"id"] && ![column.name isEqualToString:@"geom"]) {
-                MCLayerCell *fieldCell = [self.tableView dequeueReusableCellWithIdentifier:@"field"];
+                MCLayerCell *fieldCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
                 [fieldCell setName:column.name];
                 [fieldCell activeIndicatorOff];
                 
@@ -132,6 +132,22 @@
         [headerCell setDetailLabelThreeText:[NSString stringWithFormat:@"%d tiles", _tileTable.count]];
         tileButtonsCell.delegate = self;
         _cellArray = [[NSMutableArray alloc] initWithObjects:headerCell, tileButtonsCell, nil];
+        
+        MCTitleCell *zoomLevelsTitle = [self.tableView dequeueReusableCellWithIdentifier:@"title"];
+        [zoomLevelsTitle setLabelText:@"Zoom levels"];
+        [_cellArray addObject:zoomLevelsTitle];
+        
+        for (MCTileMatrix *tileMatrix in _tileTable.tileMatrices) {
+            if (tileMatrix.tileCount.intValue > 0) {
+                MCLayerCell *tileMatricCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
+                [tileMatricCell setName:[NSString stringWithFormat: @"%@ ", tileMatrix.zoomLevel]];
+                NSString *tileText = tileMatrix.tileCount.intValue > 1 ? @"tiles" : @"tile";
+                [tileMatricCell setDetails:[NSString stringWithFormat:@"%@ %@", tileMatrix.tileCount, tileText]];
+                [tileMatricCell.layerTypeImage setImage:[UIImage imageNamed:@"ZoomLevel"]];
+                [tileMatricCell activeIndicatorOff];
+                [_cellArray addObject:tileMatricCell];
+            }
+        }
     }
     
     /*if (layerBoundingBox != nil) {
@@ -252,6 +268,11 @@
 
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (_tileTable != nil) {
+        return nil;
+    }
+    
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
         GPKGUserColumn *columnToDelete = nil;
@@ -288,6 +309,7 @@
     
     
     UIContextualAction *renameAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Rename" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        
         MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
         GPKGUserColumn *columnToRename = nil;
         

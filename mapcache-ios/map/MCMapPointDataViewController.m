@@ -107,8 +107,10 @@
     for (int i = 0; i < _row.columnCount; i++) {
         NSString *columnName = _row.columnNames[i];
         enum GPKGDataType dataType = _row.columns.columns[i].dataType;
+        NSString *idColumnName = [_row idColumnName]; // the Primary Key column name
+        NSString *geometryColumnName = [(GPKGFeatureRow*)_row geometryColumnName];
         
-        if (![columnName isEqualToString:@"id"] && ![columnName isEqualToString:@"geom"]) {
+        if (![columnName isEqualToString:idColumnName] && ![columnName isEqualToString:geometryColumnName]) {
             MCKeyValueDisplayCell *displayCell = [self.tableView dequeueReusableCellWithIdentifier:@"keyValue"];
             
             if (_row.columns.columns[i].dataType == GPKG_DT_TEXT) {
@@ -187,11 +189,14 @@
     }
     
     if (_row) {
+        NSString *idColumnName = [_row idColumnName]; // the Primary Key column name
+        NSString *geometryColumnName = [(GPKGFeatureRow*)_row geometryColumnName];
+        
         for (int i = 0; i < _row.columnCount; i++) {
             NSString *columnName = _row.columnNames[i];
             enum GPKGDataType dataType = _row.columns.columns[i].dataType;
             
-            if (![columnName isEqualToString:@"id"] && ![columnName isEqualToString:@"geom"]) {
+            if (![columnName isEqualToString:idColumnName] && ![columnName isEqualToString:geometryColumnName]) {
                 MCFieldWithTitleCell *fieldWithTitle = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
                 [fieldWithTitle setTitleText:columnName];
                 fieldWithTitle.columnName = columnName;

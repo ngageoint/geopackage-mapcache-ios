@@ -87,71 +87,19 @@
 
 
 - (void) updateDatabase {
-    GPKGGeoPackage *geoPackage = nil;
-    MCDatabase *updatedDatabase = nil;
-    
-    @try {
-        geoPackage = [_manager open:_database.name];
-        
-        GPKGContentsDao *contentsDao = [geoPackage contentsDao];
-        NSMutableArray *tables = [[NSMutableArray alloc] init];
-        
-        updatedDatabase = [[MCDatabase alloc] initWithName:_database.name andExpanded:false];
-        
-        // Handle the Feature Layers
-        for (NSString *tableName in [geoPackage featureTables]) {
-            GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:tableName];
-            int count = [featureDao count];
-            GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
-            GPKGGeometryColumns *geometryColumns = [contentsDao geometryColumns:contents];
-            enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
-            MCFeatureTable *table = [[MCFeatureTable alloc] initWithDatabase:_database.name andName:tableName andGeometryType:geometryType andCount:count];
-            
-            [tables addObject:table];
-            [updatedDatabase addFeature:table];
-        }
-        
-        // Handle the tile layers
-        for (NSString *tableName in [geoPackage tileTables]) {
-            GPKGTileDao *tileDao = [geoPackage tileDaoWithTableName:tableName];
-            int count = [tileDao count];
-            
-            MCTileTable *table = [[MCTileTable alloc] initWithDatabase:_database.name andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
-            
-            [tables addObject:table];
-            [updatedDatabase addTile:table];
-        }
-        
-        // TODO: Figure out what to do about overlays
-    }
-    @finally {
-        if (geoPackage == nil) {
-            @try {
-                [_manager delete:_database.name];
-            }
-            @catch (NSException *exception) {
-            }
-        } else {
-            if (updatedDatabase != nil) {
-                _database = updatedDatabase;
-                _geoPackageViewController.database = _database;
-                [_geoPackageViewController update];
-            }
-            [geoPackage close];
-        }
-    }
+    _database = [_repository refreshDatabaseAndUpdateList:self.database.name];
+    self.geoPackageViewController.database = _database;
+    [self.geoPackageViewController update];
 }
 
 
 - (void) copyGeoPackage {
-    //[_navigationController popViewControllerAnimated:YES]; // TODO replace with drawer
     [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
 }
 
 
 - (void) deleteGeoPackage {
     NSLog(@"Coordinator handling delete");
-    //[_navigationController popViewControllerAnimated:YES]; // TODO replace with drawer
     [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:YES];
 }
 
@@ -265,7 +213,7 @@
     [_drawerDelegate popDrawerAndHide];
     self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] init];
     self.boundingBoxGuideViewController.delegate = self;
-    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view];
+    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view tileUrl:url];
 }
 
 
@@ -346,7 +294,7 @@
     [_drawerDelegate popDrawerAndHide];
     self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] init];
     self.boundingBoxGuideViewController.delegate = self;
-    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view];
+    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view tileUrl:_tileData.loadTiles.url];
 }
 
 - (NSString *) updateTileDownloadSizeEstimateWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
@@ -382,22 +330,26 @@
     NSLog(@"Coordinator attempting to create tiles");
     GPKGTileScaling *scaling = [MCLoadTilesTask tileScaling];
     
-    [MCLoadTilesTask loadTilesWithCallback:self
-                                  andDatabase:_database.name
-                                     andTable:tileData.name
-                                       andUrl:tileData.loadTiles.url
-                                   andMinZoom:[tileData.loadTiles.generateTiles.minZoom intValue]
-                                   andMaxZoom:[tileData.loadTiles.generateTiles.maxZoom intValue]
-                            andCompressFormat:GPKG_CF_NONE // TODO: let user set this
-                           andCompressQuality:[[MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT] intValue]
-                             andCompressScale:100 // TODO: let user set this
-                                  andXyzTiles:tileData.loadTiles.generateTiles.xyzTiles
-                               andBoundingBox:tileData.loadTiles.generateTiles.boundingBox
-                               andTileScaling:scaling
-                                 andAuthority:PROJ_AUTHORITY_EPSG
-                                      andCode:[NSString stringWithFormat:@"%d",tileData.loadTiles.epsg]
-                                     andLabel:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
-
+    @try {
+        [MCLoadTilesTask loadTilesWithCallback:self
+               andDatabase:_database.name
+                  andTable:tileData.name
+                    andUrl:tileData.loadTiles.url
+                andMinZoom:[tileData.loadTiles.generateTiles.minZoom intValue]
+                andMaxZoom:[tileData.loadTiles.generateTiles.maxZoom intValue]
+         andCompressFormat:GPKG_CF_NONE // TODO: let user set this
+        andCompressQuality:[[MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT] intValue]
+          andCompressScale:100 // TODO: let user set this
+               andXyzTiles:tileData.loadTiles.generateTiles.xyzTiles
+            andBoundingBox:tileData.loadTiles.generateTiles.boundingBox
+            andTileScaling:scaling
+              andAuthority:PROJ_AUTHORITY_EPSG
+                   andCode:[NSString stringWithFormat:@"%d",tileData.loadTiles.epsg]
+                  andLabel:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
+    } @catch(NSException *e) {
+        NSLog(@"MCGeoPacakgeCoordinator - createTileLayer\n%@", e.reason);
+    }
+    
 }
 
 

@@ -12,11 +12,13 @@
 
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count{
     self = [super initWithDatabase:database andName:name andCount:count];
+    self.tileMatrices = [[NSMutableArray alloc] init];
     return self;
 }
 
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count andMinZoom: (int) minZoom andMaxZoom: (int) maxZoom {
     self = [super initWithDatabase:database andName:name andCount:count];
+    self.tileMatrices = [[NSMutableArray alloc] init];
     self.minZoom = minZoom;
     self.maxZoom = maxZoom;
     return self;

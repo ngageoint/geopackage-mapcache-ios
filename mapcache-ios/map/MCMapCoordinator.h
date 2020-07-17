@@ -27,7 +27,7 @@
 - (void) updateMapLayers;
 - (void) toggleGeoPackage:(MCDatabase *) geoPackage;
 - (void) zoomToSelectedGeoPackage:(NSString *) geoPackageName;
-- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView;
+- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl;
 - (void) removeTileBoundingBoxGuide;
 - (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;
 @end

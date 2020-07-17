@@ -14,5 +14,6 @@
 -(instancetype) initWithDatabase: (NSString *) database andName: (NSString *) name andCount: (int) count andMinZoom: (int) minZoom andMaxZoom: (int) maxZoom;
 @property (nonatomic) int minZoom;
 @property (nonatomic) int maxZoom;
+@property (nonatomic, strong) NSMutableArray *tileMatrices;
 
 @end

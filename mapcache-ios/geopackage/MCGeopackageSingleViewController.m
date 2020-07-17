@@ -93,6 +93,7 @@
     [newOfflineMapButtonCell.button setTitle:@"Download a map" forState:UIControlStateNormal];
     newOfflineMapButtonCell.action = GPKGS_ACTION_NEW_LAYER;
     newOfflineMapButtonCell.delegate = self;
+    newOfflineMapButtonCell.button.backgroundColor = [MCColorUtil getAccent];
     [_cellArray addObject: newOfflineMapButtonCell];
     
     NSArray *tileTables = [_database getTiles];
@@ -117,6 +118,7 @@
     [newLayerButtonCell.button setTitle:@"New feature collection" forState:UIControlStateNormal];
     newLayerButtonCell.action = @"new-collection";
     newLayerButtonCell.delegate = self;
+    newLayerButtonCell.button.backgroundColor = [MCColorUtil getAccent];
     [_cellArray addObject:newLayerButtonCell];
     
     NSArray *featureTables = [_database getFeatures];

@@ -19,7 +19,6 @@
 #import "MCLayerCell.h"
 #import "MCUtils.h"
 #import "MCProperties.h"
-#import <GPKGGeoPackageManager.h>
 #import <SFPProjectionTransform.h>
 #import "MCFeatureLayerOperationsCell.h"
 #import "MCTileLayerOperationsCell.h"

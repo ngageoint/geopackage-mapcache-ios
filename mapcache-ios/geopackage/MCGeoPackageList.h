@@ -14,6 +14,7 @@
 #import "GPKGGeoPackageFactory.h"
 #import "MCDatabase.h"
 #import "MCDatabases.h"
+#import "MCColorUtil.h"
 
 
 @protocol MCGeoPacakageListViewDelegate <NSObject>
@@ -29,6 +30,8 @@
 - (instancetype) initWithGeoPackages: (NSMutableArray *) geoPackages asFullView: (BOOL) fullView andDelegate:(id<MCGeoPacakageListViewDelegate>) delegate;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *geoPackages;
+@property (weak, nonatomic) IBOutlet UIButton *downloadButton;
+@property (weak, nonatomic) IBOutlet UIButton *createButton;
 
 
 - (void)toggleGeoPacakge:(NSIndexPath *) indexPath;

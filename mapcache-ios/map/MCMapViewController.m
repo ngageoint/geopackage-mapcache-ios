@@ -57,6 +57,7 @@
 @property (nonatomic) int currentZoom;
 @property (nonatomic) CLLocationCoordinate2D currentCenter;
 @property (nonatomic) BOOL expandedZoomDetails;
+@property (nonatomic, strong) MKTileOverlay *userTileOverlay;
 @end
 
 
@@ -334,7 +335,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 #pragma mark - MCTileHelperDelegate methods
-- (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay {
+- (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay withTable:(MCTileTable *)table {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [self.mapView addOverlay:tileOverlay];
     });
@@ -699,80 +700,89 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     NSMutableArray *activeDatabase = [[NSMutableArray alloc] init];
     [activeDatabase addObjectsFromArray:[self.active getDatabases]];
     for(MCDatabase *database in activeDatabase){
-        GPKGGeoPackage *geoPackage = [self.manager open:database.name];
-        if (geoPackage != nil) {
-            
-            NSMutableSet<NSString *> *featureTableDaos = [[NSMutableSet alloc] init];
-            NSArray *features = [database getFeatures];
-            if(features.count > 0){
-                for(MCTable *featureTable in features){
-                    [featureTableDaos addObject:featureTable.name];
-                }
-            }
-            
-            for(MCFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
-                if(featureOverlay.active){
-                    [featureTableDaos addObject:featureOverlay.featureTable];
-                }
-            }
-            
-            if(featureTableDaos.count > 0){
+        GPKGGeoPackage *geoPackage;
+
+        @try {
+            geoPackage = [self.manager open:database.name];
+            if (geoPackage != nil) {
                 
-                GPKGContentsDao *contentsDao = [geoPackage contentsDao];
+                NSMutableSet<NSString *> *featureTableDaos = [[NSMutableSet alloc] init];
+                NSArray *features = [database getFeatures];
+                if(features.count > 0){
+                    for(MCTable *featureTable in features){
+                        [featureTableDaos addObject:featureTable.name];
+                    }
+                }
                 
-                for (NSString *featureTable in featureTableDaos) {
+                for(MCFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
+                    if(featureOverlay.active){
+                        [featureTableDaos addObject:featureOverlay.featureTable];
+                    }
+                }
+                
+                if(featureTableDaos.count > 0){
                     
-                    @try {
-                        GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:featureTable];
-                        GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
+                    GPKGContentsDao *contentsDao = [geoPackage contentsDao];
+                    
+                    for (NSString *featureTable in featureTableDaos) {
                         
-                        if (contentsBoundingBox != nil) {
+                        @try {
+                            GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:featureTable];
+                            GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
                             
-                            contentsBoundingBox = [self.tileHelper transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao srs:contents]];
-                            
-                            if (self.featuresBoundingBox != nil) {
-                                self.featuresBoundingBox = [self.featuresBoundingBox union:contentsBoundingBox];
-                            } else {
-                                self.featuresBoundingBox = contentsBoundingBox;
+                            if (contentsBoundingBox != nil) {
+                                
+                                contentsBoundingBox = [self.tileHelper transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao srs:contents]];
+                                
+                                if (self.featuresBoundingBox != nil) {
+                                    self.featuresBoundingBox = [self.featuresBoundingBox union:contentsBoundingBox];
+                                } else {
+                                    self.featuresBoundingBox = contentsBoundingBox;
+                                }
                             }
+                        } @catch (NSException *e) {
+                            NSLog(@"%@", [e description]);
+                        } @finally {
+                            [geoPackage close];
                         }
-                    } @catch (NSException *e) {
-                        NSLog(@"%@", [e description]);
-                    } @finally {
-                        [geoPackage close];
                     }
                 }
-            }
-            
-            NSArray *tileTables = [database getTiles];
-            if(tileTables.count > 0){
                 
-                GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage tileMatrixSetDao];
-                
-                for(MCTileTable *tileTable in tileTables){
+                NSArray *tileTables = [database getTiles];
+                if(tileTables.count > 0){
                     
-                    @try {
-                        GPKGTileMatrixSet *tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:tileTable.name];
-                        GPKGBoundingBox *tileMatrixSetBoundingBox = [tileMatrixSet boundingBox];
+                    GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage tileMatrixSetDao];
+                    
+                    for(MCTileTable *tileTable in tileTables){
                         
-                        tileMatrixSetBoundingBox = [self.tileHelper transformBoundingBoxToWgs84:tileMatrixSetBoundingBox withSrs:[tileMatrixSetDao srs:tileMatrixSet]];
-                        
-                        if (self.tilesBoundingBox != nil) {
-                            self.tilesBoundingBox = [self.tilesBoundingBox union:tileMatrixSetBoundingBox];
-                        } else {
-                            self.tilesBoundingBox = tileMatrixSetBoundingBox;
+                        @try {
+                            GPKGTileMatrixSet *tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:tileTable.name];
+                            GPKGBoundingBox *tileMatrixSetBoundingBox = [tileMatrixSet boundingBox];
+                            
+                            tileMatrixSetBoundingBox = [self.tileHelper transformBoundingBoxToWgs84:tileMatrixSetBoundingBox withSrs:[tileMatrixSetDao srs:tileMatrixSet]];
+                            
+                            if (self.tilesBoundingBox != nil) {
+                                self.tilesBoundingBox = [self.tilesBoundingBox union:tileMatrixSetBoundingBox];
+                            } else {
+                                self.tilesBoundingBox = tileMatrixSetBoundingBox;
+                            }
+                        } @catch (NSException *e) {
+                            NSLog(@"%@", [e description]);
+                        } @finally {
+                            [geoPackage close];
                         }
-                    } @catch (NSException *e) {
-                        NSLog(@"%@", [e description]);
-                    } @finally {
-                        [geoPackage close];
                     }
                 }
             }
-            
-            [geoPackage close];
+        } @catch (NSException *e) {
+            NSLog(@"Problem zooming to bounds %@", e.reason);
+        } @finally {
+            if (geoPackage != nil) {
+                [geoPackage close];
+            }
         }
     }
+    
     [self zoomToActiveAndIgnoreRegionChange:YES];
 }
 
@@ -818,6 +828,29 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.drawPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYGON_LINE_WIDTH] doubleValue];
     if([MCProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL]){
         self.drawPolygonFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
+    }
+}
+
+
+/**
+   Used to show tile previews after a tile download, or switch on saved tile URLs from the map.
+*/
+- (void) addUserTilesWithUrl:(NSString *) tileTemplateURL {
+    if (self.userTileOverlay != nil) {
+        [self.mapView removeOverlay:self.userTileOverlay];
+    }
+    
+    self.userTileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileTemplateURL];
+    [self.mapView insertOverlay:self.userTileOverlay atIndex:0];
+}
+
+
+/**
+    Used to remove tile previews after a tile download, or switch off saved tile URLs from the map.
+ */
+- (void) removeUserTiles {
+    if (self.userTileOverlay != nil) {
+        [self.mapView removeOverlay:self.userTileOverlay];
     }
 }
 

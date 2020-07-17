@@ -53,4 +53,6 @@
 - (void)toggleMapControls;
 - (void)clearTempPoints;
 - (void) removeMapPoint:(GPKGMapPoint *) mapPoint;
+- (void) addUserTilesWithUrl:(NSString *) tileTemplateURL;
+- (void) removeUserTiles;
 @end

@@ -55,34 +55,40 @@
             break;
         }
         
-        GPKGGeoPackage * geoPackage = [self.manager open:database.name];
+        GPKGGeoPackage * geoPackage;
         
-        if(geoPackage != nil){
-            [self.geoPackages setObject:geoPackage forKey:database.name];
-            
-            NSMutableSet * featureTableDaos = [[NSMutableSet alloc] init];
-            NSArray * features = [database getFeatures];
-            if([features count] > 0){
-                for(MCTable * features in [database getFeatures]){
-                    [featureTableDaos addObject:features.name];
-                }
-            }
-            
-            if(featureTableDaos.count > 0){
-                NSMutableDictionary * databaseFeatureDaos = [[NSMutableDictionary alloc] init];
-                [self.featureDaos setObject:databaseFeatureDaos forKey:database.name];
-                for(NSString *featureTable in featureTableDaos){
-                    
-                    if([self updateCanceled:updateId]){
-                        break;
+        @try {
+            geoPackage = [self.manager open:database.name];
+        
+            if(geoPackage != nil){
+                [self.geoPackages setObject:geoPackage forKey:database.name];
+                
+                NSMutableSet * featureTableDaos = [[NSMutableSet alloc] init];
+                NSArray * features = [database getFeatures];
+                if([features count] > 0){
+                    for(MCTable * features in [database getFeatures]){
+                        [featureTableDaos addObject:features.name];
                     }
-                    
-                    GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:featureTable];
-                    [databaseFeatureDaos setObject:featureDao forKey:featureTable];
                 }
+                
+                if(featureTableDaos.count > 0){
+                    NSMutableDictionary * databaseFeatureDaos = [[NSMutableDictionary alloc] init];
+                    [self.featureDaos setObject:databaseFeatureDaos forKey:database.name];
+                    for(NSString *featureTable in featureTableDaos){
+                        
+                        if([self updateCanceled:updateId]){
+                            break;
+                        }
+                        
+                        GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:featureTable];
+                        [databaseFeatureDaos setObject:featureDao forKey:featureTable];
+                    }
+                }
+            } else{
+                [self.active removeDatabase:database.name andPreserveOverlays:false];
             }
-        } else{
-            [self.active removeDatabase:database.name andPreserveOverlays:false];
+        } @catch (NSException *e) {
+            NSLog(@"Problem preparing features in %@ %@", database.name, e.reason);
         }
     }
     

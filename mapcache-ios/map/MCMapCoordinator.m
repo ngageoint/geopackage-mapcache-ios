@@ -37,6 +37,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     self.childCoordinators = [[NSMutableArray alloc] init];
     self.preferences = [NSUserDefaults standardUserDefaults];
     self.repository = [MCGeoPackageRepository sharedRepository];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerRenamed:) name:@"MC_LAYER_RENAMED" object:nil];
     
     return self;
 }
@@ -58,6 +59,11 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 - (void) setMaxFeaturesPreference {
     
+}
+
+
+- (void)layerRenamed:(NSNotification *)notification {
+    [self updateMapLayers];
 }
 
 
@@ -96,7 +102,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 /**
     Get the map view ready to select an area where you would like to download tiles.
  */
-- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView {
+- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl {
     self.boundingBoxGuideView = boudingBoxGuideView;
     self.boundingBoxGuideView.alpha = 0.0;
     [self.mcMapViewController.view addSubview:self.boundingBoxGuideView];
@@ -106,6 +112,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     } completion:nil];
     
     [self.mcMapViewController toggleMapControls];
+    [self.mcMapViewController addUserTilesWithUrl:tileUrl];
 }
 
 

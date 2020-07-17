@@ -33,7 +33,11 @@ import UIKit
     @objc public func start() {
         self.layerViewController.table = self.table
         self.layerViewController.delegate = self
-        self.layerViewController.columns = MCGeoPackageRepository.shared().columns(forTable: table.name, database: table.database)
+        
+        if (self.table is MCFeatureTable) {
+            self.layerViewController.columns = MCGeoPackageRepository.shared().columns(forTable: table.name, database: table.database)
+        }
+        
         self.layerViewController.drawerViewDelegate = self.drawerViewDelegate
         self.layerViewController.pushOntoStack()
     }
@@ -74,6 +78,7 @@ import UIKit
             self.table = renamedTable
             self.layerViewController.table = self.table
             self.layerViewController.update()
+            NotificationCenter.default.post(name: Notification.Name("MC_LAYER_RENAMED"), object: nil)
         }
         
         return didUpdate

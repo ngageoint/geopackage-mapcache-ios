@@ -27,7 +27,7 @@
 
 
 + (UIColor *) getAccent {
-    return [UIColor colorWithRed:0.09f green:0.53f blue:0.56f alpha:1];
+    return [UIColor colorWithRed:36.0/255.0 green:169.0/255.0 blue:176.0/255.0 alpha:1.0];
 }
 
 
@@ -37,7 +37,7 @@
 
 
 + (UIColor *) getMediumGrey {
-    return [UIColor colorWithRed:(230/255.0) green:(230/255.0) blue:(230/255.0) alpha:1];
+    return [UIColor colorWithRed:(215/255.0) green:(215/255.0) blue:(215/255.0) alpha:1];
 }
 
 

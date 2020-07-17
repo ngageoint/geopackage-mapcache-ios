@@ -41,17 +41,19 @@
     NSArray *activeDatabases = [[NSArray alloc] initWithArray: [self.active getDatabases]];
 
     for (MCDatabase *database in activeDatabases) {
-        GPKGGeoPackage *geoPackage = [self.manager open:database.name];
+        GPKGGeoPackage *geoPackage;
         
-        if (geoPackage != nil) {
-            for (MCTileTable *tiles in [database getTiles]) {
-                @try {
+        @try {
+            geoPackage = [self.manager open:database.name];
+            
+            if (geoPackage != nil) {
+                for (MCTileTable *tiles in [database getTiles]) {
                     MKTileOverlay *tileOverlay = [self createOverlayForTiles:tiles fromGeoPacakge:geoPackage];
-                    [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay];
-                } @catch (NSException *e) {
-                    NSLog(@"%@", [e description]);
-                } 
+                    [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay withTable:tiles];
+                }
             }
+        } @catch (NSException *e) {
+            NSLog(@"%@", e.reason);
         }
     }
 }
@@ -61,7 +63,7 @@
     for (MCTileTable *tiles in [database getTiles]) {
         @try {
             MKTileOverlay *tileOverlay = [self createOverlayForTiles:tiles fromGeoPacakge:geoPackage];
-            [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay];
+            [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay withTable:tiles];
         } @catch (NSException *e) {
             NSLog(@"%@", [e description]);
         }

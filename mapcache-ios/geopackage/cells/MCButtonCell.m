@@ -33,7 +33,7 @@
 
 
 - (void) usePrimaryColors {
-    [self.button setBackgroundColor:[UIColor colorWithRed:79.0/255.0 green:188.0/255.0 blue:194.0/255.0 alpha:1.0]];
+    [self.button setBackgroundColor: [MCColorUtil getAccent]];
     self.button.clipsToBounds = YES;
     [self.button setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
 }
@@ -62,13 +62,13 @@
 
 - (void) enableButton {
     _button.userInteractionEnabled = YES;
-    _button.backgroundColor = [MCColorUtil getAccent];
+    [_button setBackgroundColor: [MCColorUtil getAccent]];
 }
 
 
 - (void) disableButton {
     _button.userInteractionEnabled = NO;
-    _button.backgroundColor = [MCColorUtil getAccentLight];
+    [_button setBackgroundColor: [MCColorUtil getMediumGrey]];
 }
 
 @end
