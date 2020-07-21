@@ -355,7 +355,7 @@ static MCGeoPackageRepository *sharedRepository;
     BOOL saved = YES;
     
     @try {
-        GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:featureRow.table.tableName];
+        GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:self.selectedLayerName];
         
         if (featureRow.values[0] && [featureRow.values[0] isKindOfClass:NSNull.class]) { // new row
             [featureDao insert:featureRow];

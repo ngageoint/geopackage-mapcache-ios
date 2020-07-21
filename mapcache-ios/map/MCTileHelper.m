@@ -49,11 +49,13 @@
             if (geoPackage != nil) {
                 for (MCTileTable *tiles in [database getTiles]) {
                     MKTileOverlay *tileOverlay = [self createOverlayForTiles:tiles fromGeoPacakge:geoPackage];
-                    [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay withTable:tiles];
+                    if (tileOverlay != nil) {
+                        [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay withTable:tiles];
+                    }
                 }
             }
         } @catch (NSException *e) {
-            NSLog(@"%@", e.reason);
+            NSLog(@"MCTileHelper - prepareTiles: %@", e.reason);
         }
     }
 }
@@ -65,7 +67,7 @@
             MKTileOverlay *tileOverlay = [self createOverlayForTiles:tiles fromGeoPacakge:geoPackage];
             [self.tileHelperDelegate addTileOverlayToMapView:tileOverlay withTable:tiles];
         } @catch (NSException *e) {
-            NSLog(@"%@", [e description]);
+            NSLog(@"MCTileHelper - prepareTilesForGeoPackage: %@", [e description]);
         }
     }
 }
@@ -73,46 +75,55 @@
 
 // MCTileHelper version of -(void) displayTiles: (GPKGSTileTable *)
 -(MKTileOverlay *) createOverlayForTiles: (MCTileTable *) tiles fromGeoPacakge:(GPKGGeoPackage *) geoPackage {
-    GPKGTileDao * tileDao = [geoPackage tileDaoWithTableName:tiles.name];
-    GPKGTileTableScaling *tileTableScaling = [[GPKGTileTableScaling alloc] initWithGeoPackage:geoPackage andTileDao:tileDao];
-    GPKGTileScaling *tileScaling = [tileTableScaling tileScaling];
-    GPKGBoundedOverlay * overlay = [GPKGOverlayFactory boundedOverlay:tileDao andScaling:tileScaling];
-    overlay.canReplaceMapContent = false;
+    GPKGBoundedOverlay *overlay = nil;
     
-    GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
-    
-    // TODO: handle feature tiles.
-    //    GPKGFeatureTileTableLinker * linker = [[GPKGFeatureTileTableLinker alloc] initWithGeoPackage:geoPackage];
-    //    NSArray<GPKGFeatureDao *> * featureDaos = [linker getFeatureDaosForTileTable:tileDao.tableName];
-    //    for(GPKGFeatureDao * featureDao in featureDaos){
-    //
-    //        // Create the feature tiles
-    //        GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
-    //
-    //        self.featureOverlayTiles = true;
-    //
-    //        // Add the feature overlay query
-    ////        GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithBoundedOverlay:overlay andFeatureTiles:featureTiles];
-    //        [self.featureOverlayQueries addObject:featureOverlayQuery];
-    //    }
-    
-    GPKGBoundingBox *displayBoundingBox = [tileMatrixSet boundingBox];
-    GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage tileMatrixSetDao];
-    GPKGSpatialReferenceSystem *tileMatrixSetSrs = [tileMatrixSetDao srs:tileMatrixSet];
-    GPKGContents *contents = [tileMatrixSetDao contents:tileMatrixSet];
-    GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
-    if(contentsBoundingBox != nil){
-        GPKGContentsDao *contentsDao = [geoPackage contentsDao];
-        SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromProjection:[[contentsDao srs:contents] projection] andToProjection:[tileMatrixSetSrs projection]];
-        GPKGBoundingBox *transformedContentsBoundingBox = contentsBoundingBox;
-        if(![transform isSameProjection]){
-            transformedContentsBoundingBox = [transformedContentsBoundingBox transform:transform];
+    @try {
+        GPKGTileDao * tileDao = [geoPackage tileDaoWithTableName:tiles.name];
+        GPKGTileTableScaling *tileTableScaling = [[GPKGTileTableScaling alloc] initWithGeoPackage:geoPackage andTileDao:tileDao];
+        GPKGTileScaling *tileScaling = [tileTableScaling tileScaling];
+        overlay = [GPKGOverlayFactory boundedOverlay:tileDao andScaling:tileScaling];
+        overlay.canReplaceMapContent = false;
+        
+        GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
+        
+        // TODO: handle feature tiles.
+        //    GPKGFeatureTileTableLinker * linker = [[GPKGFeatureTileTableLinker alloc] initWithGeoPackage:geoPackage];
+        //    NSArray<GPKGFeatureDao *> * featureDaos = [linker getFeatureDaosForTileTable:tileDao.tableName];
+        //    for(GPKGFeatureDao * featureDao in featureDaos){
+        //
+        //        // Create the feature tiles
+        //        GPKGFeatureTiles * featureTiles = [[GPKGFeatureTiles alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
+        //
+        //        self.featureOverlayTiles = true;
+        //
+        //        // Add the feature overlay query
+        ////        GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithBoundedOverlay:overlay andFeatureTiles:featureTiles];
+        //        [self.featureOverlayQueries addObject:featureOverlayQuery];
+        //    }
+        
+        GPKGBoundingBox *displayBoundingBox = [tileMatrixSet boundingBox];
+        GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage tileMatrixSetDao];
+        GPKGSpatialReferenceSystem *tileMatrixSetSrs = [tileMatrixSetDao srs:tileMatrixSet];
+        GPKGContents *contents = [tileMatrixSetDao contents:tileMatrixSet];
+        GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
+        if(contentsBoundingBox != nil){
+            GPKGContentsDao *contentsDao = [geoPackage contentsDao];
+            SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromProjection:[[contentsDao srs:contents] projection] andToProjection:[tileMatrixSetSrs projection]];
+            GPKGBoundingBox *transformedContentsBoundingBox = contentsBoundingBox;
+            if(![transform isSameProjection]){
+                transformedContentsBoundingBox = [transformedContentsBoundingBox transform:transform];
+            }
+            displayBoundingBox = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:displayBoundingBox andBoundingBox:transformedContentsBoundingBox];
         }
-        displayBoundingBox = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:displayBoundingBox andBoundingBox:transformedContentsBoundingBox];
+        
+        [self updateTileBoundingBox:displayBoundingBox withSrs:tileMatrixSetSrs andSpecifiedBoundingBox:nil];
+        
+    } @catch(NSException *e) {
+        NSLog(@"MCTileHelper - createOverlayForTilesFromGeoPacakge %@", e.reason);
+    } @finally {
+        return overlay;
     }
     
-    [self updateTileBoundingBox:displayBoundingBox withSrs:tileMatrixSetSrs andSpecifiedBoundingBox:nil];
-    return overlay;
 }
 
 

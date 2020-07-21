@@ -196,7 +196,7 @@
             NSString *columnName = _row.columnNames[i];
             enum GPKGDataType dataType = _row.columns.columns[i].dataType;
             
-            if (![columnName isEqualToString:idColumnName] && ![columnName isEqualToString:geometryColumnName]) {
+            if (![columnName isEqualToString:idColumnName] && ![columnName isEqualToString:@"id"] && ![columnName isEqualToString:geometryColumnName]) {
                 MCFieldWithTitleCell *fieldWithTitle = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
                 [fieldWithTitle setTitleText:columnName];
                 fieldWithTitle.columnName = columnName;
@@ -320,7 +320,7 @@
 - (void)performDualButtonAction:(NSString *)action {
     if ([action isEqualToString:@"save"]) {
         NSLog(@"Saving point data");
-        NSString *databaseName = [self.mapPoint.data valueForKey:@"database"];
+
         BOOL saved = [_mapPointDataDelegate saveRow:_row];
         
         if (saved) {

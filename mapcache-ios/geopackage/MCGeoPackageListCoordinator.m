@@ -149,14 +149,15 @@
 
 #pragma mark - MCGeoPackageCoordinatorDelegate method
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete {
-    if (didDelete) {
-        [_repository deleteGeoPackage:[_repository databaseNamed:database]];
-    }
-    
     _repository.selectedGeoPackageName = @"";
-    _databases = [_repository regenerateDatabaseList];
-    self.geoPackageListView.geoPackages = self.databases;
-    [self.geoPackageListView.tableView reloadData];
+    [_childCoordinators removeAllObjects];
+    
+    if (didDelete) {
+        [self deleteGeoPackage:[_repository databaseNamed:database]];
+    } else {
+        _databases = [_repository regenerateDatabaseList];
+        [self.geoPackageListView refreshWithGeoPackages:_databases];
+    }
 }
 
 

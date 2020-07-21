@@ -100,6 +100,7 @@
 
 - (void) deleteGeoPackage {
     NSLog(@"Coordinator handling delete");
+    self.geoPackageViewController = nil;
     [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:YES];
 }
 

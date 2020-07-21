@@ -92,9 +92,8 @@ import UIKit
     
     
     func renameColumn(_ column: GPKGUserColumn!, name: String!) {
-        MCGeoPackageRepository.shared().renameColumn(column, newName: name, table: self.table)
-        self.layerViewController.columns = MCGeoPackageRepository.shared().columns(forTable: self.table.name, database: self.table.database)
-        let updatedDatabase:MCDatabase = MCGeoPackageRepository.shared().databaseNamed(self.table.name)
+        self.layerViewController.columns = MCGeoPackageRepository.shared().renameColumn(column, newName: name, table: self.table)
+        let updatedDatabase:MCDatabase = MCGeoPackageRepository.shared().databaseNamed(self.table.database)
         self.table = updatedDatabase.tableNamed(self.table.name)
         self.layerViewController.table = self.table
         self.layerViewController.update()
