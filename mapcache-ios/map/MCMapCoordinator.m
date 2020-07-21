@@ -323,6 +323,8 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     
     if (rowsRemoved == 1) {
         [self.mcMapViewController removeMapPoint:mapPoint];
+        [_mapPointDataViewController.drawerViewDelegate popDrawer];
+        _mapPointDataViewController = nil;
     }
     
     return rowsRemoved;

@@ -363,10 +363,7 @@
         UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this point? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             NSString *databaseName = [self.mapPoint.data valueForKey:@"database"];
-            int rowsDeleted = [self.mapPointDataDelegate deleteRow:self.row fromDatabase:databaseName andRemoveMapPoint:self.mapPoint];
-            if (rowsDeleted > 0) {
-                [self.drawerViewDelegate popDrawer];
-            }
+            [self.mapPointDataDelegate deleteRow:self.row fromDatabase:databaseName andRemoveMapPoint:self.mapPoint];
         }];
         
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
