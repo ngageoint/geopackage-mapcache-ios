@@ -111,6 +111,14 @@ static MCGeoPackageRepository *sharedRepository;
             MCTileTable * table = [[MCTileTable alloc] initWithDatabase:databaseName andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
             [table setActive: [_activeDatabases exists:table]];
             
+            MCTileHelper *tileHelper = [[MCTileHelper alloc] init];
+            GPKGTileMatrixSet * tileMatrixSet = tileDao.tileMatrixSet;
+            GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage tileMatrixSetDao];
+            GPKGSpatialReferenceSystem *tileMatrixSetSrs = [tileMatrixSetDao srs:tileMatrixSet];
+            GPKGBoundingBox *boundingBox = [tileDao boundingBoxWithZoomLevel:tileDao.maxZoom];
+            
+            table.center = [tileHelper transformBoundingBoxToWgs84:boundingBox withSrs:tileMatrixSetSrs].center;
+            
             for (GPKGTileMatrix *tileMatrix in tileDao.tileMatrices) {
                 MCTileMatrix *mcTileMatrix = [[MCTileMatrix alloc] init];
                 mcTileMatrix.zoomLevel = tileMatrix.zoomLevel;

@@ -18,6 +18,7 @@
 #import "MCDatabases.h"
 #import "MCFeatureTable.h"
 #import "MCTileTable.h"
+#import "MCTileHelper.h"
 #import "MCFeatureOverlayTable.h"
 #import "GPKGAlterTable.h"
 

@@ -47,12 +47,13 @@
 @property (nonatomic, strong) MCDatabases *active;
 
 - (int)updateInBackgroundWithZoom: (BOOL) zoom;
-- (int) updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter;
+- (int)updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter;
 - (void)zoomToPointWithOffset:(CLLocationCoordinate2D) point;
+- (void)zoomToPointWithOffset:(CLLocationCoordinate2D) point zoomLevel:(NSUInteger)zoomLevel;
 - (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;
 - (void)toggleMapControls;
 - (void)clearTempPoints;
-- (void) removeMapPoint:(GPKGMapPoint *) mapPoint;
-- (void) addUserTilesWithUrl:(NSString *) tileTemplateURL;
-- (void) removeUserTiles;
+- (void)removeMapPoint:(GPKGMapPoint *) mapPoint;
+- (void)addUserTilesWithUrl:(NSString *) tileTemplateURL;
+- (void)removeUserTiles;
 @end

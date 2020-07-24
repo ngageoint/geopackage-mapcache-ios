@@ -223,9 +223,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     MCLayerCell *layerCell;
     NSObject *cellObject = [_cellArray objectAtIndex:indexPath.row];
-    
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-    
     
     if([cellObject isKindOfClass:[MCLayerCell class]]){
         layerCell = (MCLayerCell *) cellObject;

@@ -87,15 +87,37 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     React to a GeoPackage being selected from the list. Set the map region to have the selected GeoPackage in view.
  */
 - (void)zoomToSelectedGeoPackage:(NSString *)geoPackageName {
-    GPKGGeoPackage *geoPackage = [self.manager open:geoPackageName];
-    GPKGBoundingBox *boundingBox = [geoPackage contentsBoundingBoxInProjection:[SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
-    CLLocationCoordinate2D center = [boundingBox center];
+    GPKGGeoPackage *geoPackage = nil;
     
-    if (center.latitude != 0 && center.longitude != 0) {
-        [self.mcMapViewController zoomToPointWithOffset:center];
+    @try {
+        geoPackage = [self.manager open:geoPackageName];
+        GPKGBoundingBox *boundingBox = [geoPackage contentsBoundingBoxInProjection:[SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
+        CLLocationCoordinate2D center = [boundingBox center];
+        
+        if (center.latitude != 0 && center.longitude != 0) {
+            [self.mcMapViewController zoomToPointWithOffset:center];
+        }
+    } @catch (NSException *e) {
+        NSLog(@"MCMapCoordinator - Problem zooming to geopacakge\n%@", e.reason);
+    } @finally {
+        if (geoPackage != nil) {
+            [geoPackage close];
+        }
     }
-    
-    [geoPackage close];
+}
+
+
+/**
+    React to a GeoPackage being selected from the list. Set the map region to have the selected GeoPackage in view.
+ */
+- (void)zoomToPoint:(CLLocationCoordinate2D)point withZoomLevel:(NSUInteger) zoomLevel {
+    if (point.latitude != 0 && point.longitude != 0) {
+        @try {
+            [self.mcMapViewController zoomToPointWithOffset:point zoomLevel:zoomLevel];
+        } @catch (NSException *e) {
+            NSLog(@"MCMapCoordinator - Problem zooming to point\n%@", e.reason);
+        }
+    }
 }
 
 

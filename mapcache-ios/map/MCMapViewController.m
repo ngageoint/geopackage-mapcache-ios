@@ -179,6 +179,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
+- (void) zoomToPointWithOffset:(CLLocationCoordinate2D) point zoomLevel:(NSUInteger)zoomLevel {
+    //point.latitude -= self.mapView.region.span.latitudeDelta * (1.0/3.0);
+    MKCoordinateSpan span = MKCoordinateSpanMake(0, 360/pow(2, zoomLevel)*self.mapView.frame.size.width/256);
+    [self.mapView setRegion:MKCoordinateRegionMake(point, span) animated:YES];
+}
+
+
 - (void)clearTempPoints {
     for (GPKGMapPoint *point in self.tempMapPoints) {
         [self.mapView removeAnnotation:point];

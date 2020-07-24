@@ -7,6 +7,8 @@
 //
 
 #import "MCTable.h"
+#import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface MCTileTable : MCTable
 
@@ -15,5 +17,6 @@
 @property (nonatomic) int minZoom;
 @property (nonatomic) int maxZoom;
 @property (nonatomic, strong) NSMutableArray *tileMatrices;
+@property (nonatomic) CLLocationCoordinate2D center;
 
 @end
