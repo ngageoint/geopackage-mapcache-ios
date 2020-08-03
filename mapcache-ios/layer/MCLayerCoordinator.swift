@@ -143,4 +143,18 @@ import UIKit
             }
         }
     }
+    
+    
+    func checkFieldNameCollision(name: String) -> Bool {
+        let columns = MCGeoPackageRepository.shared().columns(forTable: self.table.name, database: self.table.database)
+        
+        for column in columns {
+            let c = column as! GPKGUserColumn
+            if (name == c.name) {
+                return false
+            }
+        }
+        
+        return true
+    }
 }

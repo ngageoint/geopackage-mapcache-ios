@@ -103,6 +103,14 @@
         GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory manager];
         @try {
             imported = [manager importGeoPackageFromPath:fileUrl andOverride:true andMove:true];
+        } @catch (NSException *e) {
+            NSLog(@"------------------------- AppDelegate - Problem importing geopackage %@\n%@", fileUrl, e.reason);
+            
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Problem importing GeoPacakge" message:e.reason preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}];
+            [alert addAction:defaultAction];
+            [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+            
         }
         @finally {
             [manager close];

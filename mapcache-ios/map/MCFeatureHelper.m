@@ -271,8 +271,9 @@
                         NSLog(@"Failed to display feature. database: %@, feature table: %@, error: %@", database, features, [exception description]);
                     }
                 }
-            }
-            @finally {
+            } @catch(NSException *e) {
+                NSLog(@"---------- MCFeatureHelper - DisplayFeaturesWithId\n%@", e.reason);
+            } @finally {
                 [results close];
             }
         }

@@ -54,6 +54,8 @@
     GPKGGeoPackage * geoPackage = nil;
     @try {
         geoPackage = [manager open:database];
+    } @catch(NSException *e) {
+        NSLog(@"---------- MCLoadTilesTask - Problem downloading tiles\n%@", e.reason);
     }
     @finally {
         [manager close];

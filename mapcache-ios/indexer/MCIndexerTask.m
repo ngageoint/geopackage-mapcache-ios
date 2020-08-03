@@ -40,8 +40,9 @@
     GPKGGeoPackage * geoPackage = nil;
     @try {
         geoPackage = [manager open:database];
-    }
-    @finally {
+    } @catch (NSException *e) {
+        NSLog(@"---------- MCIndexerTask - Problem indexing \n%@", e.reason);
+    } @finally {
         [manager close];
     }
     

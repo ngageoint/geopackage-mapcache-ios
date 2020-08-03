@@ -154,12 +154,13 @@
 
 - (void) showLayerDetails:(MCTable *) table {
     NSLog(@"In showLayerDetails with %@", table.name);
-    _repository.selectedLayerName = table.name;
     
     if ([table isKindOfClass:MCTileTable.class]) {
         MCTileTable *tileTable = (MCTileTable *)table;
         NSUInteger zoomLevel = tileTable.maxZoom;
         [_mapDelegate zoomToPoint:tileTable.center withZoomLevel:zoomLevel];
+    } else if ([table isKindOfClass:MCFeatureTable.class]) {
+        _repository.selectedLayerName = table.name;
     }
     
     MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerDelegate layerCoordinatorDelegate:self];

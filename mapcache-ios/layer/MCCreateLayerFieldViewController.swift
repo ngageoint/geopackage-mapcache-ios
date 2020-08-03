@@ -10,6 +10,7 @@ import UIKit
 
 protocol MCCreateLayerFieldDelegate: AnyObject {
     func createField(name:String, type:GPKGDataType)
+    func checkFieldNameCollision(name: String) -> Bool
 }
 
 
@@ -95,7 +96,16 @@ class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDele
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        // TODO: validate the name before making the button active
+        textField.trimWhiteSpace()
+        
+        if let isValidFieldName = self.createLayerFieldDelegate?.checkFieldNameCollision(name: textField.text!) {
+            if (!isValidFieldName || textField.text == "") {
+                self.fieldName?.useErrorAppearance()
+            } else {
+                self.fieldName?.useNormalAppearance()
+            }
+        }
+
         textField.resignFirstResponder()
         self.dualButtons?.enableRightButton()
     }

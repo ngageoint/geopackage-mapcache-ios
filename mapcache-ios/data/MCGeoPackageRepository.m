@@ -214,12 +214,12 @@ static MCGeoPackageRepository *sharedRepository;
 
 
 - (BOOL)savePoints:(NSArray<GPKGMapPoint *> *) points toDatabase:(MCDatabase *) database table:(MCTable *) table {
-    GPKGGeoPackage *geoPackage = [_manager open:database.name];
+    GPKGGeoPackage *geoPackage = nil;
     GPKGFeatureIndexManager *indexer = nil;
-    
     BOOL saved = YES;
     
     @try {
+        geoPackage = [_manager open:database.name];
         GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:table.name];
         NSNumber *srsId = featureDao.geometryColumns.srsId;
         indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
@@ -266,7 +266,8 @@ static MCGeoPackageRepository *sharedRepository;
     
     @try {
         geoPackage = [_manager open:database];
-        [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:boundingBox andSrsId:srsId];
+        //[geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:boundingBox andSrsId:srsId];
+        [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andIdColumnName:@"id" andBoundingBox:boundingBox andSrsId:srsId];
     }
     @catch (NSException *e) {
         // TODO handle this
@@ -340,9 +341,10 @@ static MCGeoPackageRepository *sharedRepository;
 
 - (GPKGUserRow *)queryRow:(int)rowId fromTableNamed:(NSString *)tableName inDatabase:(NSString *)databaseName {
     GPKGUserRow *userRow = nil;
-    GPKGGeoPackage *geoPackage = [_manager open:databaseName];
+    GPKGGeoPackage *geoPackage = nil;
     
     @try {
+        geoPackage = [_manager open:databaseName];
         GPKGFeatureDao* featureDao = [geoPackage featureDaoWithTableName:tableName];
         userRow = [featureDao queryForIdRow:rowId];
     } @catch(NSException *e) {
@@ -358,11 +360,12 @@ static MCGeoPackageRepository *sharedRepository;
 
 
 - (BOOL)saveRow:(GPKGFeatureRow *)featureRow {
-    GPKGGeoPackage *geoPackage = [_manager open:self.selectedGeoPackageName];
+    GPKGGeoPackage *geoPackage = nil;
     GPKGFeatureIndexManager *indexer = nil;
     BOOL saved = YES;
     
     @try {
+        geoPackage = [_manager open:self.selectedGeoPackageName];
         GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:self.selectedLayerName];
         
         if (featureRow.values[0] && [featureRow.values[0] isKindOfClass:NSNull.class]) { // new row
@@ -412,9 +415,10 @@ static MCGeoPackageRepository *sharedRepository;
 - (GPKGFeatureRow *)newRowInTable:(NSString *) table database:(NSString *)database mapPoint:(GPKGMapPoint *)mapPoint {
     GPKGFeatureRow *newRow = nil;
     GPKGFeatureIndexManager *indexer = nil;
-    GPKGGeoPackage *geoPackage = [_manager open:database];
+    GPKGGeoPackage *geoPackage = nil;
     
     @try {
+        geoPackage = [_manager open:database];
         GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:table];
         newRow = [featureDao newRow];
         NSNumber *srsId = featureDao.geometryColumns.srsId;
@@ -443,10 +447,11 @@ static MCGeoPackageRepository *sharedRepository;
 
 
 - (int)deleteRow:(GPKGUserRow *)featureRow fromDatabase:(NSString *)databaseName {
-    GPKGGeoPackage *geoPackage = [_manager open:databaseName];
+    GPKGGeoPackage *geoPackage = nil;
     int rowsDeleted = 0;
     
     @try {
+        geoPackage = [_manager open:databaseName];
         GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:featureRow.table.tableName];
         rowsDeleted = [featureDao delete:featureRow] > 0;
     } @catch (NSException *e) {
@@ -465,9 +470,10 @@ static MCGeoPackageRepository *sharedRepository;
 
 - (NSArray *)columnsForTable:(NSString *) table database:(NSString *)database {
     NSArray *columns = nil;
-    GPKGGeoPackage *geoPackage = [_manager open:database];
+    GPKGGeoPackage *geoPackage =nil;
     
     @try {
+        geoPackage = [_manager open:database];
         GPKGFeatureDao* featureDao = [geoPackage featureDaoWithTableName:table];
         columns = [featureDao columns];
     } @catch(NSException *e) {
@@ -484,9 +490,10 @@ static MCGeoPackageRepository *sharedRepository;
 
 - (BOOL)addColumn:(GPKGFeatureColumn *)featureColumn to:(MCTable *)table {
     BOOL didAdd = YES;
-    GPKGGeoPackage *geoPackage = [_manager open:table.database];
+    GPKGGeoPackage *geoPackage = nil;
     
     @try {
+        geoPackage = [_manager open:table.database];
         GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:table.name];
         [featureDao addColumn:featureColumn];
     } @catch(NSException *e) {

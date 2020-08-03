@@ -712,9 +712,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         @try {
             geoPackage = [self.manager open:database.name];
             if (geoPackage != nil) {
-                
                 NSMutableSet<NSString *> *featureTableDaos = [[NSMutableSet alloc] init];
                 NSArray *features = [database getFeatures];
+                
                 if(features.count > 0){
                     for(MCTable *featureTable in features){
                         [featureTableDaos addObject:featureTable.name];
@@ -728,17 +728,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 }
                 
                 if(featureTableDaos.count > 0){
-                    
                     GPKGContentsDao *contentsDao = [geoPackage contentsDao];
                     
                     for (NSString *featureTable in featureTableDaos) {
-                        
                         @try {
                             GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:featureTable];
                             GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
                             
                             if (contentsBoundingBox != nil) {
-                                
                                 contentsBoundingBox = [self.tileHelper transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao srs:contents]];
                                 
                                 if (self.featuresBoundingBox != nil) {
