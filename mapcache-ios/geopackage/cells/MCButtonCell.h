@@ -9,19 +9,22 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "MCColorUtil.h"
-#import "GPKGSConstants.h"
+#import "MCConstants.h"
 
-@protocol GPKGSButtonCellDelegate <NSObject>
+@protocol MCButtonCellDelegate <NSObject>
 - (void) performButtonAction:(NSString *) action;
 @end
 
 
 @interface MCButtonCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIButton *button;
-@property (weak, nonatomic) id<GPKGSButtonCellDelegate> delegate;
+@property (weak, nonatomic) id<MCButtonCellDelegate> delegate;
 @property (strong, nonatomic) NSString *action;
 - (void) enableButton;
 - (void) disableButton;
+- (void) usePrimaryColors;
 - (void) useSecondaryColors;
+- (void) useRedColor;
+- (void) useSecondaryRed;
 - (void) setButtonLabel: (NSString *) text;
 @end

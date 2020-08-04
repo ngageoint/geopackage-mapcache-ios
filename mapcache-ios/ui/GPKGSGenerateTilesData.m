@@ -14,7 +14,7 @@
     self = [super init];
     if(self){
         self.compressFormat = GPKG_CF_NONE;
-        self.standardWebMercatorFormat = false;
+        self.xyzTiles = false;
         self.setZooms = true;
     }
     return self;

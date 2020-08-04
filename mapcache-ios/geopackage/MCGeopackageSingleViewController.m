@@ -13,39 +13,44 @@
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIDocumentInteractionController *shareDocumentController;
-@property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic) BOOL haveScrolled;
+@property (nonatomic) CGFloat contentOffset;
 @end
 
 @implementation MCGeopackageSingleViewController
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    self.manager = [GPKGGeoPackageFactory getManager];
-    self.active = [GPKGSDatabases getInstance];
+    self.manager = [GPKGGeoPackageFactory manager];
+    self.active = [MCDatabases getInstance];
     
     CGRect bounds = self.view.bounds;
     CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
     self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    self.tableView.estimatedRowHeight = 390.0;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.estimatedRowHeight = 141.0;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.contentOffset = 0;
+    
     [self registerCellTypes];
     [self initCellArray];
+    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
+
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
     self.haveScrolled = NO;
+    [self addAndConstrainSubview:self.tableView];
     
-    [self.view addSubview:self.tableView];
+    //[self.view addSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
 }
@@ -68,43 +73,58 @@
     headerCell.detailLabelOne.text = [self.manager readableSize:_database.name]; // TODO look into threading this
     
     NSInteger tileCount = [_database getTileCount];
-    NSString *tileText = tileCount == 1 ? @"tile layer" : @"tile layers";
+    NSString *tileText = tileCount == 1 ? @"downloaded map" : @"downloaded maps";
     headerCell.detailLabelTwo.text = [NSString stringWithFormat:@"%ld %@", tileCount, tileText];
     
     NSInteger featureCount = [_database getFeatureCount];
-    NSString *featureText = featureCount == 1 ? @"feature layer" : @"feature layers";
+    NSString *featureText = featureCount == 1 ? @"feature collection" : @"feature collections";
     headerCell.detailLabelThree.text = [NSString stringWithFormat:@"%ld %@", featureCount, featureText];
     
     MCGeoPackageOperationsCell *geoPackageOperationsCell = [self.tableView dequeueReusableCellWithIdentifier:@"operations"];
     geoPackageOperationsCell.delegate = self;
     
-    MCSectionTitleCell *layersTitleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
-    layersTitleCell.sectionTitleLabel.text = @"Layers";
-
-    // TODO: Convert new layer wizard to work with drawer system for a future release
-    MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
-    [newLayerButtonCell.button setTitle:@"New Layer" forState:UIControlStateNormal];
-    newLayerButtonCell.action = GPKGS_ACTION_NEW_LAYER;
-    newLayerButtonCell.delegate = self;
+    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, nil];
     
-    _cellArray = [[NSMutableArray alloc] initWithObjects: headerCell, geoPackageOperationsCell, layersTitleCell, newLayerButtonCell, nil];
-    NSArray *tables = [_database getTables];
+    MCSectionTitleCell *offlineMapsTitleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
+    offlineMapsTitleCell.sectionTitleLabel.text = @"Downloaded Maps";
+    [_cellArray addObject:offlineMapsTitleCell];
     
-    for (GPKGSTable *table in tables) {
+    MCButtonCell *newOfflineMapButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
+    [newOfflineMapButtonCell.button setTitle:@"Download a map" forState:UIControlStateNormal];
+    newOfflineMapButtonCell.action = GPKGS_ACTION_NEW_LAYER;
+    newOfflineMapButtonCell.delegate = self;
+    newOfflineMapButtonCell.button.backgroundColor = [MCColorUtil getAccent];
+    [_cellArray addObject: newOfflineMapButtonCell];
+    
+    NSArray *tileTables = [_database getTiles];
+    for (MCTable *table in tileTables) {
         MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
-        NSString *typeImageName = @"";
+        [layerCell setContentsWithTable:table];
         
-        if ([table isMemberOfClass:[GPKGSFeatureTable class]]) {
-            typeImageName = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
-            [layerCell.detailLabel setText: [NSString stringWithFormat:@"%d features", [(GPKGSFeatureTable *)table count]]];
-        } else if ([table isMemberOfClass:[GPKGSTileTable class]]) {
-            typeImageName = [GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_TILES];
-            [layerCell.detailLabel setText:[NSString stringWithFormat:@"Zoom levels %d - %d",  [(GPKGSTileTable *)table minZoom], [(GPKGSTileTable *)table maxZoom]]];
+        if ([_active exists:table]) {
+            [layerCell activeIndicatorOn];
+        } else {
+            [layerCell activeIndicatorOff];
         }
         
-        layerCell.table = table;
-        layerCell.layerNameLabel.text = table.name;
-        [layerCell.layerTypeImage setImage:[UIImage imageNamed:typeImageName]];
+        [_cellArray addObject:layerCell];
+    }
+    
+    MCSectionTitleCell *layersTitleCell = [self.tableView dequeueReusableCellWithIdentifier:@"sectionTitle"];
+    layersTitleCell.sectionTitleLabel.text = @"Feature Collections";
+    [_cellArray addObject:layersTitleCell];
+    
+    MCButtonCell *newLayerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
+    [newLayerButtonCell.button setTitle:@"New feature collection" forState:UIControlStateNormal];
+    newLayerButtonCell.action = @"new-collection";
+    newLayerButtonCell.delegate = self;
+    newLayerButtonCell.button.backgroundColor = [MCColorUtil getAccent];
+    [_cellArray addObject:newLayerButtonCell];
+    
+    NSArray *featureTables = [_database getFeatures];
+    for (MCTable *table in featureTables) {
+        MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
+        [layerCell setContentsWithTable:table];
         
         if ([_active exists:table]) {
             [layerCell activeIndicatorOn];
@@ -129,7 +149,7 @@
 
 
 - (void) update {
-    [self initCellArray]; // May not need to call this, or may need to call it closer to the end
+    [self initCellArray];
     [self.tableView reloadData];
 }
 
@@ -158,10 +178,27 @@
 
 
 - (void) closeDrawer {
+    [super closeDrawer];
     [self.drawerViewDelegate popDrawer];
     [self.delegate callCompletionHandler];
 }
 
+
+- (void) drawerWasCollapsed {
+    [super drawerWasCollapsed];
+    [self.tableView setScrollEnabled:NO];
+}
+
+
+- (void) drawerWasMadeFull {
+    [super drawerWasMadeFull];
+    [self.tableView setScrollEnabled:YES];
+}
+
+
+- (void) becameTopDrawer {
+    [self.delegate setSelectedDatabaseName];
+}
 
 #pragma mark - TableView delegate methods
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
@@ -186,25 +223,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     MCLayerCell *layerCell;
     NSObject *cellObject = [_cellArray objectAtIndex:indexPath.row];
-    
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     
-    // TODO add layer details view
-    /*if([cellObject isKindOfClass:[MCLayerCell class]]){
+    if([cellObject isKindOfClass:[MCLayerCell class]]){
         layerCell = (MCLayerCell *) cellObject;
-        NSString *layerName = layerCell.layerNameLabel.text;
-        GPKGGeoPackage *geoPackage = [_manager open:_database.name];
-        
-        if ([geoPackage isFeatureTable:layerName]) {
-            GPKGFeatureDao *featureDao =  [geoPackage getFeatureDaoWithTableName:layerName];
-            [_delegate showLayerDetails:featureDao];
-            [geoPackage close];
-        } else if ([geoPackage isTileTable:layerName]) {
-            GPKGTileDao *tileDao =  [geoPackage getTileDaoWithTableName:layerName];
-            [_delegate showLayerDetails:tileDao];
-            [geoPackage close];
-        }
-    }*/
+        [_delegate showLayerDetails:layerCell.table];
+    }
 }
 
 
@@ -234,8 +258,21 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        MCLayerCell *cell = [_cellArray objectAtIndex:indexPath.row];
-        [_delegate deleteLayer:cell.table];
+        MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
+        
+        UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this layer? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self.delegate deleteLayer:cell.table];
+        }];
+        
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [deleteAlert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+        [deleteAlert addAction:confirmDelete];
+        [deleteAlert addAction:cancel];
+        [self presentViewController:deleteAlert animated:YES completion:nil];
+        
         completionHandler(YES);
     }];
     
@@ -252,8 +289,8 @@
     
     UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this GeoPackage? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        [self.delegate deleteGeoPackage];
         [self.drawerViewDelegate popDrawer];
+        [self.delegate deleteGeoPackage];
     }];
     
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -277,7 +314,7 @@
         [_shareDocumentController setUTI:@"public.database"];
         [_shareDocumentController presentOpenInMenuFromRect:self.view.bounds inView:self.view animated:YES];
     }else{
-        [GPKGSUtils showMessageWithDelegate:self
+        [MCUtils showMessageWithDelegate:self
                                    andTitle:[NSString stringWithFormat:@"Share Database %@", _database]
                                  andMessage:[NSString stringWithFormat:@"No path was found for database %@", _database]];
     }
@@ -305,13 +342,13 @@
                     [self initCellArray];
                     [self.tableView reloadData];
                 }else{
-                    [GPKGSUtils showMessageWithDelegate:self
-                                               andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
+                    [MCUtils showMessageWithDelegate:self
+                                               andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_RENAME_LABEL]
                                              andMessage:[NSString stringWithFormat:@"Rename from %@ to %@ was not successful", self.database.name, newName]];
                 }
             }
             @catch (NSException *exception) {
-                [GPKGSUtils showMessageWithDelegate:self
+                [MCUtils showMessageWithDelegate:self
                                            andTitle:[NSString stringWithFormat:@"Rename %@ to %@", self.database.name, newName]
                                          andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
             }
@@ -350,13 +387,13 @@
                         [self.delegate copyGeoPackage];
                     });
                 }else{
-                    [GPKGSUtils showMessageWithDelegate:self
-                                               andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL]
+                    [MCUtils showMessageWithDelegate:self
+                                               andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_COPY_LABEL]
                                              andMessage:[NSString stringWithFormat:@"Copy from %@ to %@ was not successful", database, newName]];
                 }
             }
             @catch (NSException *exception) {
-                [GPKGSUtils showMessageWithDelegate:self
+                [MCUtils showMessageWithDelegate:self
                                            andTitle:[NSString stringWithFormat:@"Copy %@ to %@", database, newName]
                                          andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
             }
@@ -375,12 +412,24 @@
 
 
 - (void)performButtonAction:(NSString *) action {
-    NSLog(@"Button pressed, checking action...");
+    NSLog(@"Button pressed, handling action %@", action);
     
     if ([action isEqualToString:GPKGS_ACTION_NEW_LAYER]) {
-        NSLog(@"Button pressed, handling action %@", action);
-        [_delegate newLayer];
+        [_delegate newTileLayer];
+    } else if ([action isEqualToString:@"new-collection"]) {
+        [_delegate newFeatureLayer];
     }
+}
+
+
+- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
+    CGPoint point = [recognizer locationInView:self.view];
+    
+    if (CGRectContainsPoint(self.tableView.frame, point)) {
+        return true;
+    }
+    
+    return false;
 }
 
 
@@ -404,7 +453,7 @@
 }
 
 
-/* Chekcing */
+/* Checking */
 - (void)alertTextFieldDidChange:(UITextField *)sender
 {
     UIAlertController *alertController = (UIAlertController *)self.presentedViewController;

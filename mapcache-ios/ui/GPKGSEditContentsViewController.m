@@ -7,12 +7,12 @@
 //
 
 #import "GPKGSEditContentsViewController.h"
-#import "GPKGSDecimalValidator.h"
-#import "GPKGSUtils.h"
+#import "MCDecimalValidator.h"
+#import "MCUtils.h"
 
 @interface GPKGSEditContentsViewController ()
 
-@property (nonatomic, strong) GPKGSDecimalValidator * xAndYValidator;
+@property (nonatomic, strong) MCDecimalValidator * xAndYValidator;
 
 @end
 
@@ -21,7 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.xAndYValidator = [[GPKGSDecimalValidator alloc] initWithMinimum:nil andMaximum:nil];
+    self.xAndYValidator = [[MCDecimalValidator alloc] initWithMinimum:nil andMaximum:nil];
     [self.minYTextField setDelegate:self.xAndYValidator];
     [self.maxYTextField setDelegate:self.xAndYValidator];
     [self.minXTextField setDelegate:self.xAndYValidator];
@@ -42,7 +42,7 @@
         [self.maxXTextField setText:[self.data.maxX stringValue]];
     }
     
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.identifierTextField.inputAccessoryView = keyboardToolbar;
     self.descriptionTextField.inputAccessoryView = keyboardToolbar;

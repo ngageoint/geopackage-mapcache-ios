@@ -7,16 +7,16 @@
 //
 
 #import "GPKGSFeatureTilesDrawViewController.h"
-#import "GPKGSUtils.h"
+#import "MCUtils.h"
 #import "GPKGUtils.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
-#import "GPKGSDecimalValidator.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
+#import "MCDecimalValidator.h"
 
 @interface GPKGSFeatureTilesDrawViewController ()
 
-@property (nonatomic, strong) GPKGSDecimalValidator * alphaValidator;
-@property (nonatomic, strong) GPKGSDecimalValidator * decimalValidator;
+@property (nonatomic, strong) MCDecimalValidator * alphaValidator;
+@property (nonatomic, strong) MCDecimalValidator * decimalValidator;
 @property (nonatomic, strong) NSNumberFormatter * numberFormatter;
 @property (nonatomic, strong) NSArray * colors;
 
@@ -35,8 +35,8 @@
     self.numberFormatter = [[NSNumberFormatter alloc] init];
     self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     
-    self.alphaValidator = [[GPKGSDecimalValidator alloc] initWithMinimumInt:0 andMaximumInt:255];
-    self.decimalValidator = [[GPKGSDecimalValidator alloc] initWithMinimum:[[NSDecimalNumber alloc] initWithDouble:0.0] andMaximum:nil];
+    self.alphaValidator = [[MCDecimalValidator alloc] initWithMinimumInt:0 andMaximumInt:255];
+    self.decimalValidator = [[MCDecimalValidator alloc] initWithMinimum:[[NSDecimalNumber alloc] initWithDouble:0.0] andMaximum:nil];
     
     [self.pointAlphaTextField setDelegate:self.alphaValidator];
     [self.pointRadiusTextField setDelegate:self.decimalValidator];
@@ -46,7 +46,7 @@
     [self.polygonStrokeTextField setDelegate:self.decimalValidator];
     [self.polygonFillAlphaTextField setDelegate:self.alphaValidator];
     
-    self.colors = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS];
+    self.colors = [MCProperties getArrayOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS];
     NSMutableDictionary * colorNames = [[NSMutableDictionary alloc] initWithCapacity:self.colors.count];
     for(NSDictionary * color in self.colors){
         [colorNames setObject:color forKey:[color objectForKey:GPKGS_PROP_COLORS_NAME]];
@@ -58,7 +58,7 @@
         if(self.data.pointColorName != nil){
             pointColor = [colorNames objectForKey:self.data.pointColorName];
         }else{
-            pointColor = [colorNames objectForKey:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_POINT]];
+            pointColor = [colorNames objectForKey:[MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_POINT]];
         }
         [self setColor:pointColor withTag:TAG_POINT_COLOR];
         
@@ -78,7 +78,7 @@
         if(self.data.lineColorName != nil){
             lineColor = [colorNames objectForKey:self.data.lineColorName];
         }else{
-            lineColor = [colorNames objectForKey:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_LINE]];
+            lineColor = [colorNames objectForKey:[MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_LINE]];
         }
         [self setColor:lineColor withTag:TAG_LINE_COLOR];
         
@@ -98,7 +98,7 @@
         if(self.data.polygonColorName != nil){
             polygonColor = [colorNames objectForKey:self.data.polygonColorName];
         }else{
-            polygonColor = [colorNames objectForKey:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_POLYGON]];
+            polygonColor = [colorNames objectForKey:[MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_POLYGON]];
         }
         [self setColor:polygonColor withTag:TAG_POLYGON_COLOR];
         
@@ -120,7 +120,7 @@
         if(self.data.polygonFillColorName != nil){
             polygonFillColor = [colorNames objectForKey:self.data.polygonFillColorName];
         }else{
-            polygonFillColor = [colorNames objectForKey:[GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_POLYGON_FILL]];
+            polygonFillColor = [colorNames objectForKey:[MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_COLORS_DEFAULT_POLYGON_FILL]];
         }
         [self setColor:polygonFillColor withTag:TAG_POLYGON_FILL_COLOR];
         
@@ -131,7 +131,7 @@
         }
     }
     
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.pointAlphaTextField.inputAccessoryView = keyboardToolbar;
     self.pointRadiusTextField.inputAccessoryView = keyboardToolbar;
@@ -204,7 +204,7 @@
 
 -(void) setColor: (NSDictionary *) color withTag: (NSInteger) tag{
     
-    UIColor * createdColor = [GPKGUtils getColor:color];
+    UIColor * createdColor = [GPKGUtils color:color];
     
     NSString * name = [color objectForKey:GPKGS_PROP_COLORS_NAME];
     
@@ -238,25 +238,25 @@
 
 - (IBAction)pointColorButton:(id)sender {
     
-    UIAlertView *alert = [self buildColorAlertViewWithTitle: [GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_POINT_COLOR_LABEL]];
+    UIAlertView *alert = [self buildColorAlertViewWithTitle: [MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_POINT_COLOR_LABEL]];
     alert.tag = TAG_POINT_COLOR;
     [alert show];
 }
 
 - (IBAction)lineColorButton:(id)sender {
-    UIAlertView *alert = [self buildColorAlertViewWithTitle: [GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_LINE_COLOR_LABEL]];
+    UIAlertView *alert = [self buildColorAlertViewWithTitle: [MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_LINE_COLOR_LABEL]];
     alert.tag = TAG_LINE_COLOR;
     [alert show];
 }
 
 - (IBAction)polygonColorButton:(id)sender {
-    UIAlertView *alert = [self buildColorAlertViewWithTitle: [GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_POLYGON_COLOR_LABEL]];
+    UIAlertView *alert = [self buildColorAlertViewWithTitle: [MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_POLYGON_COLOR_LABEL]];
     alert.tag = TAG_POLYGON_COLOR;
     [alert show];
 }
 
 - (IBAction)polygonFillColorButton:(id)sender {
-    UIAlertView *alert = [self buildColorAlertViewWithTitle: [GPKGSProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_POLYGON_FILL_COLOR_LABEL]];
+    UIAlertView *alert = [self buildColorAlertViewWithTitle: [MCProperties getValueOfProperty:GPKGS_PROP_FEATURE_TILES_DRAW_POLYGON_FILL_COLOR_LABEL]];
     alert.tag = TAG_POLYGON_FILL_COLOR;
     [alert show];
 }
@@ -278,7 +278,7 @@
     for (NSString *option in options) {
         [alert addButtonWithTitle:option];
     }
-    alert.cancelButtonIndex = [alert addButtonWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
+    alert.cancelButtonIndex = [alert addButtonWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
     
     return alert;
 }

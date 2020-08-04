@@ -12,15 +12,16 @@
 #import "MCTutorialCell.h"
 #import "NGADrawerViewController.h"
 #import "GPKGGeoPackageFactory.h"
-#import "GPKGSDatabase.h"
-#import "GPKGSDatabases.h"
+#import "MCDatabase.h"
+#import "MCDatabases.h"
+#import "MCColorUtil.h"
 
 
 @protocol MCGeoPacakageListViewDelegate <NSObject>
-- (void) didSelectGeoPackage: (GPKGSDatabase*) database;
+- (void) didSelectGeoPackage: (MCDatabase*) database;
 - (void) downloadGeopackageWithExample:(BOOL) prefillExample;
-- (void) toggleActive:(GPKGSDatabase *) database;
-- (void) deleteGeoPackage:(GPKGSDatabase *) database;
+- (void) toggleActive:(MCDatabase *) database;
+- (void) deleteGeoPackage:(MCDatabase *) database;
 - (void) showNewGeoPackageView;
 @end
 
@@ -29,6 +30,8 @@
 - (instancetype) initWithGeoPackages: (NSMutableArray *) geoPackages asFullView: (BOOL) fullView andDelegate:(id<MCGeoPacakageListViewDelegate>) delegate;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *geoPackages;
+@property (weak, nonatomic) IBOutlet UIButton *downloadButton;
+@property (weak, nonatomic) IBOutlet UIButton *createButton;
 
 
 - (void)toggleGeoPacakge:(NSIndexPath *) indexPath;

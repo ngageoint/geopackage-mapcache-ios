@@ -7,16 +7,16 @@
 //
 
 #import "GPKGSBoundingBoxViewController.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
-#import "GPKGSDecimalValidator.h"
-#import "GPKGSUtils.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
+#import "MCDecimalValidator.h"
+#import "MCUtils.h"
 
 @interface GPKGSBoundingBoxViewController ()
 
 @property (nonatomic, strong) NSArray * boundingBoxes;
-@property (nonatomic, strong) GPKGSDecimalValidator * latitudeValidator;
-@property (nonatomic, strong) GPKGSDecimalValidator * longitudeValidator;
+@property (nonatomic, strong) MCDecimalValidator * latitudeValidator;
+@property (nonatomic, strong) MCDecimalValidator * longitudeValidator;
 
 @end
 
@@ -27,18 +27,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.latitudeValidator = [[GPKGSDecimalValidator alloc] initWithMinimumDouble:-90.0 andMaximumDouble:90.0];
-    self.longitudeValidator = [[GPKGSDecimalValidator alloc] initWithMinimumDouble:-180.0 andMaximumDouble:180.0];
+    self.latitudeValidator = [[MCDecimalValidator alloc] initWithMinimumDouble:-90.0 andMaximumDouble:90.0];
+    self.longitudeValidator = [[MCDecimalValidator alloc] initWithMinimumDouble:-180.0 andMaximumDouble:180.0];
     [self.minLatValue setDelegate:self.latitudeValidator];
     [self.maxLatValue setDelegate:self.latitudeValidator];
     [self.minLonValue setDelegate:self.longitudeValidator];
     [self.maxLonValue setDelegate:self.longitudeValidator];
-    self.boundingBoxes = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_BOUNDING_BOXES];
+    self.boundingBoxes = [MCProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_BOUNDING_BOXES];
     if(self.boundingBox == nil){
-        [self.minLatValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MIN_LATITUDE]];
-        [self.maxLatValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LATITUDE]];
-        [self.minLonValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MIN_LONGITUDE]];
-        [self.maxLonValue setText:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LONGITUDE]];
+        [self.minLatValue setText:[MCProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MIN_LATITUDE]];
+        [self.maxLatValue setText:[MCProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LATITUDE]];
+        [self.minLonValue setText:[MCProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MIN_LONGITUDE]];
+        [self.maxLonValue setText:[MCProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DEFAULT_MAX_LONGITUDE]];
         self.boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-180.0 andMinLatitudeDouble:-90.0 andMaxLongitudeDouble:180.0 andMaxLatitudeDouble:90.0];
         [self updateBoundingBox];
     } else{
@@ -48,7 +48,7 @@
         [self.maxLonValue setText:[self.boundingBox.maxLongitude stringValue]];
     }
     
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.minLatValue.inputAccessoryView = keyboardToolbar;
     self.maxLatValue.inputAccessoryView = keyboardToolbar;
@@ -91,7 +91,7 @@
     }
     
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_PRELOADED_LABEL]
+                          initWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_BOUNDING_BOX_PRELOADED_LABEL]
                           message:nil
                           delegate:self
                           cancelButtonTitle:nil
@@ -100,7 +100,7 @@
     for (NSString *box in boxes) {
         [alert addButtonWithTitle:box];
     }
-    alert.cancelButtonIndex = [alert addButtonWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
+    alert.cancelButtonIndex = [alert addButtonWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
     
     alert.tag = TAG_BOUNDING_BOXES;
     

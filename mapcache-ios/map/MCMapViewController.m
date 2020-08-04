@@ -10,7 +10,6 @@
 
 @interface MCMapViewController ()
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
-@property (nonatomic, strong) GPKGSDatabases *active;
 @property (nonatomic, strong) NSUserDefaults *settings;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
 @property (nonatomic, strong) NSMutableDictionary *geoPackages;
@@ -22,6 +21,7 @@
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic) BOOL showingUserLocation;
 @property (nonatomic) BOOL featureOverlayTiles;
+@property (nonatomic) BOOL ignoreRegionChange;
 @property (atomic) int updateCountId;
 @property (atomic) int featureUpdateCountId;
 @property (nonatomic, strong) GPKGFeatureShapes *featureShapes;
@@ -46,7 +46,6 @@
 @property (nonatomic, strong) UIColor *drawPolygonFillColor;
 @property (nonatomic, strong) NSNumberFormatter *locationDecimalFormatter;
 @property (nonatomic) BOOL boundingBoxMode;
-@property (nonatomic) BOOL drawing;
 @property (nonatomic, strong) GPKGPolygon *boundingBox;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxEndCorner;
@@ -56,7 +55,9 @@
 @property (nonatomic) double maxLon;
 @property (nonatomic) BOOL settingsDrawerVisible;
 @property (nonatomic) int currentZoom;
+@property (nonatomic) CLLocationCoordinate2D currentCenter;
 @property (nonatomic) BOOL expandedZoomDetails;
+@property (nonatomic, strong) MKTileOverlay *userTileOverlay;
 @end
 
 
@@ -78,8 +79,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.geoPackages = [[NSMutableDictionary alloc] init];
     self.featureShapes = [[GPKGFeatureShapes alloc] init];
     self.featureDaos = [[NSMutableDictionary alloc] init];
-    self.manager = [GPKGGeoPackageFactory getManager];
-    self.active = [GPKGSDatabases getInstance];
+    self.manager = [GPKGGeoPackageFactory manager];
+    self.active = [MCDatabases getInstance];
     self.needsInitialZoom = true;
     self.updateCountId = 0;
     self.featureUpdateCountId = 0;
@@ -94,7 +95,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.locationManager.delegate = self;
     self.showingUserLocation = NO;
     self.settingsDrawerVisible = NO;
+    self.ignoreRegionChange = YES;
     self.currentZoom = -1;
+    self.currentCenter = self.mapView.centerCoordinate;
     
     self.infoButton.layer.shadowColor = [UIColor blackColor].CGColor;
     self.infoButton.layer.shadowOpacity = 0.3;
@@ -124,11 +127,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.boundingBoxMode = NO;
     [_mapView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget: self action:@selector(longPressGesture:)]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableBoundingBoxMode) name:@"drawBoundingBox" object:nil];
+    self.tempMapPoints = [[NSMutableArray alloc] init];
     
     NSString *mapType = [self.settings stringForKey:GPKGS_PROP_MAP_TYPE];
-    if (mapType == nil || [mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
+    if (mapType == nil || [mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
         [self.mapView setMapType:MKMapTypeStandard];
-    } else if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
+    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
         [self.mapView setMapType:MKMapTypeSatellite];
     } else {
         [self.mapView setMapType:MKMapTypeHybrid];
@@ -141,7 +145,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if (self.active.modified) {
         [self.active setModified:NO];
-        [self updateInBackgroundWithZoom:YES];
+        [self updateInBackgroundWithZoom:NO];
     }
     
     // iOS 13 dark mode support
@@ -172,6 +176,27 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (void) zoomToPointWithOffset:(CLLocationCoordinate2D) point {
     point.latitude -= self.mapView.region.span.latitudeDelta * (1.0/3.0);
     [self.mapView setCenterCoordinate:point animated:YES];
+}
+
+
+- (void) zoomToPointWithOffset:(CLLocationCoordinate2D) point zoomLevel:(NSUInteger)zoomLevel {
+    //point.latitude -= self.mapView.region.span.latitudeDelta * (1.0/3.0);
+    MKCoordinateSpan span = MKCoordinateSpanMake(0, 360/pow(2, zoomLevel)*self.mapView.frame.size.width/256);
+    [self.mapView setRegion:MKCoordinateRegionMake(point, span) animated:YES];
+}
+
+
+- (void)clearTempPoints {
+    for (GPKGMapPoint *point in self.tempMapPoints) {
+        [self.mapView removeAnnotation:point];
+    }
+    
+    [self.tempMapPoints removeAllObjects];
+}
+
+
+- (void) removeMapPoint:(GPKGMapPoint *) mapPoint {
+    [self.mapView removeAnnotation:mapPoint];
 }
 
 
@@ -265,10 +290,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (void)setMapType:(NSString *)mapType {
     NSLog(@"In MCMapViewController handing setting map change");
     
-    if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
+    if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
         [self.mapView setMapType:MKMapTypeStandard];
         [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
-    } else if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
+    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
         [self.mapView setMapType:MKMapTypeSatellite];
         [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
     } else {
@@ -317,7 +342,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 #pragma mark - MCTileHelperDelegate methods
-- (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay {
+- (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay withTable:(MCTileTable *)table {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [self.mapView addOverlay:tileOverlay];
     });
@@ -409,7 +434,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     MKAnnotationView * view = nil;
     
     if ([annotation isKindOfClass:[GPKGMapPoint class]]){
-        
         GPKGMapPoint * mapPoint = (GPKGMapPoint *) annotation;
         
         if(mapPoint.options.image != nil){
@@ -423,7 +447,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             mapPointImageView.centerOffset = mapPoint.options.imageCenterOffset;
             
             view = mapPointImageView;
-            
+            mapPoint.view = view;
         }else{
             MKPinAnnotationView *mapPointPinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointPinReuseIdentifier];
             if(mapPointPinView == nil){
@@ -451,20 +475,32 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
-    int updateId = ++self.featureUpdateCountId;
-    int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];
-    [self.featureHelper resetFeatureCount];
-    int previousZoom = self.currentZoom;
-    int zoom = (int)[GPKGMapUtils currentZoomWithMapView:mapView];
-    self.currentZoom = zoom;
     
-    if (self.expandedZoomDetails) {
-        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", zoom] forState:UIControlStateNormal];
-    } else {
-        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", zoom] forState:UIControlStateNormal];
+    if (_active == nil) {
+        return;
     }
     
-    if (zoom != previousZoom) {
+    if (self.ignoreRegionChange) {
+        self.ignoreRegionChange = NO;
+        return;
+    }
+    
+    CLLocationCoordinate2D previousCenter = self.currentCenter;
+    self.currentCenter = self.mapView.centerCoordinate;
+    int previousZoom = self.currentZoom;
+    self.currentZoom = (int)[GPKGMapUtils currentZoomWithMapView:mapView];
+    
+    if (self.currentCenter.latitude == previousCenter.latitude && self.currentCenter.longitude == previousCenter.longitude && self.currentZoom == previousZoom) {
+        return;
+    }
+    
+    if (self.expandedZoomDetails) {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", self.currentZoom] forState:UIControlStateNormal];
+    } else {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", self.currentZoom] forState:UIControlStateNormal];
+    }
+    
+    if (self.currentZoom != previousZoom) {
         // Zoom level changed, remove all the feature shapes except the markers
         [self.featureHelper.featureShapes removeShapesFromMapView:mapView withExclusions:[[NSSet alloc] initWithObjects:[NSNumber numberWithInt:GPKG_MST_POINT], [NSNumber numberWithInt:GPKG_MST_MULTI_POINT], nil]];
     } else {
@@ -472,29 +508,38 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self.featureHelper.featureShapes removeShapesNotWithinMapView:mapView];
     }
     
+    int updateId = [self.featureHelper getNewUpdateId];
+    int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];
+    [self.featureHelper resetFeatureCount];
+
     GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:mapView];
     double toleranceDistance = [GPKGMapUtils toleranceDistanceInMapView:mapView];
     int maxFeatures = [self getMaxFeatures];
-    
+
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
          if (self.active != nil) {
-                    for (GPKGSDatabase *database in [self.active getDatabases]) {
-                        GPKGGeoPackage *geoPacakge;
-                        @try {
-                            geoPacakge = [self.manager open:database.name];
-                            [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
-                            
-                            [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)zoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter: YES];
-                            
-                        } @catch (NSException *exception) {
-                           NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
-                        } @finally {
-                            [geoPacakge close];
-                        }
-                    }
+            for (MCDatabase *database in [self.active getDatabases]) {
+                GPKGGeoPackage *geoPacakge;
+                @try {
+                    geoPacakge = [self.manager open:database.name];
+                    [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
+
+                    [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)self.currentZoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter: YES];
+
+                } @catch (NSException *exception) {
+                   NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
                 }
+            }
+        }
     });
+}
+
+
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+    NSLog(@"Tapped map point");
+    [self zoomToPointWithOffset:view.annotation.coordinate];
+    [self.mapActionDelegate showDetailsForAnnotation:(GPKGMapPoint *)view.annotation];
 }
 
 
@@ -504,13 +549,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
-// Lots of mapview stuff in here, most of this can stay
 -(int) updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter{
     int updateId = [self.featureHelper getNewUpdateId];
     int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];
     [self.featureHelper resetFeatureCount];
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
+    
     for(GPKGGeoPackage * geoPackage in [self.geoPackages allValues]){
         @try {
             [geoPackage close];
@@ -522,6 +567,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.featureDaos removeAllObjects];
     
     if(zoom){
+        self.ignoreRegionChange = YES;
         [self zoomToActiveBounds];
     }
     
@@ -529,15 +575,15 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.tilesBoundingBox = nil;
     self.featureOverlayTiles = false;
     [self.featureHelper.featureShapes clear];
-    int maxFeatures = [self getMaxFeatures];
     
+    int maxFeatures = [self getMaxFeatures];
     GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:self.mapView];
     double toleranceDistance = [GPKGMapUtils toleranceDistanceInMapView:self.mapView];
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
          if (self.active != nil) {
-             for (GPKGSDatabase *database in [self.active getDatabases]) {
+             for (MCDatabase *database in [self.active getDatabases]) {
                  GPKGGeoPackage *geoPacakge;
                  @try {
                      geoPacakge = [self.manager open:database.name];
@@ -547,8 +593,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                      
                  } @catch (NSException *exception) {
                     NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
-                 } @finally {
-                     [geoPacakge close];
                  }
              }
          }
@@ -570,16 +614,18 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self zoomToActiveIfNothingVisible:NO];
 }
 
+
 -(void) zoomToActiveAndIgnoreRegionChange: (BOOL) ignoreChange{
     [self zoomToActiveIfNothingVisible:NO andIgnoreRegionChange:ignoreChange];
 }
+
 
 -(void) zoomToActiveIfNothingVisible: (BOOL) nothingVisible{
     [self zoomToActiveIfNothingVisible:nothingVisible andIgnoreRegionChange:NO];
 }
 
+
 -(void) zoomToActiveIfNothingVisible: (BOOL) nothingVisible andIgnoreRegionChange: (BOOL) ignoreChange{
-    
     GPKGBoundingBox * bbox = self.featuresBoundingBox;
     BOOL tileBox = false;
     
@@ -588,12 +634,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         bbox = self.tilesBoundingBox;
         tileBox = true;
         if(self.featureOverlayTiles){
-            paddingPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURE_TILES_ZOOM_PADDING_PERCENTAGE] intValue] * .01;
+            paddingPercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURE_TILES_ZOOM_PADDING_PERCENTAGE] intValue] * .01;
         }else{
-            paddingPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_ZOOM_PADDING_PERCENTAGE] intValue] * .01;
+            paddingPercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_ZOOM_PADDING_PERCENTAGE] intValue] * .01;
         }
     }else{
-        paddingPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_PADDING_PERCENTAGE] intValue] * .01f;
+        paddingPercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_PADDING_PERCENTAGE] intValue] * .01f;
     }
     
     if(bbox != nil){
@@ -618,9 +664,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     
                     double zoomAlreadyVisiblePercentage;
                     if (tileBox) {
-                        zoomAlreadyVisiblePercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
+                        zoomAlreadyVisiblePercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
                     }else{
-                        zoomAlreadyVisiblePercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
+                        zoomAlreadyVisiblePercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
                     }
                     
                     if(longitudeRatio >= zoomAlreadyVisiblePercentage && latitudeRatio >= zoomAlreadyVisiblePercentage){
@@ -635,7 +681,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             double expandedHeight = size.height + (2 * (size.height * paddingPercentage));
             double expandedWidth = size.width + (2 * (size.width * paddingPercentage));
             
-            CLLocationCoordinate2D center = [bbox getCenter];
+            CLLocationCoordinate2D center = [bbox center];
             MKCoordinateRegion expandedRegion = MKCoordinateRegionMakeWithDistance(center, expandedHeight, expandedWidth);
             
             double latitudeRange = expandedRegion.span.latitudeDelta / 2.0;
@@ -644,9 +690,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 expandedRegion = MKCoordinateRegionMake(self.mapView.centerCoordinate, MKCoordinateSpanMake(180, 360));
             }
             
-//            if(ignoreChange){
-//                self.ignoreRegionChange = true;
-//            }
+            if(ignoreChange){
+                self.ignoreRegionChange = YES;
+            }
             [self.mapView setRegion:expandedRegion animated:true];
         }
     }
@@ -654,88 +700,93 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 
 -(void) zoomToActiveBounds{
-    
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
     
     // Pre zoom
     NSMutableArray *activeDatabase = [[NSMutableArray alloc] init];
     [activeDatabase addObjectsFromArray:[self.active getDatabases]];
-    for(GPKGSDatabase *database in activeDatabase){
-        GPKGGeoPackage *geoPackage = [self.manager open:database.name];
-        if (geoPackage != nil) {
-            
-            NSMutableSet<NSString *> *featureTableDaos = [[NSMutableSet alloc] init];
-            NSArray *features = [database getFeatures];
-            if(features.count > 0){
-                for(GPKGSTable *featureTable in features){
-                    [featureTableDaos addObject:featureTable.name];
-                }
-            }
-            
-            for(GPKGSFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
-                if(featureOverlay.active){
-                    [featureTableDaos addObject:featureOverlay.featureTable];
-                }
-            }
-            
-            if(featureTableDaos.count > 0){
+    for(MCDatabase *database in activeDatabase){
+        GPKGGeoPackage *geoPackage;
+
+        @try {
+            geoPackage = [self.manager open:database.name];
+            if (geoPackage != nil) {
+                NSMutableSet<NSString *> *featureTableDaos = [[NSMutableSet alloc] init];
+                NSArray *features = [database getFeatures];
                 
-                GPKGContentsDao *contentsDao = [geoPackage getContentsDao];
+                if(features.count > 0){
+                    for(MCTable *featureTable in features){
+                        [featureTableDaos addObject:featureTable.name];
+                    }
+                }
                 
-                for (NSString *featureTable in featureTableDaos) {
+                for(MCFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
+                    if(featureOverlay.active){
+                        [featureTableDaos addObject:featureOverlay.featureTable];
+                    }
+                }
+                
+                if(featureTableDaos.count > 0){
+                    GPKGContentsDao *contentsDao = [geoPackage contentsDao];
                     
-                    @try {
-                        GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:featureTable];
-                        GPKGBoundingBox *contentsBoundingBox = [contents getBoundingBox];
-                        
-                        if (contentsBoundingBox != nil) {
+                    for (NSString *featureTable in featureTableDaos) {
+                        @try {
+                            GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:featureTable];
+                            GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
                             
-                            contentsBoundingBox = [self.tileHelper transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao getSrs:contents]];
-                            
-                            if (self.featuresBoundingBox != nil) {
-                                self.featuresBoundingBox = [self.featuresBoundingBox union:contentsBoundingBox];
-                            } else {
-                                self.featuresBoundingBox = contentsBoundingBox;
+                            if (contentsBoundingBox != nil) {
+                                contentsBoundingBox = [self.tileHelper transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao srs:contents]];
+                                
+                                if (self.featuresBoundingBox != nil) {
+                                    self.featuresBoundingBox = [self.featuresBoundingBox union:contentsBoundingBox];
+                                } else {
+                                    self.featuresBoundingBox = contentsBoundingBox;
+                                }
                             }
+                        } @catch (NSException *e) {
+                            NSLog(@"%@", [e description]);
+                        } @finally {
+                            [geoPackage close];
                         }
-                    } @catch (NSException *e) {
-                        NSLog(@"%@", [e description]);
-                    } @finally {
-                        [geoPackage close];
                     }
                 }
-            }
-            
-            NSArray *tileTables = [database getTiles];
-            if(tileTables.count > 0){
                 
-                GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
-                
-                for(GPKGSTileTable *tileTable in tileTables){
+                NSArray *tileTables = [database getTiles];
+                if(tileTables.count > 0){
                     
-                    @try {
-                        GPKGTileMatrixSet *tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:tileTable.name];
-                        GPKGBoundingBox *tileMatrixSetBoundingBox = [tileMatrixSet getBoundingBox];
+                    GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage tileMatrixSetDao];
+                    
+                    for(MCTileTable *tileTable in tileTables){
                         
-                        tileMatrixSetBoundingBox = [self.tileHelper transformBoundingBoxToWgs84:tileMatrixSetBoundingBox withSrs:[tileMatrixSetDao getSrs:tileMatrixSet]];
-                        
-                        if (self.tilesBoundingBox != nil) {
-                            self.tilesBoundingBox = [self.tilesBoundingBox union:tileMatrixSetBoundingBox];
-                        } else {
-                            self.tilesBoundingBox = tileMatrixSetBoundingBox;
+                        @try {
+                            GPKGTileMatrixSet *tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:tileTable.name];
+                            GPKGBoundingBox *tileMatrixSetBoundingBox = [tileMatrixSet boundingBox];
+                            
+                            tileMatrixSetBoundingBox = [self.tileHelper transformBoundingBoxToWgs84:tileMatrixSetBoundingBox withSrs:[tileMatrixSetDao srs:tileMatrixSet]];
+                            
+                            if (self.tilesBoundingBox != nil) {
+                                self.tilesBoundingBox = [self.tilesBoundingBox union:tileMatrixSetBoundingBox];
+                            } else {
+                                self.tilesBoundingBox = tileMatrixSetBoundingBox;
+                            }
+                        } @catch (NSException *e) {
+                            NSLog(@"%@", [e description]);
+                        } @finally {
+                            [geoPackage close];
                         }
-                    } @catch (NSException *e) {
-                        NSLog(@"%@", [e description]);
-                    } @finally {
-                        [geoPackage close];
                     }
                 }
             }
-            
-            [geoPackage close];
+        } @catch (NSException *e) {
+            NSLog(@"Problem zooming to bounds %@", e.reason);
+        } @finally {
+            if (geoPackage != nil) {
+                [geoPackage close];
+            }
         }
     }
+    
     [self zoomToActiveAndIgnoreRegionChange:YES];
 }
 
@@ -743,44 +794,67 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(int) getMaxFeatures{
     int maxFeatures = (int)[self.settings integerForKey:GPKGS_PROP_MAP_MAX_FEATURES];
     if(maxFeatures == 0){
-        maxFeatures = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
+        maxFeatures = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
     }
     return maxFeatures;
 }
 
 
 - (void) setupColors {
-    self.boundingBoxColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_COLOR]];
-    self.boundingBoxLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_LINE_WIDTH] doubleValue];
-    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL]){
-        self.boundingBoxFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
+    self.boundingBoxColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_COLOR]];
+    self.boundingBoxLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_LINE_WIDTH] doubleValue];
+    if([MCProperties getBoolOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL]){
+        self.boundingBoxFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
     }
     
-    self.defaultPolylineColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_COLOR]];
-    self.defaultPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_LINE_WIDTH] doubleValue];
+    self.defaultPolylineColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_COLOR]];
+    self.defaultPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_LINE_WIDTH] doubleValue];
     
-    self.defaultPolygonColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_COLOR]];
-    self.defaultPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYGON_LINE_WIDTH] doubleValue];
-    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL]){
-        self.defaultPolygonFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL_COLOR]];
+    self.defaultPolygonColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_COLOR]];
+    self.defaultPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYGON_LINE_WIDTH] doubleValue];
+    if([MCProperties getBoolOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL]){
+        self.defaultPolygonFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL_COLOR]];
     }
     
-    self.editPolylineColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYLINE_COLOR]];
-    self.editPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYLINE_LINE_WIDTH] doubleValue];
+    self.editPolylineColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYLINE_COLOR]];
+    self.editPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYLINE_LINE_WIDTH] doubleValue];
     
-    self.editPolygonColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_COLOR]];
-    self.editPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYGON_LINE_WIDTH] doubleValue];
-    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL]){
-        self.editPolygonFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL_COLOR]];
+    self.editPolygonColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_COLOR]];
+    self.editPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYGON_LINE_WIDTH] doubleValue];
+    if([MCProperties getBoolOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL]){
+        self.editPolygonFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL_COLOR]];
     }
     
-    self.drawPolylineColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYLINE_COLOR]];
-    self.drawPolylineLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYLINE_LINE_WIDTH] doubleValue];
+    self.drawPolylineColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYLINE_COLOR]];
+    self.drawPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYLINE_LINE_WIDTH] doubleValue];
     
-    self.drawPolygonColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_COLOR]];
-    self.drawPolygonLineWidth = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYGON_LINE_WIDTH] doubleValue];
-    if([GPKGSProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL]){
-        self.drawPolygonFillColor = [GPKGUtils getColor:[GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
+    self.drawPolygonColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_COLOR]];
+    self.drawPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYGON_LINE_WIDTH] doubleValue];
+    if([MCProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL]){
+        self.drawPolygonFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL_COLOR]];
+    }
+}
+
+
+/**
+   Used to show tile previews after a tile download, or switch on saved tile URLs from the map.
+*/
+- (void) addUserTilesWithUrl:(NSString *) tileTemplateURL {
+    if (self.userTileOverlay != nil) {
+        [self.mapView removeOverlay:self.userTileOverlay];
+    }
+    
+    self.userTileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileTemplateURL];
+    [self.mapView insertOverlay:self.userTileOverlay atIndex:0];
+}
+
+
+/**
+    Used to remove tile previews after a tile download, or switch off saved tile URLs from the map.
+ */
+- (void) removeUserTiles {
+    if (self.userTileOverlay != nil) {
+        [self.mapView removeOverlay:self.userTileOverlay];
     }
 }
 
@@ -798,142 +872,31 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     CGPoint cgPoint = [longPressGestureRecognizer locationInView:self.mapView];
     CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
     
-    if(self.boundingBoxMode){
-        NSLog(@"Bounding Box mode");
-        if(longPressGestureRecognizer.state == UIGestureRecognizerStateBegan){
-            //[_editBoundingBoxButton setTitle:@"Edit Bounding Box" forState:UIControlStateNormal];
-            
-            // Check to see if editing any of the bounding box corners
-            if (self.boundingBox != nil && CLLocationCoordinate2DIsValid(self.boundingBoxEndCorner)) {
-                
-                double allowableScreenPercentage = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_LONG_CLICK_SCREEN_PERCENTAGE] intValue] / 100.0;
-                if([self isWithinDistanceWithPoint:cgPoint andLocation:self.boundingBoxEndCorner andAllowableScreenPercentage:allowableScreenPercentage]){
-                    [self setDrawing:true];
-                }else if([self isWithinDistanceWithPoint:cgPoint andLocation:self.boundingBoxStartCorner andAllowableScreenPercentage:allowableScreenPercentage]){
-                    CLLocationCoordinate2D temp = self.boundingBoxStartCorner;
-                    self.boundingBoxStartCorner = self.boundingBoxEndCorner;
-                    self.boundingBoxEndCorner = temp;
-                    [self setDrawing:true];
-                }else{
-                    CLLocationCoordinate2D corner1 = CLLocationCoordinate2DMake(self.boundingBoxStartCorner.latitude, self.boundingBoxEndCorner.longitude);
-                    CLLocationCoordinate2D corner2 = CLLocationCoordinate2DMake(self.boundingBoxEndCorner.latitude, self.boundingBoxStartCorner.longitude);
-                    if([self isWithinDistanceWithPoint:cgPoint andLocation:corner1 andAllowableScreenPercentage:allowableScreenPercentage]){
-                        self.boundingBoxStartCorner = corner2;
-                        self.boundingBoxEndCorner = corner1;
-                        [self setDrawing:true];
-                    }else if([self isWithinDistanceWithPoint:cgPoint andLocation:corner2 andAllowableScreenPercentage:allowableScreenPercentage]){
-                        self.boundingBoxStartCorner = corner1;
-                        self.boundingBoxEndCorner = corner2;
-                        [self setDrawing:true];
-                    }
-                }
-            }
-            
-            // Start drawing a new polygon
-            if(!self.drawing){
-                if(self.boundingBox != nil){
-                    [self.mapView removeOverlay:self.boundingBox];
-                }
-                self.boundingBoxStartCorner = point;
-                self.boundingBoxEndCorner = point;
-                CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
-                self.boundingBox = [GPKGPolygon polygonWithCoordinates:points count:4];
-                
-                [self.mapView addOverlay:self.boundingBox];
-                [self setDrawing:true];
-            }
-            
-        }else{
-            switch(longPressGestureRecognizer.state){
-                case UIGestureRecognizerStateChanged:
-                case UIGestureRecognizerStateEnded:
-                    if(self.boundingBoxMode){
-                        if(self.drawing && self.boundingBox != nil){
-                            self.boundingBoxEndCorner = point;
-                            CLLocationCoordinate2D * points = [self getPolygonPointsWithPoint1:self.boundingBoxStartCorner andPoint2:self.boundingBoxEndCorner];
-                            GPKGPolygon * newBoundingBox = [GPKGPolygon polygonWithCoordinates:points count:4];
-                            [self.mapView removeOverlay:self.boundingBox];
-                            [self.mapView addOverlay:newBoundingBox];
-                            self.boundingBox = newBoundingBox;
-                            //_nextButton.enabled = YES;
-                            self.navigationItem.prompt = @"You can drag the corners of the bounding box to adjust it.";
-                            
-                            if (_boundingBoxStartCorner.latitude > _boundingBoxEndCorner.latitude) {
-                                _minLat = _boundingBoxEndCorner.latitude;
-                                _maxLat = _boundingBoxStartCorner.latitude;
-                                
-                                //_upperRightLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxStartCorner.latitude];
-                                //_lowerLeftLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxEndCorner.latitude];
-                            } else {
-                                _minLat = _boundingBoxStartCorner.latitude;
-                                _maxLat = _boundingBoxEndCorner.latitude;
-                                
-                                //_upperRightLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxEndCorner.latitude];
-                                //_lowerLeftLatitudeLabel.text = [NSString stringWithFormat:@"Lat: %.2f", self.boundingBoxStartCorner.latitude];
-                            }
-                            
-                            if (_boundingBoxStartCorner.longitude < _boundingBoxEndCorner.longitude) {
-                                _minLon = _boundingBoxStartCorner.longitude;
-                                _maxLon = _boundingBoxEndCorner.longitude;
-                                
-                                //_lowerLeftLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxStartCorner.longitude];
-                                //_upperRightLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxEndCorner.longitude];
-                            } else {
-                                _minLon = _boundingBoxEndCorner.longitude;
-                                _maxLon = _boundingBoxStartCorner.longitude;
-                                
-                                //_lowerLeftLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxEndCorner.longitude];
-                                //_upperRightLongitudeLabel.text = [NSString stringWithFormat:@"Lon: %.2f", self.boundingBoxStartCorner.longitude];
-                            }
-                            
-                            
-//                            [self animateShowHide:_lowerLeftLabel :NO];
-//                            [self animateShowHide:_upperRightLabel :NO];
-//                            [self animateShowHide:_lowerLeftLatitudeLabel :NO];
-//                            [self animateShowHide:_lowerLeftLongitudeLabel :NO];
-//                            [self animateShowHide:_upperRightLatitudeLabel :NO];
-//                            [self animateShowHide:_upperRightLongitudeLabel :NO];
-                        }
-                        if(longPressGestureRecognizer.state == UIGestureRecognizerStateEnded){
-                            [self setDrawing:false];
-                            
-                            GPKGBoundingBox *boundingBox = [[GPKGBoundingBox alloc] initWithMinLongitude:[[NSDecimalNumber alloc] initWithDouble:_minLon]
-                                                                                          andMinLatitude:[[NSDecimalNumber alloc] initWithDouble:_minLat]
-                                                                                         andMaxLongitude:[[NSDecimalNumber alloc] initWithDouble:_maxLon]
-                                                                                          andMaxLatitude:[[NSDecimalNumber alloc] initWithDouble:_maxLat]];
-                            
-                            NSDictionary *boundingBoxResults = @{@"boundingBox": boundingBox};
-                            
-                            // MCBoundingBoxDetailsViewController is on the recieving end
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"boundingBoxResults" object:self userInfo:boundingBoxResults];
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    /*else if(self.editFeatureType != GPKGS_ET_NONE){
+    if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan && self.tempMapPoints.count == 0) {
+        UINotificationFeedbackGenerator *feedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
+        [feedbackGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
         
-        if(longPressGestureRecognizer.state == UIGestureRecognizerStateBegan){
-            if(self.editFeatureType == GPKGS_ET_EDIT_FEATURE){
-                if(self.editFeatureShapePoints != nil){
-                    GPKGMapPoint * mapPoint = [self addEditPoint:point];
-                    [self.editFeatureShapePoints addNewPoint:mapPoint];
-                    [self.editFeatureShape addPoint:mapPoint withShape:self.editFeatureShapePoints];
-                    GPKGSMapPointData * data = [self getOrCreateDataWithMapPoint:mapPoint];
-                    data.type = GPKGS_MPDT_EDIT_FEATURE_POINT;
-                    [self setTitleWithGeometryType:self.editFeatureShape.shape.geometryType andMapPoint:mapPoint];
-                    [self updateEditState:true]; // TODO figure out if I need all of this method
-                }
-            }else{
-                GPKGMapPoint * mapPoint = [self addEditPoint:point];
-                [self setTitleWithTitle:[GPKGSEditTypes pointName:self.editFeatureType] andMapPoint:mapPoint];
-                [self updateEditState:true]; // TODO figure out if I need all of this method
-            }
+        NSLog(@"Adding a pin");
+        GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithLocation:point];
+        [mapPoint.options setPinTintColor:[UIColor redColor]];
+        
+        [self.mapView addAnnotation: mapPoint];
+        [self.tempMapPoints addObject:mapPoint];
+     
+        if (!_drawing && self.tempMapPoints.count > 0) {
+            [self zoomToPointWithOffset: point];
+            [mapPoint setTitle:[_featureHelper buildLocationTitleWithMapPoint:mapPoint]];
+            [self.mapView selectAnnotation:mapPoint animated:YES];
+            
+            _drawing = YES;
+        } else {
+            [self.mapActionDelegate updateDrawingStatus];
         }
-    }*/
+        
+    }
+    
+    // MKMapView workaround for unresponsiveness after a longpress https://forums.developer.apple.com/thread/126473
+    //[self.mapView setCenterCoordinate:self.mapView.centerCoordinate animated:NO];
 }
 
 

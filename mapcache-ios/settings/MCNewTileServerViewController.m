@@ -113,7 +113,7 @@
 
 #pragma mark - UITextFieldDelegate
 - (void) textFieldDidEndEditing:(UITextField *)textField {
-    [textField trimWhiteSpace:textField];
+    [textField trimWhiteSpace];
     if (textField.text && ![textField.text isEqualToString:@""]) {
         self.nameIsValid = YES;
         [self.nameField useNormalAppearance];

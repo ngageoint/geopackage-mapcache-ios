@@ -1,21 +1,23 @@
 {
   "images" : [
     {
+      "filename" : "Point_3.png",
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "ic_point.png"
+      "scale" : "1x"
     },
     {
+      "filename" : "Point_4.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Point_5.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }

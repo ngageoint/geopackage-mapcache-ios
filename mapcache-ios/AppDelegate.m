@@ -9,8 +9,8 @@
 #import "AppDelegate.h"
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGSManagerViewController.h"
-#import "GPKGSConstants.h"
-#import "GPKGSProperties.h"
+#import "MCConstants.h"
+#import "MCProperties.h"
 #import "MBFingerTipWindow.h"
 
 @interface AppDelegate ()
@@ -22,7 +22,7 @@
 @implementation AppDelegate
 
 - (UIWindow *)window {
-    if ([GPKGSProperties getBoolOfProperty:GPKGS_ANIMATE_SCREEN_TOUCHES] && !_window) {
+    if ([MCProperties getBoolOfProperty:GPKGS_ANIMATE_SCREEN_TOUCHES] && !_window) {
         MBFingerTipWindow * fingerTip = [[MBFingerTipWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
         fingerTip.alwaysShowTouches = YES;
         _window = fingerTip;
@@ -52,7 +52,7 @@
         [_window.rootViewController presentViewController:disclaimer animated:YES completion:nil];
     }
     
-    _manager = [GPKGGeoPackageFactory getManager];
+    _manager = [GPKGGeoPackageFactory manager];
     _geoPackages = [[GPKGGeoPackageCache alloc] initWithManager:self.manager];
     
     return YES;
@@ -100,9 +100,17 @@
         NSString * fileUrl = [url path];
         
         BOOL imported = false;
-        GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory getManager];
+        GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory manager];
         @try {
             imported = [manager importGeoPackageFromPath:fileUrl andOverride:true andMove:true];
+        } @catch (NSException *e) {
+            NSLog(@"------------------------- AppDelegate - Problem importing geopackage %@\n%@", fileUrl, e.reason);
+            
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Problem importing GeoPacakge" message:e.reason preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}];
+            [alert addAction:defaultAction];
+            [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+            
         }
         @finally {
             [manager close];

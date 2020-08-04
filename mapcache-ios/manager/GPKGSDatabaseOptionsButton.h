@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSDatabase.h"
+#import "MCDatabase.h"
 
 @interface GPKGSDatabaseOptionsButton : UIButton
 
-@property (nonatomic, strong) GPKGSDatabase * database;
+@property (nonatomic, strong) MCDatabase * database;
 
 @end
 

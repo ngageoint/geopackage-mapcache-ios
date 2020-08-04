@@ -28,9 +28,10 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     [super viewDidLoad];
     
     self.haveScrolled = NO;
-    CGRect bounds = self.view.bounds;
-    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
-    self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
+//    CGRect bounds = self.view.bounds;
+//    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
+    //self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] init];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -41,13 +42,14 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     [self registerCellTypes];
     [self initCellArray];
     
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.extendedLayoutIncludesOpaqueBars = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
-    self.tableView.contentInset = tabBarInsets;
-    self.tableView.scrollIndicatorInsets = tabBarInsets;
-    [self.view addSubview:self.tableView];
+//    self.edgesForExtendedLayout = UIRectEdgeNone;
+//    self.extendedLayoutIncludesOpaqueBars = NO;
+//    self.automaticallyAdjustsScrollViewInsets = NO;
+//    UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
+//    self.tableView.contentInset = tabBarInsets;
+//    self.tableView.scrollIndicatorInsets = tabBarInsets;
+    //[self.view addSubview:self.tableView];
+    [self addAndConstrainSubview:self.tableView];
     
     [self addDragHandle];
     [self addCloseButton];
@@ -73,16 +75,16 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     _baseMapSelector = [_tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
     _baseMapSelector.label.text = @"Base Map Type";
     _baseMapSelector.delegate = self;
-    NSArray *maps = [[NSArray alloc] initWithObjects: [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD],
-                     [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE],
-                     [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_HYBRID], nil];
+    NSArray *maps = [[NSArray alloc] initWithObjects: [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD],
+                     [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE],
+                     [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_HYBRID], nil];
     
-    [_baseMapSelector setItems:maps];
+    [_baseMapSelector updateItems:maps];
     
     NSString *mapType = [self.settings stringForKey:GPKGS_PROP_MAP_TYPE];
-    if (mapType == nil || [mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
+    if (mapType == nil || [mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
         [_baseMapSelector.segmentedControl setSelectedSegmentIndex:0];
-    } else if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
+    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
         [_baseMapSelector.segmentedControl setSelectedSegmentIndex:1];
     } else {
         [_baseMapSelector.segmentedControl setSelectedSegmentIndex:2];
@@ -94,7 +96,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     _maxFeaturesCell.title.text = @"Maximum number of features";
     int maxFeatures = (int)[self.settings integerForKey:GPKGS_PROP_MAP_MAX_FEATURES];
     if(maxFeatures == 0){
-        maxFeatures = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
+        maxFeatures = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
     }
     _maxFeaturesCell.field.text = [NSString stringWithFormat:@"%d", maxFeatures];
     [_maxFeaturesCell setTextFielDelegate:self];

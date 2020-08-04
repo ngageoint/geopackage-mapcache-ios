@@ -10,7 +10,7 @@
 
 @interface MCGeoPackageList()
 @property (strong, nonatomic) NSMutableArray *childCoordinators;
-@property (nonatomic, strong) GPKGSDatabases *active;
+@property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic) BOOL haveScrolled;
 @end
 
@@ -21,7 +21,7 @@
     self = [super initAsFullView:fullView];
     _geoPackages = geoPackages;
     _geopackageListViewDelegate = delegate;
-    _active = [GPKGSDatabases getInstance];
+    _active = [MCDatabases getInstance];
     
     return self;
 }
@@ -38,6 +38,8 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCGeoPackageCell" bundle:nil] forCellReuseIdentifier:@"geopackage"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCEmptyStateCell" bundle:nil] forCellReuseIdentifier:@"emptyState"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCTutorialCell" bundle:nil] forCellReuseIdentifier:@"tutorialCell"];
+    self.downloadButton.backgroundColor = [MCColorUtil getAccent];
+    self.createButton.backgroundColor = [MCColorUtil getAccent];
     
     // iOS 13 dark mode support
     if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
@@ -96,27 +98,6 @@
 
 - (IBAction)createGeoPackage:(id)sender {
     [self.geopackageListViewDelegate showNewGeoPackageView];
-    
-    /*UIAlertController *newGeoPackageAlert = [UIAlertController alertControllerWithTitle:@"New GeoPackage" message:@"" preferredStyle:UIAlertControllerStyleAlert];
-    [newGeoPackageAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.text = @"";
-    }];
-    
-    UIAlertAction *confirmCreate = [UIAlertAction actionWithTitle:@"Create" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSLog(@"Name: %@", newGeoPackageAlert.textFields[0].text);
-        
-        NSString * newName = newGeoPackageAlert.textFields[0].text;
-        [self.geopackageListViewDelegate createGeoPackage:newName];
-    }];
-    
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        [newGeoPackageAlert dismissViewControllerAnimated:YES completion:nil];
-    }];
-    
-    [newGeoPackageAlert addAction:confirmCreate];
-    [newGeoPackageAlert addAction:cancel];
-    
-    [self presentViewController:newGeoPackageAlert animated:YES completion:nil];*/
 }
 
 
@@ -157,21 +138,8 @@
             cell = [[MCGeoPackageCell alloc] init];
         }
         
-        GPKGSDatabase *database = [_geoPackages objectAtIndex:indexPath.row];
-        
-        cell.geoPackageNameLabel.text = database.name;
-        
-        if ([database getFeatures].count == 1) {
-            cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layer", (long)[database getFeatures].count];
-        } else {
-            cell.featureLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Feature layers", (long)[database getFeatures].count];
-        }
-        
-        if ([database getTileCount] == 1) {
-            cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layer", (long)[database getTileCount]];
-        } else {
-            cell.tileLayerDetailsLabel.text = [NSString stringWithFormat:@"%ld Tile layers", (long)[database getTileCount]];
-        }
+        MCDatabase *database = [_geoPackages objectAtIndex:indexPath.row];
+        [cell setContentWithDatabase:database];
         
         if ([_active isActive:database]) {
             [cell activeLayersIndicatorOn];
@@ -212,7 +180,7 @@
     } else if([cell isKindOfClass:[MCTutorialCell class]]){
         return;
     } else {
-        GPKGSDatabase *selectedGeoPackage = [_geoPackages objectAtIndex:indexPath.row];
+        MCDatabase *selectedGeoPackage = [_geoPackages objectAtIndex:indexPath.row];
         NSLog(@"didSelectRowAtIndexPath for %@", selectedGeoPackage.name);
         [_geopackageListViewDelegate didSelectGeoPackage:selectedGeoPackage];
     }
@@ -259,7 +227,20 @@
     }
     
     UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        [self deleteGeoPackageAtIndexPath:indexPath];
+        
+        UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this GeoPackage? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self deleteGeoPackageAtIndexPath:indexPath];
+        }];
+        
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [deleteAlert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+        [deleteAlert addAction:confirmDelete];
+        [deleteAlert addAction:cancel];
+        [self presentViewController:deleteAlert animated:YES completion:nil];
+        
         completionHandler(YES);
     }];
     delete.backgroundColor = [UIColor redColor];

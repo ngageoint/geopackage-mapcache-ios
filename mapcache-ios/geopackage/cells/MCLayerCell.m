@@ -24,6 +24,23 @@
 }
 
 
+- (void)setContentsWithTable:(MCTable *) table {
+    self.table = table;
+    [self.layerNameLabel setText:table.name];
+    
+    NSString *typeImageName = @"";
+    if ([table isMemberOfClass:[MCFeatureTable class]]) {
+        typeImageName = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_GEOMETRY];
+        [self.detailLabel setText: [NSString stringWithFormat:@"%d features", [(MCFeatureTable *)table count]]];
+    } else if ([table isMemberOfClass:[MCTileTable class]]) {
+        typeImageName = [MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILES];
+        [self.detailLabel setText:[NSString stringWithFormat:@"Zoom levels %d - %d",  [(MCTileTable *)table minZoom], [(MCTileTable *)table maxZoom]]];
+    }
+    
+    [self.layerTypeImage setImage:[UIImage imageNamed:typeImageName]];
+}
+
+
 - (void) setName: (NSString *) name {
     [self.layerNameLabel setText:name];
 }

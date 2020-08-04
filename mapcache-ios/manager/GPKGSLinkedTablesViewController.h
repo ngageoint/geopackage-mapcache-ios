@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSTable.h"
+#import "MCTable.h"
 #import "GPKGGeoPackageManager.h"
 
 @class GPKGSLinkedTablesViewController;
@@ -20,6 +20,6 @@
 
 @property (nonatomic, weak) id <GPKGSLinkedTablesDelegate> delegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) GPKGSTable *table;
+@property (nonatomic, strong) MCTable *table;
 
 @end

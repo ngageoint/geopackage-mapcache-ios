@@ -44,6 +44,9 @@
 }
 
 
+/**
+    Change the return key to be a done button for the text field. 
+ */
 - (void) useReturnKeyDone {
     [self.field setReturnKeyType:UIReturnKeyDone];
 }
@@ -61,11 +64,10 @@
 
 - (void)setupNumericalKeyboard {
     self.field.keyboardType = UIKeyboardTypeNumberPad;
-    
-    UIToolbar *keyboardAccessoryView = [[UIToolbar alloc] init];
-    [keyboardAccessoryView sizeToFit];
+    UIToolbar *keyboardAccessoryView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, [[UIApplication sharedApplication] keyWindow].frame.size.width, 40)];
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(done:)];
     [keyboardAccessoryView setItems:@[doneButton]];
+    [keyboardAccessoryView sizeToFit];
     self.field.inputAccessoryView = keyboardAccessoryView;
 }
 

@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UISwitch *switchControl;
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @property (weak, nonatomic) id<MCSwitchCellDelegate> switchDelegate;
+@property (strong, nonatomic) NSString *columnName;
 
 - (void) switchOn;
 - (void) switchOff;

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSTable.h"
+#import "MCTable.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGSLoadTilesData.h"
 #import "GPKGSLoadTilesProtocol.h"
@@ -22,7 +22,7 @@
 
 @property (nonatomic, weak) id <GPKGSManagerLoadTilesDelegate> delegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) GPKGSTable *table;
+@property (nonatomic, strong) MCTable *table;
 @property (nonatomic, strong) GPKGSLoadTilesData *data;
 
 

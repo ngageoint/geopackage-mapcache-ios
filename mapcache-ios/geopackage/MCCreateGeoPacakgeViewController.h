@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface MCCreateGeoPacakgeViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate>
+@interface MCCreateGeoPacakgeViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCButtonCellDelegate>
 @property (nonatomic, weak) id<MCCreateGeoPackageDelegate> createGeoPackageDelegate;
 @end
 

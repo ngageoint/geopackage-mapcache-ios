@@ -9,7 +9,7 @@
 #import "GPKGSLinkedTablesViewController.h"
 #import "GPKGSTableCell.h"
 #import "GPKGFeatureTileTableLinker.h"
-#import "GPKGSConstants.h"
+#import "MCConstants.h"
 
 @interface GPKGSLinkedTablesViewController ()
 
@@ -33,11 +33,11 @@
     GPKGResultSet * linkedTableResults = nil;
     switch([self.table getType]){
         case GPKGS_TT_FEATURE:
-            tables = [geoPackage getTileTables];
+            tables = [geoPackage tileTables];
             linkedTableResults = [linker queryForFeatureTable:self.table.name];
             break;
         case GPKGS_TT_TILE:
-            tables = [geoPackage getFeatureTables];
+            tables = [geoPackage featureTables];
             linkedTableResults = [linker queryForTileTable:self.table.name];
             break;
         default:
@@ -47,7 +47,7 @@
     // Build a set of currently linked tables
     self.linkedTableSet = [[NSMutableSet alloc] init];
     while([linkedTableResults moveToNext]){
-        GPKGFeatureTileLink * link = [linker getLinkFromResultSet:linkedTableResults];
+        GPKGFeatureTileLink * link = [linker linkFromResultSet:linkedTableResults];
         switch([self.table getType]){
             case GPKGS_TT_FEATURE:
                 [self.linkedTableSet addObject:link.tileTableName];
@@ -63,7 +63,7 @@
     
     self.tableCells = [[NSMutableArray alloc] init];
     for(NSString * table in tables){
-        GPKGSTable * linkTable = [[GPKGSTable alloc] initWithDatabase:self.table.database andName:table andCount:0];
+        MCTable * linkTable = [[MCTable alloc] initWithDatabase:self.table.database andName:table andCount:0];
         linkTable.active = [self.linkedTableSet containsObject:table];
         [self.tableCells addObject:linkTable];
     }
@@ -87,7 +87,7 @@
     // Determine which links were newly checked or removed
     NSMutableArray * newLinks = [[NSMutableArray alloc] init];
     NSMutableArray * removedLinks = [[NSMutableArray alloc] init];
-    for(GPKGSTable * linkTable in self.tableCells){
+    for(MCTable * linkTable in self.tableCells){
         BOOL wasActive = [self.linkedTableSet containsObject:linkTable.name];
         if(linkTable.active){
             if(!wasActive){
@@ -152,7 +152,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    GPKGSTable * linkTable = (GPKGSTable *) [self.tableCells objectAtIndex:indexPath.row];
+    MCTable * linkTable = (MCTable *) [self.tableCells objectAtIndex:indexPath.row];
     GPKGSTableCell * tableCell = (GPKGSTableCell *) [tableView dequeueReusableCellWithIdentifier:GPKGS_CELL_LINKED_TABLE forIndexPath:indexPath];
     tableCell.active.on = linkTable.active;
     [tableCell.tableName setText:linkTable.name];
@@ -163,7 +163,7 @@
 }
 
 - (IBAction)tableActiveChanged:(GPKGSActiveTableSwitch *)sender {
-    GPKGSTable * table = sender.table;
+    MCTable * table = sender.table;
     table.active = sender.on;
 }
 

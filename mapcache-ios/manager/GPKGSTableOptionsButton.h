@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPKGSTable.h"
+#import "MCTable.h"
 
 @interface GPKGSTableOptionsButton : UIButton
 
-@property (nonatomic, strong) GPKGSTable * table;
+@property (nonatomic, strong) MCTable * table;
 
 @end

@@ -45,8 +45,8 @@
         [_downloadDelegate downloadCoordinatorCompletitonHandler:YES];
     }
     if(error != nil){
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_IMPORT_URL_ERROR]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[MCProperties getValueOfProperty:GPKGS_PROP_IMPORT_URL_ERROR]
                                  andMessage:[NSString stringWithFormat:@"There was a problem downloading '%@' from:\n%@\n\n%@", controller.nameTextField.text, controller.urlTextField.text, error]];
     }
 }

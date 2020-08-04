@@ -7,7 +7,7 @@
 //
 
 #import "GPKGSCreateTilesViewController.h"
-#import "GPKGSUtils.h"
+#import "MCUtils.h"
 #import "GPKGSLoadTilesViewController.h"
 
 NSString * const GPKGS_CREATE_TILES_SEG_LOAD_TILES = @"loadTiles";
@@ -21,7 +21,7 @@ NSString * const GPKGS_CREATE_TILES_SEG_LOAD_TILES = @"loadTiles";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.nameTextField.inputAccessoryView = keyboardToolbar;
 }

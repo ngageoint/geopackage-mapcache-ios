@@ -32,6 +32,13 @@
 }
 
 
+- (void) usePrimaryColors {
+    [self.button setBackgroundColor: [MCColorUtil getAccent]];
+    self.button.clipsToBounds = YES;
+    [self.button setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
+}
+
+
 - (void) useSecondaryColors {
     [self.button setBackgroundColor:[UIColor clearColor]];
     self.button.clipsToBounds = YES;
@@ -39,15 +46,29 @@
 }
 
 
+- (void) useRedColor {
+    [self.button setBackgroundColor:[UIColor redColor]];
+    self.button.clipsToBounds = YES;
+    [self.button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+}
+
+
+- (void) useSecondaryRed {
+    [self.button setBackgroundColor:[UIColor clearColor]];
+    self.button.clipsToBounds = YES;
+    [self.button setTitleColor: [UIColor redColor] forState:UIControlStateNormal];
+}
+
+
 - (void) enableButton {
     _button.userInteractionEnabled = YES;
-    _button.backgroundColor = [MCColorUtil getAccent];
+    [_button setBackgroundColor: [MCColorUtil getAccent]];
 }
 
 
 - (void) disableButton {
     _button.userInteractionEnabled = NO;
-    _button.backgroundColor = [MCColorUtil getAccentLight];
+    [_button setBackgroundColor: [MCColorUtil getMediumGrey]];
 }
 
 @end

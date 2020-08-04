@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MCTitleCell : UITableViewCell
+- (void)setLabelText:(NSString *) text;
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @end
 

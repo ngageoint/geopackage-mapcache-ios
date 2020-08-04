@@ -21,6 +21,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *detailLabelOne;
 @property (weak, nonatomic) IBOutlet UILabel *detailLabelTwo;
 @property (weak, nonatomic) IBOutlet UILabel *detailLabelThree;
-@property (strong, nonatomic) MKTileOverlay *tileOverlay;
-@property (strong, nonatomic) GPKGFeatureDao *featureDao;
+
+- (void)setNameLabelText:(NSString *) text;
+- (void)setDetailLabelOneText:(NSString *) text;
+- (void)setDetailLabelTwoText:(NSString *) text;
+- (void)setDetailLabelThreeText:(NSString *) text;
 @end

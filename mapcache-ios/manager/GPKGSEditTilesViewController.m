@@ -8,9 +8,9 @@
 
 #import "GPKGSEditTilesViewController.h"
 #import "GPKGSEditContentsViewController.h"
-#import "GPKGSUtils.h"
-#import "GPKGSDecimalValidator.h"
-#import "GPKGSLoadTilesTask.h"
+#import "MCUtils.h"
+#import "MCDecimalValidator.h"
+#import "MCLoadTilesTask.h"
 #import "GPKGTileTableScaling.h"
 
 NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
@@ -18,7 +18,7 @@ NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
 @interface GPKGSEditTilesViewController ()
 
 @property (nonatomic, strong) GPKGSEditContentsData *data;
-@property (nonatomic, strong) GPKGSDecimalValidator * xAndYValidator;
+@property (nonatomic, strong) MCDecimalValidator * xAndYValidator;
 
 @end
 
@@ -27,13 +27,13 @@ NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.xAndYValidator = [[GPKGSDecimalValidator alloc] initWithMinimum:nil andMaximum:nil];
+    self.xAndYValidator = [[MCDecimalValidator alloc] initWithMinimum:nil andMaximum:nil];
     [self.minYTextField setDelegate:self.xAndYValidator];
     [self.maxYTextField setDelegate:self.xAndYValidator];
     [self.minXTextField setDelegate:self.xAndYValidator];
     [self.maxXTextField setDelegate:self.xAndYValidator];
     
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.minYTextField.inputAccessoryView = keyboardToolbar;
     self.maxYTextField.inputAccessoryView = keyboardToolbar;
@@ -56,10 +56,10 @@ NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
     
     GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
     @try {
-        GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
-        GPKGContentsDao * contentsDao = [geoPackage getContentsDao];
+        GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage tileMatrixSetDao];
+        GPKGContentsDao * contentsDao = [geoPackage contentsDao];
         GPKGTileMatrixSet * tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:self.table.name];
-        GPKGContents * contents = [tileMatrixSetDao getContents:tileMatrixSet];
+        GPKGContents * contents = [tileMatrixSetDao contents:tileMatrixSet];
         
         [contents setIdentifier:self.data.identifier];
         [contents setTheDescription:self.data.theDescription];
@@ -100,7 +100,7 @@ NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
 
         [tileMatrixSetDao update:tileMatrixSet];
         
-        GPKGTileScaling *scaling = [GPKGSLoadTilesTask tileScaling];
+        GPKGTileScaling *scaling = [MCLoadTilesTask tileScaling];
         GPKGTileTableScaling *tileTableScaling = [[GPKGTileTableScaling alloc] initWithGeoPackage:geoPackage andTileMatrixSet:tileMatrixSet];
         if(scaling != nil){
             [tileTableScaling createOrUpdate:scaling];
@@ -113,7 +113,7 @@ NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
         }
     }
     @catch (NSException *e) {
-        [GPKGSUtils showMessageWithDelegate:self
+        [MCUtils showMessageWithDelegate:self
                                    andTitle:@"Edit Tiles"
                                  andMessage:[NSString stringWithFormat:@"Error editing tiles table '%@' in database: '%@'\n\nError: %@", self.table.name, self.table.database, [e description]]];
     }
@@ -139,9 +139,9 @@ NSString * const GPKGS_MANAGER_EDIT_TILES_SEG_EDIT_CONTENTS = @"editContents";
     
     GPKGGeoPackage * geoPackage = [self.manager open:self.table.database];
     @try {
-        GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage getTileMatrixSetDao];
+        GPKGTileMatrixSetDao * tileMatrixSetDao = [geoPackage tileMatrixSetDao];
         GPKGTileMatrixSet * tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:self.table.name];
-        GPKGContents * contents = [tileMatrixSetDao getContents:tileMatrixSet];
+        GPKGContents * contents = [tileMatrixSetDao contents:tileMatrixSet];
         
         [self.data setIdentifier:contents.identifier];
         [self.data setTheDescription:contents.theDescription];

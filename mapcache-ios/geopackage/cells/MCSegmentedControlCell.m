@@ -22,16 +22,21 @@
 }
 
 
-- (void) setItems:(NSArray *)items {
-    _items = items;
+- (void) setLabelText:(NSString *)text {
+    [self.label setText:text];
+}
+
+
+- (void) updateItems:(NSArray *)items {
+    _updateItems = items;
     
     [_segmentedControl removeAllSegments];
     
-    for (int i = 0; i < _items.count; i++) {
-        [_segmentedControl insertSegmentWithTitle:[_items objectAtIndex:i] atIndex:i animated:NO];
+    for (int i = 0; i < _updateItems.count; i++) {
+        [_segmentedControl insertSegmentWithTitle:[_updateItems objectAtIndex:i] atIndex:i animated:NO];
     }
     
-    if (_items.count > 0) {
+    if (_updateItems.count > 0) {
         [_segmentedControl setSelectedSegmentIndex:0];
     }
 }

@@ -23,8 +23,29 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
+}
 
-    // Configure the view for the selected state
+
+- (void)setContentWithDatabase: (MCDatabase *) database {
+    self.database = database;
+    [self.geoPackageNameLabel setText:database.name];
+    
+    if ([database getFeatures].count == 1) {
+        [self.featureLayerDetailsLabel setText: [NSString stringWithFormat:@"%ld Feature layer", (long)[database getFeatures].count]];
+     } else {
+         [self.featureLayerDetailsLabel setText: [NSString stringWithFormat:@"%ld Feature layers", (long)[database getFeatures].count]];
+     }
+     
+     if ([database getTileCount] == 1) {
+         [self.tileLayerDetailsLabel setText: [NSString stringWithFormat:@"%ld Tile layer", (long)[database getTileCount]]];
+     } else {
+         [self.tileLayerDetailsLabel setText: [NSString stringWithFormat:@"%ld Tile layers", (long)[database getTileCount]]];
+     }
+}
+
+
+- (void)setGeoPackageName:(NSString *) name {
+    [self.geoPackageNameLabel setText:name];
 }
 
 

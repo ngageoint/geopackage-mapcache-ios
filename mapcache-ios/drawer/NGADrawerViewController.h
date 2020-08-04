@@ -1,5 +1,5 @@
 //
-//  MCBottomDrawerViewController.h
+//  NGADrawerViewController.h
 //  MapDrawer
 //
 //  Created by Tyler Burgett on 8/20/18.
@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MCProperties.h"
 
 @protocol NGADrawerViewDelegate <NSObject>
 - (void) drawerAddAnimationComplete: (UIViewController *) viewController;
@@ -15,6 +16,7 @@
 - (void) popDrawerAndHide;
 - (void) showTopDrawer;
 @end
+
 
 @interface NGADrawerViewController : UIViewController <UIGestureRecognizerDelegate>
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
@@ -27,9 +29,14 @@
 - (void) removeDrawerFromSuperview;
 - (void) addDragHandle;
 - (void) addCloseButton;
+- (void) addAndConstrainSubview:(UIView *) view;
 - (void) closeDrawer;
+- (void) drawerWasCollapsed;
+- (void) drawerWasMadeFull;
+- (void) becameTopDrawer;
 - (void) slideDown;
-- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer;
+- (BOOL) gestureIsInConflict:(UIPanGestureRecognizer *) recognizer;
 - (void) panGesture:(UIPanGestureRecognizer *) recognizer;
 - (void) rollUpPanGesture:(UIPanGestureRecognizer *) recognizer withScrollView:(UIScrollView *) scrollView;
+- (void) pushOntoStack;
 @end

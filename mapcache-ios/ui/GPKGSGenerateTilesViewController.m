@@ -8,17 +8,17 @@
 
 #import "GPKGSGenerateTilesViewController.h"
 #import "GPKGSBoundingBoxViewController.h"
-#import "GPKGSUtils.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
-#import "GPKGSDecimalValidator.h"
+#import "MCUtils.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
+#import "MCDecimalValidator.h"
 
 NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
 
 @interface GPKGSGenerateTilesViewController ()
 
-@property (nonatomic, strong) GPKGSDecimalValidator * zoomValidator;
-@property (nonatomic, strong) GPKGSDecimalValidator * percentageValidator;
+@property (nonatomic, strong) MCDecimalValidator * zoomValidator;
+@property (nonatomic, strong) MCDecimalValidator * percentageValidator;
 @property (nonatomic, strong) NSNumberFormatter * numberFormatter;
 
 @end
@@ -31,10 +31,10 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
     self.numberFormatter = [[NSNumberFormatter alloc] init];
     self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     
-    NSNumber * minZoomValidation = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MIN_ZOOM_DEFAULT];
-    NSNumber * maxZoomValidation = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MAX_ZOOM_DEFAULT];
-    self.zoomValidator = [[GPKGSDecimalValidator alloc] initWithMinimumNumber:minZoomValidation andMaximumNumber:maxZoomValidation];
-    self.percentageValidator = [[GPKGSDecimalValidator alloc] initWithMinimumInt:0 andMaximumInt:100];
+    NSNumber * minZoomValidation = [MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MIN_ZOOM_DEFAULT];
+    NSNumber * maxZoomValidation = [MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MAX_ZOOM_DEFAULT];
+    self.zoomValidator = [[MCDecimalValidator alloc] initWithMinimumNumber:minZoomValidation andMaximumNumber:maxZoomValidation];
+    self.percentageValidator = [[MCDecimalValidator alloc] initWithMinimumInt:0 andMaximumInt:100];
     
     [self.minZoomTextField setDelegate:self.zoomValidator];
     [self.maxZoomTextField setDelegate:self.zoomValidator];
@@ -44,12 +44,12 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
     if(self.data != nil){
         
         if(self.data.minZoom == nil){
-            self.data.minZoom = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_DEFAULT_MIN_ZOOM_DEFAULT];
+            self.data.minZoom = [MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_DEFAULT_MIN_ZOOM_DEFAULT];
         }
         [self.minZoomTextField setText:[self.data.minZoom stringValue]];
         
         if(self.data.maxZoom == nil){
-            self.data.maxZoom = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_DEFAULT_MAX_ZOOM_DEFAULT];
+            self.data.maxZoom = [MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_DEFAULT_MAX_ZOOM_DEFAULT];
         }
         [self.maxZoomTextField setText:[self.data.maxZoom stringValue]];
         
@@ -63,18 +63,18 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
         }
         
         if(self.data.compressQuality == nil){
-            self.data.compressQuality = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT];
+            self.data.compressQuality = [MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT];
         }
         [self.compressQualityTextField setText:[self.data.compressQuality stringValue]];
         
         if(self.data.compressScale == nil){
-            self.data.compressScale = [GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_SCALE_DEFAULT];
+            self.data.compressScale = [MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_SCALE_DEFAULT];
         }
         [self.compressScaleTextField setText:[self.data.compressScale stringValue]];
         
     }
     
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.minZoomTextField.inputAccessoryView = keyboardToolbar;
     self.maxZoomTextField.inputAccessoryView = keyboardToolbar;
@@ -133,10 +133,10 @@ NSString * const GPKGS_GENERATE_TILES_SEG_BOUNDING_BOX = @"boundingBox";
 - (IBAction)tileFormatChanged:(id)sender {
     switch (self.tileFormatSegmentedControl.selectedSegmentIndex){
         case 0:
-            self.data.standardWebMercatorFormat = false;
+            self.data.xyzTiles = false;
             break;
         case 1:
-            self.data.standardWebMercatorFormat = true;
+            self.data.xyzTiles = true;
             break;
     }
 }
