@@ -140,6 +140,8 @@
 		E3D80EA7240076CC006F1014 /* MCDualButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3D80EA6240076CC006F1014 /* MCDualButtonCell.xib */; };
 		E3DE0DEA23E2420D00CB27AF /* UITextView+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DE0DE923E2420D00CB27AF /* UITextView+Validators.m */; };
 		E3DE0DED23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DE0DEC23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m */; };
+		E3E02AD12522A52E00856A4C /* MCTileServerRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E02AD02522A52E00856A4C /* MCTileServerRepository.swift */; };
+		E3E4C435252CF77F0083635F /* MCTileServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E4C434252CF77F0083635F /* MCTileServer.swift */; };
 		E3E9ED6923EA407E004C4530 /* mapcache_iosUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E9ED6823EA407E004C4530 /* mapcache_iosUITests.m */; };
 		E3F9A99C2475F52400DFD043 /* MCLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3B7DD4F2475F1EC00215EF5 /* MCLayerViewController.m */; };
 		E3FB856B2134955F002F012E /* NGADrawerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB85682134955D002F012E /* NGADrawerCoordinator.m */; };
@@ -428,6 +430,8 @@
 		E3DE0DE923E2420D00CB27AF /* UITextView+Validators.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITextView+Validators.m"; sourceTree = "<group>"; };
 		E3DE0DEB23E3781800CB27AF /* MCCreateGeoPacakgeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCCreateGeoPacakgeViewController.h; sourceTree = "<group>"; };
 		E3DE0DEC23E3781800CB27AF /* MCCreateGeoPacakgeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCCreateGeoPacakgeViewController.m; sourceTree = "<group>"; };
+		E3E02AD02522A52E00856A4C /* MCTileServerRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCTileServerRepository.swift; sourceTree = "<group>"; };
+		E3E4C434252CF77F0083635F /* MCTileServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCTileServer.swift; sourceTree = "<group>"; };
 		E3E9ED6623EA407E004C4530 /* mapcache-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mapcache-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3E9ED6823EA407E004C4530 /* mapcache_iosUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = mapcache_iosUITests.m; sourceTree = "<group>"; };
 		E3E9ED6A23EA407E004C4530 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -574,6 +578,8 @@
 				04DD108C1BD9443F00CC59A0 /* MCTableIndex.h */,
 				04DD108D1BD9443F00CC59A0 /* MCTableIndex.m */,
 				E3C5FC4724B7D38F00B5E12E /* MCTileMatrix.swift */,
+				E3E02AD02522A52E00856A4C /* MCTileServerRepository.swift */,
+				E3E4C434252CF77F0083635F /* MCTileServer.swift */,
 			);
 			path = data;
 			sourceTree = "<group>";
@@ -1230,6 +1236,7 @@
 				0446481E1B4C26DF0052913B /* MCConstants.m in Sources */,
 				E3FB85742134A9B5002F012E /* MCGeoPackageList.m in Sources */,
 				E3A651A82003DDC800B8AB27 /* MCCreateLayerViewController.m in Sources */,
+				E3E02AD12522A52E00856A4C /* MCTileServerRepository.swift in Sources */,
 				04CCC8711B6122480001296D /* GPKGSCreateTilesViewController.m in Sources */,
 				E35B631121BC26F9004E5BB0 /* MCTitleCell.m in Sources */,
 				E31BD630244E340300C18609 /* MCKeyValueDisplayCell.m in Sources */,
@@ -1240,6 +1247,7 @@
 				044647FF1B4AF3870052913B /* MCTable.m in Sources */,
 				E3CF687723DA667E0005A6EF /* MCTextViewCell.m in Sources */,
 				E33F557F1FCC956A00F252FD /* MCButtonCell.m in Sources */,
+				E3E4C435252CF77F0083635F /* MCTileServer.swift in Sources */,
 				04CCC85F1B60225C0001296D /* GPKGSKeyboardConstraint.m in Sources */,
 				040136781AF94FB200C92AFC /* AppDelegate.m in Sources */,
 				04E1D8D01B66D366002BD947 /* GPKGSEditContentsViewController.m in Sources */,

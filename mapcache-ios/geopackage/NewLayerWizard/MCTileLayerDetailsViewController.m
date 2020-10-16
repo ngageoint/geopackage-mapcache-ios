@@ -152,14 +152,16 @@
     
     if (textField == _urlCell.field) {
         NSLog(@"URL Field ended editing");
-        [textField isValidTileServerURL:textField withResult:^(BOOL isValid) {
-            if (isValid) {
+        [textField isValidTileServerURL:textField withResult:^(MCTileServerURLType serverURLType) {
+            if (serverURLType == MCXYZTileServerURL) {
                 NSLog(@"Valid URL");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.urlCell useNormalAppearance];
                     [self.buttonCell enableButton];
                 });
-            } else {
+            } else if (serverURLType == MCWMSTileServerURL) {
+                // handle sort out the rest of the information with the URL
+            }else {
                 NSLog(@"Bad url");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.buttonCell disableButton];

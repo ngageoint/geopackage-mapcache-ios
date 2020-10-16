@@ -9,10 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "GPKGDataTypes.h"
 
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UITextField (Validators)
-- (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock;
+
+typedef NS_ENUM(NSInteger, MCTileServerURLType) {
+    MCXYZTileServerURL,
+    MCWMSTileServerURL,
+    MCInvalidURL
+};
+
+
+- (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(MCTileServerURLType serverURLType))resultBlock;
 - (void)isValidGeoPackageURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock;
 - (void)trimWhiteSpace;
 - (BOOL)fieldValueValidForType:(enum GPKGDataType) dataType;
