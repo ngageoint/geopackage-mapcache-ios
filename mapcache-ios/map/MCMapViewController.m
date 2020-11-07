@@ -7,6 +7,7 @@
 //
 
 #import "MCMapViewController.h"
+#import "mapcache_ios-Swift.h"
 
 @interface MCMapViewController ()
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
@@ -839,13 +840,20 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 /**
    Used to show tile previews after a tile download, or switch on saved tile URLs from the map.
 */
-- (void) addUserTilesWithUrl:(NSString *) tileTemplateURL {
+- (void) addUserTilesWithUrl:(NSString *) tileTemplateURL serverType:(MCTileServerType)serverType {
     if (self.userTileOverlay != nil) {
         [self.mapView removeOverlay:self.userTileOverlay];
     }
     
-    self.userTileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileTemplateURL];
-    [self.mapView insertOverlay:self.userTileOverlay atIndex:0];
+    if (serverType == MCTileServerTypeXyz) {
+        self.userTileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileTemplateURL];
+    } else if (serverType == MCTileServerTypeWms) {
+        self.userTileOverlay = [[WMSTileOverlay alloc] initWithURL:tileTemplateURL];
+    }
+    
+    if (self.userTileOverlay != nil) {
+        [self.mapView insertOverlay:self.userTileOverlay atIndex:0];
+    }
 }
 
 

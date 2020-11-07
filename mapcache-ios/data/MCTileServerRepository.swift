@@ -9,31 +9,10 @@
 import Foundation
 
 
-enum MCTileServerError: Error {
-    case badURL, badResponse, unknown, none
-}
-
-@objc class MCTileServerResult: NSObject {
-    @objc public private(set) var success: Any?
-    @objc public private(set) var failure: Error?
-    
-    private override init() {
-        super.init()
-        success = nil
-        failure = nil
-    }
-    
-    public convenience init<Success, Failure>(_ arg1: Success, _ arg2: Failure) where Failure: Error {
-        self.init()
-        success = arg1
-        failure = arg2
-    }
-}
-
-
-
 @objc class MCTileServerRepository: NSObject, XMLParserDelegate {
-    static let _sharedInstance = MCTileServerRepository()
+    @objc static let shared = MCTileServerRepository()
+    
+    private override init() {}
     
     var tileServers: [String:MCTileServer] = [:]
     var layers: [MCLayer] = []
@@ -63,16 +42,24 @@ enum MCTileServerError: Error {
     var level = 0
     var tagStack: [String] = []
     
-    @objc class func sharedInstance() -> MCTileServerRepository {
-        return MCTileServerRepository._sharedInstance
+    
+    @objc func tileServerForURL(urlString: String) -> MCTileServer {
+        if let tileServer:MCTileServer = self.tileServers[urlString] {
+            return tileServer
+        }
+        
+        
+        return MCTileServer.init(serverName: "")
     }
+    
     
     @objc func isValidServerURL(urlString: String, completion: @escaping (MCTileServerResult) -> Void) {
         var tryXYZ = false;
         var tryWMS = false;
         var editedURLString = urlString
+        let tileServer = MCTileServer.init(serverName: urlString)
         
-        if (!urlString.range(of: "{x}")!.isEmpty && !urlString.range(of: "{y}")!.isEmpty && !urlString.range(of: "{x}")!.isEmpty) {
+        if (urlString.contains("{x}") && urlString.contains("{y}") && urlString.contains("{x}")) {
             
             editedURLString.replaceSubrange(editedURLString.range(of: "{x}")!, with: "0")
             editedURLString.replaceSubrange(editedURLString.range(of: "{y}")!, with: "0")
@@ -83,27 +70,51 @@ enum MCTileServerError: Error {
         }
         
         guard let url:URL = URL.init(string: editedURLString) else {
-            return // TODO: call results block
+            tileServer.serverType = .error
+            let result = MCTileServerResult.init(tileServer, self.generateError(message: "Invalid URL", errorType: MCServerErrorType.MCURLInvalid))
+            
+            completion(result)
+            return
         }
         
         if (tryXYZ) {
             URLSession.shared.downloadTask(with: url) { (location, response, error) in
-                
+                let tileServer = MCTileServer.init(serverName: urlString)
+                do {
+                    guard let tile = UIImage.init(data: try Data.init(contentsOf: location!)) else {
+                        tileServer.serverType = .error
+                        let result = MCTileServerResult.init(tileServer, self.generateError(message: "Ubable to get tile", errorType: MCServerErrorType.MCNoData))
+                        
+                        completion(result)
+                        return
+                    }
+
+                    tileServer.serverType = .xyz
+                    self.tileServers[urlString] = tileServer
+                    completion(MCTileServerResult.init(tileServer, self.generateError(message: "No error", errorType: MCServerErrorType.MCNoError)))
+                } catch {
+                    tileServer.serverType = .error
+                    let error:MCServerError = MCServerError.init(domain: "MCTileServerRepository", code: MCServerErrorType.MCTileServerNoResponse.rawValue, userInfo: ["message" : "no response from server"])
+                    let result = MCTileServerResult.init(tileServer, self.generateError(message: "No response from server", errorType: MCServerErrorType.MCTileServerNoResponse))
+                    completion(result)
+                }
             }.resume()
             
         } else if (tryWMS) {
-            // TODO: hook up WMS GetCapabilities and parse to verify URL
+            self.getCapabilites(url: urlString, completion: completion)
         } else {
-            let server = MCTileServer.init(url: URL.init(string: "")!, serverName: "")
-            let result = MCTileServerResult.init(server, MCTileServerError.unknown)
-            completion(result)
+            tileServer.serverType = .error
+            let error:MCServerError = MCServerError.init(domain: "MCTileServerRepository", code: MCServerErrorType.MCURLInvalid.rawValue, userInfo: ["message" : "invalid URL"])
+            completion(MCTileServerResult.init(tileServer, error))
         }
     }
 
     
-    @objc public func getCapabilites(url:String, completion: @escaping (_ result: MCTileServerResult) -> Void) {
+    @objc public func getCapabilites(url:String, completion: @escaping (MCTileServerResult) -> Void) {
         if let wmsURL = URL.init(string: url) {
             let baseURL = wmsURL.scheme! + "://" + wmsURL.host! + wmsURL.path
+            let tileServer = MCTileServer.init(serverName: self.urlString)
+            self.layers = []
             
             var builtURL = URLComponents(string: baseURL)
             builtURL?.queryItems = [
@@ -132,12 +143,16 @@ enum MCTileServerError: Error {
                     }
                     
                     self.buildMapCacheURLs(url: url)
+                    tileServer.serverType = .wms
+                    tileServer.url = URL.init(string: (builtURL?.string)!)!
+                    tileServer.layers = self.layers
+                    self.tileServers[self.urlString] = tileServer
                     
-                    let server = MCTileServer.init(url: URL.init(string: (builtURL?.string)!)!, serverName: (builtURL?.string)!)
-                    let result = MCTileServerResult.init(server, MCTileServerError.none)
-                    completion(result)
+                    completion(MCTileServerResult.init(tileServer, self.generateError(message: "No error", errorType: MCServerErrorType.MCNoError)))
                 } else {
-                    print("oh noes")
+                    tileServer.serverType = .error
+                    let error:MCServerError = MCServerError.init(domain: "MCTileServerRepository", code: MCServerErrorType.MCURLInvalid.rawValue, userInfo: ["message" : "invalid URL"])
+                    completion(MCTileServerResult.init(tileServer, error))
                 }
             }
             task.resume()
@@ -256,5 +271,9 @@ enum MCTileServerError: Error {
 
         currentValue = String()
         
+    }
+    
+    func generateError(message:String, errorType: MCServerErrorType) -> MCServerError {
+        return MCServerError.init(domain: "MCTileServerRepository", code: errorType.rawValue, userInfo: ["message" : message])
     }
 }

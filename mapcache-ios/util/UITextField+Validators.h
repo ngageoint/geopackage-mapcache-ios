@@ -12,16 +12,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class MCTileServerResult;
+@class MCTileServer;
+@class MCTileServerRepository;
+
 @interface UITextField (Validators)
 
-typedef NS_ENUM(NSInteger, MCTileServerURLType) {
-    MCXYZTileServerURL,
-    MCWMSTileServerURL,
-    MCInvalidURL
-};
-
-
-- (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(MCTileServerURLType serverURLType))resultBlock;
+- (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(MCTileServerResult *tileServerResult))resultBlock;
 - (void)isValidGeoPackageURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock;
 - (void)trimWhiteSpace;
 - (BOOL)fieldValueValidForType:(enum GPKGDataType) dataType;

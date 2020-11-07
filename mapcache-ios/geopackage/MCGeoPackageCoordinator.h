@@ -32,7 +32,11 @@
 #import "MCTileServerURLManagerViewController.h"
 #import "MCFeatureLayerDetailsViewController.h"
 #import "MCGeoPackageRepository.h"
+#import "WMSTileOverlay.h"
 
+
+@class MCTileServer;
+@class MCLayer;
 
 @protocol MCMapDelegate;
 @protocol MCLayerCoordinatorDelegate;

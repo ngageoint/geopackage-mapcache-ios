@@ -8,7 +8,7 @@
 
 #import "MCMapCoordinator.h"
 #import "MCMapViewController.h"
-
+#import "mapcache_ios-Swift.h"
 
 NSString * const MC_MAP_TYPE_PREFERENCE = @"mapTyper";
 NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
@@ -124,7 +124,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 /**
     Get the map view ready to select an area where you would like to download tiles.
  */
-- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl {
+- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl serverType:(MCTileServerType) serverType {
     self.boundingBoxGuideView = boudingBoxGuideView;
     self.boundingBoxGuideView.alpha = 0.0;
     [self.mcMapViewController.view addSubview:self.boundingBoxGuideView];
@@ -134,7 +134,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     } completion:nil];
     
     [self.mcMapViewController toggleMapControls];
-    [self.mcMapViewController addUserTilesWithUrl:tileUrl];
+    [self.mcMapViewController addUserTilesWithUrl:tileUrl serverType:serverType];
 }
 
 
@@ -151,6 +151,14 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
             [self.mcMapViewController toggleMapControls];
         }];
     }
+}
+
+
+/**
+    Used for preview tiles when downloading a map or choosing a saved server as a basemap.
+ */
+- (void)addTileOverlay:(NSString *)tileServerURL serverType:(MCTileServerType)serverType {
+    [self.mcMapViewController addUserTilesWithUrl:tileServerURL serverType:serverType];
 }
 
 

@@ -17,19 +17,24 @@
 #import "MCCreateGeoPacakgeViewController.h"
 #import "MCFeatureLayerDetailsViewController.h"
 #import "MCMapPointDataViewController.h"
+#import "MCServerError.h"
 
-
-
+// forward declarations
 @class MCMapViewController;
+@class MCTileServer;
+@class MCLayer;
+typedef NS_ENUM(NSInteger, MCTileServerType);
+
 @protocol MCMapActionDelegate;
 
 @protocol MCMapDelegate <NSObject>
 - (void) updateMapLayers;
 - (void) toggleGeoPackage:(MCDatabase *) geoPackage;
 - (void) zoomToSelectedGeoPackage:(NSString *) geoPackageName;
-- (void)zoomToPoint:(CLLocationCoordinate2D)point withZoomLevel:(NSUInteger) zoomLevel;
-- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl;
+- (void) zoomToPoint:(CLLocationCoordinate2D)point withZoomLevel:(NSUInteger) zoomLevel;
+- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl serverType:(MCTileServerType) serverType;
 - (void) removeTileBoundingBoxGuide;
+- (void) addTileOverlay:(NSString *)tileServerURL serverType:(MCTileServerType)serverType;
 - (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;
 @end
 

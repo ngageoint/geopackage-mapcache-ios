@@ -7,6 +7,7 @@
 //
 
 #import "MCTileLayerDetailsViewController.h"
+#import "mapcache_ios-Swift.h"
 
 @interface MCTileLayerDetailsViewController ()
 @property (nonatomic, strong) NSMutableArray *cellArray;
@@ -15,6 +16,7 @@
 @property (nonatomic, strong) MCButtonCell *helpButtonCell;
 @property (nonatomic, strong) MCFieldWithTitleCell *layerNameCell;
 @property (nonatomic, strong) MCFieldWithTitleCell *urlCell;
+@property (nonatomic, strong) MCTileServer *tileServer;
 @property (nonatomic, strong) UITableView *tableView;
 @end
 
@@ -152,16 +154,25 @@
     
     if (textField == _urlCell.field) {
         NSLog(@"URL Field ended editing");
-        [textField isValidTileServerURL:textField withResult:^(MCTileServerURLType serverURLType) {
-            if (serverURLType == MCXYZTileServerURL) {
+        [textField isValidTileServerURL:textField withResult:^(MCTileServerResult *tileServerResult) {
+            MCServerError *error = (MCServerError *)tileServerResult.failure;
+            MCTileServerType serverType = ((MCTileServer *)tileServerResult.success).serverType;
+            
+            if (tileServerResult.failure != nil && error.code != MCNoError) {
+                NSLog(@"Bad url");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.buttonCell disableButton];
+                    [self.urlCell useErrorAppearance];
+                });
+            } else if (serverType == MCTileServerTypeXyz || serverType == MCTileServerTypeWms) {
                 NSLog(@"Valid URL");
+                self.tileServer = (MCTileServer *)tileServerResult.success;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.urlCell useNormalAppearance];
                     [self.buttonCell enableButton];
                 });
-            } else if (serverURLType == MCWMSTileServerURL) {
-                // handle sort out the rest of the information with the URL
-            }else {
+            } else {
+                // TODO add TMS support
                 NSLog(@"Bad url");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.buttonCell disableButton];
@@ -194,7 +205,7 @@
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
     if ([action isEqualToString:@"ContinueToBoundingBox"]) {
-        [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text URL:_urlCell.field.text andReferenceSystemCode:PROJ_EPSG_WEB_MERCATOR];
+        [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text tileServer: self.tileServer andReferenceSystemCode:PROJ_EPSG_WEB_MERCATOR];
     } else if ([action isEqualToString:@"ShowServers"]) {
         [self.delegate showTileServerList];
     } else {

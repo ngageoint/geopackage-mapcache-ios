@@ -18,8 +18,11 @@
 #import "NGADrawerViewController.h"
 
 
+@class MCTileServer;
+@class MCTileServerResult;
+
 @protocol MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode;
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer andReferenceSystemCode:(int)referenceCode;
 - (void) showURLHelp;
 - (void) showTileServerList;
 - (BOOL) isLayerNameAvailable: (NSString *) layerName;

@@ -23,6 +23,7 @@
 @property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureLayerDetailsView;
 @property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic, strong) MCDatabase *database;
+@property (nonatomic, strong) MCTileServer *tileServer;
 @property (nonatomic, strong) GPKGSCreateTilesData * tileData;
 @property (nonatomic, strong) MCGeoPackageRepository *repository;
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
@@ -213,15 +214,17 @@
 
 
 #pragma mark - MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode {
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer andReferenceSystemCode:(int)referenceCode {
     _tileData.name = name;
-    _tileData.loadTiles.url = url;
+    _tileData.loadTiles.url = tileServer.url.absoluteString;
     _tileData.loadTiles.epsg = referenceCode;
+    _tileServer = tileServer;
     
     [_drawerDelegate popDrawerAndHide];
     self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] init];
+    self.boundingBoxGuideViewController.tileServer = tileServer;
     self.boundingBoxGuideViewController.delegate = self;
-    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view tileUrl:url];
+    [_mapDelegate setupTileBoundingBoxGuide:self.boundingBoxGuideViewController.view tileUrl:[tileServer urlForLayerWithIndex:0] serverType:tileServer.serverType];
 }
 
 
@@ -287,6 +290,11 @@
 }
 
 
+- (void)layerSelected:(NSUInteger)index {
+    [self.mapDelegate addTileOverlay: [_tileServer urlForLayerWithIndex:index] serverType:_tileServer.serverType];
+}
+
+
 #pragma mark- MCZoomAndQualityDelegate methods
 - (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
     NSLog(@"In wizard, going to call completion handler");
@@ -302,7 +310,8 @@
     [_drawerDelegate popDrawerAndHide];
     self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] init];
     self.boundingBoxGuideViewController.delegate = self;
-    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view tileUrl:_tileData.loadTiles.url];
+    // TODO setup the bounding box view
+    //_mapDelegate setupTileBoundingBoxGuide:self.boundingBoxGuideViewController.view tileUrl:_tileData.loadTiles.url serverType:
 }
 
 - (NSString *) updateTileDownloadSizeEstimateWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {

@@ -9,67 +9,11 @@
 #import "UITextField+Validators.h"
 #import "mapcache_ios-Swift.h"
 
+
 @implementation UITextField (Validators)
 
-- (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(MCTileServerURLType serverURLType))resultBlock {
-    resultBlock(YES);
-    
-    NSString *urlText = textField.text;
-    BOOL tryXYZ = NO;
-    BOOL tryWMS = NO;
-    NSURL *url;
-    
-    if ([urlText rangeOfString:@"{x}"].length > 0) {
-        urlText = [urlText stringByReplacingOccurrencesOfString:@"{x}" withString:@"0"];
-        urlText = [urlText stringByReplacingOccurrencesOfString:@"{y}" withString:@"0"];
-        urlText = [urlText stringByReplacingOccurrencesOfString:@"{z}" withString:@"0"];
-        url = [NSURL URLWithString:urlText];
-        tryXYZ = YES;
-    } else {
-        url = [NSURL URLWithString:urlText];
-        tryWMS = YES;
-    }
-    
-
-    if (url) {
-        if (tryXYZ) {
-            NSURLSessionDownloadTask *downlaodTask = [[NSURLSession sharedSession] downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-            UIImage *downloadedTile = [UIImage imageWithData:[NSData dataWithContentsOfURL: location]];
-            
-            if (error || downloadedTile == nil) {
-                resultBlock(MCInvalidURL);
-            } else {
-                resultBlock(MCXYZTileServerURL);
-            }
-            }];
-            [downlaodTask resume];
-        } else if (tryWMS) {
-            // make a get capabilities call, if its good, party on
-            MCTileServerRepository *wmsUtil = [[MCTileServerRepository alloc] init];
-            
-            [wmsUtil getCapabilitesWithUrl:urlText completion:^(MCTileServerResult * _Nonnull result) {
-                NSLog(@"completion block for getCapabilitiesWithURL %@", result.failure.localizedDescription);
-                
-                if (result.success != nil) {
-                    MCTileServer *tileServer = (MCTileServer*)result.success;
-                    NSLog(@"%@", tileServer.serverName);
-                }
-            }];
-            
-            
-            
-            
-            
-            
-            
-            
-            resultBlock(MCWMSTileServerURL);
-        } else {
-            resultBlock(MCInvalidURL);
-        }
-    } else {
-        resultBlock(MCInvalidURL);
-    }
+- (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(MCTileServerResult *tileServerResult))resultBlock {
+    [MCTileServerRepository.shared isValidServerURLWithUrlString:textField.text completion:resultBlock];
 }
 
 
