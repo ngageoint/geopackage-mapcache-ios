@@ -15,6 +15,7 @@
 #import "GPKGSConstants.h"
 #import "SFGeometryPrinter.h"
 #import "GPKGSFeatureOverlayTable.h"
+#import "GPKGSchemaExtension.h"
 
 @interface GPKGSDisplayTextViewController ()
 
@@ -203,7 +204,7 @@
         }
         
         [info appendFormat:@"\n\n%@ columns:", tableName];
-        GPKGDataColumnsDao *dataColumnsDao = [geoPackage dataColumnsDao];
+        GPKGDataColumnsDao *dataColumnsDao = [[[GPKGSchemaExtension alloc] init] dataColumnsDao];
         for(GPKGUserColumn * userColumn in userTable.columns){
             [info appendFormat:@"\n\nIndex: %d", userColumn.index];
             [info appendFormat:@"\nName: %@", userColumn.name];
@@ -272,7 +273,7 @@
         
         GPKGFeatureDao * featureDao = [geoPackage featureDaoWithTableName:data.tableName];
         
-        GPKGDataColumnsDao * dataColumnsDao = [geoPackage dataColumnsDao];
+        GPKGDataColumnsDao * dataColumnsDao = [[[GPKGSchemaExtension alloc] init] dataColumnsDao];
         
         NSNumber * featureId = [NSNumber numberWithInt:data.featureId];
         if(featureId != nil){
@@ -304,7 +305,7 @@
                             [info appendString:@"\n"];
                         }
                         
-                        [info appendString:[SFGeometryPrinter getGeometryString:geometry]];
+                        [info appendString:[SFGeometryPrinter geometryString:geometry]];
                     }
                 }
             }

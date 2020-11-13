@@ -68,7 +68,7 @@ NSString * const GPKGS_MANAGER_LOAD_TILES_SEG_LOAD_TILES = @"loadTiles";
                 // Create the tile table
                 SFPProjection * projection = [SFPProjectionFactory projectionWithEpsgInt:loadTiles.epsg];
                 GPKGBoundingBox * bbox = [GPKGSLoadTilesTask transformBoundingBox:boundingBox withProjection:projection];
-                [geoPackage createTileTableWithTableName:name andContentsBoundingBox:bbox andContentsSrsId:srs.srsId andTileMatrixSetBoundingBox:bbox andTileMatrixSetSrsId:srs.srsId];
+                [geoPackage createTileTableWithMetadata:[GPKGTileTableMetadata createWithTable:name andTileBoundingBox:bbox andTileSrsId:srs.srsId]];
             }
             @finally {
                 [geoPackage close];
