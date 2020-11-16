@@ -224,7 +224,8 @@
     GPKGGeoPackage * geoPackage;
     @try {
         geoPackage = [_manager open:database];
-        [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:boundingBox andSrsId:srsId];
+        [geometryColumns setSrsId:srsId];
+        [geoPackage createFeatureTableWithMetadata:[GPKGFeatureTableMetadata createWithGeometryColumns:geometryColumns andBoundingBox:boundingBox]];
     }
     @catch (NSException *e) {
         // TODO handle this
