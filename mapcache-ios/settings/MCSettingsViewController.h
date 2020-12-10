@@ -14,12 +14,14 @@
 #import "MCFieldWithTitleCell.h"
 #import "MCSwitchCell.h"
 #import "MCButtonCell.h"
+#import "MCLayerCell.h"
 #import "MCProperties.h"
 #import <MapKit/MapKit.h>
 
 /* Settings that change the state of the map, or the controls that are shown are handled here */
 @protocol MCMapSettingsDelegate <NSObject>
 - (void)setMapType:(NSString *) mapType;
+- (void)updateBasemaps;
 - (void)setMaxFeatures:(int) maxFeatures;
 - (void)toggleZoomIndicator;
 - (void)settingsCompletionHandler;
@@ -30,6 +32,8 @@
 @protocol MCSettingsDelegate <NSObject>
 - (void)showNoticeAndAttributeView;
 - (void)showTileURLManager;
+- (void)editTileServer:(NSString *) serverName;
+- (void)deleteTileServer:(NSString *) serverName;
 @end
 
 

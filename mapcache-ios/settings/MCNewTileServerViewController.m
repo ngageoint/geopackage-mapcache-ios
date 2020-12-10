@@ -7,6 +7,8 @@
 //
 
 #import "MCNewTileServerViewController.h"
+#import "mapcache_ios-Swift.h"
+
 
 @interface MCNewTileServerViewController ()
 @property (nonatomic, strong) NSMutableArray *cellArray;
@@ -134,27 +136,27 @@
 - (void)textViewCellDidEndEditing:(UITextView *)textView {
     [textView trimWhiteSpace:textView];
     
-    [textView isValidTileServerURL:textView withResult:^(BOOL isValid) {
-        if (isValid) {
-            NSLog(@"Valid URL");
-            self.urlIsValid = YES;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.urlField useNormalAppearance];
-            });
-        } else {
+    [textView isValidTileServerURL:textView withResult:^(MCTileServerResult * _Nonnull tileServerResult) {
+        MCServerError *error = (MCServerError *)tileServerResult.failure;
+        
+        if (tileServerResult.failure != nil && error.code != MCNoError) {
             NSLog(@"Bad URL");
             self.urlIsValid = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.urlField useErrorAppearance];
+                [self.buttonCell disableButton];
             });
+        } else {
+            NSLog(@"Valid URL");
+            self.urlIsValid = YES;
+            if (self.nameIsValid) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.urlField useNormalAppearance];
+                    [self.buttonCell enableButton];
+                });
+            }
         }
     }];
-    
-    if (self.nameIsValid && self.urlIsValid) {
-        [self.buttonCell enableButton];
-    } else {
-        [self.buttonCell disableButton];
-    }
 }
 
 

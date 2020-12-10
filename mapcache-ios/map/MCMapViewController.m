@@ -59,6 +59,7 @@
 @property (nonatomic) CLLocationCoordinate2D currentCenter;
 @property (nonatomic) BOOL expandedZoomDetails;
 @property (nonatomic, strong) MKTileOverlay *userTileOverlay;
+@property (nonatomic, strong) NSMutableArray *basemapOverlays;
 @end
 
 
@@ -88,6 +89,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.active setModified:YES];
     self.tileHelper = [[MCTileHelper alloc] initWithTileHelperDelegate:self];
     self.featureHelper = [[MCFeatureHelper alloc] initWithFeatureHelperDelegate:self];
+    self.basemapOverlays = [[NSMutableArray alloc] init];
     
     self.locationDecimalFormatter = [[NSNumberFormatter alloc] init];
     self.locationDecimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
@@ -303,6 +305,33 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }
     
     NSLog(@"NSUSerDefaults\n %@", [self.settings dictionaryRepresentation]);
+}
+
+
+- (void)updateBasemaps {
+    NSLog(@"MCMapViewController updateBasemaps");
+    // remove basemap overlays
+    
+    
+    // get active xyz servers and wms tile layers from tile server repo
+    NSDictionary *tileServers = [[MCTileServerRepository shared] getTileServers];
+    
+    for (NSString *serverKey in [tileServers allKeys]) {
+        MCTileServer *tileServer = tileServers[serverKey];
+        
+        if (tileServer.serverType == MCTileServerTypeXyz) {
+            NSString *tileUrlString = tileServer.url.absoluteString;
+            MKTileOverlay *tileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
+            [self.mapView insertOverlay:tileOverlay atIndex:0];
+        } else if (tileServer.serverType == MCTileServerTypeWms) {
+            /*NSString *url = [tileServer urlForLayerWithIndex:0 boundingBoxTemplate:YES];
+            WMSTileOverlay *tileOverlay = [[WMSTileOverlay alloc] initWithURLTemplate:url];
+            //[self.mapView insertOverlay:tileOverlay atIndex:0];
+            [self.mapView addOverlay:tileOverlay];*/
+        }
+    }
+    
+    // add layers
 }
 
 

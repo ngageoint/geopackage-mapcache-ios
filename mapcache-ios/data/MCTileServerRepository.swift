@@ -12,10 +12,17 @@ import Foundation
 @objc class MCTileServerRepository: NSObject, XMLParserDelegate {
     @objc static let shared = MCTileServerRepository()
     
-    private override init() {}
+    private override init() {
+        super.init()
+        self.loadUserPreferences()
+    }
     
     var tileServers: [String:MCTileServer] = [:]
     var layers: [MCLayer] = []
+    
+    // Arrays for keeping track of which tile servers and layers are being used as basemaps managed by the settings view controller and displayed on the map.
+    var xyzBaseMaps: [MCTileServer] = [];
+    var wmsLayerBaseMaps: [MCLayer] = [];
     
     // URL query parameters
     let getCapabilities = "request=GetCapabilities"
@@ -31,6 +38,7 @@ import Foundation
     let formatKey = "Format"
     let dictionaryKeys = Set<String>(["CRS", "Name", "Title", "Name", "Format"])
     
+    let userDefaults = UserDefaults.standard;
     var layerDictionary = NSMutableDictionary()
     var formats: [String] = []
     var currentValue = String() // the current value that the parser is handling
@@ -144,9 +152,9 @@ import Foundation
                     
                     self.buildMapCacheURLs(url: url)
                     tileServer.serverType = .wms
-                    tileServer.url = URL.init(string: (builtURL?.string)!)!
+                    tileServer.url = (builtURL?.string)!
                     tileServer.layers = self.layers
-                    self.tileServers[self.urlString] = tileServer
+                    self.tileServers[url] = tileServer
                     
                     completion(MCTileServerResult.init(tileServer, self.generateError(message: "No error", errorType: MCServerErrorType.MCNoError)))
                 } else {
@@ -276,4 +284,43 @@ import Foundation
     func generateError(message:String, errorType: MCServerErrorType) -> MCServerError {
         return MCServerError.init(domain: "MCTileServerRepository", code: errorType.rawValue, userInfo: ["message" : message])
     }
+    
+    
+    // TODO: function to save a tile server to the UserDefaults
+    
+    // TODO: function to remove a tile server from UserDefaults
+    
+    
+    // function to refresh the tile server list from UserDefaults
+    @objc func loadUserPreferences() {
+        print(self.userDefaults.dictionaryRepresentation())
+        
+        if let savedServers = self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) {
+            for server in savedServers.keys {
+                // TODO: check the URL and add it to the dictionary
+            }
+        }
+        
+        // test code for checking map functionality
+        self.isValidServerURL(urlString: "https://basemap.nationalmap.gov/arcgis/services/USGSTopo/MapServer/WmsServer") { (tileServerResult) in
+            let serverError:MCServerError = tileServerResult.failure as! MCServerError
+            
+            if (serverError.code == MCServerErrorType.MCNoError.rawValue) {
+                print("valid test URL")
+            }
+        }
+        
+        self.isValidServerURL(urlString: "https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png") { (tileServerResult) in
+            let serverError:MCServerError = tileServerResult.failure as! MCServerError
+            
+            if (serverError.code == MCServerErrorType.MCNoError.rawValue) {
+                print("valid test URL")
+            }
+        }
+    }
+    
+    @objc func getTileServers() -> [String:MCTileServer] {
+        return self.tileServers
+    }
+    
 }

@@ -15,6 +15,14 @@
 
 @implementation MCBoundingBoxGuideView
 
+- (instancetype) initWithTileServer:(MCTileServer *)tileServer boundingBoxDelegate:(id<MCBoundingBoxGuideDelegate>) delegate {
+    self = [super init];
+    self.tileServer = tileServer;
+    self.delegate = delegate;
+    return self;
+}
+
+
 - (void) viewDidLoad {
     [super viewDidLoad];
     
@@ -32,18 +40,14 @@
     fillLayer.path = overlayPath.CGPath;
     fillLayer.fillRule = kCAFillRuleEvenOdd;
     fillLayer.fillColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:0.7].CGColor;
-    //[self.guideView.layer addSublayer:fillLayer];
     [self.guideView.layer insertSublayer:fillLayer below:self.layerButton.layer];
-    
     
     if (self.tileServer.serverType == MCTileServerTypeWms) {
         [self.layerButton setHidden:NO];
-        
     } else {
         [self.layerButton setHidden:YES];
     }
 }
-
 
 
 - (IBAction)continue:(id)sender {

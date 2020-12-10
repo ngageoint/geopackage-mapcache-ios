@@ -15,7 +15,6 @@
 @property (nonatomic, strong) MCButtonCell *selectServerButtonCell;
 @property (nonatomic, strong) MCButtonCell *helpButtonCell;
 @property (nonatomic, strong) MCFieldWithTitleCell *layerNameCell;
-@property (nonatomic, strong) MCFieldWithTitleCell *urlCell;
 @property (nonatomic, strong) MCTileServer *tileServer;
 @property (nonatomic, strong) UITableView *tableView;
 @end

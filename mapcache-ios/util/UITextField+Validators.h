@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "GPKGDataTypes.h"
 
-
 NS_ASSUME_NONNULL_BEGIN
 
 @class MCTileServerResult;

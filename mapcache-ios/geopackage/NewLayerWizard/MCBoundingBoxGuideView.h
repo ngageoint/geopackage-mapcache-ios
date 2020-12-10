@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @interface MCBoundingBoxGuideView : UIViewController
+- (instancetype) initWithTileServer:(MCTileServer *)tileServer boundingBoxDelegate:(id<MCBoundingBoxGuideDelegate>) delegate;
 @property (weak, nonatomic) IBOutlet UIView *guideView;
 @property (weak, nonatomic) IBOutlet UILabel *instructionsLabel;
 @property (weak, nonatomic) IBOutlet UIView *controlView;

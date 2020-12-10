@@ -12,10 +12,13 @@
 #import "MCConstants.h"
 #import "MCProperties.h"
 #import "MBFingerTipWindow.h"
+#import "mapcache_ios-Swift.h"
+
 
 @interface AppDelegate ()
 @property (strong, nonatomic) NSMutableArray *childCoordinators;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
+@property (strong, nonatomic) MCTileServerRepository *tileServerRepository;
 @property (nonatomic, strong) GPKGGeoPackageCache *geoPackages;
 @end
 
@@ -44,6 +47,9 @@
     mapCoordinator.drawerViewDelegate = drawerCoordinator;
     [_childCoordinators addObject:drawerCoordinator];
     [_childCoordinators addObject:mapCoordinator];
+    _tileServerRepository = [MCTileServerRepository shared];
+    [_tileServerRepository loadUserPreferences];
+    
     _window.rootViewController = mapViewController;
     
     BOOL preventDisclaimer = [[NSUserDefaults standardUserDefaults] boolForKey:@"preventDisclaimer"];
