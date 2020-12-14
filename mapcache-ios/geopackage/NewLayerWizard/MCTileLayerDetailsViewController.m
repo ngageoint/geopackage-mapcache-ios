@@ -40,7 +40,7 @@
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;

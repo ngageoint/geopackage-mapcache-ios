@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "GPKGGeoPackageFactory.h"
-#import "GPKGSManagerViewController.h"
 #import "MCConstants.h"
 #import "MCProperties.h"
 #import "MBFingerTipWindow.h"

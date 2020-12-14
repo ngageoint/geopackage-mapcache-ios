@@ -218,7 +218,7 @@
 #pragma mark - MCTileLayerDetailsDelegate
 - (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer andReferenceSystemCode:(int)referenceCode {
     _tileData.name = name;
-    _tileData.loadTiles.url = tileServer.url.absoluteString;
+    _tileData.loadTiles.url = tileServer.url;
     _tileData.loadTiles.epsg = referenceCode;
     _tileServer = tileServer;
     
@@ -351,7 +351,7 @@
     NSString *serverURL = @"";
     
     if (self.tileServer.serverType == MCTileServerTypeXyz) {
-        serverURL = [self.tileServer.url absoluteString];
+        serverURL = self.tileServer.url;
     } else {
         xyzTiles = NO;
         serverURL = [self.tileServer urlForLayerWithIndex:self.selectedLayerIndex boundingBoxTemplate:YES];

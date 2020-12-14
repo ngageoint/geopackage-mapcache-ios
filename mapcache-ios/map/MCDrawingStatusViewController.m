@@ -35,7 +35,7 @@
     [self initCellArray];
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     
     [self.view addSubview:self.tableView];
     [self.tableView setScrollEnabled:NO];

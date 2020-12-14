@@ -24,7 +24,6 @@
 #import "MCTileLayerDetailsViewController.h"
 #import "MCBoundingBoxGuideView.h"
 #import "MCZoomAndQualityViewController.h"
-#import "GPKGSDisplayTextViewController.h"
 #import "MCFeatureLayerOperationsCell.h"
 #import "MCMapCoordinator.h"
 #import "MCTileServerHelpViewController.h"

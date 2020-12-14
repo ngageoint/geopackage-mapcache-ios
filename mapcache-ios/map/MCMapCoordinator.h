@@ -24,7 +24,6 @@
 @class MCTileServer;
 @class MCLayer;
 typedef NS_ENUM(NSInteger, MCTileServerType);
-
 @protocol MCMapActionDelegate;
 
 @protocol MCMapDelegate <NSObject>

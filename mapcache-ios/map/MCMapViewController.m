@@ -320,8 +320,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         MCTileServer *tileServer = tileServers[serverKey];
         
         if (tileServer.serverType == MCTileServerTypeXyz) {
-            NSString *tileUrlString = tileServer.url.absoluteString;
-            MKTileOverlay *tileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
+            MKTileOverlay *tileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileServer.url];
             [self.mapView insertOverlay:tileOverlay atIndex:0];
         } else if (tileServer.serverType == MCTileServerTypeWms) {
             /*NSString *url = [tileServer urlForLayerWithIndex:0 boundingBoxTemplate:YES];
