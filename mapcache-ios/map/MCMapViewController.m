@@ -320,14 +320,16 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         MCTileServer *tileServer = tileServers[serverKey];
         
         if (tileServer.serverType == MCTileServerTypeXyz) {
+            NSString *url = tileServer.url;
+            NSLog(@"URL from tile server: [%@]", url);
             MKTileOverlay *tileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileServer.url];
             [self.mapView insertOverlay:tileOverlay atIndex:0];
-        } else if (tileServer.serverType == MCTileServerTypeWms) {
+        } //else if (tileServer.serverType == MCTileServerTypeWms) {
             /*NSString *url = [tileServer urlForLayerWithIndex:0 boundingBoxTemplate:YES];
             WMSTileOverlay *tileOverlay = [[WMSTileOverlay alloc] initWithURLTemplate:url];
             //[self.mapView insertOverlay:tileOverlay atIndex:0];
             [self.mapView addOverlay:tileOverlay];*/
-        }
+        //}
     }
     
     // add layers

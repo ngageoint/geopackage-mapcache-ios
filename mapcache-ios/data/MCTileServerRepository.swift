@@ -66,6 +66,7 @@ import Foundation
         var tryWMS = false;
         var editedURLString = urlString
         let tileServer = MCTileServer.init(serverName: urlString)
+        tileServer.url = urlString;
         
         if (urlString.contains("{x}") && urlString.contains("{y}") && urlString.contains("{x}")) {
             
@@ -87,7 +88,6 @@ import Foundation
         
         if (tryXYZ) {
             URLSession.shared.downloadTask(with: url) { (location, response, error) in
-                let tileServer = MCTileServer.init(serverName: urlString)
                 do {
                     guard let tile = UIImage.init(data: try Data.init(contentsOf: location!)) else {
                         tileServer.serverType = .error
@@ -302,13 +302,13 @@ import Foundation
         }
         
         // test code for checking map functionality
-        self.isValidServerURL(urlString: "https://basemap.nationalmap.gov/arcgis/services/USGSTopo/MapServer/WmsServer") { (tileServerResult) in
+        /*self.isValidServerURL(urlString: "https://basemap.nationalmap.gov/arcgis/services/USGSTopo/MapServer/WmsServer") { (tileServerResult) in
             let serverError:MCServerError = tileServerResult.failure as! MCServerError
             
             if (serverError.code == MCServerErrorType.MCNoError.rawValue) {
                 print("valid test URL")
             }
-        }
+        }*/
         
         self.isValidServerURL(urlString: "https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png") { (tileServerResult) in
             let serverError:MCServerError = tileServerResult.failure as! MCServerError
