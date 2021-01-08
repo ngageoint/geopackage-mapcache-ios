@@ -7,6 +7,7 @@
 //
 
 #import "MCTileServerURLManagerViewController.h"
+#import "mapcache_ios-Swift.h"
 
 
 @interface MCTileServerURLManagerViewController ()
@@ -14,6 +15,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MCButtonCell *buttonCell;
 @property (nonatomic, strong) MCFieldWithTitleCell *urlCell;
+@property (nonatomic, strong) NSDictionary *tileServers;
 @end
 
 @implementation MCTileServerURLManagerViewController
@@ -80,15 +82,15 @@
     [testURL1.layerTypeImage setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
     [self.cellArray addObject:testURL1];
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *serverUrls = [defaults dictionaryForKey:MC_SAVED_TILE_SERVER_URLS];
+    self.tileServers = [[MCTileServerRepository shared] getTileServers];
     
-    if (serverUrls) {
-        NSArray *serverNames = [serverUrls allKeys];
-        for (NSString *serverName in serverNames) {
+    if (self.tileServers) {
+        NSArray *serverNames = [self.tileServers allKeys];
+        for (NSString *serverUrl in serverNames) {
+            MCTileServer *tileServer = [self.tileServers objectForKey:serverUrl];
             MCLayerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
-            [tileServerCell setName: serverName];
-            [tileServerCell setDetails: [serverUrls objectForKey:serverName]];
+            [tileServerCell setName: tileServer.serverName];
+            [tileServerCell setDetails: serverUrl];
             [tileServerCell activeIndicatorOff];
             [tileServerCell.layerTypeImage setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
             [self.cellArray addObject:tileServerCell];
@@ -132,7 +134,10 @@
     
     if (self.selectMode && [[_cellArray objectAtIndex:indexPath.row] isKindOfClass:[MCLayerCell class]]) {
         MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
-        [self.selectServerDelegate selectTileServer: cell.detailLabel.text];
+        NSString *key = cell.detailLabel.text;
+        MCTileServer *server = [self.tileServers objectForKey:key];
+        
+        [self.selectServerDelegate selectTileServer: server];
         [self.drawerViewDelegate popDrawer];
     }
 }

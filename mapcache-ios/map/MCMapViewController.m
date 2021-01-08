@@ -319,17 +319,21 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     for (NSString *serverKey in [tileServers allKeys]) {
         MCTileServer *tileServer = tileServers[serverKey];
         
+        MKTileOverlay *tileOverlay;
+        
         if (tileServer.serverType == MCTileServerTypeXyz) {
-            NSString *url = tileServer.url;
+            /*NSString *url = tileServer.url;
             NSLog(@"URL from tile server: [%@]", url);
-            MKTileOverlay *tileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileServer.url];
+            tileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileServer.url];
+            [self.mapView insertOverlay:tileOverlay atIndex:0];*/
+        } else if (tileServer.serverType == MCTileServerTypeWms) {
+            NSString *url = [tileServer urlForLayerWithIndex:0 boundingBoxTemplate:NO];
+            tileOverlay = [[WMSTileOverlay alloc] initWithURL:url];
+        }
+        
+        if (tileOverlay != nil) {
             [self.mapView insertOverlay:tileOverlay atIndex:0];
-        } //else if (tileServer.serverType == MCTileServerTypeWms) {
-            /*NSString *url = [tileServer urlForLayerWithIndex:0 boundingBoxTemplate:YES];
-            WMSTileOverlay *tileOverlay = [[WMSTileOverlay alloc] initWithURLTemplate:url];
-            //[self.mapView insertOverlay:tileOverlay atIndex:0];
-            [self.mapView addOverlay:tileOverlay];*/
-        //}
+        }
     }
     
     // add layers

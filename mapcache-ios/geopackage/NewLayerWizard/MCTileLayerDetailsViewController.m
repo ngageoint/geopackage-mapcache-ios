@@ -15,7 +15,6 @@
 @property (nonatomic, strong) MCButtonCell *selectServerButtonCell;
 @property (nonatomic, strong) MCButtonCell *helpButtonCell;
 @property (nonatomic, strong) MCFieldWithTitleCell *layerNameCell;
-@property (nonatomic, strong) MCTileServer *tileServer;
 @property (nonatomic, strong) UITableView *tableView;
 @end
 
@@ -35,6 +34,9 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    
+    self.tileServer = [[MCTileServerRepository shared] tileServerForURLWithUrlString:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
+    
     [self registerCellTypes];
     [self initCellArray];
     
@@ -79,13 +81,9 @@
     
     _urlCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     [_urlCell setTitleText:@"Tile server URL"];
-    
-    if (self.selectedServerURL != nil) {
-        [_urlCell setFieldText:self.selectedServerURL];
-    } else {
-        [_urlCell setPlaceholder:@"https://osm.gs.mil/tiles/default/{x}/{y}/{z}.png"];
-        [_urlCell setFieldText:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
-    }
+
+    [_urlCell setPlaceholder:self.tileServer.url];
+    [_urlCell setFieldText:self.tileServer.url];
     
     [_urlCell setTextFielDelegate: self];
     [_urlCell useReturnKeyDone];

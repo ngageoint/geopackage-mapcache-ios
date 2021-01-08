@@ -101,7 +101,7 @@ import Foundation
         - Parameter boundingBoxTemplate: Add the bounding box template to the end of the URL, this should only be used when downloading tiles
      */
     @objc func urlForLayer(index:Int, boundingBoxTemplate:Bool) -> String {
-        guard self.serverType == .xyz else {
+        guard self.serverType == .wms else {
             return self.url
         }
         

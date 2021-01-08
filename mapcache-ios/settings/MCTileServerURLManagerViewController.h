@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @protocol MCSelectTileServerDelegate <NSObject>
-- (void) selectTileServer:(NSString *) serverURL;
+- (void) selectTileServer:(MCTileServer *) tileServer;
 @end
 
 

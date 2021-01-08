@@ -205,10 +205,10 @@
 
 
 #pragma mark - MCSelectTileServerDelegate
-- (void) selectTileServer:(NSString *)serverURL {
+- (void) selectTileServer:(MCTileServer *)tileServer {
     // pass the selected server url to the tile detail view controller to display in the url field
-    NSLog(@"Selected %@", serverURL);
-    _tileDetailsController.selectedServerURL = serverURL;
+    NSLog(@"Selected %@", tileServer.url);
+    _tileDetailsController.tileServer = tileServer;
     [_tileDetailsController update];
     
 }
