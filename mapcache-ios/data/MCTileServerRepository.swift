@@ -14,7 +14,7 @@ import Foundation
     
     private override init() {
         super.init()
-        self.loadUserPreferences()
+        self.loadUserDefaults()
     }
     
     var tileServers: [String:MCTileServer] = [:]
@@ -98,7 +98,6 @@ import Foundation
                     }
 
                     tileServer.serverType = .xyz
-                    self.tileServers[urlString] = tileServer
                     completion(MCTileServerResult.init(tileServer, self.generateError(message: "No error", errorType: MCServerErrorType.MCNoError)))
                 } catch {
                     tileServer.serverType = .error
@@ -154,7 +153,6 @@ import Foundation
                     tileServer.serverType = .wms
                     tileServer.url = (builtURL?.string)!
                     tileServer.layers = self.layers
-                    self.tileServers[url] = tileServer
                     
                     completion(MCTileServerResult.init(tileServer, self.generateError(message: "No error", errorType: MCServerErrorType.MCNoError)))
                 } else {
@@ -281,28 +279,71 @@ import Foundation
         
     }
     
+    
     func generateError(message:String, errorType: MCServerErrorType) -> MCServerError {
         return MCServerError.init(domain: "MCTileServerRepository", code: errorType.rawValue, userInfo: ["message" : message])
     }
     
     
-    // TODO: function to save a tile server to the UserDefaults
+    @objc func saveToUserDefaults(serverName:String, url:String, tileServer:MCTileServer) -> Bool {
+        if var savedServers = self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) {
+            savedServers[serverName] = url
+            self.userDefaults.setValue(savedServers, forKey: MC_SAVED_TILE_SERVER_URLS)
+            self.tileServers[url] = tileServer
+            return true
+        }
+        
+        return false
+    }
     
-    // TODO: function to remove a tile server from UserDefaults
+    
+    @objc func saveBasemapToUserDefaults(serverName:String, layerName:String) {
+        self.userDefaults.setValue(serverName, forKey: MC_USER_BASEMAP_SERVER_NAME)
+        self.userDefaults.setValue(layerName, forKey: MC_USER_BASEMAP_LAYER_NAME)
+    }
     
     
-    // function to refresh the tile server list from UserDefaults
-    @objc func loadUserPreferences() {
+    @objc func removeTileServerFromUserDefaults(serverName:String) {
+        // get the defaults
+        if var savedServers = self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) {
+            savedServers.removeValue(forKey: serverName)
+            self.tileServers.removeValue(forKey: serverName)
+            self.userDefaults.setValue(savedServers, forKey: MC_SAVED_TILE_SERVER_URLS)
+        }
+        
+        // check if the server that was deleted was a being used as a basemap, and if so delete it
+        if let currentBasemap:String = self.userDefaults.object(forKey: MC_USER_BASEMAP_SERVER_NAME) as? String {
+            if (currentBasemap.elementsEqual(serverName)) {
+                self.saveBasemapToUserDefaults(serverName: "", layerName: "")
+            }
+        }
+    }
+    
+    
+    // Load or refresh the tile server list from UserDefaults.
+    @objc func loadUserDefaults() {
         print(self.userDefaults.dictionaryRepresentation())
         
         if let savedServers = self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) {
-            for server in savedServers.keys {
-                // TODO: check the URL and add it to the dictionary
+            for serverName in savedServers.keys {
+                if let serverURL = savedServers[serverName] {
+                    print("\(serverName) \(serverURL)")
+                    self.isValidServerURL(urlString: serverURL as! String) { (tileServerResult) in
+                        let serverError:MCServerError = tileServerResult.failure as! MCServerError
+                        
+                        if (serverError.code == MCServerErrorType.MCNoError.rawValue) {
+                            print("valid test URL")
+                            // check the dictionary update as needed, use the name from user defaults for the label/key
+                            
+                            self.tileServers[serverName] = tileServerResult.success as? MCTileServer
+                        }
+                    }
+                }
             }
         }
         
         // test code for checking map functionality
-        self.isValidServerURL(urlString: "https://basemap.nationalmap.gov/arcgis/services/USGSTopo/MapServer/WmsServer") { (tileServerResult) in
+        /*self.isValidServerURL(urlString: "https://basemap.nationalmap.gov/arcgis/services/USGSTopo/MapServer/WmsServer") { (tileServerResult) in
             let serverError:MCServerError = tileServerResult.failure as! MCServerError
             
             if (serverError.code == MCServerErrorType.MCNoError.rawValue) {
@@ -316,7 +357,7 @@ import Foundation
             if (serverError.code == MCServerErrorType.MCNoError.rawValue) {
                 print("valid test URL")
             }
-        }
+        }*/
     }
     
     @objc func getTileServers() -> [String:MCTileServer] {

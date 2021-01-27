@@ -281,6 +281,29 @@ static MCGeoPackageRepository *sharedRepository;
 }
 
 
+- (BOOL) deleteLayer:(MCTable *) table {
+    GPKGGeoPackage *geoPackage = nil;
+    BOOL didDelete = NO;
+    
+    @try {
+        geoPackage = [self.manager open:table.database];
+        [geoPackage deleteTable:table.name];
+        [self.activeDatabases removeTable:table];
+        didDelete = YES;
+    }
+    @catch (NSException *exception) {
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], table.database, table.name]
+                                 andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
+    }
+    @finally {
+        [geoPackage close];
+        [self regenerateDatabaseList];
+        return didDelete;
+    }
+}
+
+
 - (BOOL) renameTable:(MCTable *) table toNewName:(NSString *)newTableName {
     GPKGGeoPackage *geoPackage;
     BOOL didRenameTable = YES;

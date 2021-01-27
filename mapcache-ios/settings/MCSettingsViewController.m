@@ -38,7 +38,6 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
-    //self.savedTileServers = [[NSUserDefaults standardUserDefaults] dictionaryForKey:MC_SAVED_TILE_SERVER_URLS];
     self.savedTileServers = [[MCTileServerRepository shared] getTileServers];
     [self registerCellTypes];
     [self initCellArray];
@@ -47,6 +46,13 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     [self addDragHandle];
     [self addCloseButton];
     
+}
+
+
+- (void) update {
+    self.savedTileServers = [[MCTileServerRepository shared] getTileServers];
+    [self initCellArray];
+    [self.tableView reloadData];
 }
 
 
@@ -93,18 +99,37 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     [ngaOSMURL.layerTypeImage setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
     [self.cellArray addObject:ngaOSMURL];
     
+    
+    
     if (self.savedTileServers) {
         NSArray *serverNames = [self.savedTileServers allKeys];
         for (NSString *serverName in serverNames) {
             MCLayerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
-            [tileServerCell setName: serverName];
-            
             MCTileServer *tileServer = [self.savedTileServers objectForKey:serverName];
             
-            [tileServerCell setDetails: tileServer.serverName];
+            [tileServerCell setName: tileServer.serverName];            
+            NSMutableArray *wmsLayers = [[NSMutableArray alloc] init];
+            
+            if (tileServer.serverType == MCTileServerTypeWms) {
+                NSString *layerLabel = tileServer.layers.count == 1? @"layer" : @"layers";
+                NSString *details = [NSString stringWithFormat:@"%lu %@", (unsigned long)tileServer.layers.count, layerLabel];
+                [tileServerCell setDetails: details];
+                
+                for (MCLayer *layer in tileServer.layers) {
+                    MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
+                    [layerCell.layerTypeImage setImage:[UIImage imageNamed:@"Layer"]];
+                    [layerCell setName:layer.title];
+                    [layerCell activeIndicatorOff];
+                    [wmsLayers addObject:layerCell];
+                }
+            } else {
+                [tileServerCell setDetails: tileServer.serverName];
+            }
+            
             [tileServerCell.layerTypeImage setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
             [tileServerCell activeIndicatorOff];
             [self.cellArray addObject:tileServerCell];
+            [self.cellArray addObjectsFromArray:wmsLayers];
         }
     }
     
@@ -252,14 +277,13 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     
     UIContextualAction *editAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Edit" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
-        // TODO wire this up
+        [self.settingsDelegate editTileServer:cell.layerNameLabel.text];
         completionHandler(YES);
     }];
     
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
-        //[self.tileServerManagerDelegate deleteTileServer: cell.layerNameLabel.text];
-        // TODO wire this up
+        [self.settingsDelegate deleteTileServer: cell.layerNameLabel.text];
         completionHandler(YES);
     }];
     

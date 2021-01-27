@@ -47,7 +47,7 @@
     [_childCoordinators addObject:drawerCoordinator];
     [_childCoordinators addObject:mapCoordinator];
     _tileServerRepository = [MCTileServerRepository shared];
-    [_tileServerRepository loadUserPreferences];
+    [_tileServerRepository loadUserDefaults];
     
     _window.rootViewController = mapViewController;
     

@@ -16,6 +16,7 @@
 @property (nonatomic, strong) MCFieldWithTitleCell *nameField;
 @property (nonatomic, strong) MCTextViewCell *urlField;
 @property (nonatomic, strong) MCButtonCell *buttonCell;
+@property (nonatomic, strong) MCTileServer *tileServer;
 @property (nonatomic) BOOL nameIsValid;
 @property (nonatomic) BOOL urlIsValid;
 @end
@@ -70,7 +71,7 @@
     [self.cellArray addObject:self.nameField];
     
     self.urlField = [self.tableView dequeueReusableCellWithIdentifier:@"textView"];
-    [self.urlField setPlaceholderText:@"XYZ and WMS are supported. Make sure you enter the URL template."];
+    [self.urlField setPlaceholderText:@"yourtileserverurl.com\nXYZ and WMS tile servers are supported."];
     self.urlField.textViewCellDelegate = self;
     [self.cellArray addObject:self.urlField];
     
@@ -135,7 +136,6 @@
 #pragma mark - MCTextViewCellDelegate
 - (void)textViewCellDidEndEditing:(UITextView *)textView {
     [textView trimWhiteSpace:textView];
-    
     [textView isValidTileServerURL:textView withResult:^(MCTileServerResult * _Nonnull tileServerResult) {
         MCServerError *error = (MCServerError *)tileServerResult.failure;
         
@@ -149,6 +149,12 @@
         } else {
             NSLog(@"Valid URL");
             self.urlIsValid = YES;
+            self.tileServer = (MCTileServer *)tileServerResult.success;
+            
+            if (self.tileServer.serverType == MCTileServerTypeWms && [[self.nameField fieldValue]  isEqualToString: @""]) {
+                [self.nameField setFieldText:self.tileServer.serverName];
+            }
+            
             if (self.nameIsValid) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.urlField useNormalAppearance];
@@ -179,10 +185,13 @@
 
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
-    BOOL didSave = [self.saveTileServerDelegate saveURL:[self.urlField getText] forServerNamed:[self.nameField fieldValue]];
+    BOOL didSave = [self.saveTileServerDelegate saveURL:[self.urlField getText] forServerNamed:[self.nameField fieldValue] tileServer:self.tileServer];
     
     if (didSave) {
         [self.drawerViewDelegate popDrawer];
+    } else {
+        NSLog(@"Problem saving tile server");
+        // TODO: let the user know
     }
 }
 

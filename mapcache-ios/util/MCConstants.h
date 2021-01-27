@@ -186,6 +186,8 @@ extern NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LAT;
 extern NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MIN_LON;
 extern NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LON;
 extern NSString * const MC_SAVED_TILE_SERVER_URLS;
+extern NSString * const MC_USER_BASEMAP_SERVER_NAME;
+extern NSString * const MC_USER_BASEMAP_LAYER_NAME;
 extern NSString * const GPKGS_ACTION_DELETE;
 extern NSString * const GPKGS_ACTION_SHARE;
 extern NSString * const GPKGS_ACTION_NEW_LAYER;

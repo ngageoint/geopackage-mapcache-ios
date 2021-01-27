@@ -7,8 +7,10 @@
 //
 
 #import "MCSettingsCoordinator.h"
+#import"mapcache_ios-Swift.h"
 
 @interface MCSettingsCoordinator ()
+@property (nonatomic, strong) MCSettingsViewController *settingsViewController;
 @property (nonatomic, strong) MCTileServerURLManagerViewController *tileServerManagerView;
 @property (nonatomic, strong) MCNewTileServerViewController *createTileServerView;
 @property (nonatomic, strong) NSString *originalServerName;
@@ -17,11 +19,11 @@
 @implementation MCSettingsCoordinator 
 
 - (void)start {
-    MCSettingsViewController *settingsViewController = [[MCSettingsViewController alloc] initAsFullView:YES];
-    settingsViewController.mapSettingsDelegate = _settingsDelegate;
-    settingsViewController.drawerViewDelegate = _drawerViewDelegate;
-    settingsViewController.settingsDelegate = self;
-    [settingsViewController.drawerViewDelegate pushDrawer:settingsViewController];
+    self.settingsViewController = [[MCSettingsViewController alloc] initAsFullView:YES];
+    self.settingsViewController.mapSettingsDelegate = _settingsDelegate;
+    self.settingsViewController.drawerViewDelegate = _drawerViewDelegate;
+    self.settingsViewController.settingsDelegate = self;
+    [self.settingsViewController.drawerViewDelegate pushDrawer:self.settingsViewController];
 }
 
 
@@ -44,10 +46,16 @@
 
 
 - (void)showTileURLManager {
-    self.tileServerManagerView = [[MCTileServerURLManagerViewController alloc] initAsFullView:YES];
+    /*self.tileServerManagerView = [[MCTileServerURLManagerViewController alloc] initAsFullView:YES];
     self.tileServerManagerView.drawerViewDelegate = self.drawerViewDelegate;
     self.tileServerManagerView.tileServerManagerDelegate = self;
-    [self.drawerViewDelegate pushDrawer:self.tileServerManagerView];
+    [self.drawerViewDelegate pushDrawer:self.tileServerManagerView];*/
+    
+    self.originalServerName = nil;
+    self.createTileServerView = [[MCNewTileServerViewController alloc] initAsFullView:YES];
+    self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
+    self.createTileServerView.saveTileServerDelegate = self;
+    [self.drawerViewDelegate pushDrawer:self.createTileServerView];
 }
 
 
@@ -78,36 +86,21 @@
 
 
 - (void)deleteTileServer:(nonnull NSString *)serverName {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary *serverUrls = [[NSMutableDictionary alloc] initWithDictionary:[defaults dictionaryForKey:MC_SAVED_TILE_SERVER_URLS]];
-    
-    [serverUrls removeObjectForKey:serverName];
-    [defaults setObject:serverUrls forKey:MC_SAVED_TILE_SERVER_URLS];
-    [defaults synchronize];
-    [self.tileServerManagerView update];
+    [[MCTileServerRepository shared] removeTileServerFromUserDefaultsWithServerName:serverName];
+    [self.settingsViewController update];
 }
 
 
 #pragma mark - MCTileServerSaveDelegate
-- (BOOL)saveURL:(NSString *)url forServerNamed:(NSString *)serverName {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary *serverUrls = [[NSMutableDictionary alloc] initWithDictionary:[defaults dictionaryForKey:MC_SAVED_TILE_SERVER_URLS]];
-    
-    if (serverUrls == nil || [[serverUrls allKeys] count] == 0) {
-        serverUrls = [[NSMutableDictionary alloc] init];
-    }
-    
+- (BOOL)saveURL:(NSString *)url forServerNamed:(NSString *)serverName tileServer:(nonnull MCTileServer *)tileServer {
     // If the server name changed, remove the old value
     if (self.originalServerName != nil && ![self.originalServerName isEqualToString:serverName]) {
-        [serverUrls removeObjectForKey:_originalServerName];
+        [[MCTileServerRepository shared] removeTileServerFromUserDefaultsWithServerName:self.originalServerName];
     }
     
-    [serverUrls setValue:url forKey:serverName];
-    [defaults setObject:serverUrls forKey:MC_SAVED_TILE_SERVER_URLS];
-    [defaults synchronize];
-    [self.tileServerManagerView update];
-    
-    return YES;
+    BOOL didUpdate = [[MCTileServerRepository shared] saveToUserDefaultsWithServerName:serverName url:url tileServer:tileServer];
+    [self.settingsViewController update];
+    return didUpdate;
 }
 
 @end
