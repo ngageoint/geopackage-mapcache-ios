@@ -102,10 +102,10 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     
     
     if (self.savedTileServers) {
-        NSArray *serverNames = [self.savedTileServers allKeys];
-        for (NSString *serverName in serverNames) {
+        NSArray *serverURLs = [self.savedTileServers allKeys];
+        for (NSString *serverURL in serverURLs) {
             MCLayerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
-            MCTileServer *tileServer = [self.savedTileServers objectForKey:serverName];
+            MCTileServer *tileServer = [self.savedTileServers objectForKey:serverURL];
             
             [tileServerCell setName: tileServer.serverName];            
             NSMutableArray *wmsLayers = [[NSMutableArray alloc] init];

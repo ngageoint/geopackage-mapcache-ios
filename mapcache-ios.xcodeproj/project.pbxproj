@@ -696,7 +696,6 @@
 		E3A492021FA952C100FFE613 /* geopackage */ = {
 			isa = PBXGroup;
 			children = (
-				E308FBC31FBFA77F00348577 /* cells */,
 				E3A6519F2003DA2D00B8AB27 /* NewLayerWizard */,
 				E3FB85732134A9B5002F012E /* MCGeoPackageList.h */,
 				E3FB85722134A9B4002F012E /* MCGeoPackageList.m */,
@@ -721,6 +720,7 @@
 		E3A492061FA9531E00FFE613 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				E308FBC31FBFA77F00348577 /* cells */,
 				E3B975381FB3DE8800E33E0A /* DisplayCells */,
 				E3B975391FB3DE8900E33E0A /* EditCells */,
 				E3A651A92003DDE800B8AB27 /* NewLayerWizard */,
