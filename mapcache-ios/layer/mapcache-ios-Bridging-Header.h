@@ -18,6 +18,7 @@
 #import "MCSectionTitleCell.h"
 #import "MCLayerCell.h"
 #import "MCButtonCell.h"
+#import "MCTileServerCell.h"
 #import "MCDualButtonCell.h"
 #import "MCFieldWithTitleCell.h"
 #import "MCDescriptionCell.h"

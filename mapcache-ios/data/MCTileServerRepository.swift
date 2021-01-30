@@ -153,10 +153,12 @@ import Foundation
                     tileServer.serverType = .wms
                     tileServer.url = (builtURL?.string)!
                     tileServer.layers = self.layers
+                    self.layers = []
                     
                     completion(MCTileServerResult.init(tileServer, self.generateError(message: "No error", errorType: MCServerErrorType.MCNoError)))
                 } else {
                     tileServer.serverType = .error
+                    self.layers = []
                     let error:MCServerError = MCServerError.init(domain: "MCTileServerRepository", code: MCServerErrorType.MCURLInvalid.rawValue, userInfo: ["message" : "invalid URL"])
                     completion(MCTileServerResult.init(tileServer, error))
                 }
@@ -209,9 +211,9 @@ import Foundation
         
         print("\(spaces) \(level) \(elementName)")
         if elementName == layerKey {
-            if (topLevelLayer.title == "" && topLevelLayer.title != "") {
+            if (topLevelLayer.title != "") {
                 topLevelLayer = currentLayer
-                layers.append(topLevelLayer)
+                //layers.append(topLevelLayer)
             }
             currentLayer = MCLayer()
         }
@@ -234,7 +236,7 @@ import Foundation
         if elementName == layerKey {
             print("found a layer")
             print("adding currentLayer to layer")
-            if (currentLayer.title != "") {
+            if (currentLayer.title != "" && currentLayer.title != topLevelLayer.title) {
                 layers.append(currentLayer)
             }
             
@@ -333,9 +335,9 @@ import Foundation
                         
                         if (serverError.code == MCServerErrorType.MCNoError.rawValue) {
                             print("valid test URL")
-                            // check the dictionary update as needed, use the name from user defaults for the label/key
-                            
-                            self.tileServers[serverName] = tileServerResult.success as? MCTileServer
+                            let tileServer = tileServerResult.success as? MCTileServer
+                            tileServer?.serverName = serverName
+                            self.tileServers[serverName] = tileServer
                         }
                     }
                 }

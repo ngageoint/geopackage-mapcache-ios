@@ -14,6 +14,7 @@
 #import "MCFieldWithTitleCell.h"
 #import "MCSwitchCell.h"
 #import "MCButtonCell.h"
+#import "MCTileServerCell.h"
 #import "MCLayerCell.h"
 #import "MCProperties.h"
 #import <MapKit/MapKit.h>

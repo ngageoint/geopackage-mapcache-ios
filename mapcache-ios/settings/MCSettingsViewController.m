@@ -102,18 +102,18 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     
     
     if (self.savedTileServers) {
-        NSArray *serverURLs = [self.savedTileServers allKeys];
-        for (NSString *serverURL in serverURLs) {
-            MCLayerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
-            MCTileServer *tileServer = [self.savedTileServers objectForKey:serverURL];
-            
-            [tileServerCell setName: tileServer.serverName];            
+        NSArray *serverNames = [self.savedTileServers allKeys];
+        for (NSString *serverName in serverNames) {
+            MCTileServer *tileServer = [self.savedTileServers objectForKey:serverName];
+            MCTileServerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileServerCell"];
+            [tileServerCell setContentWithTileServer:tileServer];
+                        
             NSMutableArray *wmsLayers = [[NSMutableArray alloc] init];
             
             if (tileServer.serverType == MCTileServerTypeWms) {
                 NSString *layerLabel = tileServer.layers.count == 1? @"layer" : @"layers";
                 NSString *details = [NSString stringWithFormat:@"%lu %@", (unsigned long)tileServer.layers.count, layerLabel];
-                [tileServerCell setDetails: details];
+                [tileServerCell setLayersLabelText:details];
                 
                 for (MCLayer *layer in tileServer.layers) {
                     MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
@@ -122,11 +122,9 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                     [layerCell activeIndicatorOff];
                     [wmsLayers addObject:layerCell];
                 }
-            } else {
-                [tileServerCell setDetails: tileServer.serverName];
             }
             
-            [tileServerCell.layerTypeImage setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
+            [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
             [tileServerCell activeIndicatorOff];
             [self.cellArray addObject:tileServerCell];
             [self.cellArray addObjectsFromArray:wmsLayers];
@@ -191,6 +189,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"buttonCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCLayerCell" bundle:nil] forCellReuseIdentifier:@"layerCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCTileServerCell" bundle:nil] forCellReuseIdentifier:@"tileServerCell"];
 }
 
 

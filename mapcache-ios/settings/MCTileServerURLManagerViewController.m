@@ -86,11 +86,11 @@
     
     if (self.tileServers) {
         NSArray *serverNames = [self.tileServers allKeys];
-        for (NSString *serverUrl in serverNames) {
-            MCTileServer *tileServer = [self.tileServers objectForKey:serverUrl];
+        for (NSString *serverName in serverNames) {
+            MCTileServer *tileServer = [self.tileServers objectForKey:serverName];
             MCLayerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
-            [tileServerCell setName: tileServer.serverName];
-            [tileServerCell setDetails: serverUrl];
+            [tileServerCell setName: serverName];
+            [tileServerCell setDetails: tileServer.url];
             [tileServerCell activeIndicatorOff];
             [tileServerCell.layerTypeImage setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
             [self.cellArray addObject:tileServerCell];
