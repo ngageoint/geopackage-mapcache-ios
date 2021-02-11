@@ -37,6 +37,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     self.childCoordinators = [[NSMutableArray alloc] init];
     self.preferences = [NSUserDefaults standardUserDefaults];
     self.repository = [MCGeoPackageRepository sharedRepository];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(basemapsLoadedFromUserDefaults:) name:MC_USER_BASEMAP_LOADED_FROM_DEFAULTS object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerRenamed:) name:@"MC_LAYER_RENAMED" object:nil];
     
     return self;
@@ -59,6 +60,27 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 - (void) setMaxFeaturesPreference {
     
+}
+
+
+- (void)basemapsLoadedFromUserDefaults:(NSNotification *)notification {
+    MCTileServer *basemapTileServer = [[MCTileServerRepository shared] baseMapServer];
+    
+    if (basemapTileServer == nil) {
+        return;
+    }
+    
+    if (basemapTileServer.serverType == MCTileServerTypeXyz) {
+        [self.mcMapViewController updateBasemaps:basemapTileServer.url serverType:MCTileServerTypeXyz];
+    } else if (basemapTileServer.serverType == MCTileServerTypeWms) {
+        MCLayer *basemapLayer = [[MCTileServerRepository shared] baseMapLayer];
+        
+        if (basemapLayer == nil) {
+            return;
+        }
+        
+        [self.mcMapViewController updateBasemaps: [basemapTileServer urlForLayerWithLayer:basemapLayer boundingBoxTemplate:NO] serverType:MCTileServerTypeWms];
+    }
 }
 
 

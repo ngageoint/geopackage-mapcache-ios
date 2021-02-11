@@ -46,8 +46,6 @@
     mapCoordinator.drawerViewDelegate = drawerCoordinator;
     [_childCoordinators addObject:drawerCoordinator];
     [_childCoordinators addObject:mapCoordinator];
-    _tileServerRepository = [MCTileServerRepository shared];
-    [_tileServerRepository loadUserDefaults];
     
     _window.rootViewController = mapViewController;
     
@@ -59,6 +57,9 @@
     
     _manager = [GPKGGeoPackageFactory manager];
     _geoPackages = [[GPKGGeoPackageCache alloc] initWithManager:self.manager];
+    
+    _tileServerRepository = [MCTileServerRepository shared];
+    [_tileServerRepository loadUserDefaults];
     
     return YES;
 }

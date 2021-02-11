@@ -188,6 +188,7 @@ NSString * const GPKGS_PROP_PRELOADED_BOUNDING_BOXES_MAX_LON = @"max_lon";
 NSString * const MC_SAVED_TILE_SERVER_URLS = @"tile_server_urls";
 NSString * const MC_USER_BASEMAP_SERVER_NAME = @"mc_user_basemap_server_name";
 NSString * const MC_USER_BASEMAP_LAYER_NAME = @"mc_user_basemap_layer_name";
+NSString * const MC_USER_BASEMAP_LOADED_FROM_DEFAULTS = @"mc_user_basemap_loaded_from_defaults";
 NSString * const GPKGS_ACTION_DELETE = @"action_delete";
 NSString * const GPKGS_ACTION_SHARE = @"action_share";
 NSString * const GPKGS_ACTION_NEW_LAYER = @"action_new_layer";

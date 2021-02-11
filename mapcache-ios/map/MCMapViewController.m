@@ -59,7 +59,7 @@
 @property (nonatomic) CLLocationCoordinate2D currentCenter;
 @property (nonatomic) BOOL expandedZoomDetails;
 @property (nonatomic, strong) MKTileOverlay *userTileOverlay;
-@property (nonatomic, strong) NSMutableArray *basemapOverlays;
+@property (nonatomic, strong) MKTileOverlay *userBasemapOverlay;
 @end
 
 
@@ -89,7 +89,6 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.active setModified:YES];
     self.tileHelper = [[MCTileHelper alloc] initWithTileHelperDelegate:self];
     self.featureHelper = [[MCFeatureHelper alloc] initWithFeatureHelperDelegate:self];
-    self.basemapOverlays = [[NSMutableArray alloc] init];
     
     self.locationDecimalFormatter = [[NSNumberFormatter alloc] init];
     self.locationDecimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
@@ -308,35 +307,23 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 }
 
 
-- (void)updateBasemaps {
+- (void)updateBasemaps:(NSString *)url serverType:(MCTileServerType) serverType {
     NSLog(@"MCMapViewController updateBasemaps");
-    // remove basemap overlays
-    
-    
-    // get active xyz servers and wms tile layers from tile server repo
-    NSDictionary *tileServers = [[MCTileServerRepository shared] getTileServers];
-    
-    for (NSString *serverKey in [tileServers allKeys]) {
-        MCTileServer *tileServer = tileServers[serverKey];
-        
-        MKTileOverlay *tileOverlay;
-        
-        if (tileServer.serverType == MCTileServerTypeXyz) {
-            /*NSString *url = tileServer.url;
-            NSLog(@"URL from tile server: [%@]", url);
-            tileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileServer.url];
-            [self.mapView insertOverlay:tileOverlay atIndex:0];*/
-        } else if (tileServer.serverType == MCTileServerTypeWms) {
-            NSString *url = [tileServer urlForLayerWithIndex:0 boundingBoxTemplate:NO];
-            tileOverlay = [[WMSTileOverlay alloc] initWithURL:url];
-        }
-        
-        if (tileOverlay != nil) {
-            [self.mapView insertOverlay:tileOverlay atIndex:0];
-        }
+    if (self.userBasemapOverlay != nil) {
+        [self.mapView removeOverlay:self.userBasemapOverlay];
     }
     
-    // add layers
+    if ([url isEqualToString: @""]) {
+        return;
+    }
+    
+    if (serverType == MCTileServerTypeXyz) {
+        self.userBasemapOverlay = [[MKTileOverlay alloc] initWithURLTemplate:url];
+        [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
+    } else if (serverType == MCTileServerTypeWms) {
+        self.userBasemapOverlay = [[WMSTileOverlay alloc] initWithURL:url];
+        [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
+    }
 }
 
 

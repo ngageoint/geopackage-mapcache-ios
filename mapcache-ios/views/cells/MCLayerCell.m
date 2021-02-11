@@ -7,6 +7,7 @@
 //
 
 #import "MCLayerCell.h"
+#import"mapcache_ios-Swift.h"
 
 @implementation MCLayerCell
 
@@ -24,7 +25,10 @@
 }
 
 
-- (void)setContentsWithTable:(MCTable *) table {
+/**
+    Use a GeoPackage table, which represents a map layer, for this cell's information.
+ */
+- (void)setContentsWithTable:(MCTable *) table{
     self.table = table;
     [self.layerNameLabel setText:table.name];
     
@@ -38,6 +42,18 @@
     }
     
     [self.layerTypeImage setImage:[UIImage imageNamed:typeImageName]];
+}
+
+
+/**
+    Use a WMS layer for this cell's details.
+ */
+- (void)setContentsWithLayer:(MCLayer *) layer tileServer:(MCTileServer *) tileServer {
+    self.mapLayer = layer;
+    self.tileServer = tileServer;
+    [self.layerNameLabel setText: layer.title];
+    [self.layerTypeImage setImage:[UIImage imageNamed:@"Layer"]];
+    [self activeIndicatorOff];
 }
 
 

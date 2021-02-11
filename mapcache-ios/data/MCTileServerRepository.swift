@@ -20,9 +20,13 @@ import Foundation
     var tileServers: [String:MCTileServer] = [:]
     var layers: [MCLayer] = []
     
-    // Arrays for keeping track of which tile servers and layers are being used as basemaps managed by the settings view controller and displayed on the map.
-    var xyzBaseMaps: [MCTileServer] = [];
-    var wmsLayerBaseMaps: [MCLayer] = [];
+    // Objects for keeping track of which tile server and or layer are being used as basemaps managed by the settings view controller and displayed on the map.
+    
+    /** Object for keeping track of the user basemap.  */
+    @objc var baseMapServer:MCTileServer = MCTileServer.init();
+    
+    /** In the case of a WMS server you will also need to set which layer the user wanted to use as a basemap. Not needed and can be left as default for XYZ servers. */
+    @objc var baseMapLayer:MCLayer = MCLayer.init();
     
     // URL query parameters
     let getCapabilities = "request=GetCapabilities"
@@ -299,9 +303,21 @@ import Foundation
     }
     
     
+    @objc func setBasemap(tileServer:MCTileServer?, layer:MCLayer?) {
+        if let updatedServer = tileServer, let updatedLayer = layer {
+            self.baseMapServer = updatedServer
+            self.baseMapLayer = updatedLayer
+            saveBasemapToUserDefaults(serverName: updatedServer.serverName, layerName: updatedLayer.name)
+        } else {
+            saveBasemapToUserDefaults(serverName: "", layerName: "")
+        }
+    }
+    
+    
     @objc func saveBasemapToUserDefaults(serverName:String, layerName:String) {
         self.userDefaults.setValue(serverName, forKey: MC_USER_BASEMAP_SERVER_NAME)
         self.userDefaults.setValue(layerName, forKey: MC_USER_BASEMAP_LAYER_NAME)
+        self.userDefaults.synchronize()
     }
     
     
@@ -330,6 +346,8 @@ import Foundation
             for serverName in savedServers.keys {
                 if let serverURL = savedServers[serverName] {
                     print("\(serverName) \(serverURL)")
+                    var numberOfServersLoaded = 0
+                    
                     self.isValidServerURL(urlString: serverURL as! String) { (tileServerResult) in
                         let serverError:MCServerError = tileServerResult.failure as! MCServerError
                         
@@ -339,31 +357,46 @@ import Foundation
                             tileServer?.serverName = serverName
                             self.tileServers[serverName] = tileServer
                         }
+                        
+                        numberOfServersLoaded += 1
+                        if (numberOfServersLoaded == savedServers.keys.count) {
+                            self.loadBasemapsFromUserDefaults()
+                        }
                     }
                 }
             }
         }
-        
-        // test code for checking map functionality
-        /*self.isValidServerURL(urlString: "https://basemap.nationalmap.gov/arcgis/services/USGSTopo/MapServer/WmsServer") { (tileServerResult) in
-            let serverError:MCServerError = tileServerResult.failure as! MCServerError
-            
-            if (serverError.code == MCServerErrorType.MCNoError.rawValue) {
-                print("valid test URL")
+    }
+    
+    
+    @objc func loadBasemapsFromUserDefaults() {
+        if let savedBasemapServerName = self.userDefaults.string(forKey: MC_USER_BASEMAP_SERVER_NAME) {
+            if self.tileServers.keys.contains(savedBasemapServerName), let server = self.tileServers[savedBasemapServerName] {
+                self.baseMapServer = server
+                
+                if let savedBasemapLayerName = self.userDefaults.string(forKey: MC_USER_BASEMAP_LAYER_NAME) {
+                    for layer in server.layers {
+                        if (layer.name == savedBasemapLayerName) {
+                            self.baseMapLayer = layer
+                            break
+                        }
+                    }
+                } else {
+                    self.baseMapLayer = MCLayer()
+                }
+            } else {
+                self.baseMapServer = MCTileServer()
             }
+        } else {
+            self.baseMapServer = MCTileServer()
+            self.baseMapLayer = MCLayer()
         }
         
-        self.isValidServerURL(urlString: "https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png") { (tileServerResult) in
-            let serverError:MCServerError = tileServerResult.failure as! MCServerError
-            
-            if (serverError.code == MCServerErrorType.MCNoError.rawValue) {
-                print("valid test URL")
-            }
-        }*/
+        NotificationCenter.default.post(name: Notification.Name(MC_USER_BASEMAP_LOADED_FROM_DEFAULTS), object: nil)
     }
+    
     
     @objc func getTileServers() -> [String:MCTileServer] {
         return self.tileServers
     }
-    
 }

@@ -19,10 +19,17 @@
 #import "MCProperties.h"
 #import <MapKit/MapKit.h>
 
+// forward declarations
+@class MCTileServer;
+@class MCLayer;
+typedef NS_ENUM(NSInteger, MCTileServerType);
+
+
+
 /* Settings that change the state of the map, or the controls that are shown are handled here */
 @protocol MCMapSettingsDelegate <NSObject>
 - (void)setMapType:(NSString *) mapType;
-- (void)updateBasemaps;
+- (void)updateBasemaps:(NSString *)url serverType:(MCTileServerType) serverType;
 - (void)setMaxFeatures:(int) maxFeatures;
 - (void)toggleZoomIndicator;
 - (void)settingsCompletionHandler;
@@ -35,11 +42,14 @@
 - (void)showTileURLManager;
 - (void)editTileServer:(NSString *) serverName;
 - (void)deleteTileServer:(NSString *) serverName;
+- (void)setUserBasemap:(MCTileServer *)tileServer layer:(MCLayer *)layer;
 @end
 
 
 @interface MCSettingsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCSegmentedControlCellDelegate, MCButtonCellDelegate, MCSwitchCellDelegate>
 @property (nonatomic, strong) id<MCMapSettingsDelegate> mapSettingsDelegate;
 @property (nonatomic, strong) id<MCSettingsDelegate> settingsDelegate;
+@property (nonatomic, strong) MCTileServer *basemapTileServer;
+@property (nonatomic, strong) MCLayer *basemapLayer;
 - (void) update;
 @end

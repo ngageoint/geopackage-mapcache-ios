@@ -9,15 +9,12 @@
 #import "MCTileServerCell.h"
 #import"mapcache_ios-Swift.h"
 
-@interface MCTileServerCell()
-@property (nonatomic, strong) MCTileServer *tileServer;
-@end
-
 @implementation MCTileServerCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.visibilityStatusIndicator.image = [UIImage imageNamed:@"allLayersOn"];
+    self.layersExpanded = NO;
     // Initialization code
 }
 
@@ -31,6 +28,7 @@
     self.tileServer = tileServer;
     [self.nameLabel setText:self.tileServer.serverName];
     [self.urlLabel setText:self.tileServer.url];
+    [self.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
     
     if (self.tileServer.serverType == MCTileServerTypeXyz) {
         [self.layersLabel setText:@"1 layer"];

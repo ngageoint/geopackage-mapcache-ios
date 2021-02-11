@@ -13,7 +13,7 @@ import Foundation
 }
 
 
-@objc class MCLayer: NSObject, NSCoding {
+@objc class MCLayer: NSObject {
     static let (formatKey, crsKey, titleKey, nameKey) = ("format", "crs", "title", "name")
     
     @objc var format: String = ""
@@ -54,7 +54,7 @@ import Foundation
 }
 
 
-@objc class MCTileServer: NSObject, NSCoding {
+@objc class MCTileServer: NSObject {
     static let (serverNameKey, urlKey, layersKey, serverTypeKey) = ("serverName", "url", "layers", "serverType")
     
     @objc var serverName: String = ""
@@ -87,11 +87,6 @@ import Foundation
         let serverType = coder.decodeObject(forKey: MCTileServer.serverTypeKey) as! MCTileServerType
         
         self.init(serverName:serverName, url: url, layers:[], serverType:serverType)
-    }
-    
-    
-    func encode(with coder:NSCoder) {
-        
     }
     
     
@@ -135,5 +130,12 @@ import Foundation
         
         return ""
     }
-
+    
+    @objc func urlForLayer(layer:MCLayer, boundingBoxTemplate:Bool) -> String {
+        if let index = self.layers.firstIndex(of: layer) {
+            return self.urlForLayer(index: index, boundingBoxTemplate: boundingBoxTemplate)
+        }
+        
+        return ""
+    }
 }

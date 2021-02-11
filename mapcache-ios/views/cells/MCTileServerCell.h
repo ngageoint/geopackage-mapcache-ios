@@ -16,6 +16,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *urlLabel;
 @property (weak, nonatomic) IBOutlet UILabel *layersLabel;
+@property (nonatomic, strong) MCTileServer *tileServer;
+@property (nonatomic) BOOL layersExpanded;
 - (void) setContentWithTileServer:(MCTileServer *)tileServer;
 - (void) setNameLabelText:(NSString *)serverName;
 - (void) setUrlLabelText:(NSString *)url;

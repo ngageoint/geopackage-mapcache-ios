@@ -13,17 +13,22 @@
 #import "MCProperties.h"
 #import <UIKit/UIKit.h>
 
+@class MCLayer;
+@class MCTileServer;
 
 @interface MCLayerCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UIImageView *activeIndicator;
-@property (weak, nonatomic) IBOutlet UIImageView *layerTypeImage;
-@property (weak, nonatomic) IBOutlet UILabel *layerNameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *detailLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *activeIndicator;
+@property (nonatomic, weak) IBOutlet UIImageView *layerTypeImage;
+@property (nonatomic, weak) IBOutlet UILabel *layerNameLabel;
+@property (nonatomic, weak) IBOutlet UILabel *detailLabel;
 @property (nonatomic, strong) MCTable *table;
+@property (nonatomic, strong) MCLayer *mapLayer;
+@property (nonatomic, strong) MCTileServer *tileServer;
 - (void)activeIndicatorOn;
 - (void)activeIndicatorOff;
 - (void)toggleActiveIndicator;
 - (void) setDetails: (NSString *) details;
 - (void) setName: (NSString *) name;
 - (void)setContentsWithTable:(MCTable *) table;
+- (void)setContentsWithLayer:(MCLayer *) layer tileServer:(MCTileServer *) tileServer;
 @end

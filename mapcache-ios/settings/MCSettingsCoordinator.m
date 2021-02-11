@@ -19,11 +19,25 @@
 @implementation MCSettingsCoordinator 
 
 - (void)start {
+    MCTileServer *basemapTileServer = [[MCTileServerRepository shared] baseMapServer];
     self.settingsViewController = [[MCSettingsViewController alloc] initAsFullView:YES];
+    
+    if (basemapTileServer != nil) {
+        self.settingsViewController.basemapTileServer = basemapTileServer;
+        
+        if (basemapTileServer.serverType == MCTileServerTypeWms) {
+            MCLayer *basemapLayer = [[MCTileServerRepository shared] baseMapLayer];
+            if (basemapLayer != nil) {
+                self.settingsViewController.basemapLayer = basemapLayer;
+            }
+        }
+    }
+    
     self.settingsViewController.mapSettingsDelegate = _settingsDelegate;
     self.settingsViewController.drawerViewDelegate = _drawerViewDelegate;
     self.settingsViewController.settingsDelegate = self;
     [self.settingsViewController.drawerViewDelegate pushDrawer:self.settingsViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(basemapsLoadedFromUserDefaults:) name:MC_USER_BASEMAP_LOADED_FROM_DEFAULTS object:nil];
 }
 
 
@@ -34,6 +48,13 @@
     self.tileServerManagerView.tileServerManagerDelegate = self;
     [self.drawerViewDelegate pushDrawer:self.tileServerManagerView];
     self.tileServerManagerView.selectMode = YES;
+}
+
+
+- (void)basemapsLoadedFromUserDefaults:(NSNotification *)notification {
+    self.settingsViewController.basemapTileServer = [[MCTileServerRepository shared] baseMapServer];
+    self.settingsViewController.basemapLayer = [[MCTileServerRepository shared] baseMapLayer];
+    [self.settingsViewController update];
 }
 
 
@@ -56,6 +77,23 @@
     self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
     self.createTileServerView.saveTileServerDelegate = self;
     [self.drawerViewDelegate pushDrawer:self.createTileServerView];
+}
+
+
+- (void)setUserBasemap:(MCTileServer *)tileServer layer:(MCLayer *)layer {
+    [[MCTileServerRepository shared] setBasemapWithTileServer:tileServer layer:layer];
+    NSString *basemapURL = @"";
+    
+    if(tileServer == nil) {
+        [self.settingsDelegate updateBasemaps:@"" serverType:MCTileServerTypeError];
+        return;
+    } else if (tileServer.serverType == MCTileServerTypeXyz) {
+        basemapURL = tileServer.url;
+    } else if (tileServer.serverType == MCTileServerTypeWms) {
+        basemapURL = [tileServer urlForLayerWithLayer:layer boundingBoxTemplate:NO];
+    }
+    
+    [self.settingsDelegate updateBasemaps:basemapURL serverType:tileServer.serverType];
 }
 
 

@@ -92,12 +92,13 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     
     [_cellArray addObject:_baseMapSelector];
     
-    MCLayerCell *ngaOSMURL = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
-    [ngaOSMURL setName:@"GEOINT Services OSM"];
-    [ngaOSMURL setDetails:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
-    [ngaOSMURL activeIndicatorOff];
-    [ngaOSMURL.layerTypeImage setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
-    [self.cellArray addObject:ngaOSMURL];
+    MCTileServer *defaultServer = [[MCTileServer alloc] initWithServerName:@"GEOINT Services OSM"];
+    defaultServer.url = @"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png";
+    defaultServer.serverType = MCTileServerTypeXyz;
+    MCTileServerCell *defaultServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileServerCell"];
+    [defaultServerCell setContentWithTileServer:defaultServer];
+    [defaultServerCell activeIndicatorOff];
+    [self.cellArray addObject:defaultServerCell];
     
     
     
@@ -115,11 +116,18 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 NSString *details = [NSString stringWithFormat:@"%lu %@", (unsigned long)tileServer.layers.count, layerLabel];
                 [tileServerCell setLayersLabelText:details];
                 
+                if (self.basemapTileServer.serverName == tileServer.serverName) {
+                    [tileServerCell activeIndicatorOn];
+                }
+                
                 for (MCLayer *layer in tileServer.layers) {
                     MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
-                    [layerCell.layerTypeImage setImage:[UIImage imageNamed:@"Layer"]];
-                    [layerCell setName:layer.title];
-                    [layerCell activeIndicatorOff];
+                    [layerCell setContentsWithLayer:layer tileServer:tileServer];
+                    
+                    if (self.basemapTileServer.serverName == tileServer.serverName && self.basemapLayer.name == layer.name) {
+                        [layerCell activeIndicatorOn];
+                    }
+                    
                     [wmsLayers addObject:layerCell];
                 }
             }
@@ -229,8 +237,9 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 }
 
 
+// Choose which types of cells can have swipe actions
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[_cellArray objectAtIndex:indexPath.row] isKindOfClass:[MCLayerCell class]]) {
+    if ([[_cellArray objectAtIndex:indexPath.row] isKindOfClass:[MCLayerCell class]] || [[_cellArray objectAtIndex:indexPath.row] isKindOfClass:MCTileServerCell.class]) {
         return YES;
     }
       
@@ -239,23 +248,52 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 
 
 - (UISwipeActionsConfiguration *) tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    MCLayerCell *cell = (MCLayerCell *)[_cellArray objectAtIndex:indexPath.row];
+    MCLayerCell *layerCell = nil;
+    MCTileServerCell *tileServerCell = nil;
+    
+    if ([[_cellArray objectAtIndex:indexPath.row] isKindOfClass:MCTileServerCell.class]) {
+        tileServerCell = (MCTileServerCell *)[_cellArray objectAtIndex:indexPath.row];
+    } else if ([[_cellArray objectAtIndex:indexPath.row] isKindOfClass:MCLayerCell.class]) {
+        layerCell = (MCLayerCell *)[_cellArray objectAtIndex:indexPath.row];
+    }
+    
+    // TODO add an expand action for tile servers that are WMS to show the layers of the server
     
     UIContextualAction *toggleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"Add to map" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        //[self.delegate toggleLayer: cell.table];
-        // TODO wire this up
-        [self.mapSettingsDelegate updateBasemaps];
-        [cell toggleActiveIndicator];
+        
+        if (tileServerCell != nil) {
+            if (tileServerCell.tileServer.serverType == MCTileServerTypeXyz) {
+                if ([tileServerCell.visibilityStatusIndicator isHidden]) {
+                    toggleAction.backgroundColor = [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0];
+                    toggleAction.title = @"Use as basemap";
+                    
+                    [self.settingsDelegate setUserBasemap:tileServerCell.tileServer layer:nil];
+                } else {
+                    toggleAction.backgroundColor = [UIColor grayColor];
+                    toggleAction.title = @"Remove basemap";
+                    [self.settingsDelegate setUserBasemap:nil layer:nil];
+                }
+            } else if (tileServerCell.tileServer.serverType == MCTileServerTypeWms) {
+                // TODO add action to expand and show the list of wms layers
+            }
+            
+            [tileServerCell toggleActiveIndicator];
+        } else if (layerCell != nil) {
+            if ([layerCell.activeIndicator isHidden]) {
+                toggleAction.backgroundColor = [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0];
+                toggleAction.title = @"Use as basemap";
+                [_settingsDelegate setUserBasemap:layerCell.tileServer layer:layerCell.mapLayer];
+            } else {
+                toggleAction.backgroundColor = [UIColor grayColor];
+                toggleAction.title = @"Remove basemap";
+                [self.settingsDelegate setUserBasemap:nil layer:nil];
+            }
+            
+            [layerCell toggleActiveIndicator];
+        }
+        
         completionHandler(YES);
     }];
-    
-    if ([cell.activeIndicator isHidden]) {
-        toggleAction.backgroundColor = [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0];
-        toggleAction.title = @"Show on map";
-    } else {
-        toggleAction.backgroundColor = [UIColor grayColor];
-        toggleAction.title = @"Hide from map";
-    }
     
     UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[toggleAction]];
     configuration.performsFirstActionWithFullSwipe = YES;
