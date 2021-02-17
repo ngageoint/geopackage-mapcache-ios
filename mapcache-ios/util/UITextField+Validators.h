@@ -12,6 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class MCTileServerResult;
+@class MCServerError;
 @class MCTileServer;
 @class MCTileServerRepository;
 

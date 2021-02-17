@@ -123,7 +123,7 @@ import Foundation
     
     @objc public func getCapabilites(url:String, completion: @escaping (MCTileServerResult) -> Void) {
         if let wmsURL = URL.init(string: url) {
-            let baseURL = wmsURL.scheme! + "://" + wmsURL.host! + wmsURL.path
+            let baseURL:String = wmsURL.scheme! + "://" + wmsURL.host! + wmsURL.path
             let tileServer = MCTileServer.init(serverName: self.urlString)
             self.layers = []
             

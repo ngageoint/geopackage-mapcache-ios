@@ -578,6 +578,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
     
+    if (self.userBasemapOverlay != nil) {
+        [self.mapView addOverlay:self.userBasemapOverlay];
+    }
+    
     for(GPKGGeoPackage * geoPackage in [self.geoPackages allValues]){
         @try {
             [geoPackage close];

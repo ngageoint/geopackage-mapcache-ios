@@ -35,7 +35,10 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     
-    self.tileServer = [[MCTileServerRepository shared] tileServerForURLWithUrlString:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
+    self.tileServer = [[MCTileServer alloc] initWithServerName:@"GEOINT Services OSM"];
+    self.tileServer.url = @"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png";
+    
+    
     
     [self registerCellTypes];
     [self initCellArray];
@@ -90,7 +93,7 @@
     [_cellArray addObject:_urlCell];
     
     MCDescriptionCell *urlDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
-    urlDescription.descriptionLabel.text = @"Tip: XYZ and WMS are supported. Make sure you enter the URL template.";
+    urlDescription.descriptionLabel.text = @"Tip: EPSG:3857 tiles from XYZ and WMS servers are supported.";
     [_cellArray addObject:urlDescription];
     
     _selectServerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
@@ -152,6 +155,16 @@
     if (textField == _urlCell.field) {
         NSLog(@"URL Field ended editing");
         [textField isValidTileServerURL:textField withResult:^(MCTileServerResult *tileServerResult) {
+            
+            if (tileServerResult == nil) {
+                NSLog(@"Bad url");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.buttonCell disableButton];
+                    [self.urlCell useErrorAppearance];
+                });
+                [textField resignFirstResponder];
+            }
+            
             MCServerError *error = (MCServerError *)tileServerResult.failure;
             MCTileServerType serverType = ((MCTileServer *)tileServerResult.success).serverType;
             

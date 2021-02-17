@@ -75,12 +75,15 @@
     [self.buttonCell setDelegate:self];
     [self.cellArray addObject:self.buttonCell];
     
-    MCLayerCell *testURL1 = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
-    [testURL1 setName:@"GEOINT Services OSM"];
-    [testURL1 setDetails:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
-    [testURL1 activeIndicatorOff];
-    [testURL1.layerTypeImage setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
-    [self.cellArray addObject:testURL1];
+    
+    MCTileServer *defaultServer = [[MCTileServer alloc] init];
+    [defaultServer setServerName:@"GEOINT Services OSM"];
+    [defaultServer setUrl:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
+    [defaultServer setServerType: MCTileServerTypeXyz];
+    MCTileServerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
+    [tileServerCell setContentWithTileServer:defaultServer];
+    [tileServerCell activeIndicatorOff];
+    [self.cellArray addObject:tileServerCell];
     
     self.tileServers = [[MCTileServerRepository shared] getTileServers];
     
@@ -88,11 +91,9 @@
         NSArray *serverNames = [self.tileServers allKeys];
         for (NSString *serverName in serverNames) {
             MCTileServer *tileServer = [self.tileServers objectForKey:serverName];
-            MCLayerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
-            [tileServerCell setName: serverName];
-            [tileServerCell setDetails: tileServer.url];
+            MCTileServerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
+            [tileServerCell setContentWithTileServer:tileServer];
             [tileServerCell activeIndicatorOff];
-            [tileServerCell.layerTypeImage setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
             [self.cellArray addObject:tileServerCell];
         }
     }
@@ -104,7 +105,7 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"MCLayerCell" bundle:nil] forCellReuseIdentifier:@"server"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCTileServerCell" bundle:nil] forCellReuseIdentifier:@"server"];
 }
 
 
@@ -132,12 +133,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     
-    if (self.selectMode && [[_cellArray objectAtIndex:indexPath.row] isKindOfClass:[MCLayerCell class]]) {
-        MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
-        NSString *key = cell.detailLabel.text;
-        MCTileServer *server = [self.tileServers objectForKey:key];
-        
-        [self.selectServerDelegate selectTileServer: server];
+    if (self.selectMode && [[_cellArray objectAtIndex:indexPath.row] isKindOfClass: MCTileServerCell.class]) {
+        MCTileServerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
+        [self.selectServerDelegate selectTileServer:cell.tileServer];
         [self.drawerViewDelegate popDrawer];
     }
 }
