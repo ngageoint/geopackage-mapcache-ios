@@ -361,7 +361,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         MCLayerCell *cell = [cells objectAtIndex:indexPath.row];
-        [self.settingsDelegate deleteTileServer: cell.layerNameLabel.text];
+        [self.settingsDelegate deleteTileServer: cell.tileServer.serverName];
         completionHandler(YES);
     }];
     

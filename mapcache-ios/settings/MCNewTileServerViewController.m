@@ -17,6 +17,9 @@
 @property (nonatomic, strong) MCTextViewCell *urlField;
 @property (nonatomic, strong) MCButtonCell *buttonCell;
 @property (nonatomic, strong) MCTileServer *tileServer;
+@property (nonatomic, strong) MCDescriptionCell *statusCell;
+@property (nonatomic, strong) NSString *serverName;
+@property (nonatomic, strong) NSString *serverURL;
 @property (nonatomic) BOOL nameIsValid;
 @property (nonatomic) BOOL urlIsValid;
 @end
@@ -81,6 +84,10 @@
     [self.buttonCell setDelegate:self];
     [self.buttonCell disableButton];
     [self.cellArray addObject:self.buttonCell];
+    
+    self.statusCell = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+    [self.statusCell.descriptionLabel setText:@""];
+    [self.cellArray addObject:self.statusCell];
 }
 
 
@@ -117,7 +124,9 @@
 #pragma mark - UITextFieldDelegate
 - (void) textFieldDidEndEditing:(UITextField *)textField {
     [textField trimWhiteSpace];
-    if (textField.text && ![textField.text isEqualToString:@""]) {
+    _serverName = textField.text;
+    
+    if (_serverName && ![_serverName isEqualToString:@""]) {
         self.nameIsValid = YES;
         [self.nameField useNormalAppearance];
     } else {
@@ -135,9 +144,16 @@
 
 #pragma mark - MCTextViewCellDelegate
 - (void)textViewCellDidEndEditing:(UITextView *)textView {
+    [self.statusCell.descriptionLabel setText:@"Processing layers from server, this may take a moment."];
+    _serverURL = textView.text;
+    
     [textView trimWhiteSpace:textView];
     [textView isValidTileServerURL:textView withResult:^(MCTileServerResult * _Nonnull tileServerResult) {
         MCServerError *error = (MCServerError *)tileServerResult.failure;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.statusCell.descriptionLabel setText:@""];
+        });
         
         if (tileServerResult.failure != nil && error.code != MCNoError) {
             NSLog(@"Bad URL");
@@ -151,8 +167,10 @@
             self.urlIsValid = YES;
             self.tileServer = (MCTileServer *)tileServerResult.success;
             
-            if (self.tileServer.serverType == MCTileServerTypeWms && [[self.nameField fieldValue]  isEqualToString: @""]) {
-                [self.nameField setFieldText:self.tileServer.serverName];
+            if (self.tileServer.serverType == MCTileServerTypeWms && [self.serverName  isEqualToString: @""]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.nameField setFieldText:self.tileServer.serverName];
+                });
             }
             
             if (self.nameIsValid) {
@@ -185,7 +203,7 @@
 
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
-    BOOL didSave = [self.saveTileServerDelegate saveURL:[self.urlField getText] forServerNamed:[self.nameField fieldValue] tileServer:self.tileServer];
+    BOOL didSave = [self.saveTileServerDelegate saveURL:self.serverURL forServerNamed:self.serverName tileServer:self.tileServer];
     
     if (didSave) {
         [self.drawerViewDelegate popDrawer];

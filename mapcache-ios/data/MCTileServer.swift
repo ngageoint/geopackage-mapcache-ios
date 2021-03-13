@@ -19,6 +19,7 @@ import Foundation
     @objc var format: String = ""
     @objc var crs: String = ""
     @objc var title: String = ""
+    @objc var titles: [String] = []
     @objc var name: String = ""
     
     

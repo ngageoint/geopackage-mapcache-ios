@@ -71,7 +71,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     }
     
     if (basemapTileServer.serverType == MCTileServerTypeXyz) {
-        [self.mcMapViewController updateBasemaps:basemapTileServer.url serverType:MCTileServerTypeXyz];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.mcMapViewController updateBasemaps:basemapTileServer.url serverType:MCTileServerTypeXyz];
+        });
     } else if (basemapTileServer.serverType == MCTileServerTypeWms) {
         MCLayer *basemapLayer = [[MCTileServerRepository shared] baseMapLayer];
         
@@ -79,7 +81,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
             return;
         }
         
-        [self.mcMapViewController updateBasemaps: [basemapTileServer urlForLayerWithLayer:basemapLayer boundingBoxTemplate:NO] serverType:MCTileServerTypeWms];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.mcMapViewController updateBasemaps: [basemapTileServer urlForLayerWithLayer:basemapLayer boundingBoxTemplate:NO] serverType:MCTileServerTypeWms];
+        });
     }
 }
 

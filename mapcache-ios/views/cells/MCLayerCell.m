@@ -51,7 +51,13 @@
 - (void)setContentsWithLayer:(MCLayer *) layer tileServer:(MCTileServer *) tileServer {
     self.mapLayer = layer;
     self.tileServer = tileServer;
-    [self.layerNameLabel setText: layer.title];
+    
+    NSString *layerTitle = @"";
+    for (NSString *title in layer.titles) {
+        layerTitle = [NSString stringWithFormat:@"%@ %@", layerTitle, title];
+    }
+    
+    [self.layerNameLabel setText: layerTitle];
     [self.layerTypeImage setImage:[UIImage imageNamed:@"Layer"]];
     [self activeIndicatorOff];
 }

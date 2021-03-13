@@ -19,12 +19,14 @@
     return [super initWithURLTemplate:self.url];
 }
 
+
 - (double) xOfColumn:(long) column andZoom: (long) zoom {
     double x = (double) column;
     double z = (double) zoom;
     
     return x / pow(2.0, z) * 360.0 - 180;
 }
+
 
 - (double) yOfRow:(long) row andZoom: (long) zoom {
     double y = (double) row;
@@ -33,8 +35,10 @@
     return 180.0 / M_PI * atan(0.5 * (exp(n) - exp (-n)));
 }
 
+
 - (double) mercatorXOfLongitude: (double) lon {
     return lon * 20037508.34 / 180;
+
 }
 
 - (double) mercatorYOfLatitude: (double) lat {
@@ -43,12 +47,14 @@
     return y;
 }
 
+
 - (long) tileZ: (MKZoomScale) zoomScale {
     double numTilesAt1_0 = MKMapSizeWorld.width / 256.0;
     double zoomLevelAt1_0 = log2(numTilesAt1_0);
     double zoomLevel = MAX(0, zoomLevelAt1_0 + floor(log2f((float)zoomScale)) + 0.5);
     return (long) zoomLevel;
 }
+
 
 - (NSURL *) URLForTilePath:(MKTileOverlayPath) path {
     double left = [self mercatorXOfLongitude: [self xOfColumn:path.x andZoom:path.z]];
@@ -57,6 +63,7 @@
     double top = [self mercatorYOfLatitude: [self yOfRow:path.y andZoom:path.z]];
     return [NSURL URLWithString:[NSString stringWithFormat:@"%@&BBOX=%f,%f,%f,%f", self.url, left, bottom, right, top]];
 }
+
 
 - (void)loadTileAtPath:(MKTileOverlayPath)path result:(void (^)(NSData * _Nullable, NSError * _Nullable))result {
     NSURL *url1 = [self URLForTilePath:path];

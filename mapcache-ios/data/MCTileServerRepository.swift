@@ -53,6 +53,7 @@ import Foundation
     var urlString = ""
     var level = 0
     var tagStack: [String] = []
+    var layerTitleStack: [String] = []
     
     
     @objc func tileServerForURL(urlString: String) -> MCTileServer {
@@ -153,7 +154,6 @@ import Foundation
                         print("Format: \(layer.format)\n\n")
                     }
                     
-                    self.buildMapCacheURLs(url: url)
                     tileServer.serverType = .wms
                     tileServer.url = (builtURL?.string)!
                     tileServer.layers = self.layers
@@ -214,10 +214,11 @@ import Foundation
         }
         
         print("\(spaces) \(level) \(elementName)")
+        
         if elementName == layerKey {
-            if (topLevelLayer.title != "") {
+            if (topLevelLayer.title == "") {
                 topLevelLayer = currentLayer
-                //layers.append(topLevelLayer)
+                layers.append(topLevelLayer)
             }
             currentLayer = MCLayer()
         }
@@ -227,35 +228,38 @@ import Foundation
 
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-        //print("found characters")
         currentValue += string
-        //print("\t\(string)")
     }
 
 
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         level -= 1
-        //print("did end element")
-        //print(elementName)
         if elementName == layerKey {
             print("found a layer")
             print("adding currentLayer to layer")
-            if (currentLayer.title != "" && currentLayer.title != topLevelLayer.title) {
+            if (currentLayer.title != "") { //&& currentLayer.title != topLevelLayer.title
+                print("Layer in a layer top level: \(topLevelLayer.title) current layer: \(currentLayer.title)")
+                currentLayer.titles = self.layerTitleStack
                 layers.append(currentLayer)
+                self.layerTitleStack.popLast()
+            } else {
+                if (self.layerTitleStack.count > 0) {
+                    self.layerTitleStack.popLast()
+                }
             }
             
             currentLayer = MCLayer()
         } else if dictionaryKeys.contains(elementName) {
-            print("found layer details")
-            
             if elementName == "CRS" && currentValue == "EPSG:3857" {
                 currentLayer.crs = currentValue
             } else if elementName ==  "Title" {
                 if (tagStack.count > 2 && tagStack[tagStack.count - 2] == "Layer"){
+                    print("topLevelLayer.title: \(self.topLevelLayer.title) currentValue: \(currentValue)")
                     currentLayer.title = currentValue
+                    self.layerTitleStack.append(currentValue)
                 }
             } else if elementName == "Name" {
-                print("************** Name Tag \(tagStack[tagStack.count - 2])")
+                //print("************** Name Tag \(tagStack[tagStack.count - 2])")
                 if (tagStack.count > 2 && tagStack[tagStack.count - 2] == "Layer"){
                     currentLayer.name = currentValue
                 }
@@ -267,7 +271,7 @@ import Foundation
                 }
                 
             } else {
-                print("hmm, something unexpected found \(currentValue)")
+                //print("hmm, something unexpected found \(currentValue)")
             }
         } else if elementName == formatKey {
             formats.append(currentValue)
@@ -280,9 +284,7 @@ import Foundation
     
     func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
         print(parseError)
-
         currentValue = String()
-        
     }
     
     
@@ -295,7 +297,8 @@ import Foundation
         if var savedServers = self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) {
             savedServers[serverName] = url
             self.userDefaults.setValue(savedServers, forKey: MC_SAVED_TILE_SERVER_URLS)
-            self.tileServers[url] = tileServer
+            tileServer.serverName = serverName
+            self.tileServers[serverName] = tileServer
             return true
         }
         
