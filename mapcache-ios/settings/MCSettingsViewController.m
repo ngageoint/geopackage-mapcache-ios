@@ -35,8 +35,8 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.estimatedRowHeight = 390.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 390.0;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     self.savedTileServers = [[MCTileServerRepository shared] getTileServers];
@@ -89,8 +89,6 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
         [_baseMapSelector.segmentedControl setSelectedSegmentIndex:2];
     }
     
-    //[_cellArray addObject:titleCell];
-    //[_cellArray addObject:_baseMapSelector];
     NSArray *topCells = @[titleCell, _baseMapSelector];
     [_cellArray addObject:topCells];
     
@@ -99,7 +97,12 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     defaultServer.serverType = MCTileServerTypeXyz;
     MCTileServerCell *defaultServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileServerCell"];
     [defaultServerCell setContentWithTileServer:defaultServer];
-    [defaultServerCell activeIndicatorOff];
+    
+    if (self.basemapTileServer.serverName == defaultServer.serverName) {
+        [defaultServerCell activeIndicatorOn];
+    } else {
+        [defaultServerCell activeIndicatorOff];
+    }
     
     NSMutableArray *serverCells = [[NSMutableArray alloc] init];
     [serverCells addObject:defaultServerCell];
@@ -136,7 +139,13 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 }
             }
             
-            [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
+            if (tileServer.serverType == MCTileServerTypeError) {
+                [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:MC_PROP_ICON_TILE_SERVER_ERROR]]];
+                [tileServerCell setLayersLabelText:@"Unable to reach server"];
+            } else {
+                [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
+            }
+            
             [tileServerCell activeIndicatorOff];
             [serverCells addObject:tileServerCell];
             [serverCells addObjectsFromArray:wmsLayers];
@@ -297,7 +306,10 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
         layerCell = (MCLayerCell *)[cells objectAtIndex:indexPath.row];
     }
     
-    // TODO add an expand action for tile servers that are WMS to show the layers of the server
+    if (tileServerCell != nil && tileServerCell.tileServer.serverType == MCTileServerTypeWms) {
+        UISwipeActionsConfiguration *emptyConfiguration = [UISwipeActionsConfiguration configurationWithActions:@[]];
+        return emptyConfiguration;
+    }
     
     UIContextualAction *toggleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"Add to map" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         
@@ -307,14 +319,12 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                     toggleAction.backgroundColor = [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0];
                     toggleAction.title = @"Use as basemap";
                     
-                    [self.settingsDelegate setUserBasemap:tileServerCell.tileServer layer:nil];
+                    [self.settingsDelegate setUserBasemap:tileServerCell.tileServer layer:[[MCLayer alloc] init]];
                 } else {
                     toggleAction.backgroundColor = [UIColor grayColor];
                     toggleAction.title = @"Remove basemap";
                     [self.settingsDelegate setUserBasemap:nil layer:nil];
                 }
-            } else if (tileServerCell.tileServer.serverType == MCTileServerTypeWms) {
-                // TODO add action to expand and show the list of wms layers
             }
             
             [tileServerCell toggleActiveIndicator];
@@ -343,14 +353,21 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     // if the server is the default NGA OSM server, dont let them edit or delete it
+    MCLayerCell *layerCell = nil;
+    MCTileServerCell *tileServerCell = nil;
     NSArray *cells = [_cellArray objectAtIndex:indexPath.section];
     
-    if ([[cells objectAtIndex:indexPath.row] isKindOfClass:[MCLayerCell class]]) {
-        MCLayerCell *cell = [cells objectAtIndex:indexPath.row];
-        if ([cell.layerNameLabel.text isEqualToString:@"GEOINT Services OSM"]) {
-            UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[]];
-            return configuration;
-        }
+    if ([[cells objectAtIndex:indexPath.row] isKindOfClass:MCTileServerCell.class]) {
+        tileServerCell = (MCTileServerCell *)[cells objectAtIndex:indexPath.row];
+    } else if ([[cells objectAtIndex:indexPath.row] isKindOfClass:MCLayerCell.class]) {
+        layerCell = (MCLayerCell *)[cells objectAtIndex:indexPath.row];
+    }
+    
+    UISwipeActionsConfiguration *emptyConfiguration = [UISwipeActionsConfiguration configurationWithActions:@[]];
+    if (layerCell != nil) {
+        return emptyConfiguration;
+    } else if (tileServerCell != nil && [tileServerCell.tileServer.serverName isEqualToString:@"GEOINT Services OSM"]) {
+        return emptyConfiguration;
     }
     
     UIContextualAction *editAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Edit" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {

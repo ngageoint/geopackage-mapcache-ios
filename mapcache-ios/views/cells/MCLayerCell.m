@@ -52,12 +52,22 @@
     self.mapLayer = layer;
     self.tileServer = tileServer;
     
-    NSString *layerTitle = @"";
-    for (NSString *title in layer.titles) {
-        layerTitle = [NSString stringWithFormat:@"%@ %@", layerTitle, title];
+    if (layer.titles[0]) {
+        [self.layerNameLabel setText:layer.titles[0]];
     }
     
-    [self.layerNameLabel setText: layerTitle];
+    
+    if (layer.titles.count > 1) {
+        NSString *layerSubtitle = @"";
+        
+        int i;
+        for (i = 0; i < layer.titles.count; i = i + 1) {
+            layerSubtitle = [NSString stringWithFormat:@"%@ %@", layerSubtitle, layer.titles[i]];
+        }
+        
+        [self.detailLabel setText:layerSubtitle];
+    }
+    
     [self.layerTypeImage setImage:[UIImage imageNamed:@"Layer"]];
     [self activeIndicatorOff];
 }

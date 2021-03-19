@@ -9,7 +9,6 @@
 #import "MCNewTileServerViewController.h"
 #import "mapcache_ios-Swift.h"
 
-
 @interface MCNewTileServerViewController ()
 @property (nonatomic, strong) NSMutableArray *cellArray;
 @property (nonatomic, strong) UITableView *tableView;
@@ -30,27 +29,17 @@
     [super viewDidLoad];
     
     self.tableView = [[UITableView alloc] init];
-    CGRect bounds = self.view.bounds;
-    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
-    self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.estimatedRowHeight = 390.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 100.0;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     [self registerCellTypes];
     [self initCellArray];
     
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.extendedLayoutIncludesOpaqueBars = NO;
-    self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-
-    UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
-    self.tableView.contentInset = tabBarInsets;
-    self.tableView.scrollIndicatorInsets = tabBarInsets;
-    [self.view addSubview:self.tableView];
+    [self addAndConstrainSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
     
@@ -76,12 +65,14 @@
     self.urlField = [self.tableView dequeueReusableCellWithIdentifier:@"textView"];
     [self.urlField setPlaceholderText:@"yourtileserverurl.com\nXYZ and WMS tile servers are supported."];
     self.urlField.textViewCellDelegate = self;
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    self.urlField.textView.inputAccessoryView = keyboardToolbar;
     [self.cellArray addObject:self.urlField];
     
     self.buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [self.buttonCell setButtonLabel:@"Save Tile Server"];
     [self.buttonCell setAction:@"SAVE"];
-    [self.buttonCell setDelegate:self];
+    self.buttonCell.delegate = self;
     [self.buttonCell disableButton];
     [self.cellArray addObject:self.buttonCell];
     
@@ -121,6 +112,11 @@
 }
 
 
+- (void) doneButtonPressed {
+    [self.urlField.textView resignFirstResponder];
+}
+
+
 #pragma mark - UITextFieldDelegate
 - (void) textFieldDidEndEditing:(UITextField *)textField {
     [textField trimWhiteSpace];
@@ -145,6 +141,10 @@
 #pragma mark - MCTextViewCellDelegate
 - (void)textViewCellDidEndEditing:(UITextView *)textView {
     [self.statusCell.descriptionLabel setText:@"Processing layers from server, this may take a moment."];
+    NSIndexPath *cellPath = [self.tableView indexPathForCell:self.statusCell];
+    [self.tableView reloadRowsAtIndexPaths:@[cellPath
+    ] withRowAnimation:UITableViewRowAnimationNone];
+    
     _serverURL = textView.text;
     
     [textView trimWhiteSpace:textView];
@@ -161,6 +161,13 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.urlField useErrorAppearance];
                 [self.buttonCell disableButton];
+                NSDictionary *userInfo = error.userInfo;
+                
+                [self.statusCell.descriptionLabel setText:userInfo[@"message"]];
+                
+                NSIndexPath *cellPath = [self.tableView indexPathForCell:self.statusCell];
+                [self.tableView reloadRowsAtIndexPaths:@[cellPath
+                ] withRowAnimation:UITableViewRowAnimationNone];
             });
         } else {
             NSLog(@"Valid URL");

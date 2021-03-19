@@ -14,8 +14,10 @@
 @property (nonatomic, strong) MCButtonCell *buttonCell;
 @property (nonatomic, strong) MCButtonCell *selectServerButtonCell;
 @property (nonatomic, strong) MCButtonCell *helpButtonCell;
+@property (nonatomic, strong) MCDescriptionCell *helpText;
 @property (nonatomic, strong) MCFieldWithTitleCell *layerNameCell;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic) BOOL urlIsValid;
 @end
 
 @implementation MCTileLayerDetailsViewController
@@ -34,11 +36,10 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    self.urlIsValid = YES;
     
     self.tileServer = [[MCTileServer alloc] initWithServerName:@"GEOINT Services OSM"];
     self.tileServer.url = @"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png";
-    
-    
     
     [self registerCellTypes];
     [self initCellArray];
@@ -92,9 +93,9 @@
     [_urlCell useReturnKeyDone];
     [_cellArray addObject:_urlCell];
     
-    MCDescriptionCell *urlDescription = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
-    urlDescription.descriptionLabel.text = @"Tip: EPSG:3857 tiles from XYZ and WMS servers are supported.";
-    [_cellArray addObject:urlDescription];
+    self.helpText = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+    self.helpText.descriptionLabel.text = @"Tip: EPSG:3857 tiles from XYZ and WMS servers are supported.";
+    [_cellArray addObject:self.helpText];
     
     _selectServerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_selectServerButtonCell.button setTitle:@"Choose Tile Server" forState:UIControlStateNormal];
@@ -122,6 +123,7 @@
     [self initCellArray];
     [self.tableView reloadData];
     [self textFieldDidEndEditing:self.layerNameCell.field];
+    [self textFieldDidEndEditing:self.urlCell.field];
 }
 
 
@@ -154,52 +156,80 @@
     
     if (textField == _urlCell.field) {
         NSLog(@"URL Field ended editing");
-        [textField isValidTileServerURL:textField withResult:^(MCTileServerResult *tileServerResult) {
-            
-            if (tileServerResult == nil) {
-                NSLog(@"Bad url");
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.buttonCell disableButton];
-                    [self.urlCell useErrorAppearance];
-                });
-                [textField resignFirstResponder];
-            }
-            
-            MCServerError *error = (MCServerError *)tileServerResult.failure;
-            MCTileServerType serverType = ((MCTileServer *)tileServerResult.success).serverType;
-            
-            if (tileServerResult.failure != nil && error.code != MCNoError) {
-                NSLog(@"Bad url");
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.buttonCell disableButton];
-                    [self.urlCell useErrorAppearance];
-                });
-            } else if (serverType == MCTileServerTypeXyz || serverType == MCTileServerTypeWms) {
-                NSLog(@"Valid URL");
-                self.tileServer = (MCTileServer *)tileServerResult.success;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.urlCell useNormalAppearance];
-                    [self.buttonCell enableButton];
-                });
-            } else {
-                // TODO add TMS support
-                NSLog(@"Bad url");
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.buttonCell disableButton];
-                    [self.urlCell useErrorAppearance];
-                });
-            }
-        }];
+        
+        if ([textField.text isEqualToString:@""]) {
+            self.urlIsValid = NO;
+            [self.helpText.descriptionLabel setText:@"URL can't be blank."];
+            [self.urlCell useErrorAppearance];
+            [self.buttonCell disableButton];
+        } else {
+            [textField isValidTileServerURL:textField withResult:^(MCTileServerResult *tileServerResult) {
+                
+                if (tileServerResult == nil) {
+                    NSLog(@"Bad url");
+                    self.urlIsValid = NO;
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.helpText.descriptionLabel setText:@"Check your URL."];
+                        [self.buttonCell disableButton];
+                        [self.urlCell useErrorAppearance];
+                    });
+                    [textField resignFirstResponder];
+                    return;
+                }
+                
+                MCServerError *error = (MCServerError *)tileServerResult.failure;
+                MCTileServerType serverType = ((MCTileServer *)tileServerResult.success).serverType;
+                
+                if (tileServerResult.failure != nil && error.code != MCNoError) {
+                    self.urlIsValid = NO;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSDictionary *userInfo = error.userInfo;
+                        [self.helpText.descriptionLabel setText:userInfo[@"message"]];
+                        [self.buttonCell disableButton];
+                        [self.urlCell useErrorAppearance];
+                    });
+                } else if (serverType == MCTileServerTypeXyz || serverType == MCTileServerTypeWms) {
+                    NSLog(@"Valid URL");
+                    self.tileServer = (MCTileServer *)tileServerResult.success;
+                    self.urlIsValid = YES;
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.urlCell useNormalAppearance];
+                        BOOL isLayerNameAvailable = [self.delegate isLayerNameAvailable: self.layerName];
+                        
+                        if (self.layerName != nil && ![self.layerName isEqualToString:@""] && isLayerNameAvailable) {
+                            [self.buttonCell enableButton];
+                        }
+                    });
+                } else {
+                    // TODO add TMS support
+                    NSLog(@"Bad url");
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.buttonCell disableButton];
+                        [self.urlCell useErrorAppearance];
+                    });
+                }
+            }];
+        }
     } else {
         self.layerName = textField.text;
         BOOL isLayerNameAvailable = [self.delegate isLayerNameAvailable: self.layerName];
         
-        if ([_layerNameCell.field.text isEqualToString:@""] || !isLayerNameAvailable) {
+        if ([_layerNameCell.field.text isEqualToString:@""]) {
             [self.layerNameCell useErrorAppearance];
             [_buttonCell disableButton];
+            [self.helpText.descriptionLabel setText:@"Please name your layer."];
+        } else if (!isLayerNameAvailable) {
+            [self.layerNameCell useErrorAppearance];
+            [_buttonCell disableButton];
+            [self.helpText.descriptionLabel setText:@"There is already a layer with that name."];
         } else {
             [self.layerNameCell useNormalAppearance];
-            [_buttonCell enableButton];
+            
+            if (self.urlIsValid) {
+                [_buttonCell enableButton];
+            }
         }
     }
     

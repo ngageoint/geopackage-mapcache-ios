@@ -47,6 +47,7 @@ NSString * const GPKGS_PROP_ICON_LINESTRING = @"icon_linestring";
 NSString * const GPKGS_PROP_ICON_POLYGON = @"icon_polygon";
 NSString * const GPKGS_PROP_ICON_TILES = @"icon_tiles";
 NSString * const GPKGS_PROP_ICON_TILE_SERVER = @"icon_tile_server";
+NSString * const MC_PROP_ICON_TILE_SERVER_ERROR = @"icon_tile_server_error";
 NSString * const GPKGS_PROP_ICON_PAINT = @"icon_paint";
 NSString * const GPKGS_PROP_ICON_UP = @"icon_up";
 NSString * const GPKGS_PROP_ICON_DOWN = @"icon_down";

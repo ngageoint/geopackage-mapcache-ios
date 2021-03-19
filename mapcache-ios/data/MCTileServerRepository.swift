@@ -96,7 +96,7 @@ import Foundation
                 do {
                     guard let tile = UIImage.init(data: try Data.init(contentsOf: location!)) else {
                         tileServer.serverType = .error
-                        let result = MCTileServerResult.init(tileServer, self.generateError(message: "Ubable to get tile", errorType: MCServerErrorType.MCNoData))
+                        let result = MCTileServerResult.init(tileServer, self.generateError(message: "Unable to get tile", errorType: MCServerErrorType.MCNoData))
                         
                         completion(result)
                         return
@@ -116,7 +116,7 @@ import Foundation
             self.getCapabilites(url: urlString, completion: completion)
         } else {
             tileServer.serverType = .error
-            let error:MCServerError = MCServerError.init(domain: "MCTileServerRepository", code: MCServerErrorType.MCURLInvalid.rawValue, userInfo: ["message" : "invalid URL"])
+            let error:MCServerError = MCServerError.init(domain: "MCTileServerRepository", code: MCServerErrorType.MCURLInvalid.rawValue, userInfo: ["message" : "Invalid URL"])
             completion(MCTileServerResult.init(tileServer, error))
         }
     }
@@ -137,7 +137,7 @@ import Foundation
             
             let task = URLSession.shared.dataTask(with: (builtURL?.url)!) { data, response, error in
                 guard let data = data, error == nil else {
-                    print(error ?? "Unknown error")
+                    completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Server error", errorType: .MCTileServerParseError)))
                     return
                 }
                 
@@ -160,7 +160,8 @@ import Foundation
                     self.layers = []
                     
                     completion(MCTileServerResult.init(tileServer, self.generateError(message: "No error", errorType: MCServerErrorType.MCNoError)))
-                } else {
+                } else if (parser.parserError != nil) {
+                    print("Parser error")
                     tileServer.serverType = .error
                     self.layers = []
                     let error:MCServerError = MCServerError.init(domain: "MCTileServerRepository", code: MCServerErrorType.MCURLInvalid.rawValue, userInfo: ["message" : "invalid URL"])
@@ -208,12 +209,12 @@ import Foundation
         level += 1
         tagStack.append(elementName)
         
-        var spaces = ""
+        /*var spaces = ""
         for _ in 1...level {
             spaces = spaces + "\t"
         }
         
-        print("\(spaces) \(level) \(elementName)")
+        print("\(spaces) \(level) \(elementName)")*/
         
         if elementName == layerKey {
             if (topLevelLayer.title == "") {
@@ -235,10 +236,7 @@ import Foundation
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         level -= 1
         if elementName == layerKey {
-            print("found a layer")
-            print("adding currentLayer to layer")
-            if (currentLayer.title != "") { //&& currentLayer.title != topLevelLayer.title
-                print("Layer in a layer top level: \(topLevelLayer.title) current layer: \(currentLayer.title)")
+            if (currentLayer.title != "") {
                 currentLayer.titles = self.layerTitleStack
                 layers.append(currentLayer)
                 self.layerTitleStack.popLast()
@@ -259,7 +257,6 @@ import Foundation
                     self.layerTitleStack.append(currentValue)
                 }
             } else if elementName == "Name" {
-                //print("************** Name Tag \(tagStack[tagStack.count - 2])")
                 if (tagStack.count > 2 && tagStack[tagStack.count - 2] == "Layer"){
                     currentLayer.name = currentValue
                 }
@@ -294,10 +291,17 @@ import Foundation
     
     
     @objc func saveToUserDefaults(serverName:String, url:String, tileServer:MCTileServer) -> Bool {
+        tileServer.serverName = serverName
+        
         if var savedServers = self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) {
             savedServers[serverName] = url
             self.userDefaults.setValue(savedServers, forKey: MC_SAVED_TILE_SERVER_URLS)
-            tileServer.serverName = serverName
+            self.tileServers[serverName] = tileServer
+            return true
+        } else {
+            let savedServers = NSMutableDictionary()
+            savedServers[serverName] = url
+            self.userDefaults.setValue(savedServers, forKey: MC_SAVED_TILE_SERVER_URLS)
             self.tileServers[serverName] = tileServer
             return true
         }
@@ -343,8 +347,6 @@ import Foundation
     
     // Load or refresh the tile server list from UserDefaults.
     @objc func loadUserDefaults() {
-        print(self.userDefaults.dictionaryRepresentation())
-        
         if let savedServers = self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) {
             for serverName in savedServers.keys {
                 if let serverURL = savedServers[serverName] {
@@ -358,6 +360,11 @@ import Foundation
                             print("valid test URL")
                             let tileServer = tileServerResult.success as? MCTileServer
                             tileServer?.serverName = serverName
+                            self.tileServers[serverName] = tileServer
+                        } else {
+                            let tileServer = tileServerResult.success as? MCTileServer
+                            tileServer?.serverName = serverName
+                            tileServer?.serverType = .error
                             self.tileServers[serverName] = tileServer
                         }
                         

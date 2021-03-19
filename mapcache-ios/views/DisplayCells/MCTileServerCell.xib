@@ -39,7 +39,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="serverurl.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5CL-Ya-eRK" userLabel="URL Label">
-                            <rect key="frame" x="48" y="31.5" width="94" height="18"/>
+                            <rect key="frame" x="48" y="31.5" width="334" height="18"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -55,6 +55,7 @@
                     <constraints>
                         <constraint firstItem="q6R-0m-Xsw" firstAttribute="leading" secondItem="EM7-zm-Jcc" secondAttribute="leading" id="3ns-uc-b0K"/>
                         <constraint firstItem="aaj-DG-Whs" firstAttribute="top" secondItem="EM7-zm-Jcc" secondAttribute="top" constant="10" id="4Ax-OF-WHd"/>
+                        <constraint firstAttribute="trailing" secondItem="5CL-Ya-eRK" secondAttribute="trailing" constant="8" id="BwH-nU-7WS"/>
                         <constraint firstItem="q6R-0m-Xsw" firstAttribute="centerY" secondItem="EM7-zm-Jcc" secondAttribute="centerY" id="Wi9-OU-L6b"/>
                         <constraint firstItem="5CL-Ya-eRK" firstAttribute="top" secondItem="aaj-DG-Whs" secondAttribute="bottom" constant="2" id="WwR-1q-vCv"/>
                         <constraint firstItem="024-Eh-AKh" firstAttribute="top" secondItem="5CL-Ya-eRK" secondAttribute="bottom" constant="2" id="aQf-tX-sZ2"/>

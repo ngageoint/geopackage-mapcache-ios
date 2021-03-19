@@ -12,6 +12,7 @@
 #import "MCTextViewCell.h"
 #import "MCButtonCell.h"
 #import "MCDescriptionCell.h"
+#import "MCUtils.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

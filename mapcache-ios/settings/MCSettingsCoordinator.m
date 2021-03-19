@@ -54,7 +54,10 @@
 - (void)basemapsLoadedFromUserDefaults:(NSNotification *)notification {
     self.settingsViewController.basemapTileServer = [[MCTileServerRepository shared] baseMapServer];
     self.settingsViewController.basemapLayer = [[MCTileServerRepository shared] baseMapLayer];
-    [self.settingsViewController update];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.settingsViewController update];
+    });
 }
 
 
@@ -67,11 +70,6 @@
 
 
 - (void)showTileURLManager {
-    /*self.tileServerManagerView = [[MCTileServerURLManagerViewController alloc] initAsFullView:YES];
-    self.tileServerManagerView.drawerViewDelegate = self.drawerViewDelegate;
-    self.tileServerManagerView.tileServerManagerDelegate = self;
-    [self.drawerViewDelegate pushDrawer:self.tileServerManagerView];*/
-    
     self.originalServerName = nil;
     self.createTileServerView = [[MCNewTileServerViewController alloc] initAsFullView:YES];
     self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
