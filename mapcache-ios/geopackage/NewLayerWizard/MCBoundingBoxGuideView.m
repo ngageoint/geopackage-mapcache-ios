@@ -61,7 +61,7 @@
 
 - (IBAction)chooseLayer:(id)sender {
     NSLog(@"Choosing layer");
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Select a layer" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+    /*UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Select a layer" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
     
     for (MCLayer *layer in self.tileServer.layers) {
         UIAlertAction *alertAction = [UIAlertAction actionWithTitle:layer.title style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -77,7 +77,9 @@
     [alertController addAction:cancelAction];
     [self presentViewController:alertController animated:YES completion:^{
             
-    }];
+    }];*/
+    
+    [self.delegate showLayerSelectView];
 }
 
 @end

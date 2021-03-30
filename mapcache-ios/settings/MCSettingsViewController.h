@@ -25,7 +25,6 @@
 typedef NS_ENUM(NSInteger, MCTileServerType);
 
 
-
 /* Settings that change the state of the map, or the controls that are shown are handled here */
 @protocol MCMapSettingsDelegate <NSObject>
 - (void)setMapType:(NSString *) mapType;

@@ -32,6 +32,7 @@
 #import "MCFeatureLayerDetailsViewController.h"
 #import "MCGeoPackageRepository.h"
 #import "WMSTileOverlay.h"
+#import "MCLayerSelectViewController.h"
 
 
 @class MCTileServer;
@@ -43,7 +44,7 @@
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete;
 @end
 
-@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCBoundingBoxGuideDelegate, MCZoomAndQualityDelegate, GPKGSLoadTilesProtocol, MCSelectTileServerDelegate, MCFeatureLayerCreationDelegate, MCLayerCoordinatorDelegate>
+@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCBoundingBoxGuideDelegate, MCZoomAndQualityDelegate, GPKGSLoadTilesProtocol, MCSelectTileServerDelegate, MCFeatureLayerCreationDelegate, MCLayerCoordinatorDelegate, MCLayerSelectDelegate>
 - (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(MCDatabase *) database;
 - (void) start;
 @end

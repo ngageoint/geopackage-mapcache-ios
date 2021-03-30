@@ -46,6 +46,7 @@ typedef NS_ENUM(NSInteger, MCTileServerType);
 @property (nonatomic, weak) IBOutlet UIButton *locationButton;
 @property (weak, nonatomic) IBOutlet UIButton *zoomIndicatorButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *zoomIndicatorButtonWidth;
+@property (nonatomic) BOOL boundingBoxMode;
 @property (nonatomic, strong) id<MCMapActionDelegate> mapActionDelegate;
 @property (nonatomic) BOOL drawing;
 @property (nonatomic, strong) NSMutableArray *tempMapPoints;

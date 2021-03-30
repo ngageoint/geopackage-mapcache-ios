@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class MCLayer;
 
 @protocol MCBoundingBoxGuideDelegate <NSObject>
-- (void) layerSelected:(NSUInteger)index;
+- (void) showLayerSelectView;
 - (void) boundingBoxCompletionHandler:(CGRect) boundingBox;
 - (void) boundingBoxCanceled;
 @end

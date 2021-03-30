@@ -160,7 +160,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     } completion:nil];
     
     [self.mcMapViewController toggleMapControls];
+    [self.mcMapViewController updateBasemaps:@"" serverType:MCTileServerTypeError];
     [self.mcMapViewController addUserTilesWithUrl:tileUrl serverType:serverType];
+    self.mcMapViewController.boundingBoxMode = YES;
 }
 
 
@@ -169,12 +171,12 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
  */
 - (void) removeTileBoundingBoxGuide {
     if  (self.boundingBoxGuideView != nil) {
-        
         [UIView animateWithDuration:0.35 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
             self.boundingBoxGuideView.alpha = 0.0;
         } completion:^(BOOL finished) {
             [self.boundingBoxGuideView removeFromSuperview];
             [self.mcMapViewController toggleMapControls];
+            self.mcMapViewController.boundingBoxMode = NO;
         }];
     }
 }

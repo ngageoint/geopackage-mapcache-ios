@@ -46,7 +46,6 @@
 @property (nonatomic) double drawPolygonLineWidth;
 @property (nonatomic, strong) UIColor *drawPolygonFillColor;
 @property (nonatomic, strong) NSNumberFormatter *locationDecimalFormatter;
-@property (nonatomic) BOOL boundingBoxMode;
 @property (nonatomic, strong) GPKGPolygon *boundingBox;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxEndCorner;
@@ -313,7 +312,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         [self.mapView removeOverlay:self.userBasemapOverlay];
     }
     
-    if ([url isEqualToString: @""]) {
+    if (url == nil || [url isEqualToString: @""]) {
         return;
     }
     
@@ -902,31 +901,33 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(void) longPressGesture:(UILongPressGestureRecognizer *) longPressGestureRecognizer {
     NSLog(@"Getting a long press gesture.");
     
-    CGPoint cgPoint = [longPressGestureRecognizer locationInView:self.mapView];
-    CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
-    
-    if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan && self.tempMapPoints.count == 0) {
-        UINotificationFeedbackGenerator *feedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
-        [feedbackGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
+    if (!self.boundingBoxMode) {
+        CGPoint cgPoint = [longPressGestureRecognizer locationInView:self.mapView];
+        CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
         
-        NSLog(@"Adding a pin");
-        GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithLocation:point];
-        [mapPoint.options setPinTintColor:[UIColor redColor]];
-        
-        [self.mapView addAnnotation: mapPoint];
-        [self.tempMapPoints addObject:mapPoint];
-     
-        if (!_drawing && self.tempMapPoints.count > 0) {
-            [self zoomToPointWithOffset: point];
-            [mapPoint setTitle:[_featureHelper buildLocationTitleWithMapPoint:mapPoint]];
-            [self.mapView selectAnnotation:mapPoint animated:YES];
+        if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan && self.tempMapPoints.count == 0) {
+            UINotificationFeedbackGenerator *feedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
+            [feedbackGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
             
-            _drawing = YES;
-        } else {
-            [self.mapActionDelegate updateDrawingStatus];
+            NSLog(@"Adding a pin");
+            GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithLocation:point];
+            [mapPoint.options setPinTintColor:[UIColor redColor]];
+            
+            [self.mapView addAnnotation: mapPoint];
+            [self.tempMapPoints addObject:mapPoint];
+         
+            if (!_drawing && self.tempMapPoints.count > 0) {
+                [self zoomToPointWithOffset: point];
+                [mapPoint setTitle:[_featureHelper buildLocationTitleWithMapPoint:mapPoint]];
+                [self.mapView selectAnnotation:mapPoint animated:YES];
+                
+                _drawing = YES;
+            } else {
+                [self.mapActionDelegate updateDrawingStatus];
+            }
         }
-        
     }
+    
     
     // MKMapView workaround for unresponsiveness after a longpress https://forums.developer.apple.com/thread/126473
     //[self.mapView setCenterCoordinate:self.mapView.centerCoordinate animated:NO];

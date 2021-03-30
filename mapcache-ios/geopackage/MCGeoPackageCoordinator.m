@@ -255,6 +255,13 @@
 }
 
 
+#pragma mark MCLayerSelectDelegate methods
+- (void)didSelectLayer:(NSInteger)layerIndex {
+    self.selectedLayerIndex = layerIndex;
+    [self.mapDelegate addTileOverlay: [_tileServer urlForLayerWithIndex:layerIndex boundingBoxTemplate:NO] serverType:_tileServer.serverType];
+}
+
+
 #pragma mark MCBoundingBoxGuideDelegate methods
 // TODO clean up these delegates, some duplicates in switching to the drawers from the navigation controller.
 - (void) boundingBoxCompletionHandler:(CGRect) boundingBox {
@@ -290,9 +297,12 @@
 }
 
 
-- (void)layerSelected:(NSUInteger)index {
-    self.selectedLayerIndex = (NSInteger)index;
-    [self.mapDelegate addTileOverlay: [_tileServer urlForLayerWithIndex:index boundingBoxTemplate:NO] serverType:_tileServer.serverType];
+- (void)showLayerSelectView {
+    MCLayerSelectViewController *layerSelectViewController = [[MCLayerSelectViewController alloc] initAsFullView:YES];
+    layerSelectViewController.drawerViewDelegate = _drawerDelegate;
+    layerSelectViewController.layerSelectDelegate = self;
+    layerSelectViewController.tileServer = self.tileServer;
+    [_drawerDelegate pushDrawer:layerSelectViewController];
 }
 
 

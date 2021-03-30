@@ -96,6 +96,7 @@
 		E36D2DD12017C0A70097A8DE /* MCPickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E36D2DD02017C0A70097A8DE /* MCPickerViewCell.m */; };
 		E377401725476D1900F67EA8 /* MCServerError.m in Sources */ = {isa = PBXBuildFile; fileRef = E377401625476D1900F67EA8 /* MCServerError.m */; };
 		E377401D254B4A2E00F67EA8 /* WMSTileOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = E377401C254B4A2E00F67EA8 /* WMSTileOverlay.m */; };
+		E3844E372613901600C1273E /* MCLayerSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3844E362613901600C1273E /* MCLayerSelectViewController.m */; };
 		E3A492051FA952F200FFE613 /* MCGeoPackageCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A492041FA952F200FFE613 /* MCGeoPackageCoordinator.m */; };
 		E3A4920B1FA9538800FFE613 /* MCGeopackageSingleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A4920A1FA9538800FFE613 /* MCGeopackageSingleViewController.m */; };
 		E3A4920D1FA9885B00FFE613 /* MCDownloadGeopackage.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3A4920C1FA9885B00FFE613 /* MCDownloadGeopackage.xib */; };
@@ -324,6 +325,8 @@
 		E377401625476D1900F67EA8 /* MCServerError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCServerError.m; sourceTree = "<group>"; };
 		E377401B254B4A2E00F67EA8 /* WMSTileOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMSTileOverlay.h; sourceTree = "<group>"; };
 		E377401C254B4A2E00F67EA8 /* WMSTileOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMSTileOverlay.m; sourceTree = "<group>"; };
+		E3844E352613901600C1273E /* MCLayerSelectViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCLayerSelectViewController.h; sourceTree = "<group>"; };
+		E3844E362613901600C1273E /* MCLayerSelectViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCLayerSelectViewController.m; sourceTree = "<group>"; };
 		E3A492031FA952F200FFE613 /* MCGeoPackageCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCGeoPackageCoordinator.h; sourceTree = "<group>"; };
 		E3A492041FA952F200FFE613 /* MCGeoPackageCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCGeoPackageCoordinator.m; sourceTree = "<group>"; };
 		E3A492091FA9538800FFE613 /* MCGeopackageSingleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCGeopackageSingleViewController.h; sourceTree = "<group>"; };
@@ -757,6 +760,8 @@
 				E346590E202BB20B001E6E81 /* MCZoomAndQualityViewController.m */,
 				E307AD5823C52AE200771D29 /* MCTileServerHelpViewController.h */,
 				E307AD5923C52AE200771D29 /* MCTileServerHelpViewController.m */,
+				E3844E352613901600C1273E /* MCLayerSelectViewController.h */,
+				E3844E362613901600C1273E /* MCLayerSelectViewController.m */,
 			);
 			path = NewLayerWizard;
 			sourceTree = "<group>";
@@ -1102,6 +1107,7 @@
 				E3470CC72020E67E0098D783 /* MCColorUtil.m in Sources */,
 				E3A4920B1FA9538800FFE613 /* MCGeopackageSingleViewController.m in Sources */,
 				E33F55751FC4A25500F252FD /* MCSectionTitleCell.m in Sources */,
+				E3844E372613901600C1273E /* MCLayerSelectViewController.m in Sources */,
 				E3C5FC4824B7D38F00B5E12E /* MCTileMatrix.swift in Sources */,
 				043A45981B83B4AB001B8FC5 /* GPGKSMapPointInitializer.m in Sources */,
 				E3D80EA5240076AD006F1014 /* MCDualButtonCell.m in Sources */,
@@ -1336,7 +1342,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 42;
+				CURRENT_PROJECT_VERSION = 44;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1362,7 +1368,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 42;
+				CURRENT_PROJECT_VERSION = 44;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
