@@ -14,13 +14,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dVB-qC-zUZ">
-                    <rect key="frame" x="0.0" y="0.0" width="16" height="60"/>
+                    <rect key="frame" x="3" y="0.0" width="16" height="60"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="16" id="hqc-cK-KsS"/>
                     </constraints>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IxB-60-MLY">
-                    <rect key="frame" x="24" y="10" width="40" height="40"/>
+                    <rect key="frame" x="31" y="10" width="40" height="40"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="96S-8o-EuR"/>
                         <constraint firstAttribute="height" constant="40" id="Bha-5p-akD"/>
@@ -29,13 +29,13 @@
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcc-wG-Wcw">
-                    <rect key="frame" x="72" y="8" width="287" height="24"/>
+                    <rect key="frame" x="79" y="8" width="280" height="24"/>
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="253" text=" " textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fkH-Qs-GRg">
-                    <rect key="frame" x="72" y="36" width="295" height="16"/>
+                    <rect key="frame" x="79" y="36" width="288" height="16"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
@@ -50,10 +50,10 @@
                 <constraint firstItem="fkH-Qs-GRg" firstAttribute="top" secondItem="bcc-wG-Wcw" secondAttribute="bottom" constant="4" id="N9c-jr-691"/>
                 <constraint firstItem="IxB-60-MLY" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="S5y-n1-A2o"/>
                 <constraint firstAttribute="trailing" secondItem="fkH-Qs-GRg" secondAttribute="trailing" constant="8" id="Xti-pr-49R"/>
-                <constraint firstItem="dVB-qC-zUZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="cxz-FC-o2c"/>
+                <constraint firstItem="dVB-qC-zUZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="3" id="cxz-FC-o2c"/>
                 <constraint firstItem="dVB-qC-zUZ" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="fhf-L5-Wjx"/>
                 <constraint firstItem="fkH-Qs-GRg" firstAttribute="leading" secondItem="IxB-60-MLY" secondAttribute="trailing" constant="8" id="hzz-OD-ArG"/>
-                <constraint firstItem="IxB-60-MLY" firstAttribute="leading" secondItem="dVB-qC-zUZ" secondAttribute="trailing" constant="8" id="txu-rP-U3T"/>
+                <constraint firstItem="IxB-60-MLY" firstAttribute="leading" secondItem="dVB-qC-zUZ" secondAttribute="trailing" constant="12" id="txu-rP-U3T"/>
                 <constraint firstItem="bcc-wG-Wcw" firstAttribute="leading" secondItem="IxB-60-MLY" secondAttribute="trailing" constant="8" id="zqB-bl-xcs"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

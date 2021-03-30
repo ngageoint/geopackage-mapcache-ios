@@ -52,7 +52,7 @@
     self.mapLayer = layer;
     self.tileServer = tileServer;
     
-    if (layer.titles[0]) {
+    if (layer.titles.count && layer.titles.count > 0 && layer.titles[0]) {
         [self.layerNameLabel setText:layer.titles[0]];
     }
     

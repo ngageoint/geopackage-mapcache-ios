@@ -16,14 +16,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uki-2p-kom" userLabel="Activity Indicator">
-                    <rect key="frame" x="0.0" y="0.0" width="16" height="99"/>
+                    <rect key="frame" x="0.0" y="0.0" width="16" height="80"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="99" id="BR2-07-9rK"/>
                         <constraint firstAttribute="width" constant="16" id="tLL-ec-292"/>
                     </constraints>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EM7-zm-Jcc">
-                    <rect key="frame" x="24" y="0.0" width="390" height="80"/>
+                    <rect key="frame" x="32" y="0.0" width="382" height="80"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="q6R-0m-Xsw" userLabel="Server Icon">
                             <rect key="frame" x="0.0" y="20" width="40" height="40"/>
@@ -39,7 +38,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="serverurl.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5CL-Ya-eRK" userLabel="URL Label">
-                            <rect key="frame" x="48" y="31.5" width="334" height="18"/>
+                            <rect key="frame" x="48" y="31.5" width="326" height="18"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -71,8 +70,9 @@
             <constraints>
                 <constraint firstItem="uki-2p-kom" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="8jC-Tx-JSf"/>
                 <constraint firstItem="uki-2p-kom" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="KAg-n4-gxV"/>
-                <constraint firstItem="EM7-zm-Jcc" firstAttribute="leading" secondItem="uki-2p-kom" secondAttribute="trailing" constant="8" symbolic="YES" id="L0T-4i-dMI"/>
+                <constraint firstAttribute="bottom" secondItem="uki-2p-kom" secondAttribute="bottom" id="QSP-Cf-a2b"/>
                 <constraint firstAttribute="trailing" secondItem="EM7-zm-Jcc" secondAttribute="trailing" id="YqF-VD-qjD"/>
+                <constraint firstItem="q6R-0m-Xsw" firstAttribute="leading" secondItem="uki-2p-kom" secondAttribute="trailing" constant="16" id="qLJ-MU-Sn6"/>
                 <constraint firstItem="EM7-zm-Jcc" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="tqb-5W-6uv"/>
                 <constraint firstAttribute="bottom" secondItem="EM7-zm-Jcc" secondAttribute="bottom" id="y81-Hu-8qu"/>
             </constraints>

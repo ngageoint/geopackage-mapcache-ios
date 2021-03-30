@@ -121,8 +121,10 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 NSString *details = [NSString stringWithFormat:@"%lu %@", (unsigned long)tileServer.layers.count, layerLabel];
                 [tileServerCell setLayersLabelText:details];
                 
-                if (self.basemapTileServer.serverName == tileServer.serverName) {
+                if ([self.basemapTileServer.serverName isEqualToString:tileServer.serverName]) {
                     [tileServerCell activeIndicatorOn];
+                } else {
+                    [tileServerCell activeIndicatorOff];
                 }
                 
                 if ([self.expandedServer.serverName isEqualToString:tileServer.serverName]) {
@@ -146,7 +148,6 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
             }
             
-            [tileServerCell activeIndicatorOff];
             [serverCells addObject:tileServerCell];
             [serverCells addObjectsFromArray:wmsLayers];
         }
@@ -318,28 +319,36 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 if ([tileServerCell.visibilityStatusIndicator isHidden]) {
                     toggleAction.backgroundColor = [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0];
                     toggleAction.title = @"Use as basemap";
-                    
+                    self.basemapTileServer = tileServerCell.tileServer;
+                    self.basemapLayer = [[MCLayer alloc] init];
                     [self.settingsDelegate setUserBasemap:tileServerCell.tileServer layer:[[MCLayer alloc] init]];
                 } else {
                     toggleAction.backgroundColor = [UIColor grayColor];
                     toggleAction.title = @"Remove basemap";
                     [self.settingsDelegate setUserBasemap:nil layer:nil];
+                    self.basemapTileServer = [[MCTileServer alloc] init];
+                    self.basemapLayer = [[MCLayer alloc] init];
                 }
             }
             
-            [tileServerCell toggleActiveIndicator];
+            [self updateActiveIndicators];
         } else if (layerCell != nil) {
             if ([layerCell.activeIndicator isHidden]) {
                 toggleAction.backgroundColor = [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0];
                 toggleAction.title = @"Use as basemap";
-                [_settingsDelegate setUserBasemap:layerCell.tileServer layer:layerCell.mapLayer];
+                self.basemapTileServer = layerCell.tileServer;
+                self.basemapLayer = layerCell.mapLayer;
+                [self->_settingsDelegate setUserBasemap:layerCell.tileServer layer:layerCell.mapLayer];
             } else {
                 toggleAction.backgroundColor = [UIColor grayColor];
                 toggleAction.title = @"Remove basemap";
                 [self.settingsDelegate setUserBasemap:nil layer:nil];
+                self.basemapTileServer = [[MCTileServer alloc] init];
+                self.basemapLayer = [[MCLayer alloc] init];
             }
             
             [layerCell toggleActiveIndicator];
+            [self updateActiveIndicators];
         }
         
         completionHandler(YES);
@@ -387,6 +396,27 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[editAction, deleteAction]];
     configuration.performsFirstActionWithFullSwipe = YES;
     return configuration;
+}
+
+
+- (void) updateActiveIndicators {
+    for (UITableViewCell *cell in self.cellArray[1]) {
+        if ([cell isKindOfClass:MCTileServerCell.class]) {
+            MCTileServerCell *serverCell = (MCTileServerCell*)cell;
+            
+            if ([serverCell.tileServer.serverName isEqualToString:self.basemapTileServer.serverName]) {
+                [serverCell toggleActiveIndicator];
+            } else {
+                [serverCell activeIndicatorOff];
+            }
+        } else if ([cell isKindOfClass:MCLayerCell.class]) {
+            MCLayerCell *layerCell = (MCLayerCell *)cell;
+            
+            if (![layerCell.mapLayer.name isEqualToString:self.basemapLayer.name]) {
+                [layerCell activeIndicatorOff];
+            }
+        }
+    }
 }
 
 

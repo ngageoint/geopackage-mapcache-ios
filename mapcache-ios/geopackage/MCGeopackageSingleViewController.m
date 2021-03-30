@@ -313,7 +313,7 @@
         _shareDocumentController = [UIDocumentInteractionController interactionControllerWithURL:databaseUrl];
         [_shareDocumentController setUTI:@"public.database"];
         [_shareDocumentController presentOpenInMenuFromRect:self.view.bounds inView:self.view animated:YES];
-    }else{
+    } else {
         [MCUtils showMessageWithDelegate:self
                                    andTitle:[NSString stringWithFormat:@"Share Database %@", _database]
                                  andMessage:[NSString stringWithFormat:@"No path was found for database %@", _database]];

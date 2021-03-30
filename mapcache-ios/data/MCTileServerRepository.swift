@@ -97,7 +97,6 @@ import Foundation
                     guard let tile = UIImage.init(data: try Data.init(contentsOf: location!)) else {
                         tileServer.serverType = .error
                         let result = MCTileServerResult.init(tileServer, self.generateError(message: "Unable to get tile", errorType: MCServerErrorType.MCNoData))
-                        
                         completion(result)
                         return
                     }
@@ -106,7 +105,6 @@ import Foundation
                     completion(MCTileServerResult.init(tileServer, self.generateError(message: "No error", errorType: MCServerErrorType.MCNoError)))
                 } catch {
                     tileServer.serverType = .error
-                    let error:MCServerError = MCServerError.init(domain: "MCTileServerRepository", code: MCServerErrorType.MCTileServerNoResponse.rawValue, userInfo: ["message" : "no response from server"])
                     let result = MCTileServerResult.init(tileServer, self.generateError(message: "No response from server", errorType: MCServerErrorType.MCTileServerNoResponse))
                     completion(result)
                 }
@@ -298,7 +296,7 @@ import Foundation
             self.userDefaults.setValue(savedServers, forKey: MC_SAVED_TILE_SERVER_URLS)
             self.tileServers[serverName] = tileServer
             return true
-        } else {
+        } else if self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) == nil {
             let savedServers = NSMutableDictionary()
             savedServers[serverName] = url
             self.userDefaults.setValue(savedServers, forKey: MC_SAVED_TILE_SERVER_URLS)
@@ -317,6 +315,8 @@ import Foundation
             saveBasemapToUserDefaults(serverName: updatedServer.serverName, layerName: updatedLayer.name)
         } else {
             saveBasemapToUserDefaults(serverName: "", layerName: "")
+            self.baseMapServer = MCTileServer()
+            self.baseMapLayer = MCLayer()
         }
     }
     
