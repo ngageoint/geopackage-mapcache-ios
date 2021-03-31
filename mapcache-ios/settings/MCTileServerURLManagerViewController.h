@@ -13,11 +13,15 @@
 #import "MCSectionTitleCell.h"
 #import "MCButtonCell.h"
 #import "MCTitleCell.h"
+#import "MCTileServerCell.h"
 #import "MCLayerCell.h"
 #import "MCProperties.h"
 
-
 NS_ASSUME_NONNULL_BEGIN
+
+// Forward declarations
+@class MCTileServer;
+@class MCTileServerResult;
 
 @protocol MCTileServerManagerDelegate <NSObject>
 - (void) showNewTileServerView;
@@ -27,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @protocol MCSelectTileServerDelegate <NSObject>
-- (void) selectTileServer:(NSString *) serverURL;
+- (void) selectTileServer:(MCTileServer *) tileServer;
 @end
 
 

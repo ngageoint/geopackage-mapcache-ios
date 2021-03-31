@@ -7,6 +7,7 @@
 //
 
 #import "MCMapViewController.h"
+#import "mapcache_ios-Swift.h"
 
 @interface MCMapViewController ()
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
@@ -45,7 +46,6 @@
 @property (nonatomic) double drawPolygonLineWidth;
 @property (nonatomic, strong) UIColor *drawPolygonFillColor;
 @property (nonatomic, strong) NSNumberFormatter *locationDecimalFormatter;
-@property (nonatomic) BOOL boundingBoxMode;
 @property (nonatomic, strong) GPKGPolygon *boundingBox;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxStartCorner;
 @property (nonatomic) CLLocationCoordinate2D boundingBoxEndCorner;
@@ -58,6 +58,7 @@
 @property (nonatomic) CLLocationCoordinate2D currentCenter;
 @property (nonatomic) BOOL expandedZoomDetails;
 @property (nonatomic, strong) MKTileOverlay *userTileOverlay;
+@property (nonatomic, strong) MKTileOverlay *userBasemapOverlay;
 @end
 
 
@@ -302,6 +303,26 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }
     
     NSLog(@"NSUSerDefaults\n %@", [self.settings dictionaryRepresentation]);
+}
+
+
+- (void)updateBasemaps:(NSString *)url serverType:(MCTileServerType) serverType {
+    NSLog(@"MCMapViewController updateBasemaps");
+    if (self.userBasemapOverlay != nil) {
+        [self.mapView removeOverlay:self.userBasemapOverlay];
+    }
+    
+    if (url == nil || [url isEqualToString: @""]) {
+        return;
+    }
+    
+    if (serverType == MCTileServerTypeXyz) {
+        self.userBasemapOverlay = [[MKTileOverlay alloc] initWithURLTemplate:url];
+        [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
+    } else if (serverType == MCTileServerTypeWms) {
+        self.userBasemapOverlay = [[WMSTileOverlay alloc] initWithURL:url];
+        [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
+    }
 }
 
 
@@ -555,6 +576,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.featureHelper resetFeatureCount];
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
+    
+    if (self.userBasemapOverlay != nil) {
+        [self.mapView addOverlay:self.userBasemapOverlay];
+    }
     
     for(GPKGGeoPackage * geoPackage in [self.geoPackages allValues]){
         @try {
@@ -839,13 +864,20 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 /**
    Used to show tile previews after a tile download, or switch on saved tile URLs from the map.
 */
-- (void) addUserTilesWithUrl:(NSString *) tileTemplateURL {
+- (void) addUserTilesWithUrl:(NSString *) tileTemplateURL serverType:(MCTileServerType)serverType {
     if (self.userTileOverlay != nil) {
         [self.mapView removeOverlay:self.userTileOverlay];
     }
     
-    self.userTileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileTemplateURL];
-    [self.mapView insertOverlay:self.userTileOverlay atIndex:0];
+    if (serverType == MCTileServerTypeXyz) {
+        self.userTileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileTemplateURL];
+    } else if (serverType == MCTileServerTypeWms) {
+        self.userTileOverlay = [[WMSTileOverlay alloc] initWithURL:tileTemplateURL];
+    }
+    
+    if (self.userTileOverlay != nil) {
+        [self.mapView insertOverlay:self.userTileOverlay atIndex:0];
+    }
 }
 
 
@@ -869,31 +901,33 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 -(void) longPressGesture:(UILongPressGestureRecognizer *) longPressGestureRecognizer {
     NSLog(@"Getting a long press gesture.");
     
-    CGPoint cgPoint = [longPressGestureRecognizer locationInView:self.mapView];
-    CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
-    
-    if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan && self.tempMapPoints.count == 0) {
-        UINotificationFeedbackGenerator *feedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
-        [feedbackGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
+    if (!self.boundingBoxMode) {
+        CGPoint cgPoint = [longPressGestureRecognizer locationInView:self.mapView];
+        CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
         
-        NSLog(@"Adding a pin");
-        GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithLocation:point];
-        [mapPoint.options setPinTintColor:[UIColor redColor]];
-        
-        [self.mapView addAnnotation: mapPoint];
-        [self.tempMapPoints addObject:mapPoint];
-     
-        if (!_drawing && self.tempMapPoints.count > 0) {
-            [self zoomToPointWithOffset: point];
-            [mapPoint setTitle:[_featureHelper buildLocationTitleWithMapPoint:mapPoint]];
-            [self.mapView selectAnnotation:mapPoint animated:YES];
+        if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan && self.tempMapPoints.count == 0) {
+            UINotificationFeedbackGenerator *feedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
+            [feedbackGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
             
-            _drawing = YES;
-        } else {
-            [self.mapActionDelegate updateDrawingStatus];
+            NSLog(@"Adding a pin");
+            GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithLocation:point];
+            [mapPoint.options setPinTintColor:[UIColor redColor]];
+            
+            [self.mapView addAnnotation: mapPoint];
+            [self.tempMapPoints addObject:mapPoint];
+         
+            if (!_drawing && self.tempMapPoints.count > 0) {
+                [self zoomToPointWithOffset: point];
+                [mapPoint setTitle:[_featureHelper buildLocationTitleWithMapPoint:mapPoint]];
+                [self.mapView selectAnnotation:mapPoint animated:YES];
+                
+                _drawing = YES;
+            } else {
+                [self.mapActionDelegate updateDrawingStatus];
+            }
         }
-        
     }
+    
     
     // MKMapView workaround for unresponsiveness after a longpress https://forums.developer.apple.com/thread/126473
     //[self.mapView setCenterCoordinate:self.mapView.centerCoordinate animated:NO];

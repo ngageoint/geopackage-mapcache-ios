@@ -12,11 +12,12 @@
 #import "MCTextViewCell.h"
 #import "MCButtonCell.h"
 #import "MCDescriptionCell.h"
+#import "MCUtils.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol MCSaveTileServerDelegate
-- (BOOL)saveURL:(NSString *)url forServerNamed:(NSString *)serverName;
+- (BOOL)saveURL:(NSString *)url forServerNamed:(NSString *)serverName tileServer:(MCTileServer *)tileServer;
 @end
 
 

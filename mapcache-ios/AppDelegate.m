@@ -8,14 +8,16 @@
 
 #import "AppDelegate.h"
 #import "GPKGGeoPackageFactory.h"
-#import "GPKGSManagerViewController.h"
 #import "MCConstants.h"
 #import "MCProperties.h"
 #import "MBFingerTipWindow.h"
+#import "mapcache_ios-Swift.h"
+
 
 @interface AppDelegate ()
 @property (strong, nonatomic) NSMutableArray *childCoordinators;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
+@property (strong, nonatomic) MCTileServerRepository *tileServerRepository;
 @property (nonatomic, strong) GPKGGeoPackageCache *geoPackages;
 @end
 
@@ -44,6 +46,7 @@
     mapCoordinator.drawerViewDelegate = drawerCoordinator;
     [_childCoordinators addObject:drawerCoordinator];
     [_childCoordinators addObject:mapCoordinator];
+    
     _window.rootViewController = mapViewController;
     
     BOOL preventDisclaimer = [[NSUserDefaults standardUserDefaults] boolForKey:@"preventDisclaimer"];
@@ -54,6 +57,9 @@
     
     _manager = [GPKGGeoPackageFactory manager];
     _geoPackages = [[GPKGGeoPackageCache alloc] initWithManager:self.manager];
+    
+    _tileServerRepository = [MCTileServerRepository shared];
+    [_tileServerRepository loadUserDefaults];
     
     return YES;
 }
@@ -141,8 +147,6 @@ annotation {
 
 
 - (void) setupApplicationAppearance {
-    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleLightContent;
-    
     [[UINavigationBar appearance] setBarTintColor:[MCColorUtil getPrimary]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];

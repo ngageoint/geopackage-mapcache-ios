@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,19 +17,31 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LoadingScreen" translatesAutoresizingMaskIntoConstraints="NO" id="ezn-dY-R42">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                 </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VOr-px-ERH">
+                    <rect key="frame" x="0.0" y="239" width="375" height="428"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="ezn-dY-R42" secondAttribute="bottom" id="3a5-9Q-kcb"/>
+                <constraint firstItem="VOr-px-ERH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4Lg-kq-t0z"/>
+                <constraint firstItem="VOr-px-ERH" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="9Xo-q0-Edu"/>
                 <constraint firstItem="ezn-dY-R42" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="EDG-Qv-2Dk"/>
                 <constraint firstItem="ezn-dY-R42" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="MqU-qm-rgN"/>
+                <constraint firstAttribute="bottom" secondItem="VOr-px-ERH" secondAttribute="bottom" id="dsy-NT-WPN"/>
+                <constraint firstItem="VOr-px-ERH" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="239" id="lCk-os-gn5"/>
                 <constraint firstAttribute="trailing" secondItem="ezn-dY-R42" secondAttribute="trailing" id="p0X-1N-1ad"/>
+                <constraint firstAttribute="trailing" secondItem="VOr-px-ERH" secondAttribute="trailing" id="z6u-M3-BLa"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
-            <point key="canvasLocation" x="548" y="455"/>
+            <point key="canvasLocation" x="548" y="454.72263868065971"/>
         </view>
     </objects>
     <resources>
         <image name="LoadingScreen" width="375" height="667"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

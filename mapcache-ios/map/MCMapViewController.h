@@ -26,7 +26,12 @@
 #import "MCFeatureHelper.h"
 #import "GPKGBoundingBox.h"
 #import "GPKGMapShapeTypes.h"
+#import "MCServerError.h"
 
+// forward declarations
+@class MCTileServer;
+@class MCLayer;
+typedef NS_ENUM(NSInteger, MCTileServerType);
 
 @protocol MCMapActionDelegate <NSObject>
 - (void)showMapInfoDrawer;
@@ -41,6 +46,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *locationButton;
 @property (weak, nonatomic) IBOutlet UIButton *zoomIndicatorButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *zoomIndicatorButtonWidth;
+@property (nonatomic) BOOL boundingBoxMode;
 @property (nonatomic, strong) id<MCMapActionDelegate> mapActionDelegate;
 @property (nonatomic) BOOL drawing;
 @property (nonatomic, strong) NSMutableArray *tempMapPoints;
@@ -54,6 +60,6 @@
 - (void)toggleMapControls;
 - (void)clearTempPoints;
 - (void)removeMapPoint:(GPKGMapPoint *) mapPoint;
-- (void)addUserTilesWithUrl:(NSString *) tileTemplateURL;
+- (void)addUserTilesWithUrl:(NSString *) tileTemplateURL serverType:(MCTileServerType)serverType;
 - (void)removeUserTiles;
 @end

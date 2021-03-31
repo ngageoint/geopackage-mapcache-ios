@@ -11,8 +11,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class MCTileServerResult;
+@class MCServerError;
+@class MCTileServer;
+@class MCTileServerRepository;
+
 @interface UITextField (Validators)
-- (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock;
+
+- (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(MCTileServerResult *tileServerResult))resultBlock;
 - (void)isValidGeoPackageURL:(UITextField *)textField withResult:(void(^)(BOOL isValid))resultBlock;
 - (void)trimWhiteSpace;
 - (BOOL)fieldValueValidForType:(enum GPKGDataType) dataType;

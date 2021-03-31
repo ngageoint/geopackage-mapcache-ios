@@ -7,13 +7,21 @@
 //
 
 #import "MCBoundingBoxGuideView.h"
-
+#import "mapcache_ios-Swift.h"
 
 @interface MCBoundingBoxGuideView()
 @property (nonatomic) CGRect boundingBox;
 @end
 
 @implementation MCBoundingBoxGuideView
+
+- (instancetype) initWithTileServer:(MCTileServer *)tileServer boundingBoxDelegate:(id<MCBoundingBoxGuideDelegate>) delegate {
+    self = [super init];
+    self.tileServer = tileServer;
+    self.delegate = delegate;
+    return self;
+}
+
 
 - (void) viewDidLoad {
     [super viewDidLoad];
@@ -32,9 +40,14 @@
     fillLayer.path = overlayPath.CGPath;
     fillLayer.fillRule = kCAFillRuleEvenOdd;
     fillLayer.fillColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:0.7].CGColor;
-    [self.guideView.layer addSublayer:fillLayer];
+    [self.guideView.layer insertSublayer:fillLayer below:self.layerButton.layer];
+    
+    if (self.tileServer.serverType == MCTileServerTypeWms) {
+        [self.layerButton setHidden:NO];
+    } else {
+        [self.layerButton setHidden:YES];
+    }
 }
-
 
 
 - (IBAction)continue:(id)sender {
@@ -46,5 +59,27 @@
     [self.delegate boundingBoxCanceled];
 }
 
+- (IBAction)chooseLayer:(id)sender {
+    NSLog(@"Choosing layer");
+    /*UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Select a layer" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    for (MCLayer *layer in self.tileServer.layers) {
+        UIAlertAction *alertAction = [UIAlertAction actionWithTitle:layer.title style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self.delegate layerSelected: [alertController.actions indexOfObject:action]];
+        }];
+        [alertController addAction:alertAction];
+    }
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    
+    [alertController addAction:cancelAction];
+    [self presentViewController:alertController animated:YES completion:^{
+            
+    }];*/
+    
+    [self.delegate showLayerSelectView];
+}
 
 @end

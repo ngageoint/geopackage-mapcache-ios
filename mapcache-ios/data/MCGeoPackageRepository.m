@@ -266,8 +266,8 @@ static MCGeoPackageRepository *sharedRepository;
     
     @try {
         geoPackage = [_manager open:database];
-        //[geoPackage createFeatureTableWithGeometryColumns:geometryColumns andBoundingBox:boundingBox andSrsId:srsId];
-        [geoPackage createFeatureTableWithGeometryColumns:geometryColumns andIdColumnName:@"id" andBoundingBox:boundingBox andSrsId:srsId];
+        [geometryColumns setSrsId:srsId];
+        [geoPackage createFeatureTableWithMetadata:[GPKGFeatureTableMetadata createWithGeometryColumns:geometryColumns andBoundingBox:boundingBox]];
     }
     @catch (NSException *e) {
         // TODO handle this
@@ -277,6 +277,29 @@ static MCGeoPackageRepository *sharedRepository;
         [geoPackage close];
         [self regenerateDatabaseList];
         return didCreateLayer;
+    }
+}
+
+
+- (BOOL) deleteLayer:(MCTable *) table {
+    GPKGGeoPackage *geoPackage = nil;
+    BOOL didDelete = NO;
+    
+    @try {
+        geoPackage = [self.manager open:table.database];
+        [geoPackage deleteTable:table.name];
+        [self.activeDatabases removeTable:table];
+        didDelete = YES;
+    }
+    @catch (NSException *exception) {
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], table.database, table.name]
+                                 andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
+    }
+    @finally {
+        [geoPackage close];
+        [self regenerateDatabaseList];
+        return didDelete;
     }
 }
 

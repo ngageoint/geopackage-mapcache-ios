@@ -8,7 +8,7 @@
 
 #import "MCMapCoordinator.h"
 #import "MCMapViewController.h"
-
+#import "mapcache_ios-Swift.h"
 
 NSString * const MC_MAP_TYPE_PREFERENCE = @"mapTyper";
 NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
@@ -37,6 +37,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     self.childCoordinators = [[NSMutableArray alloc] init];
     self.preferences = [NSUserDefaults standardUserDefaults];
     self.repository = [MCGeoPackageRepository sharedRepository];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(basemapsLoadedFromUserDefaults:) name:MC_USER_BASEMAP_LOADED_FROM_DEFAULTS object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerRenamed:) name:@"MC_LAYER_RENAMED" object:nil];
     
     return self;
@@ -59,6 +60,31 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 - (void) setMaxFeaturesPreference {
     
+}
+
+
+- (void)basemapsLoadedFromUserDefaults:(NSNotification *)notification {
+    MCTileServer *basemapTileServer = [[MCTileServerRepository shared] baseMapServer];
+    
+    if (basemapTileServer == nil) {
+        return;
+    }
+    
+    if (basemapTileServer.serverType == MCTileServerTypeXyz) {
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.mcMapViewController updateBasemaps:basemapTileServer.url serverType:MCTileServerTypeXyz];
+        });
+    } else if (basemapTileServer.serverType == MCTileServerTypeWms) {
+        MCLayer *basemapLayer = [[MCTileServerRepository shared] baseMapLayer];
+        
+        if (basemapLayer == nil) {
+            return;
+        }
+        
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.mcMapViewController updateBasemaps: [basemapTileServer urlForLayerWithLayer:basemapLayer boundingBoxTemplate:NO] serverType:MCTileServerTypeWms];
+        });
+    }
 }
 
 
@@ -124,7 +150,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 /**
     Get the map view ready to select an area where you would like to download tiles.
  */
-- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl {
+- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl serverType:(MCTileServerType) serverType {
     self.boundingBoxGuideView = boudingBoxGuideView;
     self.boundingBoxGuideView.alpha = 0.0;
     [self.mcMapViewController.view addSubview:self.boundingBoxGuideView];
@@ -134,7 +160,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     } completion:nil];
     
     [self.mcMapViewController toggleMapControls];
-    [self.mcMapViewController addUserTilesWithUrl:tileUrl];
+    [self.mcMapViewController updateBasemaps:@"" serverType:MCTileServerTypeError];
+    [self.mcMapViewController addUserTilesWithUrl:tileUrl serverType:serverType];
+    self.mcMapViewController.boundingBoxMode = YES;
 }
 
 
@@ -143,14 +171,22 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
  */
 - (void) removeTileBoundingBoxGuide {
     if  (self.boundingBoxGuideView != nil) {
-        
         [UIView animateWithDuration:0.35 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
             self.boundingBoxGuideView.alpha = 0.0;
         } completion:^(BOOL finished) {
             [self.boundingBoxGuideView removeFromSuperview];
             [self.mcMapViewController toggleMapControls];
+            self.mcMapViewController.boundingBoxMode = NO;
         }];
     }
+}
+
+
+/**
+    Used for preview tiles when downloading a map or choosing a saved server as a basemap.
+ */
+- (void)addTileOverlay:(NSString *)tileServerURL serverType:(MCTileServerType)serverType {
+    [self.mcMapViewController addUserTilesWithUrl:tileServerURL serverType:serverType];
 }
 
 

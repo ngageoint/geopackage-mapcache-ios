@@ -23,6 +23,8 @@
 @property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureLayerDetailsView;
 @property (nonatomic, strong) MCDatabases *active;
 @property (nonatomic, strong) MCDatabase *database;
+@property (nonatomic, strong) MCTileServer *tileServer;
+@property (nonatomic) NSInteger selectedLayerIndex;
 @property (nonatomic, strong) GPKGSCreateTilesData * tileData;
 @property (nonatomic, strong) MCGeoPackageRepository *repository;
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
@@ -203,25 +205,26 @@
 
 
 #pragma mark - MCSelectTileServerDelegate
-- (void) selectTileServer:(NSString *)serverURL {
+- (void) selectTileServer:(MCTileServer *)tileServer {
     // pass the selected server url to the tile detail view controller to display in the url field
-    NSLog(@"Selected %@", serverURL);
-    _tileDetailsController.selectedServerURL = serverURL;
+    NSLog(@"Selected %@", tileServer.url);
+    _tileDetailsController.tileServer = tileServer;
     [_tileDetailsController update];
+    
 }
 
 
 
 #pragma mark - MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode {
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer andReferenceSystemCode:(int)referenceCode {
     _tileData.name = name;
-    _tileData.loadTiles.url = url;
+    _tileData.loadTiles.url = tileServer.url;
     _tileData.loadTiles.epsg = referenceCode;
+    _tileServer = tileServer;
     
     [_drawerDelegate popDrawerAndHide];
-    self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] init];
-    self.boundingBoxGuideViewController.delegate = self;
-    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view tileUrl:url];
+    self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] initWithTileServer:_tileServer boundingBoxDelegate:self];
+    [_mapDelegate setupTileBoundingBoxGuide:self.boundingBoxGuideViewController.view tileUrl:[tileServer urlForLayerWithIndex:0 boundingBoxTemplate:NO] serverType:tileServer.serverType];
 }
 
 
@@ -249,6 +252,13 @@
     }
 
     return YES;
+}
+
+
+#pragma mark MCLayerSelectDelegate methods
+- (void)didSelectLayer:(NSInteger)layerIndex {
+    self.selectedLayerIndex = layerIndex;
+    [self.mapDelegate addTileOverlay: [_tileServer urlForLayerWithIndex:layerIndex boundingBoxTemplate:NO] serverType:_tileServer.serverType];
 }
 
 
@@ -287,6 +297,15 @@
 }
 
 
+- (void)showLayerSelectView {
+    MCLayerSelectViewController *layerSelectViewController = [[MCLayerSelectViewController alloc] initAsFullView:YES];
+    layerSelectViewController.drawerViewDelegate = _drawerDelegate;
+    layerSelectViewController.layerSelectDelegate = self;
+    layerSelectViewController.tileServer = self.tileServer;
+    [_drawerDelegate pushDrawer:layerSelectViewController];
+}
+
+
 #pragma mark- MCZoomAndQualityDelegate methods
 - (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
     NSLog(@"In wizard, going to call completion handler");
@@ -302,7 +321,7 @@
     [_drawerDelegate popDrawerAndHide];
     self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] init];
     self.boundingBoxGuideViewController.delegate = self;
-    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view tileUrl:_tileData.loadTiles.url];
+    [_mapDelegate setupTileBoundingBoxGuide:self.boundingBoxGuideViewController.view tileUrl:[self.tileServer urlForLayerWithIndex:0 boundingBoxTemplate:NO] serverType:self.tileServer.serverType];
 }
 
 - (NSString *) updateTileDownloadSizeEstimateWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
@@ -338,17 +357,28 @@
     NSLog(@"Coordinator attempting to create tiles");
     GPKGTileScaling *scaling = [MCLoadTilesTask tileScaling];
     
+    Boolean xyzTiles = YES;
+    NSString *serverURL = @"";
+    
+    if (self.tileServer.serverType == MCTileServerTypeXyz) {
+        serverURL = self.tileServer.url;
+    } else {
+        xyzTiles = NO;
+        serverURL = [self.tileServer urlForLayerWithIndex:self.selectedLayerIndex boundingBoxTemplate:YES];
+    }
+    
+    
     @try {
         [MCLoadTilesTask loadTilesWithCallback:self
                andDatabase:_database.name
                   andTable:tileData.name
-                    andUrl:tileData.loadTiles.url
+                    andUrl:serverURL
                 andMinZoom:[tileData.loadTiles.generateTiles.minZoom intValue]
                 andMaxZoom:[tileData.loadTiles.generateTiles.maxZoom intValue]
          andCompressFormat:GPKG_CF_NONE // TODO: let user set this
         andCompressQuality:[[MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT] intValue]
           andCompressScale:100 // TODO: let user set this
-               andXyzTiles:tileData.loadTiles.generateTiles.xyzTiles
+               andXyzTiles:xyzTiles // tileData.loadTiles.generateTiles.xyzTiles
             andBoundingBox:tileData.loadTiles.generateTiles.boundingBox
             andTileScaling:scaling
               andAuthority:PROJ_AUTHORITY_EPSG

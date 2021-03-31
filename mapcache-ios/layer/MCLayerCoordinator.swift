@@ -45,8 +45,12 @@ import UIKit
     
     //MARK: MCLayerOperationsDelegate
     func deleteLayer() {
-        //TODO: fill in
         print("MCLayerCoordinator deleteLayer")
+        let didDelete = MCGeoPackageRepository.shared().deleteLayer(self.table)
+        if didDelete {
+            self.drawerViewDelegate.popDrawer()
+            self.layerViewCompletionHandler()
+        }
     }
     
     

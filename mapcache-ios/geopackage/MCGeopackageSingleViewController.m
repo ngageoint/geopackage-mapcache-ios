@@ -42,7 +42,7 @@
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
 
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
@@ -254,7 +254,7 @@
     return configuration;
 }
 
-
+ 
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
@@ -313,7 +313,7 @@
         _shareDocumentController = [UIDocumentInteractionController interactionControllerWithURL:databaseUrl];
         [_shareDocumentController setUTI:@"public.database"];
         [_shareDocumentController presentOpenInMenuFromRect:self.view.bounds inView:self.view animated:YES];
-    }else{
+    } else {
         [MCUtils showMessageWithDelegate:self
                                    andTitle:[NSString stringWithFormat:@"Share Database %@", _database]
                                  andMessage:[NSString stringWithFormat:@"No path was found for database %@", _database]];
