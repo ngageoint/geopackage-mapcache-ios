@@ -7,16 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NGADrawerViewController.h"
 #import <MapKit/MapKit.h>
 #import <GPKGGeoPackageManager.h>
 #import <GPKGGeoPackageFactory.h>
-#import "GPKGSUtils.h"
-#import "GPKGSConstants.h"
+#import "MCUtils.h"
+#import "MCConstants.h"
 #import "SFPProjectionConstants.h"
-#import "GPKGSProperties.h"
+#import "MCProperties.h"
 #import "MCButtonCell.h"
 #import "GPKGBoundingBox.h"
-#import "GPKGSDatabase.h"
+#import "MCDatabase.h"
 #import "MCDescriptionCell.h"
 #import "MCSectionTitleCell.h"
 #import "MCFieldWithTitleCell.h"
@@ -25,10 +26,10 @@
 
 @protocol MCFeatureLayerCreationDelegate <NSObject>
 //- (void) featureLayerCreationComplete:(BOOL)layerCreated withError:(NSString *)error;
-- (void) createFeatueLayerIn:(NSString *)database with:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId;
+- (void) createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId;
 @end
 
-@interface MCFeatureLayerDetailsViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate>
-@property (strong, nonatomic) GPKGSDatabase *database;
+@interface MCFeatureLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, MCButtonCellDelegate>
+@property (strong, nonatomic) MCDatabase *database;
 @property (weak, nonatomic) id<MCFeatureLayerCreationDelegate> delegate;
 @end

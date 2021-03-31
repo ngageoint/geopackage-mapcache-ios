@@ -17,16 +17,21 @@
 #import "MCTitleCell.h"
 #import "NGADrawerViewController.h"
 
+// Forward declarations
+@class MCTileServer;
+@class MCTileServerResult;
 
 @protocol MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode;
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer andReferenceSystemCode:(int)referenceCode;
 - (void) showURLHelp;
 - (void) showTileServerList;
 - (BOOL) isLayerNameAvailable: (NSString *) layerName;
 @end
 
-@interface MCTileLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate>
+@interface MCTileLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCButtonCellDelegate>
 @property (weak, nonatomic) id<MCTileLayerDetailsDelegate> delegate;
+@property (nonatomic, strong) MCFieldWithTitleCell *urlCell;
+@property (nonatomic, strong) MCTileServer *tileServer;
 @property (nonatomic, strong) NSString *selectedServerURL;
 @property (nonatomic, strong) NSString *layerName;
 - (void)update;

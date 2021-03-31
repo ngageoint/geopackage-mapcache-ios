@@ -12,15 +12,16 @@
 #import "MCTextViewCell.h"
 #import "MCButtonCell.h"
 #import "MCDescriptionCell.h"
+#import "MCUtils.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol MCSaveTileServerDelegate
-- (BOOL)saveURL:(NSString *)url forServerNamed:(NSString *)serverName;
+- (BOOL)saveURL:(NSString *)url forServerNamed:(NSString *)serverName tileServer:(MCTileServer *)tileServer;
 @end
 
 
-@interface MCNewTileServerViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GPKGSButtonCellDelegate, MCTextViewCellDelegate>
+@interface MCNewTileServerViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCButtonCellDelegate, MCTextViewCellDelegate>
 @property (nonatomic, strong) id<MCSaveTileServerDelegate>saveTileServerDelegate;
 - (void) setServerName:(NSString *) serverName;
 - (void) setServerURL:(NSString *) serverURL;

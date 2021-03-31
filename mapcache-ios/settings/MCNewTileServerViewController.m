@@ -7,6 +7,7 @@
 //
 
 #import "MCNewTileServerViewController.h"
+#import "mapcache_ios-Swift.h"
 
 @interface MCNewTileServerViewController ()
 @property (nonatomic, strong) NSMutableArray *cellArray;
@@ -14,6 +15,10 @@
 @property (nonatomic, strong) MCFieldWithTitleCell *nameField;
 @property (nonatomic, strong) MCTextViewCell *urlField;
 @property (nonatomic, strong) MCButtonCell *buttonCell;
+@property (nonatomic, strong) MCTileServer *tileServer;
+@property (nonatomic, strong) MCDescriptionCell *statusCell;
+@property (nonatomic, strong) NSString *serverName;
+@property (nonatomic, strong) NSString *serverURL;
 @property (nonatomic) BOOL nameIsValid;
 @property (nonatomic) BOOL urlIsValid;
 @end
@@ -24,27 +29,17 @@
     [super viewDidLoad];
     
     self.tableView = [[UITableView alloc] init];
-    CGRect bounds = self.view.bounds;
-    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
-    self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.estimatedRowHeight = 390.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 100.0;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     [self registerCellTypes];
     [self initCellArray];
     
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.extendedLayoutIncludesOpaqueBars = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
-
-    UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
-    self.tableView.contentInset = tabBarInsets;
-    self.tableView.scrollIndicatorInsets = tabBarInsets;
-    [self.view addSubview:self.tableView];
+    [self addAndConstrainSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
     
@@ -68,16 +63,22 @@
     [self.cellArray addObject:self.nameField];
     
     self.urlField = [self.tableView dequeueReusableCellWithIdentifier:@"textView"];
-    [self.urlField setPlaceholderText:@"XYZ and WMS are supported. Make sure you enter the URL template."];
+    [self.urlField setPlaceholderText:@"yourtileserverurl.com\nXYZ and WMS tile servers are supported."];
     self.urlField.textViewCellDelegate = self;
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    self.urlField.textView.inputAccessoryView = keyboardToolbar;
     [self.cellArray addObject:self.urlField];
     
     self.buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [self.buttonCell setButtonLabel:@"Save Tile Server"];
     [self.buttonCell setAction:@"SAVE"];
-    [self.buttonCell setDelegate:self];
+    self.buttonCell.delegate = self;
     [self.buttonCell disableButton];
     [self.cellArray addObject:self.buttonCell];
+    
+    self.statusCell = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+    [self.statusCell.descriptionLabel setText:@""];
+    [self.cellArray addObject:self.statusCell];
 }
 
 
@@ -111,10 +112,17 @@
 }
 
 
+- (void) doneButtonPressed {
+    [self.urlField.textView resignFirstResponder];
+}
+
+
 #pragma mark - UITextFieldDelegate
 - (void) textFieldDidEndEditing:(UITextField *)textField {
-    [textField trimWhiteSpace:textField];
-    if (textField.text && ![textField.text isEqualToString:@""]) {
+    [textField trimWhiteSpace];
+    _serverName = textField.text;
+    
+    if (_serverName && ![_serverName isEqualToString:@""]) {
         self.nameIsValid = YES;
         [self.nameField useNormalAppearance];
     } else {
@@ -132,29 +140,54 @@
 
 #pragma mark - MCTextViewCellDelegate
 - (void)textViewCellDidEndEditing:(UITextView *)textView {
-    [textView trimWhiteSpace:textView];
+    [self.statusCell.descriptionLabel setText:@"Processing layers from server, this may take a moment."];
+    NSIndexPath *cellPath = [self.tableView indexPathForCell:self.statusCell];
+    [self.tableView reloadRowsAtIndexPaths:@[cellPath
+    ] withRowAnimation:UITableViewRowAnimationNone];
     
-    [textView isValidTileServerURL:textView withResult:^(BOOL isValid) {
-        if (isValid) {
-            NSLog(@"Valid URL");
-            self.urlIsValid = YES;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.urlField useNormalAppearance];
-            });
-        } else {
+    _serverURL = textView.text;
+    
+    [textView trimWhiteSpace:textView];
+    [textView isValidTileServerURL:textView withResult:^(MCTileServerResult * _Nonnull tileServerResult) {
+        MCServerError *error = (MCServerError *)tileServerResult.failure;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.statusCell.descriptionLabel setText:@""];
+        });
+        
+        if (tileServerResult.failure != nil && error.code != MCNoError) {
             NSLog(@"Bad URL");
             self.urlIsValid = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.urlField useErrorAppearance];
+                [self.buttonCell disableButton];
+                NSDictionary *userInfo = error.userInfo;
+                
+                [self.statusCell.descriptionLabel setText:userInfo[@"message"]];
+                
+                NSIndexPath *cellPath = [self.tableView indexPathForCell:self.statusCell];
+                [self.tableView reloadRowsAtIndexPaths:@[cellPath
+                ] withRowAnimation:UITableViewRowAnimationNone];
             });
+        } else {
+            NSLog(@"Valid URL");
+            self.urlIsValid = YES;
+            self.tileServer = (MCTileServer *)tileServerResult.success;
+            
+            if (self.tileServer.serverType == MCTileServerTypeWms && [self.serverName  isEqualToString: @""]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.nameField setFieldText:self.tileServer.serverName];
+                });
+            }
+            
+            if (self.nameIsValid) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.urlField useNormalAppearance];
+                    [self.buttonCell enableButton];
+                });
+            }
         }
     }];
-    
-    if (self.nameIsValid && self.urlIsValid) {
-        [self.buttonCell enableButton];
-    } else {
-        [self.buttonCell disableButton];
-    }
 }
 
 
@@ -177,10 +210,13 @@
 
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
-    BOOL didSave = [self.saveTileServerDelegate saveURL:[self.urlField getText] forServerNamed:[self.nameField fieldValue]];
+    BOOL didSave = [self.saveTileServerDelegate saveURL:self.serverURL forServerNamed:self.serverName tileServer:self.tileServer];
     
     if (didSave) {
         [self.drawerViewDelegate popDrawer];
+    } else {
+        NSLog(@"Problem saving tile server");
+        // TODO: let the user know
     }
 }
 

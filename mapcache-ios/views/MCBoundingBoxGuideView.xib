@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,6 +13,7 @@
                 <outlet property="controlView" destination="ynA-GN-QYc" id="UUb-xR-iYa"/>
                 <outlet property="guideView" destination="RWm-CU-Lbt" id="2Hg-rd-AFe"/>
                 <outlet property="instructionsLabel" destination="Eaq-tZ-kb1" id="UrR-3A-Xdi"/>
+                <outlet property="layerButton" destination="tGI-Pv-oez" id="u5N-rk-RLi"/>
                 <outlet property="view" destination="iN0-l3-epB" id="244-cG-BDg"/>
             </connections>
         </placeholder>
@@ -24,12 +24,29 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RWm-CU-Lbt" customClass="MCBoundingBoxPassthroughView">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="741"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tGI-Pv-oez">
+                            <rect key="frame" x="24" y="693" width="40" height="40"/>
+                            <color key="backgroundColor" red="0.1019607843" green="0.64705882349999999" blue="0.67843137249999996" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="17M-zT-3Ix"/>
+                                <constraint firstAttribute="width" constant="40" id="Jgn-cB-k5Y"/>
+                            </constraints>
+                            <state key="normal" image="layers"/>
+                            <connections>
+                                <action selector="chooseLayer:" destination="-1" eventType="touchUpInside" id="12F-fW-gY1"/>
+                            </connections>
+                        </button>
+                    </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="tGI-Pv-oez" firstAttribute="leading" secondItem="RWm-CU-Lbt" secondAttribute="leading" constant="24" id="LoV-gB-l6H"/>
+                    </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ynA-GN-QYc">
                     <rect key="frame" x="0.0" y="741" width="414" height="155"/>
                     <subviews>
-                        <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="863-2a-6cd">
+                        <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="863-2a-6cd">
                             <rect key="frame" x="16" y="73" width="183" height="50"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
@@ -47,7 +64,7 @@
                                 <action selector="cancel:" destination="-1" eventType="touchUpInside" id="tFV-3t-ufb"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pdt-KD-Ctt">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pdt-KD-Ctt">
                             <rect key="frame" x="215" y="73" width="183" height="50"/>
                             <color key="backgroundColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
@@ -93,6 +110,7 @@
                     </constraints>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="RWm-CU-Lbt" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="87I-4V-yd2"/>
@@ -100,11 +118,14 @@
                 <constraint firstItem="RWm-CU-Lbt" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="HMD-pl-vgX"/>
                 <constraint firstItem="ynA-GN-QYc" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="T33-Kr-q6l"/>
                 <constraint firstAttribute="bottom" secondItem="ynA-GN-QYc" secondAttribute="bottom" id="dQj-Tr-H9m"/>
+                <constraint firstItem="ynA-GN-QYc" firstAttribute="top" secondItem="tGI-Pv-oez" secondAttribute="bottom" constant="8" symbolic="YES" id="qiy-nF-cX6"/>
                 <constraint firstItem="RWm-CU-Lbt" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="uHR-6L-6GP"/>
                 <constraint firstItem="ynA-GN-QYc" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="zB7-hT-Dzj"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="131.8840579710145" y="125.89285714285714"/>
         </view>
     </objects>
+    <resources>
+        <image name="layers" width="33" height="33"/>
+    </resources>
 </document>

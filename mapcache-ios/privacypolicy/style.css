@@ -34,3 +34,14 @@ p {
     width: 66%;
     display: inline-block;
 }
+
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #000;
+    }
+    
+    h1, h3, p {
+        color: #fff;
+    }
+}

@@ -7,7 +7,7 @@
 //
 
 #import "GPKGSSelectFeatureTableViewController.h"
-#import "GPKGSUtils.h"
+#import "MCUtils.h"
 
 @interface GPKGSSelectFeatureTableViewController ()
 
@@ -55,7 +55,7 @@
     self.tableMapping = tempTableMapping;
     
     if([self.databases count] == 0){
-        [GPKGSUtils disableButton:self.okButton];
+        [MCUtils disableButton:self.okButton];
     }else{
         self.tables = [self.tableMapping objectForKey:[NSNumber numberWithInt:0]];
         self.databasePicker.dataSource = self;

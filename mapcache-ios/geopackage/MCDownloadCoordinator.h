@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "MCDownloadGeopackage.h"
-#import "GPKGSUtils.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
+#import "MCUtils.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
 
 
 @protocol GPKGSDownloadCoordinatorDelegate <NSObject>

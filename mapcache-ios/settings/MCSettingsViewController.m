@@ -7,6 +7,7 @@
 //
 
 #import "MCSettingsViewController.h"
+#import "mapcache_ios-Swift.h"
 
 NSString *const SHOW_NOTICE = @"showNotice";
 NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
@@ -20,6 +21,8 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 @property (nonatomic, strong) MCSwitchCell *zoomSwitchCell;
 @property (nonatomic, strong) NSUserDefaults *settings;
 @property (nonatomic) BOOL haveScrolled;
+@property (nonatomic, strong) NSDictionary *savedTileServers;
+@property (nonatomic, strong) MCTileServer *expandedServer;
 @end
 
 @implementation MCSettingsViewController
@@ -28,29 +31,29 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     [super viewDidLoad];
     
     self.haveScrolled = NO;
-    CGRect bounds = self.view.bounds;
-    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
-    self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] init];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.estimatedRowHeight = 390.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 390.0;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    self.savedTileServers = [[MCTileServerRepository shared] getTileServers];
     [self registerCellTypes];
     [self initCellArray];
-    
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.extendedLayoutIncludesOpaqueBars = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
-    self.tableView.contentInset = tabBarInsets;
-    self.tableView.scrollIndicatorInsets = tabBarInsets;
-    [self.view addSubview:self.tableView];
+    [self addAndConstrainSubview:self.tableView];
     
     [self addDragHandle];
     [self addCloseButton];
+    
+}
+
+
+- (void) update {
+    self.savedTileServers = [[MCTileServerRepository shared] getTileServers];
+    [self initCellArray];
+    [self.tableView reloadData];
 }
 
 
@@ -66,40 +69,111 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     
     MCTitleCell *titleCell = [_tableView dequeueReusableCellWithIdentifier:@"title"];
     titleCell.label.text = @"Settings";
-    [_cellArray addObject:titleCell];
+    
     
     self.settings = [NSUserDefaults standardUserDefaults];
-    
     _baseMapSelector = [_tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
     _baseMapSelector.label.text = @"Base Map Type";
     _baseMapSelector.delegate = self;
-    NSArray *maps = [[NSArray alloc] initWithObjects: [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD],
-                     [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE],
-                     [GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_HYBRID], nil];
-    
-    [_baseMapSelector setItems:maps];
+    NSArray *maps = [[NSArray alloc] initWithObjects: [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD],
+                     [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE],
+                     [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_HYBRID], nil];
+    [_baseMapSelector updateItems:maps];
     
     NSString *mapType = [self.settings stringForKey:GPKGS_PROP_MAP_TYPE];
-    if (mapType == nil || [mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
+    if (mapType == nil || [mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
         [_baseMapSelector.segmentedControl setSelectedSegmentIndex:0];
-    } else if ([mapType isEqualToString:[GPKGSProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
+    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
         [_baseMapSelector.segmentedControl setSelectedSegmentIndex:1];
     } else {
         [_baseMapSelector.segmentedControl setSelectedSegmentIndex:2];
     }
     
-    [_cellArray addObject:_baseMapSelector];
+    NSArray *topCells = @[titleCell, _baseMapSelector];
+    [_cellArray addObject:topCells];
+    
+    MCTileServer *defaultServer = [[MCTileServer alloc] initWithServerName:@"GEOINT Services OSM"];
+    defaultServer.url = @"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png";
+    defaultServer.serverType = MCTileServerTypeXyz;
+    MCTileServerCell *defaultServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileServerCell"];
+    [defaultServerCell setContentWithTileServer:defaultServer];
+    
+    if (self.basemapTileServer.serverName == defaultServer.serverName) {
+        [defaultServerCell activeIndicatorOn];
+    } else {
+        [defaultServerCell activeIndicatorOff];
+    }
+    
+    NSMutableArray *serverCells = [[NSMutableArray alloc] init];
+    [serverCells addObject:defaultServerCell];
+    
+    if (self.savedTileServers) {
+        NSArray *serverNames = [self.savedTileServers allKeys];
+        for (NSString *serverName in serverNames) {
+            MCTileServer *tileServer = [self.savedTileServers objectForKey:serverName];
+            MCTileServerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileServerCell"];
+            [tileServerCell setContentWithTileServer:tileServer];
+                        
+            NSMutableArray *wmsLayers = [[NSMutableArray alloc] init];
+            
+            if (tileServer.serverType == MCTileServerTypeWms) {
+                NSString *layerLabel = tileServer.layers.count == 1? @"layer" : @"layers";
+                NSString *details = [NSString stringWithFormat:@"%lu %@", (unsigned long)tileServer.layers.count, layerLabel];
+                [tileServerCell setLayersLabelText:details];
+                
+                if ([self.basemapTileServer.serverName isEqualToString:tileServer.serverName]) {
+                    [tileServerCell activeIndicatorOn];
+                } else {
+                    [tileServerCell activeIndicatorOff];
+                }
+                
+                if ([self.expandedServer.serverName isEqualToString:tileServer.serverName]) {
+                    for (MCLayer *layer in tileServer.layers) {
+                        MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
+                        [layerCell setContentsWithLayer:layer tileServer:tileServer];
+                        
+                        if (self.basemapTileServer.serverName == tileServer.serverName && self.basemapLayer.name == layer.name) {
+                            [layerCell activeIndicatorOn];
+                        }
+                        
+                        [wmsLayers addObject:layerCell];
+                    }
+                }
+            }
+            
+            if (tileServer.serverType == MCTileServerTypeError) {
+                [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:MC_PROP_ICON_TILE_SERVER_ERROR]]];
+                [tileServerCell setLayersLabelText:@"Unable to reach server"];
+                [tileServerCell activeIndicatorOff];
+            } else {
+                [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
+            }
+            
+            [serverCells addObject:tileServerCell];
+            [serverCells addObjectsFromArray:wmsLayers];
+        }
+    }
+    
+    [self.cellArray addObject:serverCells];
+    
+    NSMutableArray *bottomCells = [[NSMutableArray alloc] init];
+    
+    MCButtonCell *tileURLServerManagerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
+    [tileURLServerManagerButtonCell setButtonLabel:@"New Tile Server"];
+    tileURLServerManagerButtonCell.action = SHOW_TILE_URL_MANAGER;
+    tileURLServerManagerButtonCell.delegate = self;
+    [bottomCells addObject:tileURLServerManagerButtonCell];
     
     _maxFeaturesCell = [_tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     _maxFeaturesCell.title.text = @"Maximum number of features";
     int maxFeatures = (int)[self.settings integerForKey:GPKGS_PROP_MAP_MAX_FEATURES];
     if(maxFeatures == 0){
-        maxFeatures = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
+        maxFeatures = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
     }
     _maxFeaturesCell.field.text = [NSString stringWithFormat:@"%d", maxFeatures];
     [_maxFeaturesCell setTextFielDelegate:self];
     [_maxFeaturesCell setupNumericalKeyboard];
-    [_cellArray addObject:_maxFeaturesCell];
+    [bottomCells addObject:_maxFeaturesCell];
     
     _alertSwitchCell = [_tableView dequeueReusableCellWithIdentifier:@"switchCell"];
     _alertSwitchCell.label.text = @"Max feature warning";
@@ -110,7 +184,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     } else {
         [_alertSwitchCell switchOff];
     }
-    [_cellArray addObject:_alertSwitchCell];
+    [bottomCells addObject:_alertSwitchCell];
     
     _zoomSwitchCell = [_tableView dequeueReusableCellWithIdentifier:@"switchCell"];
     _zoomSwitchCell.label.text = @"Zoom level indicator";
@@ -121,21 +195,15 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     } else {
         [_zoomSwitchCell switchOn];
     }
-    [_cellArray addObject:_zoomSwitchCell];
-    
-    MCButtonCell *tileURLServerManagerButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
-    [tileURLServerManagerButtonCell setButtonLabel:@"Saved Tile Server URLs"];
-    tileURLServerManagerButtonCell.action = SHOW_TILE_URL_MANAGER;
-    tileURLServerManagerButtonCell.delegate = self;
-    [_cellArray addObject:tileURLServerManagerButtonCell];
+    [bottomCells addObject:_zoomSwitchCell];
     
     MCButtonCell *showNoticesButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
     [showNoticesButtonCell setButtonLabel:@"About MapCache"];
     showNoticesButtonCell.action = SHOW_NOTICE;
     showNoticesButtonCell.delegate = self;
     [showNoticesButtonCell useSecondaryColors];
-    [_cellArray addObject:showNoticesButtonCell];
-
+    [bottomCells addObject:showNoticesButtonCell];
+    [_cellArray addObject:bottomCells];
 }
 
 
@@ -147,17 +215,53 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     [self.tableView registerNib:[UINib nibWithNibName:@"MCSwitchCell" bundle:nil] forCellReuseIdentifier:@"switchCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"buttonCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCLayerCell" bundle:nil] forCellReuseIdentifier:@"layerCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCTileServerCell" bundle:nil] forCellReuseIdentifier:@"tileServerCell"];
 }
 
 
 #pragma mark - TableView delegate methods
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    return [_cellArray objectAtIndex:indexPath.row];
+    return [[_cellArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
 }
     
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSArray *cells = [_cellArray objectAtIndex:section];
+    return [cells count];
+}
+
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [_cellArray count];
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    NSArray *cells = [_cellArray objectAtIndex:indexPath.section];
+    
+    if ([[cells objectAtIndex:indexPath.row] isKindOfClass:MCTileServerCell.class]) {
+        MCTileServerCell *cell = (MCTileServerCell *)[cells objectAtIndex:indexPath.row];
+        MCTileServer *tappedServer = cell.tileServer;
+        
+        if (tappedServer.serverType == MCTileServerTypeWms) {
+            if (self.expandedServer == nil) {
+                self.expandedServer = tappedServer;
+                [self initCellArray];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+            } else if (self.expandedServer != nil) {
+                if ([tappedServer.serverName isEqualToString:self.expandedServer.serverName]) {
+                    self.expandedServer = nil;
+                } else {
+                    self.expandedServer = tappedServer;
+                }
+                
+                [self initCellArray];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+            }
+        }
+    }
 }
 
 
@@ -177,6 +281,154 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
         scrollView.scrollEnabled = YES;
     } else {
         scrollView.scrollEnabled = YES;
+    }
+}
+
+
+// Choose which types of cells can have swipe actions
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSArray *cells = [_cellArray objectAtIndex:indexPath.section];
+    
+    if ([[cells objectAtIndex:indexPath.row] isKindOfClass:[MCLayerCell class]] || [[cells objectAtIndex:indexPath.row] isKindOfClass:MCTileServerCell.class]) {
+        return YES;
+    }
+      
+    return NO;
+}
+
+
+- (UISwipeActionsConfiguration *) tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    MCLayerCell *layerCell = nil;
+    MCTileServerCell *tileServerCell = nil;
+    NSArray *cells = [_cellArray objectAtIndex:indexPath.section];
+    
+    if ([[cells objectAtIndex:indexPath.row] isKindOfClass:MCTileServerCell.class]) {
+        tileServerCell = (MCTileServerCell *)[cells objectAtIndex:indexPath.row];
+    } else if ([[cells objectAtIndex:indexPath.row] isKindOfClass:MCLayerCell.class]) {
+        layerCell = (MCLayerCell *)[cells objectAtIndex:indexPath.row];
+    }
+    
+    if (tileServerCell != nil && tileServerCell.tileServer.serverType == MCTileServerTypeWms) {
+        UISwipeActionsConfiguration *emptyConfiguration = [UISwipeActionsConfiguration configurationWithActions:@[]];
+        return emptyConfiguration;
+    }
+    
+    UIContextualAction *toggleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"Add to map" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        
+        if (tileServerCell != nil) {
+            if (tileServerCell.tileServer.serverType == MCTileServerTypeXyz) {
+                if ([tileServerCell.visibilityStatusIndicator isHidden]) {
+                    self.basemapTileServer = tileServerCell.tileServer;
+                    self.basemapLayer = [[MCLayer alloc] init];
+                    [self.settingsDelegate setUserBasemap:tileServerCell.tileServer layer:[[MCLayer alloc] init]];
+                } else {
+                    [self.settingsDelegate setUserBasemap:nil layer:nil];
+                    self.basemapTileServer = [[MCTileServer alloc] init];
+                    self.basemapLayer = [[MCLayer alloc] init];
+                }
+            }
+            
+            [self updateActiveIndicators];
+        } else if (layerCell != nil) {
+            if ([layerCell.activeIndicator isHidden]) {
+                self.basemapTileServer = layerCell.tileServer;
+                self.basemapLayer = layerCell.mapLayer;
+                [self->_settingsDelegate setUserBasemap:layerCell.tileServer layer:layerCell.mapLayer];
+            } else {
+                [self.settingsDelegate setUserBasemap:nil layer:nil];
+                self.basemapTileServer = [[MCTileServer alloc] init];
+                self.basemapLayer = [[MCLayer alloc] init];
+            }
+            
+            [layerCell toggleActiveIndicator];
+            [self updateActiveIndicators];
+        }
+        
+        completionHandler(YES);
+    }];
+    
+    if (tileServerCell != nil) {
+        if (tileServerCell.tileServer.serverType == MCTileServerTypeXyz) {
+            if ([tileServerCell.visibilityStatusIndicator isHidden]) {
+                [toggleAction setBackgroundColor: [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0]];
+                [toggleAction setTitle:@"Use as basemap"];
+            } else {
+                [toggleAction setBackgroundColor: [UIColor grayColor]];
+                [toggleAction setTitle:@"Remove basemap"];
+            }
+        }
+    } else if (layerCell != nil) {
+        if ([layerCell.activeIndicator isHidden]) {
+            [toggleAction setBackgroundColor: [UIColor colorWithRed:0.13 green:0.31 blue:0.48 alpha:1.0]];
+            [toggleAction setTitle:@"Use layer as basemap"];
+        } else {
+            [toggleAction setBackgroundColor: [UIColor grayColor]];
+            [toggleAction setTitle: @"Remove basemap"];
+        }
+    }
+    
+    UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[toggleAction]];
+    configuration.performsFirstActionWithFullSwipe = YES;
+    return configuration;
+}
+
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    // if the server is the default NGA OSM server, dont let them edit or delete it
+    MCLayerCell *layerCell = nil;
+    MCTileServerCell *tileServerCell = nil;
+    NSArray *cells = [_cellArray objectAtIndex:indexPath.section];
+    
+    if ([[cells objectAtIndex:indexPath.row] isKindOfClass:MCTileServerCell.class]) {
+        tileServerCell = (MCTileServerCell *)[cells objectAtIndex:indexPath.row];
+    } else if ([[cells objectAtIndex:indexPath.row] isKindOfClass:MCLayerCell.class]) {
+        layerCell = (MCLayerCell *)[cells objectAtIndex:indexPath.row];
+    }
+    
+    UISwipeActionsConfiguration *emptyConfiguration = [UISwipeActionsConfiguration configurationWithActions:@[]];
+    if (layerCell != nil) {
+        return emptyConfiguration;
+    } else if (tileServerCell != nil && [tileServerCell.tileServer.serverName isEqualToString:@"GEOINT Services OSM"]) {
+        return emptyConfiguration;
+    }
+    
+    UIContextualAction *editAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Edit" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        MCLayerCell *cell = [cells objectAtIndex:indexPath.row];
+        [self.settingsDelegate editTileServer:cell.layerNameLabel.text];
+        completionHandler(YES);
+    }];
+    
+    UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        MCLayerCell *cell = [cells objectAtIndex:indexPath.row];
+        [self.settingsDelegate deleteTileServer: cell.tileServer.serverName];
+        completionHandler(YES);
+    }];
+    
+    editAction.backgroundColor = [UIColor purpleColor];
+    deleteAction.backgroundColor = [UIColor redColor];
+    UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:@[editAction, deleteAction]];
+    configuration.performsFirstActionWithFullSwipe = YES;
+    return configuration;
+}
+
+
+- (void) updateActiveIndicators {
+    for (UITableViewCell *cell in self.cellArray[1]) {
+        if ([cell isKindOfClass:MCTileServerCell.class]) {
+            MCTileServerCell *serverCell = (MCTileServerCell*)cell;
+            
+            if ([serverCell.tileServer.serverName isEqualToString:self.basemapTileServer.serverName]) {
+                [serverCell toggleActiveIndicator];
+            } else {
+                [serverCell activeIndicatorOff];
+            }
+        } else if ([cell isKindOfClass:MCLayerCell.class]) {
+            MCLayerCell *layerCell = (MCLayerCell *)cell;
+            
+            if (![layerCell.mapLayer.name isEqualToString:self.basemapLayer.name]) {
+                [layerCell activeIndicatorOff];
+            }
+        }
     }
 }
 

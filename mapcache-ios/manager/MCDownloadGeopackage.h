@@ -17,10 +17,9 @@
 - (void)downloadFileViewController:(MCDownloadGeopackage *)controller downloadedFile:(BOOL)downloaded withError: (NSString *) error;
 @end
 
-@interface MCDownloadGeopackage : NGADrawerViewController <GPKGProgress, UITextViewDelegate>
+@interface MCDownloadGeopackage : NGADrawerViewController <GPKGProgress, UITextFieldDelegate>
 - (instancetype) initAsFullView:(BOOL) isFullView withExample:(BOOL) prefillExample;
 @property (nonatomic, strong) id <MCDownloadDelegate> delegate;
-@property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *preloadedButton;
 @property (weak, nonatomic) IBOutlet UIButton *importButton;

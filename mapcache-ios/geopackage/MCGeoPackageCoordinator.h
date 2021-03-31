@@ -11,10 +11,10 @@
 #import <GPKGTileBoundingBoxUtils.h>
 #import <GPKGTileGrid.h>
 #import "SFPProjectionFactory.h"
-#import "GPKGSLoadTilesTask.h"
+#import "MCLoadTilesTask.h"
 #import "MCGeopackageSingleViewController.h"
-#import "GPKGSDatabase.h"
-#import "GPKGSDatabases.h"
+#import "MCDatabase.h"
+#import "MCDatabases.h"
 #import "GPKGSCreateTilesData.h"
 #import "GPKGSLoadTilesData.h"
 #import "GPKGSGenerateTilesData.h"
@@ -24,22 +24,27 @@
 #import "MCTileLayerDetailsViewController.h"
 #import "MCBoundingBoxGuideView.h"
 #import "MCZoomAndQualityViewController.h"
-#import "MCLayerViewController.h"
-#import "GPKGSDisplayTextViewController.h"
 #import "MCFeatureLayerOperationsCell.h"
-#import "MCLayerCoordinator.h"
 #import "MCMapCoordinator.h"
 #import "MCTileServerHelpViewController.h"
 #import "MCSettingsCoordinator.h"
 #import "MCTileServerURLManagerViewController.h"
+#import "MCFeatureLayerDetailsViewController.h"
+#import "MCGeoPackageRepository.h"
+#import "WMSTileOverlay.h"
+#import "MCLayerSelectViewController.h"
 
+
+@class MCTileServer;
+@class MCLayer;
 
 @protocol MCMapDelegate;
+@protocol MCLayerCoordinatorDelegate;
 @protocol MCGeoPackageCoordinatorDelegate <NSObject>
 - (void) geoPackageCoordinatorCompletionHandlerForDatabase:(NSString *) database withDelete:(BOOL)didDelete;
 @end
 
-@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCBoundingBoxGuideDelegate, MCZoomAndQualityDelegate, MCCreateLayerDelegate, GPKGSLoadTilesProtocol, MCSelectTileServerDelegate>
-- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(GPKGSDatabase *) database;
+@interface MCGeoPackageCoordinator: NSObject <MCOperationsDelegate, MCFeatureLayerCreationDelegate, MCTileLayerDetailsDelegate, MCBoundingBoxGuideDelegate, MCZoomAndQualityDelegate, GPKGSLoadTilesProtocol, MCSelectTileServerDelegate, MCFeatureLayerCreationDelegate, MCLayerCoordinatorDelegate, MCLayerSelectDelegate>
+- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(MCDatabase *) database;
 - (void) start;
 @end

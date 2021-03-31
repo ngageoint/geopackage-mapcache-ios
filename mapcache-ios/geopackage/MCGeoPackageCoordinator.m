@@ -7,6 +7,7 @@
 //
 
 #import "MCGeoPackageCoordinator.h"
+#import "mapcache_ios-Swift.h"
 
 
 @interface MCGeoPackageCoordinator()
@@ -15,30 +16,34 @@
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerDelegate;
 @property (nonatomic, strong) id<MCMapDelegate> mapDelegate;
 @property (nonatomic, strong) GPKGGeoPackageManager *manager;
-@property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureDetailsController;
 @property (nonatomic, strong) MCTileLayerDetailsViewController *tileDetailsController;
 @property (nonatomic, strong) MCBoundingBoxGuideView *boundingBoxGuideViewController;
 @property (nonatomic, strong) MCZoomAndQualityViewController *zoomAndQualityViewController;
-@property (nonatomic, strong) GPKGSDatabases *active;
-@property (nonatomic, strong) GPKGSDatabase *database;
+@property (nonatomic, strong) MCFeatureLayerDetailsViewController *featureLayerDetailsView;
+@property (nonatomic, strong) MCDatabases *active;
+@property (nonatomic, strong) MCDatabase *database;
+@property (nonatomic, strong) MCTileServer *tileServer;
+@property (nonatomic) NSInteger selectedLayerIndex;
 @property (nonatomic, strong) GPKGSCreateTilesData * tileData;
+@property (nonatomic, strong) MCGeoPackageRepository *repository;
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
 @end
 
 
 @implementation MCGeoPackageCoordinator
 
-- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(GPKGSDatabase *) database {
+- (instancetype) initWithDelegate:(id<MCGeoPackageCoordinatorDelegate>)geoPackageCoordinatorDelegate andDrawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate andMapDelegate:(id<MCMapDelegate>) mapDelegate andDatabase:(MCDatabase *) database {
     self = [super init];
     
     _childCoordinators = [[NSMutableArray alloc] init];
     _manager = [GPKGGeoPackageFactory manager];
+    _repository = [MCGeoPackageRepository sharedRepository];
     _geoPackageCoordinatorDelegate = geoPackageCoordinatorDelegate;
     _drawerDelegate = drawerDelegate;
     _mapDelegate = mapDelegate;
     _database = database;
-    _active = [GPKGSDatabases getInstance];
+    _active = [MCDatabases getInstance];
     
     return self;
 }
@@ -51,21 +56,20 @@
     _geoPackageViewController.delegate = self;
     _geoPackageViewController.drawerViewDelegate = _drawerDelegate;
     [_drawerDelegate pushDrawer:_geoPackageViewController];
-    
-    //[_navigationController pushViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAndReload:) name:MC_GEOPACKAGE_MODIFIED_NOTIFICATION object:nil];
+}
+
+
+- (void)updateAndReload:(NSNotification *) notification {
+    _database = [_repository refreshDatabaseAndUpdateList:_database.name];
+    _geoPackageViewController.database = _database;
+    [_geoPackageViewController update];
 }
 
 
 #pragma mark - GeoPackage View delegate methods
-- (void) newLayer {
+- (void) newTileLayer {
     NSLog(@"Coordinator handling new layer");
-    
-    // Future release will bring feature and tile layers, for now starting with just the tiles.
-//    MCCreateLayerViewController *createLayerViewControler = [[MCCreateLayerViewController alloc] initWithNibName:@"MCCreateLayerView" bundle:nil];
-//    createLayerViewControler.delegate = self;
-//    createLayerViewControler.drawerViewDelegate = _drawerDelegate;
-//    [createLayerViewControler.drawerViewDelegate pushDrawer:createLayerViewControler];
-    
     NSLog(@"Adding new tile layer");
     _tileData = [[GPKGSCreateTilesData alloc] init];
     _tileDetailsController = [[MCTileLayerDetailsViewController alloc] initAsFullView:YES];
@@ -75,72 +79,30 @@
 }
 
 
+- (void) newFeatureLayer {
+    _featureLayerDetailsView = [[MCFeatureLayerDetailsViewController alloc] initAsFullView:YES];
+    _featureLayerDetailsView.delegate = self;
+    _featureLayerDetailsView.drawerViewDelegate = _drawerDelegate;
+    _featureLayerDetailsView.database = self.database;
+    [_featureLayerDetailsView pushOntoStack];
+}
+
+
 - (void) updateDatabase {
-    GPKGGeoPackage *geoPackage = nil;
-    GPKGSDatabase *updatedDatabase = nil;
-    
-    @try {
-        geoPackage = [_manager open:_database.name];
-        
-        GPKGContentsDao *contentsDao = [geoPackage contentsDao];
-        NSMutableArray *tables = [[NSMutableArray alloc] init];
-        
-        updatedDatabase = [[GPKGSDatabase alloc] initWithName:_database.name andExpanded:false];
-        
-        // Handle the Feature Layers
-        for (NSString *tableName in [geoPackage featureTables]) {
-            GPKGFeatureDao *featureDao = [geoPackage featureDaoWithTableName:tableName];
-            int count = [featureDao count];
-            GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:tableName];
-            GPKGGeometryColumns *geometryColumns = [contentsDao geometryColumns:contents];
-            enum SFGeometryType geometryType = [SFGeometryTypes fromName:geometryColumns.geometryTypeName];
-            GPKGSFeatureTable *table = [[GPKGSFeatureTable alloc] initWithDatabase:_database.name andName:tableName andGeometryType:geometryType andCount:count];
-            
-            [tables addObject:table];
-            [updatedDatabase addFeature:table];
-        }
-        
-        // Handle the tile layers
-        for (NSString *tableName in [geoPackage tileTables]) {
-            GPKGTileDao *tileDao = [geoPackage tileDaoWithTableName:tableName];
-            int count = [tileDao count];
-            
-            GPKGSTileTable *table = [[GPKGSTileTable alloc] initWithDatabase:_database.name andName:tableName andCount:count andMinZoom:tileDao.minZoom andMaxZoom:tileDao.maxZoom];
-            
-            [tables addObject:table];
-            [updatedDatabase addTile:table];
-        }
-        
-        // TODO: Figure out what to do about overlays
-    }
-    @finally {
-        if (geoPackage == nil) {
-            @try {
-                [_manager delete:_database.name];
-            }
-            @catch (NSException *exception) {
-            }
-        } else {
-            if (updatedDatabase != nil) {
-                _database = updatedDatabase;
-                _geoPackageViewController.database = _database;
-                [_geoPackageViewController update];
-            }
-            [geoPackage close];
-        }
-    }
+    _database = [_repository refreshDatabaseAndUpdateList:self.database.name];
+    self.geoPackageViewController.database = _database;
+    [self.geoPackageViewController update];
 }
 
 
 - (void) copyGeoPackage {
-    //[_navigationController popViewControllerAnimated:YES]; // TODO replace with drawer
     [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
 }
 
 
 - (void) deleteGeoPackage {
     NSLog(@"Coordinator handling delete");
-    //[_navigationController popViewControllerAnimated:YES]; // TODO replace with drawer
+    self.geoPackageViewController = nil;
     [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:YES];
 }
 
@@ -148,10 +110,11 @@
 - (void) callCompletionHandler {
     NSLog(@"Close pressed");
     [_geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_database.name withDelete:NO];
+    [_repository setSelectedGeoPackageName:@""];
 }
 
 
-- (void) deleteLayer:(GPKGSTable *) table {
+- (void) deleteLayer:(MCTable *) table {
     GPKGGeoPackage *geoPackage = nil;
     
     @try {
@@ -162,8 +125,8 @@
         [_mapDelegate updateMapLayers];
     }
     @catch (NSException *exception) {
-        [GPKGSUtils showMessageWithDelegate:self
-                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], _database.name, table.name]
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[NSString stringWithFormat:@"%@ %@ - %@ Table", [MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_TABLE_DELETE_LABEL], _database.name, table.name]
                                  andMessage:[NSString stringWithFormat:@"%@", [exception description]]];
     }
     @finally {
@@ -172,11 +135,11 @@
 }
 
 
-- (void) toggleLayer:(GPKGSTable *) table; {
+- (void) toggleLayer:(MCTable *) table; {
     if ([_database exists:table]) {
         
         if ([_active isActive:_database]) {
-            GPKGSDatabase *activeDatabase = [_active getDatabaseWithName:_database.name];
+            MCDatabase *activeDatabase = [_active getDatabaseWithName:_database.name];
             if ([activeDatabase existsWithTable:table.name ofType:table.getType]) {
                 [_active removeTable:table];
             } else {
@@ -191,76 +154,77 @@
 }
 
 
-- (void) showLayerDetails:(GPKGUserDao *) layerDao {
-    NSLog(@"In showLayerDetails with %@", layerDao.tableName);
-    // TODO: Update to show the layerDetailsView in a drawer
-}
-
-
-#pragma mark - CreateLayerViewController delegate methods
-- (void) newFeatureLayer {
-    NSLog(@"Adding new feature layer");
-    _featureDetailsController = [[MCFeatureLayerDetailsViewController alloc] init];
-    _featureDetailsController.database = _database;
-    _featureDetailsController.delegate = self;
-    //[_navigationController pushViewController:_featureDetailsController animated:YES]; // TODO replace with drawer
-}
-
-
-// Temporarily moving this to new layer since initially they can only make tile layers.
-- (void) newTileLayer {
-    NSLog(@"Adding new tile layer");
-    _tileData = [[GPKGSCreateTilesData alloc] init];
-    _tileDetailsController = [[MCTileLayerDetailsViewController alloc] init];
-    _tileDetailsController.delegate = self;
-    _tileDetailsController.drawerViewDelegate = _drawerDelegate;
-    // [_navigationController pushViewController:_tileDetailsController animated:YES]; // TODO replace with drawer
-}
-
-
-#pragma mark - GPKGSFeatureLayerCreationDelegate
-- (void) createFeatueLayerIn:(NSString *)database with:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId {
+- (void) showLayerDetails:(MCTable *) table {
+    NSLog(@"In showLayerDetails with %@", table.name);
     
-    GPKGGeoPackage * geoPackage;
-    @try {
-        geoPackage = [_manager open:database];
-        [geometryColumns setSrsId:srsId];
-        [geoPackage createFeatureTableWithMetadata:[GPKGFeatureTableMetadata createWithGeometryColumns:geometryColumns andBoundingBox:boundingBox]];
-    }
-    @catch (NSException *e) {
-        // TODO handle this
-        NSLog(@"There was a problem creating the layer, %@", e.reason);
-    }
-    @finally {
-        [geoPackage close];
-        //[_navigationController popToViewController:_geoPackageViewController animated:YES]; // TODO replace with drawer
-        [self updateDatabase];
+    if ([table isKindOfClass:MCTileTable.class]) {
+        MCTileTable *tileTable = (MCTileTable *)table;
+        NSUInteger zoomLevel = tileTable.maxZoom;
+        [_mapDelegate zoomToPoint:tileTable.center withZoomLevel:zoomLevel];
+    } else if ([table isKindOfClass:MCFeatureTable.class]) {
+        _repository.selectedLayerName = table.name;
     }
     
-    // TODO handle dismissing the view controllers or displaying an error message
+    MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerDelegate layerCoordinatorDelegate:self];
+    [self.childCoordinators addObject:layerCoordinator];
+    
+    [layerCoordinator start];
+}
+
+
+- (void) setSelectedDatabaseName {
+    [self.repository setSelectedGeoPackageName:self.database.name];
+}
+
+
+#pragma mark - MCFeatureLayerCreationDelegate methods
+/**
+    Add a new feature layer to the GeoPackage.
+ */
+- (void) createFeatueLayerIn:(NSString *)database withGeomertyColumns:(GPKGGeometryColumns *)geometryColumns andBoundingBox:(GPKGBoundingBox *)boundingBox andSrsId:(NSNumber *) srsId {
+    NSLog(@"creating layer %@ in database %@ ", geometryColumns.tableName, database);
+
+    BOOL didCreateLayer = [_repository createFeatueLayerIn:database withGeomertyColumns:geometryColumns boundingBox:boundingBox srsId:srsId];
+    if (didCreateLayer) {
+        [_drawerDelegate popDrawer];
+        _geoPackageViewController.database = [_repository refreshDatabaseAndUpdateList:_database.name];
+        [_geoPackageViewController update];
+    } else {
+        //TODO handle the case where a new feature layer could not be created
+    }
+}
+
+
+#pragma mark - MCLayerCoordinatorDelegate methods
+- (void) layerCoordinatorCompletionHandler {
+    // TODO update the geopackage view to reflect any changes
+    _geoPackageViewController.database = [_repository databaseNamed:_database.name];
+    [_geoPackageViewController update];
+    [self.childCoordinators removeAllObjects];
 }
 
 
 #pragma mark - MCSelectTileServerDelegate
-- (void) selectTileServer:(NSString *)serverURL {
+- (void) selectTileServer:(MCTileServer *)tileServer {
     // pass the selected server url to the tile detail view controller to display in the url field
-    NSLog(@"Selected %@", serverURL);
-    _tileDetailsController.selectedServerURL = serverURL;
+    NSLog(@"Selected %@", tileServer.url);
+    _tileDetailsController.tileServer = tileServer;
     [_tileDetailsController update];
+    
 }
 
 
 
 #pragma mark - MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name URL:(NSString *) url andReferenceSystemCode:(int)referenceCode {
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer andReferenceSystemCode:(int)referenceCode {
     _tileData.name = name;
-    _tileData.loadTiles.url = url;
+    _tileData.loadTiles.url = tileServer.url;
     _tileData.loadTiles.epsg = referenceCode;
+    _tileServer = tileServer;
     
     [_drawerDelegate popDrawerAndHide];
-    self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] init];
-    self.boundingBoxGuideViewController.delegate = self;
-    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view];
+    self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] initWithTileServer:_tileServer boundingBoxDelegate:self];
+    [_mapDelegate setupTileBoundingBoxGuide:self.boundingBoxGuideViewController.view tileUrl:[tileServer urlForLayerWithIndex:0 boundingBoxTemplate:NO] serverType:tileServer.serverType];
 }
 
 
@@ -281,13 +245,20 @@
 
 
 - (BOOL) isLayerNameAvailable: (NSString *) layerName {
-    for (GPKGSTable *table in [_database getTables]) {
+    for (MCTable *table in [_database getTables]) {
         if ([layerName isEqualToString:table.name]){
             return NO;
         }
     }
 
     return YES;
+}
+
+
+#pragma mark MCLayerSelectDelegate methods
+- (void)didSelectLayer:(NSInteger)layerIndex {
+    self.selectedLayerIndex = layerIndex;
+    [self.mapDelegate addTileOverlay: [_tileServer urlForLayerWithIndex:layerIndex boundingBoxTemplate:NO] serverType:_tileServer.serverType];
 }
 
 
@@ -326,6 +297,15 @@
 }
 
 
+- (void)showLayerSelectView {
+    MCLayerSelectViewController *layerSelectViewController = [[MCLayerSelectViewController alloc] initAsFullView:YES];
+    layerSelectViewController.drawerViewDelegate = _drawerDelegate;
+    layerSelectViewController.layerSelectDelegate = self;
+    layerSelectViewController.tileServer = self.tileServer;
+    [_drawerDelegate pushDrawer:layerSelectViewController];
+}
+
+
 #pragma mark- MCZoomAndQualityDelegate methods
 - (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
     NSLog(@"In wizard, going to call completion handler");
@@ -341,7 +321,7 @@
     [_drawerDelegate popDrawerAndHide];
     self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] init];
     self.boundingBoxGuideViewController.delegate = self;
-    [_mapDelegate setupTileBoundingBoxGuide: self.boundingBoxGuideViewController.view];
+    [_mapDelegate setupTileBoundingBoxGuide:self.boundingBoxGuideViewController.view tileUrl:[self.tileServer urlForLayerWithIndex:0 boundingBoxTemplate:NO] serverType:self.tileServer.serverType];
 }
 
 - (NSString *) updateTileDownloadSizeEstimateWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
@@ -366,9 +346,6 @@
 }
 
 
-
-
-
 - (void) cancelZoomAndQuality {
     [self.mapDelegate updateMapLayers];
     [self updateDatabase];
@@ -378,24 +355,39 @@
 #pragma mark - MCNewLayerWizardDelegate methods
 - (void) createTileLayer:(GPKGSCreateTilesData *) tileData {
     NSLog(@"Coordinator attempting to create tiles");
-    GPKGTileScaling *scaling = [GPKGSLoadTilesTask tileScaling];
+    GPKGTileScaling *scaling = [MCLoadTilesTask tileScaling];
     
-    [GPKGSLoadTilesTask loadTilesWithCallback:self
-                                  andDatabase:_database.name
-                                     andTable:tileData.name
-                                       andUrl:tileData.loadTiles.url
-                                   andMinZoom:[tileData.loadTiles.generateTiles.minZoom intValue]
-                                   andMaxZoom:[tileData.loadTiles.generateTiles.maxZoom intValue]
-                            andCompressFormat:GPKG_CF_NONE // TODO: let user set this
-                           andCompressQuality:[[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT] intValue]
-                             andCompressScale:100 // TODO: let user set this
-                                  andXyzTiles:tileData.loadTiles.generateTiles.xyzTiles
-                               andBoundingBox:tileData.loadTiles.generateTiles.boundingBox
-                               andTileScaling:scaling
-                                 andAuthority:PROJ_AUTHORITY_EPSG
-                                      andCode:[NSString stringWithFormat:@"%d",tileData.loadTiles.epsg]
-                                     andLabel:[GPKGSProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
-
+    Boolean xyzTiles = YES;
+    NSString *serverURL = @"";
+    
+    if (self.tileServer.serverType == MCTileServerTypeXyz) {
+        serverURL = self.tileServer.url;
+    } else {
+        xyzTiles = NO;
+        serverURL = [self.tileServer urlForLayerWithIndex:self.selectedLayerIndex boundingBoxTemplate:YES];
+    }
+    
+    
+    @try {
+        [MCLoadTilesTask loadTilesWithCallback:self
+               andDatabase:_database.name
+                  andTable:tileData.name
+                    andUrl:serverURL
+                andMinZoom:[tileData.loadTiles.generateTiles.minZoom intValue]
+                andMaxZoom:[tileData.loadTiles.generateTiles.maxZoom intValue]
+         andCompressFormat:GPKG_CF_NONE // TODO: let user set this
+        andCompressQuality:[[MCProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_COMPRESS_QUALITY_DEFAULT] intValue]
+          andCompressScale:100 // TODO: let user set this
+               andXyzTiles:xyzTiles // tileData.loadTiles.generateTiles.xyzTiles
+            andBoundingBox:tileData.loadTiles.generateTiles.boundingBox
+            andTileScaling:scaling
+              andAuthority:PROJ_AUTHORITY_EPSG
+                   andCode:[NSString stringWithFormat:@"%d",tileData.loadTiles.epsg]
+                  andLabel:[MCProperties getValueOfProperty:GPKGS_PROP_GEOPACKAGE_CREATE_TILES_LABEL]];
+    } @catch(NSException *e) {
+        NSLog(@"MCGeoPacakgeCoordinator - createTileLayer\n%@", e.reason);
+    }
+    
 }
 
 

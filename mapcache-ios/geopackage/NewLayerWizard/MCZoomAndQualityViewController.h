@@ -23,6 +23,6 @@
 - (NSString *) updateTileDownloadSizeEstimateWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom;
 @end
 
-@interface MCZoomAndQualityViewController : NGADrawerViewController <GPKGSButtonCellDelegate, MCZoomCellValueChangedDelegate>
+@interface MCZoomAndQualityViewController : NGADrawerViewController <MCButtonCellDelegate, MCZoomCellValueChangedDelegate>
 @property (weak, nonatomic) id<MCZoomAndQualityDelegate> zoomAndQualityDelegate;
 @end

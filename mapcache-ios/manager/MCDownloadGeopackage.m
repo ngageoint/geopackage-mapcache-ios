@@ -9,9 +9,9 @@
 #import "MCDownloadGeopackage.h"
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGIOUtils.h"
-#import "GPKGSProperties.h"
-#import "GPKGSConstants.h"
-#import "GPKGSUtils.h"
+#import "MCProperties.h"
+#import "MCConstants.h"
+#import "MCUtils.h"
 
 @interface MCDownloadGeopackage ()
 
@@ -35,8 +35,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [GPKGSUtils disableButton:self.importButton];
-    UIToolbar *keyboardToolbar = [GPKGSUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
+    [MCUtils disableButton:self.importButton];
+    UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     
     self.nameTextField.inputAccessoryView = keyboardToolbar;
     self.urlTextField.inputAccessoryView = keyboardToolbar;
@@ -50,7 +50,7 @@
     self.haveScrolled = NO;
     
     if (_prefillExample) {
-        NSArray * urls = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS];
+        NSArray * urls = [MCProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS];
         NSDictionary * url = (NSDictionary *)[urls objectAtIndex:0];
         [self.nameTextField setText:[url objectForKey:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_NAME]];
         [self.urlTextField setText:[url objectForKey:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_URL]];
@@ -86,10 +86,10 @@
     if(self.active){
         self.active = false;
         [self.importButton setTitle:@"Import" forState:UIControlStateNormal];
-        [GPKGSUtils enableButton:self.preloadedButton];
-        [GPKGSUtils enableButton:self.importButton];
-        [GPKGSUtils enableTextField:self.urlTextField];
-        [GPKGSUtils enableTextField:self.nameTextField];
+        [MCUtils enableButton:self.preloadedButton];
+        [MCUtils enableButton:self.importButton];
+        [MCUtils enableTextField:self.urlTextField];
+        [MCUtils enableTextField:self.nameTextField];
         [self.cancelButton setHidden:YES];
         [self.downloadedLabel setHidden:YES];
         [self.progressView setHidden:YES];
@@ -100,13 +100,13 @@
 
 - (IBAction)preloaded:(id)sender {
     NSMutableArray * options = [[NSMutableArray alloc] init];
-    NSArray * urls = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS];
+    NSArray * urls = [MCProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS];
     for(NSDictionary * url in urls){
         [options addObject:[url objectForKey:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_LABEL]];
     }
     
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_IMPORT_URL_PRELOADED_LABEL]
+                          initWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_IMPORT_URL_PRELOADED_LABEL]
                           message:nil
                           delegate:self
                           cancelButtonTitle:nil
@@ -115,7 +115,7 @@
     for (NSString *option in options) {
         [alert addButtonWithTitle:option];
     }
-    alert.cancelButtonIndex = [alert addButtonWithTitle:[GPKGSProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
+    alert.cancelButtonIndex = [alert addButtonWithTitle:[MCProperties getValueOfProperty:GPKGS_PROP_CANCEL_LABEL]];
     
     alert.tag = TAG_PRELOADED;
     
@@ -128,7 +128,7 @@
             
         case TAG_PRELOADED:
             if(buttonIndex >= 0){
-                NSArray * urls = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS];
+                NSArray * urls = [MCProperties getArrayOfProperty:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS];
                 if(buttonIndex < [urls count]){
                     NSDictionary * url = (NSDictionary *)[urls objectAtIndex:buttonIndex];
                     [self.nameTextField setText:[url objectForKey:GPKGS_PROP_PRELOADED_GEOPACKAGE_URLS_NAME]];
@@ -147,10 +147,10 @@
     [self.downloadedLabel setHidden:NO];
     [self.progressView setHidden:NO];
     
-    [GPKGSUtils disableButton:self.preloadedButton];
-    [GPKGSUtils disableButton:self.importButton];
-    [GPKGSUtils disableTextField:self.urlTextField];
-    [GPKGSUtils disableTextField:self.nameTextField];
+    [MCUtils disableButton:self.preloadedButton];
+    [MCUtils disableButton:self.importButton];
+    [MCUtils disableTextField:self.urlTextField];
+    [MCUtils disableTextField:self.nameTextField];
     
     GPKGGeoPackageManager * manager = [GPKGGeoPackageFactory manager];
     
@@ -220,18 +220,18 @@
 
 #pragma mark- UITextFieldDelegate methods
 - (void) textFieldDidEndEditing:(UITextField *)textField {
-    [textField trimWhiteSpace:textField];
+    [textField trimWhiteSpace];
     
     if (textField == self.urlTextField) {
         NSLog(@"URL Field ended editing");
         [self validateURLField];
     } else {
         if ([self.nameTextField.text isEqualToString:@""] || [self.urlTextField.text isEqualToString:@""]) {
-            [GPKGSUtils disableButton:self.importButton];
+            [MCUtils disableButton:self.importButton];
             [self.downloadedLabel setText:@"Check your GeoPackage's name and URL"];
             self.downloadedLabel.hidden = NO;
         } else {
-            [GPKGSUtils enableButton:self.importButton];
+            [MCUtils enableButton:self.importButton];
             [self.downloadedLabel setText:@""];
             self.downloadedLabel.hidden = YES;
         }
@@ -251,14 +251,14 @@
                 self.urlTextField.layer.borderColor = [[UIColor colorWithRed:0.79 green:0.8 blue:0.8 alpha:1] CGColor];
                 self.urlTextField.layer.borderWidth = 0.5;
                 
-                [GPKGSUtils enableButton:self.importButton];
+                [MCUtils enableButton:self.importButton];
                 [self.downloadedLabel setText:@""];
                 self.downloadedLabel.hidden = YES;
             });
         } else {
             NSLog(@"Bad url");
             dispatch_async(dispatch_get_main_queue(), ^{
-                [GPKGSUtils disableButton:self.importButton];
+                [MCUtils disableButton:self.importButton];
                 
                 [self.downloadedLabel setText:@"Invalid URL"];
                 self.downloadedLabel.hidden = NO;

@@ -9,11 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "NGADrawerCoordinator.h"
-#import "GPKGSDatabases.h"
-#import "GPKGSDatabase.h"
+#import "MCDatabases.h"
+#import "MCDatabase.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGGeoPackageFactory.h"
-#import "GPKGSUtils.h"
+#import "MCUtils.h"
 #import "GPKGUtils.h"
 #import "GPKGMapUtils.h"
 #import "GPKGTileBoundingBoxUtils.h"
@@ -26,10 +26,17 @@
 #import "MCFeatureHelper.h"
 #import "GPKGBoundingBox.h"
 #import "GPKGMapShapeTypes.h"
+#import "MCServerError.h"
 
+// forward declarations
+@class MCTileServer;
+@class MCLayer;
+typedef NS_ENUM(NSInteger, MCTileServerType);
 
 @protocol MCMapActionDelegate <NSObject>
 - (void)showMapInfoDrawer;
+- (void)updateDrawingStatus;
+- (void)showDetailsForAnnotation:(GPKGMapPoint *)mapPoint;
 @end
 
 
@@ -39,10 +46,20 @@
 @property (nonatomic, weak) IBOutlet UIButton *locationButton;
 @property (weak, nonatomic) IBOutlet UIButton *zoomIndicatorButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *zoomIndicatorButtonWidth;
+@property (nonatomic) BOOL boundingBoxMode;
 @property (nonatomic, strong) id<MCMapActionDelegate> mapActionDelegate;
+@property (nonatomic) BOOL drawing;
+@property (nonatomic, strong) NSMutableArray *tempMapPoints;
+@property (nonatomic, strong) MCDatabases *active;
 
 - (int)updateInBackgroundWithZoom: (BOOL) zoom;
+- (int)updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter;
 - (void)zoomToPointWithOffset:(CLLocationCoordinate2D) point;
+- (void)zoomToPointWithOffset:(CLLocationCoordinate2D) point zoomLevel:(NSUInteger)zoomLevel;
 - (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;
-- (void) toggleMapControls;
+- (void)toggleMapControls;
+- (void)clearTempPoints;
+- (void)removeMapPoint:(GPKGMapPoint *) mapPoint;
+- (void)addUserTilesWithUrl:(NSString *) tileTemplateURL serverType:(MCTileServerType)serverType;
+- (void)removeUserTiles;
 @end

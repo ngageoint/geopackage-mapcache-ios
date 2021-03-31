@@ -12,23 +12,33 @@
 #import "GPKGGeoPackageManager.h"
 #import "MCSettingsCoordinator.h"
 #import "MCBoundingBoxGuideView.h"
+#import "MCDrawingStatusViewController.h"
+#import "MCGeoPackageRepository.h"
+#import "MCCreateGeoPacakgeViewController.h"
+#import "MCFeatureLayerDetailsViewController.h"
+#import "MCMapPointDataViewController.h"
+#import "MCServerError.h"
 
-
+// forward declarations
 @class MCMapViewController;
+@class MCTileServer;
+@class MCLayer;
+typedef NS_ENUM(NSInteger, MCTileServerType);
 @protocol MCMapActionDelegate;
 
 @protocol MCMapDelegate <NSObject>
 - (void) updateMapLayers;
-- (void) toggleGeoPackage:(GPKGSDatabase *) geoPackage;
+- (void) toggleGeoPackage:(MCDatabase *) geoPackage;
 - (void) zoomToSelectedGeoPackage:(NSString *) geoPackageName;
-- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView;
+- (void) zoomToPoint:(CLLocationCoordinate2D)point withZoomLevel:(NSUInteger) zoomLevel;
+- (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl serverType:(MCTileServerType) serverType;
 - (void) removeTileBoundingBoxGuide;
+- (void) addTileOverlay:(NSString *)tileServerURL serverType:(MCTileServerType)serverType;
 - (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;
 @end
 
 
-@interface MCMapCoordinator : NSObject <MCMapDelegate, MCMapActionDelegate>
+@interface MCMapCoordinator : NSObject <MCMapDelegate, MCMapActionDelegate, MCDrawingStatusDelegate, MCCreateGeoPackageDelegate, MCFeatureLayerCreationDelegate, MCMapPointDataDelegate>
 - (instancetype) initWithMapViewController:(MCMapViewController *) mapViewController;
-
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
 @end

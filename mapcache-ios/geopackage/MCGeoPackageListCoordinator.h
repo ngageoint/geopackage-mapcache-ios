@@ -8,19 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import <GPKGGeoPackageManager.h>
-#import "GPKGSDatabase.h"
+#import "MCDatabase.h"
 #import "MCGeoPackageCoordinator.h"
 #import "MCGeoPackageList.h"
-#import "GPKGSFeatureOverlayTable.h"
+#import "MCFeatureOverlayTable.h"
 #import "MCGeopackageSingleViewController.h"
 #import "MCGeoPackageCoordinator.h"
-#import "GPKGSDatabases.h"
+#import "MCDatabases.h"
 #import "MCDownloadCoordinator.h"
-#import "GPKGSTable.h"
+#import "MCTable.h"
 #import "MCMapCoordinator.h"
-#import "GPKGSConstants.h"
+#import "MCConstants.h"
 #import "GPKGGeoPackageCache.h"
 #import "MCCreateGeoPacakgeViewController.h"
+#import "MCGeoPackageRepository.h"
 
 
 @protocol MCMapDelegate;

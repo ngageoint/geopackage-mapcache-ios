@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,10 +18,10 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" placeholderIntrinsicWidth="125" placeholderIntrinsicHeight="70" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nFe-43-QTg">
-                            <rect key="frame" x="0.0" y="0.0" width="125" height="70"/>
+                            <rect key="frame" x="0.0" y="0.0" width="187.5" height="70"/>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <inset key="titleEdgeInsets" minX="-28" minY="0.0" maxX="0.0" maxY="-26"/>
-                            <inset key="imageEdgeInsets" minX="47" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="50" minY="-24" maxX="0.0" maxY="0.0"/>
                             <state key="normal" title="Rename" image="Edit">
                                 <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
@@ -31,20 +29,8 @@
                                 <action selector="rename:" destination="iN0-l3-epB" eventType="touchUpInside" id="3dw-Yc-EzS"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" placeholderIntrinsicWidth="125" placeholderIntrinsicHeight="70" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oew-pp-F2v">
-                            <rect key="frame" x="125" y="0.0" width="125" height="70"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <inset key="titleEdgeInsets" minX="-26" minY="0.0" maxX="0.0" maxY="-26"/>
-                            <inset key="imageEdgeInsets" minX="48" minY="-24" maxX="0.0" maxY="0.0"/>
-                            <state key="normal" title="Scaling" image="Scale">
-                                <color key="titleColor" red="0.29411764709999999" green="0.6705882353" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </state>
-                            <connections>
-                                <action selector="scaling:" destination="iN0-l3-epB" eventType="touchUpInside" id="MJI-1L-uiX"/>
-                            </connections>
-                        </button>
                         <button opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="125" placeholderIntrinsicHeight="70" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U5e-Go-CQ6">
-                            <rect key="frame" x="250" y="0.0" width="125" height="70"/>
+                            <rect key="frame" x="187.5" y="0.0" width="187.5" height="70"/>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <inset key="titleEdgeInsets" minX="-31" minY="0.0" maxX="0.0" maxY="-26"/>
                             <inset key="imageEdgeInsets" minX="40" minY="-24" maxX="0.0" maxY="0.0"/>
@@ -57,7 +43,6 @@
                         </button>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="oew-pp-F2v" firstAttribute="width" secondItem="nFe-43-QTg" secondAttribute="width" id="d6x-RB-pZT"/>
                         <constraint firstItem="U5e-Go-CQ6" firstAttribute="width" secondItem="nFe-43-QTg" secondAttribute="width" id="u5i-eY-bcF"/>
                     </constraints>
                 </stackView>
@@ -77,6 +62,5 @@
     <resources>
         <image name="Delete" width="33" height="33"/>
         <image name="Edit" width="33" height="32"/>
-        <image name="Scale" width="33" height="33"/>
     </resources>
 </document>

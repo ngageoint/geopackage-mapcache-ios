@@ -14,12 +14,12 @@
 @property (strong, nonatomic) NSArray *geometryTypes;
 @property (strong, nonatomic) NSDictionary *geometryTypesDictionary;
 @property (strong, nonatomic) NSString *selectedGeometryType;
-
+@property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) GPKGGeoPackageManager *manager;
 @property (strong, nonatomic) MCSectionTitleCell *titleCell;
 @property (strong, nonatomic) MCFieldWithTitleCell *layerNameCell;
-@property (strong, nonatomic) MCPickerViewCell *geometryTypeCell;
 @property (strong, nonatomic) MCButtonCell *buttonCell;
+@property (strong, nonatomic) MCDescriptionCell *descriptionCell;
 @end
 
 @implementation MCFeatureLayerDetailsViewController
@@ -27,9 +27,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _manager = [GPKGGeoPackageFactory manager];
-    _geometryTypes = [GPKGSProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
-    _geometryTypesDictionary = [GPKGSProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES_DICTIONARY];
+    CGRect bounds = self.view.bounds;
+    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y - 6, bounds.size.width, bounds.size.height);
+    self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    //self.tableView.estimatedRowHeight = 390.0;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    
+    _geometryTypes = [MCProperties getArrayOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES];
+    _geometryTypesDictionary = [MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_FEATURES_GEOMETRY_TYPES_DICTIONARY];
     
     [self registerCellTypes];
     [self initCellArray];
@@ -40,7 +50,8 @@
     self.tableView.estimatedRowHeight = 100;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UIAccessibilityTraitNone;
-    [self.tableView setBackgroundColor:[UIColor whiteColor]];
+    [self.view addSubview:self.tableView];
+    [self addCloseButton];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -71,15 +82,6 @@
     _layerNameCell.field.delegate = self;
     [_cellArray addObject:_layerNameCell];
     
-    _geometryTypeCell = [self.tableView dequeueReusableCellWithIdentifier:@"picker"];
-    _geometryTypeCell.label.text = @"Geometry Type";
-    _geometryTypeCell.picker.delegate = self;
-    _geometryTypeCell.picker.dataSource = self;
-    _geometryTypeCell.picker.showsSelectionIndicator = YES;
-    [_geometryTypeCell.picker selectRow:[_geometryTypesDictionary.allKeys indexOfObject:@"Geometry"] inComponent:0 animated:YES];
-    _selectedGeometryType = [_geometryTypesDictionary valueForKey:@"Geometry"];
-    [_cellArray addObject:_geometryTypeCell];
-    
     _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     _buttonCell.delegate = self;
     _buttonCell.action = GPKGS_ACTION_NEW_FEATURE_LAYER;
@@ -90,8 +92,12 @@
     } else {
         [_buttonCell enableButton];
     }
-
+    
     [_cellArray addObject:_buttonCell];
+    
+    _descriptionCell = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
+    [_descriptionCell setDescription:@"\n\n"];
+    [_cellArray addObject:_descriptionCell];
 }
 
 
@@ -128,9 +134,14 @@
 
 #pragma mark - UITextFieldDelegate
 - (void) textFieldDidEndEditing:(UITextField *)textField {
-    if ([_layerNameCell.field.text isEqualToString:@""]) {
+    if ([[_layerNameCell fieldValue] isEqualToString:@""]) {
         [_buttonCell disableButton];
+    } else if ([_database hasTableNamed:[_layerNameCell fieldValue]]) {
+        [_buttonCell disableButton];
+        [_layerNameCell useErrorAppearance];
+        [_descriptionCell setDescription:@"This GeoPackage already has a layer with that name, please choose a new one."];
     } else {
+        [_layerNameCell useNormalAppearance];
         [_buttonCell enableButton];
     }
     
@@ -141,6 +152,12 @@
     [textField resignFirstResponder];
     return YES;
 }
+
+
+- (void) closeDrawer {
+    [self.drawerViewDelegate popDrawer];
+}
+
 
 
 #pragma mark - GPKGSButtonCellDelegate
@@ -167,16 +184,18 @@
                 [NSException raise:@"Longitude Range" format:@"Min longitude can not be larger than max longitude"];
             }
             
+            _selectedGeometryType = [_geometryTypesDictionary valueForKey:@"Geometry"];
             enum SFGeometryType geometryType = [SFGeometryTypes fromName:_selectedGeometryType];
             
             GPKGGeometryColumns * geometryColumns = [[GPKGGeometryColumns alloc] init];
             [geometryColumns setTableName:tableName];
             [geometryColumns setColumnName:@"geom"];
-            [geometryColumns setGeometryType:geometryType];
+            
+            [geometryColumns setGeometryType: geometryType];
             [geometryColumns setZ:[NSNumber numberWithInt:0]];
             [geometryColumns setM:[NSNumber numberWithInt:0]];
             
-            [_delegate createFeatueLayerIn:_database.name with:geometryColumns andBoundingBox:boundingBox andSrsId:[NSNumber numberWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
+            [_delegate createFeatueLayerIn:_database.name withGeomertyColumns:geometryColumns andBoundingBox:boundingBox andSrsId:[NSNumber numberWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
         }
         @catch (NSException *e) {
             if(self.delegate != nil){
@@ -185,6 +204,7 @@
         }
     }
 }
+
 
 @end
 

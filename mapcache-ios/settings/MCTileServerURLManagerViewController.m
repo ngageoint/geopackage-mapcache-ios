@@ -7,6 +7,7 @@
 //
 
 #import "MCTileServerURLManagerViewController.h"
+#import "mapcache_ios-Swift.h"
 
 
 @interface MCTileServerURLManagerViewController ()
@@ -14,6 +15,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MCButtonCell *buttonCell;
 @property (nonatomic, strong) MCFieldWithTitleCell *urlCell;
+@property (nonatomic, strong) NSDictionary *tileServers;
 @end
 
 @implementation MCTileServerURLManagerViewController
@@ -37,7 +39,7 @@
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
 
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
@@ -73,24 +75,25 @@
     [self.buttonCell setDelegate:self];
     [self.cellArray addObject:self.buttonCell];
     
-    MCLayerCell *testURL1 = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
-    [testURL1 setName:@"GEOINT Services OSM"];
-    [testURL1 setDetails:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
-    [testURL1 activeIndicatorOff];
-    [testURL1.layerTypeImage setImage:[UIImage imageNamed:[GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
-    [self.cellArray addObject:testURL1];
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *serverUrls = [defaults dictionaryForKey:MC_SAVED_TILE_SERVER_URLS];
+    MCTileServer *defaultServer = [[MCTileServer alloc] init];
+    [defaultServer setServerName:@"GEOINT Services OSM"];
+    [defaultServer setUrl:@"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png"];
+    [defaultServer setServerType: MCTileServerTypeXyz];
+    MCTileServerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
+    [tileServerCell setContentWithTileServer:defaultServer];
+    [tileServerCell activeIndicatorOff];
+    [self.cellArray addObject:tileServerCell];
     
-    if (serverUrls) {
-        NSArray *serverNames = [serverUrls allKeys];
+    self.tileServers = [[MCTileServerRepository shared] getTileServers];
+    
+    if (self.tileServers) {
+        NSArray *serverNames = [self.tileServers allKeys];
         for (NSString *serverName in serverNames) {
-            MCLayerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
-            [tileServerCell setName: serverName];
-            [tileServerCell setDetails: [serverUrls objectForKey:serverName]];
+            MCTileServer *tileServer = [self.tileServers objectForKey:serverName];
+            MCTileServerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
+            [tileServerCell setContentWithTileServer:tileServer];
             [tileServerCell activeIndicatorOff];
-            [tileServerCell.layerTypeImage setImage:[UIImage imageNamed:[GPKGSProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
             [self.cellArray addObject:tileServerCell];
         }
     }
@@ -102,7 +105,7 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"MCLayerCell" bundle:nil] forCellReuseIdentifier:@"server"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCTileServerCell" bundle:nil] forCellReuseIdentifier:@"server"];
 }
 
 
@@ -130,9 +133,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     
-    if (self.selectMode && [[_cellArray objectAtIndex:indexPath.row] isKindOfClass:[MCLayerCell class]]) {
-        MCLayerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
-        [self.selectServerDelegate selectTileServer: cell.detailLabel.text];
+    if (self.selectMode && [[_cellArray objectAtIndex:indexPath.row] isKindOfClass: MCTileServerCell.class]) {
+        MCTileServerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
+        [self.selectServerDelegate selectTileServer:cell.tileServer];
         [self.drawerViewDelegate popDrawer];
     }
 }
