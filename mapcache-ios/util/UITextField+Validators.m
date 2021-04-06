@@ -13,13 +13,7 @@
 @implementation UITextField (Validators)
 
 - (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(MCTileServerResult *tileServerResult))resultBlock {
-    NSURL *url = [[NSURL alloc] initWithString:textField.text];
-    
-    if (url.host == nil) {
-        resultBlock(nil);
-    } else {
-        [MCTileServerRepository.shared isValidServerURLWithUrlString:textField.text completion:resultBlock];
-    }
+    [MCTileServerRepository.shared isValidServerURLWithUrlString:textField.text completion:resultBlock];
 }
 
 
