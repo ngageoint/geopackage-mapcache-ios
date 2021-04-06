@@ -73,7 +73,7 @@ import Foundation
         let tileServer = MCTileServer.init(serverName: urlString)
         tileServer.url = urlString;
         
-        if (urlString.contains("{x}") && urlString.contains("{y}") && urlString.contains("{x}")) {
+        if (urlString.contains("{z}") && urlString.contains("{y}") && urlString.contains("{x}")) {
             
             editedURLString.replaceSubrange(editedURLString.range(of: "{x}")!, with: "0")
             editedURLString.replaceSubrange(editedURLString.range(of: "{y}")!, with: "0")
