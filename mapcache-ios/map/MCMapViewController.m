@@ -559,6 +559,11 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     NSLog(@"Tapped map point");
+    
+    if (![view isKindOfClass:MKPinAnnotationView.class]) {
+        return;
+    }
+    
     [self zoomToPointWithOffset:view.annotation.coordinate];
     [self.mapActionDelegate showDetailsForAnnotation:(GPKGMapPoint *)view.annotation];
 }
