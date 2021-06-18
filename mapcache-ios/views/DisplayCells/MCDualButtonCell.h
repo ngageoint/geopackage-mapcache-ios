@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disableRightButton;
 - (void)disableButtons;
 - (void)enableButtons;
+- (void)leftButtonUseClearBackground;
+- (void)rightButtonUseClearBackground;
 @end
 
 NS_ASSUME_NONNULL_END

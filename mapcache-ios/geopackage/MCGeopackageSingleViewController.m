@@ -135,6 +135,10 @@
         [_cellArray addObject:layerCell];
     }
     
+    MCEmptyStateCell *spacer = [self.tableView dequeueReusableCellWithIdentifier:@"spacer"];
+    [spacer useAsSpacer];
+    [_cellArray addObject:spacer];
+    
     // TODO: add section for reference systems
 }
 
@@ -145,6 +149,7 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"sectionTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCLayerCell" bundle:nil] forCellReuseIdentifier:@"layerCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"buttonCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCEmptyStateCell" bundle:nil] forCellReuseIdentifier:@"spacer"];
 }
 
 

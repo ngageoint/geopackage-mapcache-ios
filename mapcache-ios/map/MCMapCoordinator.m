@@ -249,8 +249,8 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
         } else { // Use the selected GeoPackage and layer to set the point data view
             GPKGFeatureRow *newRow = [_repository newRowInTable:selectedLayer database:selectedGeoPackage mapPoint:mapPoint];
             
-            if (_mapPointDataViewController == nil) {
-                _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:newRow databaseName:selectedGeoPackage layerName:selectedLayer mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+            if (_mapPointDataViewController == nil) {                
+                _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:newRow databaseName:selectedGeoPackage layerName:selectedLayer media:[[NSMutableArray alloc] init] mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self showAttachmentDelegate:self];
 
                 [_mapPointDataViewController pushOntoStack];
             } else {
@@ -265,9 +265,11 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
         [_repository setSelectedGeoPackageName: pointData.database];
         [_repository setSelectedLayerName:pointData.tableName];
         GPKGUserRow *userRow = [_repository queryRow:pointData.featureId fromTableNamed:pointData.tableName inDatabase:pointData.database];
+        NSArray *media = [[MCMediaUtility shared] mediaRelationsForGeoPackageName:pointData.database row:userRow];
+        
         
         if (_mapPointDataViewController == nil) {
-            _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:userRow databaseName:_repository.selectedGeoPackageName layerName:_repository.selectedLayerName mode:MCPointViewModeDisplay asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+            _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:userRow databaseName:_repository.selectedGeoPackageName layerName:_repository.selectedLayerName media:media mode:MCPointViewModeDisplay asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self showAttachmentDelegate:self];
             [_drawerViewDelegate pushDrawer:_mapPointDataViewController];
         } else {
             [_mapPointDataViewController reloadWith:userRow mapPoint:mapPoint mode:MCPointViewModeDisplay];
@@ -350,7 +352,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     if (self.mapPoint != nil) {
         GPKGFeatureRow *newRow = [_repository newRowInTable:_repository.selectedLayerName database:_repository.selectedGeoPackageName mapPoint:self.mapPoint];
         _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:self.mapPoint row:newRow databaseName:_repository.selectedGeoPackageName layerName:_repository.selectedLayerName mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
-
+        
         [_mapPointDataViewController pushOntoStack];
     }
 }
@@ -360,8 +362,13 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 /**
     Save the data from a map point, which is a row in a geopackage feature table.
  */
-- (BOOL)saveRow:(GPKGUserRow *)row{
+- (BOOL)saveRow:(GPKGUserRow *)row attachments:(nonnull NSArray *)media databaseName:(nonnull NSString *)databaseName{
     if([_repository saveRow:row]) {
+        
+        if (media.count > 0) {
+            [MCMediaUtility.shared saveAttachmentsForRow:row media:media databaseName:databaseName];
+        }
+        
         [_mcMapViewController setDrawing:NO];
         [_mcMapViewController clearTempPoints];
         [self updateMapLayers];
@@ -403,6 +410,16 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     }
     
     _mapPointDataViewController = nil;
+}
+
+
+#pragma mark - MCShowAttachmentDelegate
+- (void)showAttachmentWithImage:(UIImage *)image {
+    MCMapPointAttachmentViewController *attachmentView = [[MCMapPointAttachmentViewController alloc] initAsFullView:YES];
+    attachmentView.image = image;
+    attachmentView.drawerViewDelegate = self.drawerViewDelegate;
+    [self.drawerViewDelegate pushDrawer:attachmentView];
+    
 }
 
 

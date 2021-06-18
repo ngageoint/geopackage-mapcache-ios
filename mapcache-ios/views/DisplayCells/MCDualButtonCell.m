@@ -83,4 +83,14 @@
 }
 
 
+- (void)leftButtonUseClearBackground {
+    [self.leftButton setBackgroundColor:UIColor.clearColor];
+}
+
+
+- (void)rightButtonUseClearBackground {
+    [self.rightButton setBackgroundColor:UIColor.clearColor];
+}
+
+
 @end

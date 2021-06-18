@@ -58,6 +58,7 @@
 @property (nonatomic) CLLocationCoordinate2D currentCenter;
 @property (nonatomic) BOOL expandedZoomDetails;
 @property (nonatomic, strong) MKTileOverlay *userTileOverlay;
+@property (nonatomic, strong) MKTileOverlay *bookmarkOverlay;
 @property (nonatomic, strong) MKTileOverlay *userBasemapOverlay;
 @end
 
@@ -138,6 +139,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     } else {
         [self.mapView setMapType:MKMapTypeHybrid];
     }
+    
+    self.bookmarkOverlay = [[MKTileOverlay alloc] init];
+    [self.mapView addOverlay:_bookmarkOverlay];
 }
 
 
@@ -365,7 +369,17 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 #pragma mark - MCTileHelperDelegate methods
 - (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay withTable:(MCTileTable *)table {
     dispatch_sync(dispatch_get_main_queue(), ^{
-        [self.mapView addOverlay:tileOverlay];
+        //[self.mapView addOverlay:tileOverlay];
+        [self.mapView insertOverlay:tileOverlay belowOverlay:self.bookmarkOverlay];
+        /*for (id<MKOverlay> overlay in self.mapView.overlays) {
+            if ([overlay isKindOfClass:MKTileOverlay.class]) {
+                [self.mapView insertOverlay:tileOverlay aboveOverlay:overlay];
+                break;
+            } else {
+                [self.mapView insertOverlay:tileOverlay belowOverlay:overlay];
+                break;
+            }
+        }*/
     });
 }
 
@@ -374,6 +388,47 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (void) addShapeToMapView:(GPKGMapShape *) shape withCount:(int) count {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [GPKGMapShapeConverter addMapShape:shape toMapView:self.mapView];
+        //[self.mapView insertOverlay:self.bookmarkOverlay aboveOverlay:shape];
+        
+        switch (shape.shapeType) {
+                    
+                case GPKG_MST_POINT:
+                    [self.mapView addAnnotation:(GPKGMapPoint *)shape.shape];
+                    break;
+                case GPKG_MST_POLYLINE:
+                    [self.mapView insertOverlay:(GPKGPolyline *)shape.shape aboveOverlay:self.bookmarkOverlay];
+                    break;
+                case GPKG_MST_POLYGON:
+                    [self.mapView insertOverlay:(GPKGPolygon *)shape.shape aboveOverlay:self.bookmarkOverlay];
+                    break;
+                case GPKG_MST_MULTI_POINT:
+                    for (GPKGMapPoint *point in ((GPKGMultiPoint *)shape.shape).points) {
+                        [self.mapView addAnnotation:point];
+                    }
+                    break;
+                case GPKG_MST_MULTI_POLYLINE:
+                    for (GPKGPolyline *polyline in ((GPKGMultiPoint *)shape.shape).points) {
+                        [self.mapView insertOverlay:polyline aboveOverlay:self.bookmarkOverlay];
+                    }
+                    break;
+                case GPKG_MST_MULTI_POLYGON:
+                    for (GPKGPolygon *polygon in ((GPKGMultiPolygon *)shape).polygons) {
+                        [self.mapView insertOverlay:polygon aboveOverlay:self.bookmarkOverlay];
+                    }
+                    break;
+                /*case GPKG_MST_COLLECTION:
+                    {
+                        NSMutableArray * addedShapeArray = [NSMutableArray array];
+                        NSArray * shapeArray = (NSArray *) mapShape.shape;
+                        for(GPKGMapShape * shapeArrayItem in shapeArray){
+                            [GPKGUtils addObject:[self addMapShape:shapeArrayItem toMapView:mapView] toArray:addedShapeArray];
+                        }
+                        addedShape = [[GPKGMapShape alloc] initWithGeometryType:mapShape.geometryType andShapeType:GPKG_MST_COLLECTION andShape:addedShapeArray];
+                    }
+                    break;*/
+                default:
+                    [NSException raise:@"Unsupported Shape" format:@"Unsupported Shape Type: %@", [GPKGMapShapeTypes name:shape.shapeType]];
+            }
     });
 }
 
@@ -560,7 +615,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     NSLog(@"Tapped map point");
     
-    if (![view isKindOfClass:MKPinAnnotationView.class]) {
+    //if (![view isKindOfClass:MKPinAnnotationView.class] ) {
+    if (![view isKindOfClass:MKAnnotationView.class] ) {
         return;
     }
     
@@ -581,6 +637,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.featureHelper resetFeatureCount];
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
+    [self.mapView addOverlay:self.bookmarkOverlay];
     
     if (self.userBasemapOverlay != nil) {
         [self.mapView addOverlay:self.userBasemapOverlay];

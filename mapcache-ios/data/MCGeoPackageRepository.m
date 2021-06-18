@@ -273,6 +273,9 @@ static MCGeoPackageRepository *sharedRepository;
         // TODO handle this
         NSLog(@"There was a problem creating the layer, %@", e.reason);
         didCreateLayer = NO;
+        [MCUtils showMessageWithDelegate:self
+                                   andTitle:[NSString stringWithFormat:@"Unable to create feature layer"]
+                                 andMessage:[NSString stringWithFormat:@"%@", e.reason]];
     } @finally {
         [geoPackage close];
         [self regenerateDatabaseList];
@@ -584,7 +587,7 @@ static MCGeoPackageRepository *sharedRepository;
             [self.activeDatabases addTable:[updatedDatabase tableNamed:table.name]];
         }
     } @catch (NSException *e) {
-        NSLog(@"MCGeoPackageRepository - Probem renaiming table: %@", e.reason);
+        NSLog(@"MCGeoPackageRepository - Problem renaming table: %@", e.reason);
     } @finally {
         if (geoPackage != nil) {
             [geoPackage close];

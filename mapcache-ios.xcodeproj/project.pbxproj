@@ -78,6 +78,7 @@
 		E3500E6322B4653B00164ABF /* MCDisclaimerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3500E6222B4653B00164ABF /* MCDisclaimerViewController.m */; };
 		E3500E6522B7F36500164ABF /* MCTutorialCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3500E6422B7F36500164ABF /* MCTutorialCell.xib */; };
 		E3500E6822B7F4F100164ABF /* MCTutorialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3500E6722B7F4F100164ABF /* MCTutorialCell.m */; };
+		E3540C252631EAB1001A5272 /* MCMediaUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3540C242631EAB1001A5272 /* MCMediaUtility.swift */; };
 		E354DB3322BAD7DA00FFD477 /* MCSwitchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354DB3222BAD7DA00FFD477 /* MCSwitchCell.xib */; };
 		E354DB3622BAD89D00FFD477 /* MCSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354DB3522BAD89D00FFD477 /* MCSwitchCell.m */; };
 		E354EEDB2006B9B000B062BE /* MCDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354EEDA2006B9B000B062BE /* MCDescriptionCell.xib */; };
@@ -86,6 +87,7 @@
 		E355935020F3E3EF00FC1288 /* MCFeatureLayerOperationsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E355934F20F3E3EF00FC1288 /* MCFeatureLayerOperationsCell.m */; };
 		E355935220F4170500FC1288 /* MCGeoPackageOperationsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E355935120F4170500FC1288 /* MCGeoPackageOperationsCell.xib */; };
 		E3568DCB21498387005FC49C /* MCMapCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3568DCA21498387005FC49C /* MCMapCoordinator.m */; };
+		E358B0442638D11600860F08 /* MCAttachmentsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E358B0432638D11600860F08 /* MCAttachmentsCell.swift */; };
 		E35B630E21BC24E9004E5BB0 /* MCTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E35B630D21BC24E9004E5BB0 /* MCTitleCell.xib */; };
 		E35B631121BC26F9004E5BB0 /* MCTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E35B631021BC26F9004E5BB0 /* MCTitleCell.m */; };
 		E35F316221EE7FC2001B720F /* privacypolicy in Resources */ = {isa = PBXBuildFile; fileRef = E35F316121EE7FC2001B720F /* privacypolicy */; };
@@ -111,11 +113,18 @@
 		E3BED1E0219116FA001AF654 /* MCSettingsCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3BED1DF219116FA001AF654 /* MCSettingsCoordinator.m */; };
 		E3BED1E321911712001AF654 /* MCSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3BED1E221911712001AF654 /* MCSettingsViewController.m */; };
 		E3C5FC4824B7D38F00B5E12E /* MCTileMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5FC4724B7D38F00B5E12E /* MCTileMatrix.swift */; };
+		E3CE3823265D6223003D625D /* UIImage+RotateImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CE3822265D6223003D625D /* UIImage+RotateImage.swift */; };
 		E3CF687223D901750005A6EF /* MCTileServerURLManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CF687123D901740005A6EF /* MCTileServerURLManagerViewController.m */; };
 		E3CF687423DA5FF20005A6EF /* MCTextViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF687323DA5FF20005A6EF /* MCTextViewCell.xib */; };
 		E3CF687723DA667E0005A6EF /* MCTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CF687623DA667E0005A6EF /* MCTextViewCell.m */; };
 		E3CF687A23DA6AC40005A6EF /* MCNewTileServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CF687923DA6AC40005A6EF /* MCNewTileServerViewController.m */; };
 		E3D651D3240D90340082FF10 /* MCGeoPackageRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D651D2240D90340082FF10 /* MCGeoPackageRepository.m */; };
+		E3D787E8264A2BCD00A32709 /* MCAttachmentsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3D787E7264A2BCD00A32709 /* MCAttachmentsCell.xib */; };
+		E3D787F6264F0CE500A32709 /* MCMediaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3D787F5264F0CE500A32709 /* MCMediaCell.xib */; };
+		E3D787FB264F0D0100A32709 /* MCMediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D787FA264F0D0100A32709 /* MCMediaCell.swift */; };
+		E3D78800264F38E600A32709 /* MCImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D787FF264F38E600A32709 /* MCImageCell.swift */; };
+		E3D78805264F390100A32709 /* MCImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3D78804264F390100A32709 /* MCImageCell.xib */; };
+		E3D7880A264F3C6600A32709 /* MCMapPointAttachmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D78809264F3C6600A32709 /* MCMapPointAttachmentViewController.swift */; };
 		E3D80EA223FF59E3006F1014 /* MCDrawingStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D80EA123FF59E3006F1014 /* MCDrawingStatusViewController.m */; };
 		E3D80EA5240076AD006F1014 /* MCDualButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D80EA4240076AD006F1014 /* MCDualButtonCell.m */; };
 		E3D80EA7240076CC006F1014 /* MCDualButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3D80EA6240076CC006F1014 /* MCDualButtonCell.xib */; };
@@ -295,6 +304,7 @@
 		E3500E6422B7F36500164ABF /* MCTutorialCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCTutorialCell.xib; sourceTree = "<group>"; };
 		E3500E6622B7F4F100164ABF /* MCTutorialCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCTutorialCell.h; sourceTree = "<group>"; };
 		E3500E6722B7F4F100164ABF /* MCTutorialCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTutorialCell.m; sourceTree = "<group>"; };
+		E3540C242631EAB1001A5272 /* MCMediaUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCMediaUtility.swift; sourceTree = "<group>"; };
 		E354DB3222BAD7DA00FFD477 /* MCSwitchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCSwitchCell.xib; sourceTree = "<group>"; };
 		E354DB3422BAD89D00FFD477 /* MCSwitchCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCSwitchCell.h; sourceTree = "<group>"; };
 		E354DB3522BAD89D00FFD477 /* MCSwitchCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCSwitchCell.m; sourceTree = "<group>"; };
@@ -308,6 +318,7 @@
 		E355935120F4170500FC1288 /* MCGeoPackageOperationsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCGeoPackageOperationsCell.xib; sourceTree = "<group>"; };
 		E3568DC921498387005FC49C /* MCMapCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMapCoordinator.h; sourceTree = "<group>"; };
 		E3568DCA21498387005FC49C /* MCMapCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCMapCoordinator.m; sourceTree = "<group>"; };
+		E358B0432638D11600860F08 /* MCAttachmentsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCAttachmentsCell.swift; sourceTree = "<group>"; };
 		E35B630D21BC24E9004E5BB0 /* MCTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCTitleCell.xib; sourceTree = "<group>"; };
 		E35B630F21BC26F9004E5BB0 /* MCTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCTitleCell.h; sourceTree = "<group>"; };
 		E35B631021BC26F9004E5BB0 /* MCTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTitleCell.m; sourceTree = "<group>"; };
@@ -351,6 +362,7 @@
 		E3BED1E121911712001AF654 /* MCSettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCSettingsViewController.h; sourceTree = "<group>"; };
 		E3BED1E221911712001AF654 /* MCSettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCSettingsViewController.m; sourceTree = "<group>"; };
 		E3C5FC4724B7D38F00B5E12E /* MCTileMatrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCTileMatrix.swift; sourceTree = "<group>"; };
+		E3CE3822265D6223003D625D /* UIImage+RotateImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+RotateImage.swift"; sourceTree = "<group>"; };
 		E3CF687023D901740005A6EF /* MCTileServerURLManagerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCTileServerURLManagerViewController.h; sourceTree = "<group>"; };
 		E3CF687123D901740005A6EF /* MCTileServerURLManagerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTileServerURLManagerViewController.m; sourceTree = "<group>"; };
 		E3CF687323DA5FF20005A6EF /* MCTextViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCTextViewCell.xib; sourceTree = "<group>"; };
@@ -360,6 +372,12 @@
 		E3CF687923DA6AC40005A6EF /* MCNewTileServerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCNewTileServerViewController.m; sourceTree = "<group>"; };
 		E3D651D1240D90340082FF10 /* MCGeoPackageRepository.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCGeoPackageRepository.h; sourceTree = "<group>"; };
 		E3D651D2240D90340082FF10 /* MCGeoPackageRepository.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCGeoPackageRepository.m; sourceTree = "<group>"; };
+		E3D787E7264A2BCD00A32709 /* MCAttachmentsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCAttachmentsCell.xib; sourceTree = "<group>"; };
+		E3D787F5264F0CE500A32709 /* MCMediaCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCMediaCell.xib; sourceTree = "<group>"; };
+		E3D787FA264F0D0100A32709 /* MCMediaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCMediaCell.swift; sourceTree = "<group>"; };
+		E3D787FF264F38E600A32709 /* MCImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCImageCell.swift; sourceTree = "<group>"; };
+		E3D78804264F390100A32709 /* MCImageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCImageCell.xib; sourceTree = "<group>"; };
+		E3D78809264F3C6600A32709 /* MCMapPointAttachmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCMapPointAttachmentViewController.swift; sourceTree = "<group>"; };
 		E3D80E9D23FF3DA0006F1014 /* MCDrawingCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDrawingCoordinator.h; sourceTree = "<group>"; };
 		E3D80E9E23FF3DA0006F1014 /* MCDrawingCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCDrawingCoordinator.m; sourceTree = "<group>"; };
 		E3D80EA023FF59E3006F1014 /* MCDrawingStatusViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCDrawingStatusViewController.h; sourceTree = "<group>"; };
@@ -524,6 +542,7 @@
 				E31269EC2540184300E62361 /* MCTileServerResult.swift */,
 				E377401525476D1900F67EA8 /* MCServerError.h */,
 				E377401625476D1900F67EA8 /* MCServerError.m */,
+				E3540C242631EAB1001A5272 /* MCMediaUtility.swift */,
 			);
 			path = data;
 			sourceTree = "<group>";
@@ -554,6 +573,7 @@
 				E34F32F0220CAF1C0098ED45 /* UITextField+Validators.m */,
 				E3DE0DE823E2420D00CB27AF /* UITextView+Validators.h */,
 				E3DE0DE923E2420D00CB27AF /* UITextView+Validators.m */,
+				E3CE3822265D6223003D625D /* UIImage+RotateImage.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -601,6 +621,7 @@
 				E346EC7D2448C23C001A646A /* MCMapPointDataViewController.m */,
 				E377401B254B4A2E00F67EA8 /* WMSTileOverlay.h */,
 				E377401C254B4A2E00F67EA8 /* WMSTileOverlay.m */,
+				E3D78809264F3C6600A32709 /* MCMapPointAttachmentViewController.swift */,
 			);
 			path = map;
 			sourceTree = "<group>";
@@ -690,6 +711,9 @@
 				E3CF687623DA667E0005A6EF /* MCTextViewCell.m */,
 				E33B930025C34FE2001D3D91 /* MCTileServerCell.h */,
 				E33B930125C34FE2001D3D91 /* MCTileServerCell.m */,
+				E358B0432638D11600860F08 /* MCAttachmentsCell.swift */,
+				E3D787FA264F0D0100A32709 /* MCMediaCell.swift */,
+				E3D787FF264F38E600A32709 /* MCImageCell.swift */,
 			);
 			path = cells;
 			sourceTree = "<group>";
@@ -798,6 +822,9 @@
 				E31BD62E244E340300C18609 /* MCKeyValueDisplayCell.h */,
 				E31BD62F244E340300C18609 /* MCKeyValueDisplayCell.m */,
 				E33B930625C353C9001D3D91 /* MCTileServerCell.xib */,
+				E3D787E7264A2BCD00A32709 /* MCAttachmentsCell.xib */,
+				E3D787F5264F0CE500A32709 /* MCMediaCell.xib */,
+				E3D78804264F390100A32709 /* MCImageCell.xib */,
 			);
 			path = DisplayCells;
 			sourceTree = "<group>";
@@ -988,11 +1015,14 @@
 			files = (
 				E3FB85762134A9D8002F012E /* MCGeoPackageList.xib in Resources */,
 				E300A93323313D77002336A0 /* MCBoundingBoxGuideView.xib in Resources */,
+				E3D787E8264A2BCD00A32709 /* MCAttachmentsCell.xib in Resources */,
 				E33FB474202506B500AF509B /* MCBoundingBoxView.xib in Resources */,
 				E35B630E21BC24E9004E5BB0 /* MCTitleCell.xib in Resources */,
 				E3470CC9202126140098D783 /* MCSegmentedControlCell.xib in Resources */,
+				E3D787F6264F0CE500A32709 /* MCMediaCell.xib in Resources */,
 				E3100EAF203CAF1E00FFA56E /* MCZoomCell.xib in Resources */,
 				E3D80EA7240076CC006F1014 /* MCDualButtonCell.xib in Resources */,
+				E3D78805264F390100A32709 /* MCImageCell.xib in Resources */,
 				E3B9753B1FB3DED400E33E0A /* MCHeaderCellDisplay.xib in Resources */,
 				E363F54520F0177700BBF91A /* MCTileLayerOperationsCell.xib in Resources */,
 				E354EEDB2006B9B000B062BE /* MCDescriptionCell.xib in Resources */,
@@ -1084,6 +1114,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3F9A99C2475F52400DFD043 /* MCLayerViewController.m in Sources */,
+				E3D787FB264F0D0100A32709 /* MCMediaCell.swift in Sources */,
 				E3D651D3240D90340082FF10 /* MCGeoPackageRepository.m in Sources */,
 				E354EEDE2006BB9500B062BE /* MCDescriptionCell.m in Sources */,
 				043A45851B7A54C2001B8FC5 /* GPKGSSelectFeatureTableViewController.m in Sources */,
@@ -1113,6 +1144,8 @@
 				E3D80EA5240076AD006F1014 /* MCDualButtonCell.m in Sources */,
 				E3D80EA223FF59E3006F1014 /* MCDrawingStatusViewController.m in Sources */,
 				E3A651B32005652400B8AB27 /* MCFieldWithTitleCell.m in Sources */,
+				E3D7880A264F3C6600A32709 /* MCMapPointAttachmentViewController.swift in Sources */,
+				E3D78800264F38E600A32709 /* MCImageCell.swift in Sources */,
 				04E0EE0B1B691A3C0095E53E /* GPKGSEditTileOverlayData.m in Sources */,
 				045C94891B5026E00005CCD0 /* MCDatabases.m in Sources */,
 				E3B7DD512475F1ED00215EF5 /* MCLayerCoordinator.swift in Sources */,
@@ -1144,8 +1177,10 @@
 				040136781AF94FB200C92AFC /* AppDelegate.m in Sources */,
 				E3500E6322B4653B00164ABF /* MCDisclaimerViewController.m in Sources */,
 				044648021B4AF4250052913B /* MCTableTypes.m in Sources */,
+				E3CE3823265D6223003D625D /* UIImage+RotateImage.swift in Sources */,
 				E35F316521EFEC7E001B720F /* MCNoticeAndAttributionViewController.m in Sources */,
 				045C949B1B5D4C560005CCD0 /* MCDecimalValidator.m in Sources */,
+				E3540C252631EAB1001A5272 /* MCMediaUtility.swift in Sources */,
 				E3BED1E0219116FA001AF654 /* MCSettingsCoordinator.m in Sources */,
 				04CCC8621B60232A0001296D /* GPKGSUIResponder+FirstResponder.m in Sources */,
 				E34F32F1220CAF1C0098ED45 /* UITextField+Validators.m in Sources */,
@@ -1174,6 +1209,7 @@
 				E3DE0DEA23E2420D00CB27AF /* UITextView+Validators.m in Sources */,
 				E377401D254B4A2E00F67EA8 /* WMSTileOverlay.m in Sources */,
 				E3FCD6B620F42FE5006D972B /* MCGeoPackageOperationsCell.m in Sources */,
+				E358B0442638D11600860F08 /* MCAttachmentsCell.swift in Sources */,
 				E3568DCB21498387005FC49C /* MCMapCoordinator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1342,7 +1378,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1368,7 +1404,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";

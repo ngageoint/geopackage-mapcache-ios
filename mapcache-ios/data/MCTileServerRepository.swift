@@ -121,55 +121,69 @@ import Foundation
 
     
     @objc public func getCapabilites(url:String, completion: @escaping (MCTileServerResult) -> Void) {
-        if let wmsURL = URL.init(string: url) {
-            let baseURL:String = wmsURL.scheme! + "://" + wmsURL.host! + wmsURL.path
-            let tileServer = MCTileServer.init(serverName: self.urlString)
-            self.layers = []
+        guard let wmsURL:URL = URL.init(string: url) else {
+            let tileServer = MCTileServer.init(serverName: urlString)
+            tileServer.serverType = .error
+            let result = MCTileServerResult.init(tileServer, self.generateError(message: "Invalid URL", errorType: MCServerErrorType.MCURLInvalid))
             
-            var builtURL = URLComponents(string: baseURL)
-            builtURL?.queryItems = [
-                URLQueryItem(name: "request", value: "GetCapabilities"),
-                URLQueryItem(name: "service", value: "WMS"),
-                URLQueryItem(name: "version", value: "1.3.0")
-            ]
-            
-            let task = URLSession.shared.dataTask(with: (builtURL?.url)!) { data, response, error in
-                guard let data = data, error == nil else {
-                    completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Server error", errorType: .MCTileServerParseError)))
-                    return
-                }
-                
-                let parser = XMLParser(data: data)
-                parser.delegate = self
-                
-                if parser.parse() {
-                    print("have \(self.layers.count) layers")
-                    
-                    for layer in self.layers {
-                        print("Title: \(layer.title)")
-                        print("Name: \(layer.name)")
-                        print("CRS: \(layer.crs)")
-                        print("Format: \(layer.format)\n\n")
-                    }
-                    
-                    tileServer.serverType = .wms
-                    tileServer.url = (builtURL?.string)!
-                    tileServer.layers = self.layers
-                    self.layers = []
-                    
-                    completion(MCTileServerResult.init(tileServer, self.generateError(message: "No error", errorType: MCServerErrorType.MCNoError)))
-                } else if (parser.parserError != nil) {
-                    print("Parser error")
-                    tileServer.serverType = .error
-                    self.layers = []
-                    let error:MCServerError = MCServerError.init(domain: "MCTileServerRepository", code: MCServerErrorType.MCURLInvalid.rawValue, userInfo: ["message" : "invalid URL"])
-                    completion(MCTileServerResult.init(tileServer, error))
-                }
-            }
-            task.resume()
-        } else {
-            print("Invalid URL")
+            completion(result)
+            return
         }
+       
+        if wmsURL.host == nil || wmsURL.scheme == nil {
+            let tileServer = MCTileServer.init(serverName: urlString)
+            tileServer.serverType = .error
+            let result = MCTileServerResult.init(tileServer, self.generateError(message: "Invalid URL", errorType: MCServerErrorType.MCURLInvalid))
+            
+            completion(result)
+            return
+        }
+        
+        let baseURL:String = wmsURL.scheme! + "://" + wmsURL.host! + wmsURL.path
+        let tileServer = MCTileServer.init(serverName: self.urlString)
+        self.layers = []
+        
+        var builtURL = URLComponents(string: baseURL)
+        builtURL?.queryItems = [
+            URLQueryItem(name: "request", value: "GetCapabilities"),
+            URLQueryItem(name: "service", value: "WMS"),
+            URLQueryItem(name: "version", value: "1.3.0")
+        ]
+        
+        let task = URLSession.shared.dataTask(with: (builtURL?.url)!) { data, response, error in
+            guard let data = data, error == nil else {
+                completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Server error", errorType: .MCTileServerParseError)))
+                return
+            }
+            
+            let parser = XMLParser(data: data)
+            parser.delegate = self
+            
+            if parser.parse() {
+                print("have \(self.layers.count) layers")
+                
+                for layer in self.layers {
+                    print("Title: \(layer.title)")
+                    print("Name: \(layer.name)")
+                    print("CRS: \(layer.crs)")
+                    print("Format: \(layer.format)\n\n")
+                }
+                
+                tileServer.serverType = .wms
+                tileServer.url = (builtURL?.string)!
+                tileServer.layers = self.layers
+                self.layers = []
+                
+                completion(MCTileServerResult.init(tileServer, self.generateError(message: "No error", errorType: MCServerErrorType.MCNoError)))
+            } else if (parser.parserError != nil) {
+                print("Parser error")
+                tileServer.serverType = .error
+                self.layers = []
+                let error:MCServerError = MCServerError.init(domain: "MCTileServerRepository", code: MCServerErrorType.MCURLInvalid.rawValue, userInfo: ["message" : "invalid URL"])
+                completion(MCTileServerResult.init(tileServer, error))
+            }
+        }
+        task.resume()
     }
     
     
