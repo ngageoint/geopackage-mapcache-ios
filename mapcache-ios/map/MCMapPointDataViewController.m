@@ -376,7 +376,7 @@
         [_buttonsCell enableRightButton];
     }
     
-    [_row setValueWithColumnName:fieldWithTitleCell.columnName andValue: [fieldWithTitleCell fieldValue]];
+    [self.row setValueWithColumnName:fieldWithTitleCell.columnName andValue: [fieldWithTitleCell fieldValue]];
 }
 
 
@@ -404,7 +404,7 @@
         BOOL saved = [_mapPointDataDelegate saveRow:_row attachments:self.addedMedia databaseName:self.databaseName];
         
         if (saved) {
-            self.media = self.addedMedia; // TODO: change this to query for the media
+            self.addedMedia = [[NSMutableArray alloc] init];
             [self showDisplayMode];
         }
         

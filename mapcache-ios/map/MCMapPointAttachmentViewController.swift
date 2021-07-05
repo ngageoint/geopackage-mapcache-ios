@@ -9,22 +9,24 @@
 import Foundation
 import UIKit
 
-protocol MCPointAttachmentDelegate: AnyObject {
+@objc protocol MCPointAttachmentDelegate: AnyObject {
     func deleteAttachment()
 }
 
 
 class MCMapPointAttachmentViewController: NGADrawerViewController, UITableViewDelegate, UITableViewDataSource, MCDualButtonCellDelegate {
+    
     var cellArray: Array<UITableViewCell> = []
     var tableView: UITableView = UITableView()
     var haveScrolled: Bool = false
     var contentOffset: CGFloat = 0.0
     var imageCell: MCImageCell?
-    let shareAction = "share"
-    let deleteAction = "delete"
-    @objc var image: UIImage?
     var buttonsCell: MCDualButtonCell?
     var row: GPKGUserRow?
+    @objc var image: UIImage?
+    let shareAction = "share"
+    let deleteAction = "delete"
+    @objc var attachmentDelegate:MCPointAttachmentDelegate?
     
     
     override func viewDidLoad() {
@@ -114,8 +116,19 @@ class MCMapPointAttachmentViewController: NGADrawerViewController, UITableViewDe
     func performDualButtonAction(_ action: String) {
         if (action == self.shareAction) {
             print(self.shareAction)
+            let shareController = UIActivityViewController(activityItems: [self.image!], applicationActivities: [])
+            present(shareController, animated: true)
         } else if (action == self.deleteAction) {
-            print(self.deleteAction)
+            let alertController:UIAlertController = UIAlertController.init(title: "Delete attachment?", message: "There is no undo, deleted images are removed from the GeoPackage.", preferredStyle: .alert)
+            let deleteAction:UIAlertAction = UIAlertAction.init(title: "Delete", style: .destructive) { UIAlertAction in
+                self.attachmentDelegate?.deleteAttachment()
+            }
+            let cancelAction:UIAlertAction = UIAlertAction.init(title: "Cancel", style: .cancel) { UIAlertAction in
+                alertController.dismiss(animated: true, completion: nil)
+            }
+            alertController.addAction(deleteAction)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
         }
     }
     

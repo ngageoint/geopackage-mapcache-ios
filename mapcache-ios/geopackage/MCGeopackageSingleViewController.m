@@ -205,6 +205,7 @@
     [self.delegate setSelectedDatabaseName];
 }
 
+
 #pragma mark - TableView delegate methods
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     return [_cellArray objectAtIndex:indexPath.row];

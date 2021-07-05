@@ -23,10 +23,9 @@ import Foundation
     }
     
     
-    @objc func mediaRelationsFor(geoPackageName: String, row:GPKGUserRow) -> [UIImage] {
+    @objc func mediaRelationsFor(geoPackageName: String, row:GPKGUserRow) -> [GPKGUserRow] {
         let geoPackage = manager?.open(geoPackageName)
         let relatedTables = GPKGRelatedTablesExtension.init(geoPackage: geoPackage)
-        var media = [UIImage]()
         
         if (relatedTables?.has() != nil) {
             print("Have related tables!")
@@ -38,11 +37,7 @@ import Foundation
                         if let mappedIDs = relatedTables?.mappings(for: relationship, withBaseId: row.idValue()) {
                             if let mediaDao = relatedTables?.mediaDao(for: relationship) {
                                 if let mediaRows = mediaDao.rows(withIds: mappedIDs) {
-                                    for mediaRow in mediaRows {
-                                        if let image = mediaRow.dataImage() {
-                                            media.append(image)
-                                        }
-                                    }
+                                    return mediaRows
                                 }
                             }
                         }
@@ -51,7 +46,7 @@ import Foundation
             }
         }
         
-        return media
+        return []
     }
     
     
@@ -102,7 +97,7 @@ import Foundation
     }
     
     
-    @objc func deleteAttachment(geoPackageName: String, row:GPKGUserRow, index:Int) -> Bool {
+    @objc func deleteAttachment(geoPackageName: String, row:GPKGUserRow, mediaRow:GPKGMediaRow) -> Bool {
         let geoPackage = manager?.open(geoPackageName)
         let relatedTables = GPKGRelatedTablesExtension.init(geoPackage: geoPackage)
         
@@ -111,17 +106,10 @@ import Foundation
             if let featureDao:GPKGFeatureDao = geoPackage?.featureDao(withTableName: row.tableName()) {
                 let relationships:[GPKGExtendedRelation] = (relatedTables?.relationships())!
                 for relationship:GPKGExtendedRelation in relationships {
-                    print("base table name: \(relationship.baseTableName) related table name: \(relationship.relatedTableName) mapping table name: \(relationship.mappingTableName)")
                     if row.tableName() == relationship.baseTableName {
                         if let mappedIDs = relatedTables?.mappings(for: relationship, withBaseId: row.idValue()) {
                             if let mediaDao = relatedTables?.mediaDao(for: relationship) {
-                                if let mediaRows = mediaDao.rows(withIds: mappedIDs) {
-                                    for (rowIndex, mediaRow) in mediaRows.enumerated() {
-                                        if index == rowIndex {
-                                            mediaDao.delete(mediaRow)
-                                        }
-                                    }
-                                }
+                                return mediaDao.delete(mediaRow) > 0
                             }
                         }
                     }

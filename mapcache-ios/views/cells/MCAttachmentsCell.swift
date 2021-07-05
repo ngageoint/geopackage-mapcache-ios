@@ -9,7 +9,7 @@
 import Foundation
 
 @objc protocol MCShowAttachmentDelegate: AnyObject {
-    @objc func showAttachment(image:UIImage)
+    @objc func showAttachment(mediaRow:GPKGMediaRow)
 }
 
 class MCAttachmentsCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -44,14 +44,22 @@ class MCAttachmentsCell: UITableViewCell, UICollectionViewDelegate, UICollection
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "mediaCell", for: indexPath) as! MCMediaCell
-        cell.imageView.image = (self.mediaArray.object(at: indexPath.row) as! UIImage)
+        
+        if let mediaRow:GPKGMediaRow = self.mediaArray.object(at: indexPath.row) as? GPKGMediaRow {
+            if let image:UIImage = mediaRow.dataImage() {
+                cell.imageView.image = image
+            }
+        } else if let image:UIImage = self.mediaArray.object(at: indexPath.row) as? UIImage {
+            cell.imageView.image = image
+        }
+        
         return cell
     }
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let delegate = self.attachmentDelegate {
-            delegate.showAttachment(image: self.mediaArray.object(at: indexPath.row) as! UIImage)
+            delegate.showAttachment(mediaRow: self.mediaArray.object(at: indexPath.row) as! GPKGMediaRow)
         }
     }
 }

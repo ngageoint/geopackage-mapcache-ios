@@ -417,9 +417,6 @@ static MCGeoPackageRepository *sharedRepository;
             [_activeDatabases addTable:table];
         }
         
-        self.selectedLayerName = @"";
-        self.selectedGeoPackageName = @"";
-        
     } @catch (NSException *e) {
         NSLog(@"Problem while saving point data: %@", e.reason);
         saved = NO;

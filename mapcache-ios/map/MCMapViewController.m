@@ -21,6 +21,7 @@
 @property (nonatomic, strong) GPKGBoundingBox *tilesBoundingBox;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic) BOOL showingUserLocation;
+@property (nonatomic) NSInteger userLocationStatus;
 @property (nonatomic) BOOL featureOverlayTiles;
 @property (nonatomic) BOOL ignoreRegionChange;
 @property (atomic) int updateCountId;
@@ -68,6 +69,12 @@
 static NSString *mapPointImageReuseIdentifier = @"mapPointImageReuseIdentifier";
 static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
+typedef NS_ENUM(NSInteger, MCLocationStatus) {
+    MCLocationStatusNone,
+    MCLocationStatusGPS,
+    MCLocationStatusHeading
+};
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     _childCoordinators = [[NSMutableArray alloc] init];
@@ -96,6 +103,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.showingUserLocation = NO;
+    self.userLocationStatus = MCLocationStatusNone;
     self.settingsDrawerVisible = NO;
     self.ignoreRegionChange = YES;
     self.currentZoom = -1;
@@ -220,30 +228,53 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (IBAction)changeLocationState:(id)sender {
     NSLog(@"GPS button tapped");
     
-    if (!self.showingUserLocation) {
-        if (![CLLocationManager locationServicesEnabled]) {
-            // todo show a message asking the user to enable it
-            return;
-        }
-        
+    if (![CLLocationManager locationServicesEnabled]) {
+        // todo show a message asking the user to enable it
+        return;
+    }
+    
+    if (self.userLocationStatus == MCLocationStatusNone) {
         switch ([CLLocationManager authorizationStatus]) {
             case kCLAuthorizationStatusAuthorizedWhenInUse:
                 [self.locationManager startUpdatingLocation];
                 [self.locationButton setImage:[UIImage imageNamed:@"GPSActive"] forState:UIControlStateNormal];
                 self.showingUserLocation = YES;
+                self.userLocationStatus = MCLocationStatusGPS;
                 break;
             default:
                 self.showingUserLocation = NO;
                 [self.locationManager requestWhenInUseAuthorization];
                 break;
         }
-    } else {
+    } else if (self.userLocationStatus == MCLocationStatusGPS) {
+        switch ([CLLocationManager authorizationStatus]) {
+            case kCLAuthorizationStatusAuthorizedWhenInUse:
+                [self.locationManager startUpdatingLocation];
+                [self.locationManager startUpdatingHeading];
+                [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
+                [self.locationButton setImage:[UIImage imageNamed:@"GPSHeading"] forState:UIControlStateNormal];
+                self.showingUserLocation = YES;
+                self.userLocationStatus = MCLocationStatusHeading;
+                break;
+            default:
+                self.showingUserLocation = NO;
+                [self.locationManager requestWhenInUseAuthorization];
+                break;
+        }
+    } else if (self.userLocationStatus == MCLocationStatusHeading) {
+        self.userLocationStatus = MCLocationStatusNone;
         [self.locationManager stopUpdatingLocation];
         self.mapView.showsUserLocation = NO;
+        [self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:YES];
         self.showingUserLocation = NO;
         [self.locationButton setImage:[UIImage imageNamed:@"GPS"] forState:UIControlStateNormal];
     }
     
+    /*
+    if (!self.showingUserLocation) {
+    } else {
+    }
+    */
 }
 
 
@@ -525,12 +556,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             view = mapPointImageView;
             mapPoint.view = view;
         }else{
-            MKPinAnnotationView *mapPointPinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointPinReuseIdentifier];
-            if(mapPointPinView == nil){
-                mapPointPinView = [[MKPinAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:mapPointPinReuseIdentifier];
+            MKMarkerAnnotationView *annotationView = (MKMarkerAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointPinReuseIdentifier];
+            if (annotationView == nil) {
+                annotationView = [[MKMarkerAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:mapPointPinReuseIdentifier];
             }
-            mapPointPinView.pinTintColor = mapPoint.options.pinTintColor;
-            view = mapPointPinView;
+            annotationView.tintColor = mapPoint.options.pinTintColor;
+            view = annotationView;
         }
         
         if(mapPoint.title == nil){
