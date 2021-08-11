@@ -94,6 +94,13 @@ import Foundation
         if (tryXYZ) {
             URLSession.shared.downloadTask(with: url) { (location, response, error) in
                 do {
+                    if let e = error {
+                        tileServer.serverType = .error
+                        let result = MCTileServerResult.init(tileServer, self.generateError(message: e.localizedDescription, errorType: MCServerErrorType.MCTileServerNoResponse))
+                        completion(result)
+                        return
+                    }
+                    
                     guard let tile = UIImage.init(data: try Data.init(contentsOf: location!)) else {
                         tileServer.serverType = .error
                         let result = MCTileServerResult.init(tileServer, self.generateError(message: "Unable to get tile", errorType: MCServerErrorType.MCNoData))

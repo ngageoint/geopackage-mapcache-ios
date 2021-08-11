@@ -50,4 +50,12 @@
 - (void)trimWhiteSpace:(UITextView *)textView {
     textView.text = [textView.text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
 }
+
+
+- (void)replaceEncodedCharacters:(UITextView *)textView {
+    NSString *string = textView.text;
+    string = [string stringByReplacingOccurrencesOfString:@"%7B" withString:@"{"];
+    string = [string stringByReplacingOccurrencesOfString:@"%7D" withString:@"}"];
+    [textView setText:string];
+}
 @end

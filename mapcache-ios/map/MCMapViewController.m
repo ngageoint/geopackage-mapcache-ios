@@ -196,6 +196,12 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     //point.latitude -= self.mapView.region.span.latitudeDelta * (1.0/3.0);
     MKCoordinateSpan span = MKCoordinateSpanMake(0, 360/pow(2, zoomLevel)*self.mapView.frame.size.width/256);
     [self.mapView setRegion:MKCoordinateRegionMake(point, span) animated:YES];
+    
+    /*if (self.expandedZoomDetails) {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d",  (int)[GPKGMapUtils currentZoomWithMapView:self.mapView]] forState:UIControlStateNormal];
+    } else {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d",  (int)[GPKGMapUtils currentZoomWithMapView:self.mapView]] forState:UIControlStateNormal];
+    }*/
 }
 
 
@@ -269,12 +275,6 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
         self.showingUserLocation = NO;
         [self.locationButton setImage:[UIImage imageNamed:@"GPS"] forState:UIControlStateNormal];
     }
-    
-    /*
-    if (!self.showingUserLocation) {
-    } else {
-    }
-    */
 }
 
 
@@ -313,7 +313,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
     if (self.showingUserLocation && !self.mapView.showsUserLocation && userLocation.coordinate.latitude != 0.0) {
         self.mapView.showsUserLocation = YES;
-        [self zoomToPointWithOffset:userLocation.coordinate];
+        [self zoomToPointWithOffset:_locationManager.location.coordinate zoomLevel:15];
     } else if (self.showingUserLocation) {
         self.mapView.showsUserLocation = YES;
     } else {
@@ -443,7 +443,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                     }
                     break;
                 case GPKG_MST_MULTI_POLYGON:
-                    for (GPKGPolygon *polygon in ((GPKGMultiPolygon *)shape).polygons) {
+                    for (GPKGPolygon *polygon in ((GPKGMultiPolygon *)shape.shape).polygons) {
                         [self.mapView insertOverlay:polygon aboveOverlay:self.bookmarkOverlay];
                     }
                     break;
@@ -581,6 +581,15 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 }
 
 
+- (void)mapViewDidChangeVisibleRegion:(MKMapView *)mapView {
+    if (self.expandedZoomDetails) {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", (int)[GPKGMapUtils currentZoomWithMapView:mapView]] forState:UIControlStateNormal];
+    } else {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", (int)[GPKGMapUtils currentZoomWithMapView:mapView]] forState:UIControlStateNormal];
+    }
+}
+
+
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
     
     if (_active == nil) {
@@ -646,8 +655,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     NSLog(@"Tapped map point");
     
-    //if (![view isKindOfClass:MKPinAnnotationView.class] ) {
-    if (![view isKindOfClass:MKAnnotationView.class] ) {
+    if (![view isKindOfClass:MKAnnotationView.class] || ![view isKindOfClass:MKMarkerAnnotationView.class]) {
         return;
     }
     
@@ -863,7 +871,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                                 }
                             }
                         } @catch (NSException *e) {
-                            NSLog(@"%@", [e description]);
+                            NSLog(@"Problem with features in zoomToActiveBounds: %@", [e description]);
                         } @finally {
                             [geoPackage close];
                         }
@@ -889,7 +897,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                                 self.tilesBoundingBox = tileMatrixSetBoundingBox;
                             }
                         } @catch (NSException *e) {
-                            NSLog(@"%@", [e description]);
+                            NSLog(@"Problem with tiles in zoomToActiveBounds%@", [e description]);
                         } @finally {
                             [geoPackage close];
                         }

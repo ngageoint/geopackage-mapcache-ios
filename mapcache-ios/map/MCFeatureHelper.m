@@ -358,9 +358,9 @@
 
 -(void) setTitleWithGeometryType: (enum SFGeometryType) type andMapPoint: (GPKGMapPoint *) mapPoint{
     NSString * title = nil;
-    if(type != SF_NONE){
+    /*if(type != SF_NONE){
         title = [SFGeometryTypes name:type];
-    }
+    }*/
     [self setTitleWithTitle:title andMapPoint:mapPoint];
 }
 
@@ -369,12 +369,14 @@
     
     NSString * locationTitle = [self buildLocationTitleWithMapPoint:mapPoint];
     
-    if(title == nil){
+    /*if(title == nil){
         [mapPoint setTitle:locationTitle];
     }else{
         [mapPoint setTitle:title];
         [mapPoint setSubtitle:locationTitle];
-    }
+    }*/
+    
+    [mapPoint setSubtitle:locationTitle];
 }
 
 

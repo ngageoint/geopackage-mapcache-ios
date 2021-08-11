@@ -393,13 +393,13 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     }
     
     UIContextualAction *editAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Edit" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        MCLayerCell *cell = [cells objectAtIndex:indexPath.row];
-        [self.settingsDelegate editTileServer:cell.layerNameLabel.text];
+        MCTileServerCell *cell = [cells objectAtIndex:indexPath.row];
+        [self.settingsDelegate editTileServer:cell.tileServer.serverName];
         completionHandler(YES);
     }];
     
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        MCLayerCell *cell = [cells objectAtIndex:indexPath.row];
+        MCTileServerCell *cell = [cells objectAtIndex:indexPath.row];
         [self.settingsDelegate deleteTileServer: cell.tileServer.serverName];
         completionHandler(YES);
     }];

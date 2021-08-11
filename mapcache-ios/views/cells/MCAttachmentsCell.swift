@@ -10,6 +10,7 @@ import Foundation
 
 @objc protocol MCShowAttachmentDelegate: AnyObject {
     @objc func showAttachment(mediaRow:GPKGMediaRow)
+    @objc func showAttachment(image:UIImage, index:NSNumber)
 }
 
 class MCAttachmentsCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -59,7 +60,11 @@ class MCAttachmentsCell: UITableViewCell, UICollectionViewDelegate, UICollection
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let delegate = self.attachmentDelegate {
-            delegate.showAttachment(mediaRow: self.mediaArray.object(at: indexPath.row) as! GPKGMediaRow)
+            if let mediaRow:GPKGMediaRow = self.mediaArray.object(at: indexPath.row) as? GPKGMediaRow {
+                delegate.showAttachment(mediaRow: mediaRow)
+            } else if let image:UIImage = self.mediaArray.object(at: indexPath.row) as? UIImage {
+                delegate.showAttachment(image: image, index: indexPath.row as NSNumber)
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ class MCMapPointAttachmentViewController: NGADrawerViewController, UITableViewDe
     var buttonsCell: MCDualButtonCell?
     var row: GPKGUserRow?
     @objc var image: UIImage?
+    @objc var index = -1
     let shareAction = "share"
     let deleteAction = "delete"
     @objc var attachmentDelegate:MCPointAttachmentDelegate?

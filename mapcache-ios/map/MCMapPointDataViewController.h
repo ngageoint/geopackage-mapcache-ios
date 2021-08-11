@@ -33,10 +33,12 @@ typedef NS_ENUM(NSInteger, MCMapPointViewMode) {
 // forward declarations
 @protocol MCShowAttachmentDelegate;
 
+
 @protocol MCMapPointDataDelegate <NSObject>
 - (BOOL)saveRow:(GPKGUserRow *)row attachments:(NSArray *)media databaseName:(NSString *) databaseName;
 - (int)deleteRow:(GPKGUserRow *)row fromDatabase:(NSString *)database andRemoveMapPoint:(GPKGMapPoint *)mapPoint;
 - (void)mapPointDataViewClosedWithNewPoint:(BOOL)didCloseWithNewPoint;
+- (void)showFieldEditor;
 @end
 
 @interface MCMapPointDataViewController : NGADrawerViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MCDualButtonCellDelegate, MCButtonCellDelegate, MCSwitchCellDelegate>
@@ -44,6 +46,7 @@ typedef NS_ENUM(NSInteger, MCMapPointViewMode) {
 @property (nonatomic, strong) GPKGMapPoint *mapPoint;
 @property (nonatomic, strong) GPKGUserRow *row;
 @property (nonatomic, strong) NSMutableArray *media;
+@property (nonatomic, strong) NSMutableArray *addedMedia;
 @property (nonatomic, strong) NSString *databaseName;
 @property (nonatomic, strong) NSString *layerName;
 @property (nonatomic) MCMapPointViewMode mode;

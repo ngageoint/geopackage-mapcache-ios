@@ -25,7 +25,8 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 @property (nonatomic, strong) MCMapPointAttachmentViewController *attachmentView;
 @property (nonatomic, strong) MCGeoPackageRepository *repository;
 @property (nonatomic, strong) GPKGMapPoint *mapPoint;
-@property (nonatomic, strong) GPKGMediaRow *selectedAttachment;
+@property (nonatomic, strong) GPKGMediaRow *selectedAttachment; // If the attachment was saved
+@property (nonatomic, strong) NSNumber *selectedAttachmentIndex; // if the attachment has been selected while editing the feature, but hasn't been saved
 @end
 
 
@@ -253,12 +254,13 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
             
             if (_mapPointDataViewController == nil) {                
                 _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:newRow databaseName:selectedGeoPackage layerName:selectedLayer media:[[NSMutableArray alloc] init] mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self showAttachmentDelegate:self];
-
+                
                 [_mapPointDataViewController pushOntoStack];
             } else {
                 _mapPointDataViewController.databaseName = selectedGeoPackage;
                 _mapPointDataViewController.layerName = selectedLayer;
                 _mapPointDataViewController.mapPointDataDelegate = self;
+                _mapPointDataViewController.showAttachmentDelegate = self;
                 [_mapPointDataViewController reloadWith:newRow mapPoint:mapPoint mode:MCPointViewModeEdit];
             }
         }
@@ -269,11 +271,11 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
         GPKGUserRow *userRow = [_repository queryRow:pointData.featureId fromTableNamed:pointData.tableName inDatabase:pointData.database];
         NSArray *media = [[MCMediaUtility shared] mediaRelationsForGeoPackageName:pointData.database row:userRow];
         
-        
         if (_mapPointDataViewController == nil) {
-            _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:userRow databaseName:_repository.selectedGeoPackageName layerName:_repository.selectedLayerName media:media mode:MCPointViewModeDisplay asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self showAttachmentDelegate:self];
+            _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:mapPoint row:userRow databaseName:_repository.selectedGeoPackageName layerName:_repository.selectedLayerName media:[NSMutableArray arrayWithArray: media] mode:MCPointViewModeDisplay asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self showAttachmentDelegate:self];
             [_drawerViewDelegate pushDrawer:_mapPointDataViewController];
         } else {
+            _mapPointDataViewController.media = [[NSMutableArray alloc] initWithArray: media];
             [_mapPointDataViewController reloadWith:userRow mapPoint:mapPoint mode:MCPointViewModeDisplay];
         }
     }
@@ -418,34 +420,74 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 }
 
 
+- (void)showFieldEditor {
+    MCDatabase *database = [_repository databaseNamed:_repository.selectedGeoPackageName];
+    
+    if (database != nil && [database hasTableNamed:_repository.selectedLayerName]) {
+        MCTable *table = [database tableNamed:_repository.selectedLayerName];
+        MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerViewDelegate layerCoordinatorDelegate:self];
+        [self.childCoordinators addObject:layerCoordinator];
+        [layerCoordinator start];
+    }
+}
+
+
 #pragma mark - MCShowAttachmentDelegate
 - (void)showAttachmentWithMediaRow:(GPKGMediaRow *)mediaRow {
     self.attachmentView = [[MCMapPointAttachmentViewController alloc] initAsFullView:YES];
     self.selectedAttachment = mediaRow;
+    self.selectedAttachmentIndex = [[NSNumber alloc] initWithInt:-1];
     self.attachmentView.image = [mediaRow dataImage];
     self.attachmentView.drawerViewDelegate = self.drawerViewDelegate;
     self.attachmentView.attachmentDelegate = self;
     [self.drawerViewDelegate pushDrawer:self.attachmentView];
-    
+
+}
+
+
+- (void)showAttachmentWithImage:(UIImage *)image index:(NSNumber *)index {
+    self.attachmentView = [[MCMapPointAttachmentViewController alloc] initAsFullView:YES];
+    self.selectedAttachment = nil;
+    self.selectedAttachmentIndex = index;
+    self.attachmentView.image = image;
+    self.attachmentView.drawerViewDelegate = self.drawerViewDelegate;
+    self.attachmentView.attachmentDelegate = self;
+    [self.drawerViewDelegate pushDrawer:self.attachmentView];
 }
 
 
 #pragma mark - MCPointAttachmentDelegate
 - (void) deleteAttachment {
     NSLog(@"deleting attachment");
-    if ([MCMediaUtility.shared deleteAttachmentWithGeoPackageName:_repository.selectedGeoPackageName row:_mapPointDataViewController.row mediaRow:self.selectedAttachment]) {
-        NSArray *media = [[MCMediaUtility shared] mediaRelationsForGeoPackageName:_repository.selectedGeoPackageName row:_mapPointDataViewController.row];
-        _mapPointDataViewController.media = [[NSMutableArray alloc] initWithArray: media];
+    
+    if (self.selectedAttachmentIndex.integerValue > -1) {
+        [_mapPointDataViewController.addedMedia removeObjectAtIndex:self.selectedAttachmentIndex.unsignedIntegerValue];
         [self.attachmentView closeDrawer];
         [_mapPointDataViewController reloadWith:_mapPointDataViewController.row mapPoint:_mapPoint mode:MCPointViewModeDisplay];
     } else {
-        UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error" message:@"Unable to delete attachment." preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [errorAlert dismissViewControllerAnimated:YES completion:nil];
-        }];
-        [errorAlert addAction:okAction];
-        [_attachmentView presentViewController:errorAlert animated:YES completion:nil];
+        if ([MCMediaUtility.shared deleteAttachmentWithGeoPackageName:_repository.selectedGeoPackageName row:_mapPointDataViewController.row mediaRow:self.selectedAttachment]) {
+            NSArray *media = [[MCMediaUtility shared] mediaRelationsForGeoPackageName:_repository.selectedGeoPackageName row:_mapPointDataViewController.row];
+            _mapPointDataViewController.media = [[NSMutableArray alloc] initWithArray: media];
+            [self.attachmentView closeDrawer];
+            [_mapPointDataViewController reloadWith:_mapPointDataViewController.row mapPoint:_mapPoint mode:MCPointViewModeDisplay];
+        } else {
+            UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error" message:@"Unable to delete attachment." preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [errorAlert dismissViewControllerAnimated:YES completion:nil];
+            }];
+            [errorAlert addAction:okAction];
+            [_attachmentView presentViewController:errorAlert animated:YES completion:nil];
+        }
     }
+}
+
+
+#pragma mark - MCLayerCoordinatorDelegate methods
+- (void)layerCoordinatorCompletionHandler {
+    GPKGFeatureRow *newRow = [_repository newRowInTable:_repository.selectedLayerName database:_repository.selectedGeoPackageName mapPoint:self.mapPoint];
+    self.mapPointDataViewController.row = newRow;
+    [self.mapPointDataViewController reloadWith:newRow mapPoint:self.mapPoint mode:MCPointViewModeEdit];
+    [self.childCoordinators removeLastObject];
 }
 
 

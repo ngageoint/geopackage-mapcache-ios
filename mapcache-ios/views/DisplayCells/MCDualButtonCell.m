@@ -83,6 +83,38 @@
 }
 
 
+- (void)leftButtonUsePrimaryColors {
+    [_leftButton setBackgroundColor: [MCColorUtil getAccent]];
+    _leftButton.clipsToBounds = YES;
+    [_leftButton setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
+    [_leftButton setImage:nil forState:UIControlStateNormal];
+}
+
+
+- (void)leftButtonUseSecondaryColors {
+    [_leftButton setBackgroundColor:[UIColor clearColor]];
+    _leftButton.clipsToBounds = YES;
+    [_leftButton setTitleColor: [UIColor colorWithRed:15.3/255.0 green:187.5/255.0 blue:186.15/255.0 alpha:1.0] forState:UIControlStateNormal];
+    [_leftButton setImage:nil forState:UIControlStateNormal];
+}
+
+
+- (void)rightButtonUsePrimaryColors {
+    [_rightButton setBackgroundColor: [MCColorUtil getAccent]];
+    _rightButton.clipsToBounds = YES;
+    [_rightButton setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
+    [_rightButton setImage:nil forState:UIControlStateNormal];
+}
+
+
+- (void)rightButtonUseSecondaryColors {
+    [_rightButton setBackgroundColor:[UIColor clearColor]];
+    _rightButton.clipsToBounds = YES;
+    [_rightButton setTitleColor: [UIColor colorWithRed:15.3/255.0 green:187.5/255.0 blue:186.15/255.0 alpha:1.0] forState:UIControlStateNormal];
+    [_rightButton setImage:nil forState:UIControlStateNormal];
+}
+
+
 - (void)leftButtonUseClearBackground {
     [self.leftButton setBackgroundColor:UIColor.clearColor];
 }

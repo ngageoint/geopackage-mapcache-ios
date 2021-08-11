@@ -33,7 +33,7 @@ import Foundation
                 let relationships:[GPKGExtendedRelation] = (relatedTables?.relationships())!
                 for relationship:GPKGExtendedRelation in relationships {
                     print("base table name: \(relationship.baseTableName) related table name: \(relationship.relatedTableName) mapping table name: \(relationship.mappingTableName)")
-                    if row.tableName() == relationship.baseTableName {
+                    if row.tableName() == relationship.baseTableName && relationship.relatedTableName == self.mediaTableName {
                         if let mappedIDs = relatedTables?.mappings(for: relationship, withBaseId: row.idValue()) {
                             if let mediaDao = relatedTables?.mediaDao(for: relationship) {
                                 if let mediaRows = mediaDao.rows(withIds: mappedIDs) {
@@ -53,23 +53,29 @@ import Foundation
     @objc func saveAttachmentsFor(row: GPKGUserRow, media:(NSArray), databaseName:String) {
         if let geoPackage = self.manager?.open(databaseName) {
             if let relatedTables = GPKGRelatedTablesExtension.init(geoPackage: geoPackage) {
-                if !relatedTables.has() {
-                    if !geoPackage.isTable(self.mediaTableName) {
-                        // Create the media table
-                        let columns = NSMutableArray()
+                let mappingTableName = row.tableName() + "_" + self.mediaTableName
+                var mediaTable:GPKGMediaTable = GPKGMediaTable.init()
+                
+                if !relatedTables.has() || !geoPackage.isTable(self.mediaTableName) || !geoPackage.isTable(mappingTableName) {
+                    // Create the media table
+                    let columns = NSMutableArray()
 
-                        let mediaTable:GPKGMediaTable = GPKGMediaTable.create(with: GPKGMediaTableMetadata.create(withTable: self.mediaTableName, andAdditionalColumns: (columns as! [GPKGUserCustomColumn])))
-                        
-                        // create the mapping table
-                        let mappingTableName = row.tableName() + "_" + self.mediaTableName
+                    if !geoPackage.isTable(self.mediaTableName) {
+                        mediaTable = GPKGMediaTable.create(with: GPKGMediaTableMetadata.create(withTable: self.mediaTableName, andAdditionalColumns: (columns as! [GPKGUserCustomColumn])))
+                    } else {
+                        if let mediaDao = relatedTables.mediaDao(forTableName: self.mediaTableName) {
+                            mediaTable = mediaDao.mediaTable()
+                        }
+                    }
+
+                    if !geoPackage.isTable(mappingTableName) {
                         let mappingColumns = NSMutableArray()
                         let userMappingTable = GPKGUserMappingTable.create(withName: mappingTableName, andAdditionalColumns: (mappingColumns as! [GPKGUserCustomColumn]))
-                        
                         // relate the tables
                         relatedTables.addMediaRelationship(withBaseTable: row.tableName(), andMediaTable: mediaTable, andUserMappingTable: userMappingTable)
                     }
                 }
-                
+                    
                 if let mediaDao = relatedTables.mediaDao(forTableName: self.mediaTableName) {
                     // do some saving
                     for m in media {

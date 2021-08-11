@@ -72,8 +72,10 @@
     NSLog(@"Coordinator handling new layer");
     NSLog(@"Adding new tile layer");
     _tileData = [[GPKGSCreateTilesData alloc] init];
+    
     _tileDetailsController = [[MCTileLayerDetailsViewController alloc] initAsFullView:YES];
     _tileDetailsController.delegate = self;
+    
     _tileDetailsController.drawerViewDelegate = _drawerDelegate;
     [_tileDetailsController.drawerViewDelegate pushDrawer:_tileDetailsController];
 }
@@ -210,7 +212,6 @@
     NSLog(@"Selected %@", tileServer.url);
     _tileDetailsController.tileServer = tileServer;
     [_tileDetailsController update];
-    
 }
 
 
@@ -387,7 +388,6 @@
     } @catch(NSException *e) {
         NSLog(@"MCGeoPacakgeCoordinator - createTileLayer\n%@", e.reason);
     }
-    
 }
 
 
@@ -400,7 +400,7 @@
 
 -(void) onLoadTilesFailure: (NSString *) result withCount: (int) count {
     //TODO: fill in
-    NSLog(@"Loading tiles failed");
+    NSLog(@"Loading tiles failed, %@", result);
     [_drawerDelegate popDrawer];
     [self updateDatabase];
 }

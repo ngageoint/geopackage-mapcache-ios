@@ -49,8 +49,6 @@
     self.tableView.scrollIndicatorInsets = tabBarInsets;
     self.haveScrolled = NO;
     [self addAndConstrainSubview:self.tableView];
-    
-    //[self.view addSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
 }

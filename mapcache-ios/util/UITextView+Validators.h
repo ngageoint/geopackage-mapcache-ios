@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)isValidTileServerURL:(UITextView *)textView withResult:(void(^)(MCTileServerResult *tileServerResult))resultBlock;
 - (void)isValidGeoPackageURL:(UITextView *)textView withResult:(void(^)(BOOL isValid))resultBlock;
 - (void)trimWhiteSpace:(UITextView *)textView;
+- (void)replaceEncodedCharacters:(UITextView *)textView;
 @end
 
 NS_ASSUME_NONNULL_END
