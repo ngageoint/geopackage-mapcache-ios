@@ -105,7 +105,7 @@
 - (void)deleteGeoPackage:(MCDatabase *)database {
     [_repository deleteGeoPackage:database];
     [self.active removeDatabase:database.name andPreserveOverlays:NO];
-    [_databases removeObjectIdenticalTo:database];
+    _databases = [_repository databaseList];
     
     [_geoPackageListView refreshWithGeoPackages:_databases];
     [self.mcMapDelegate updateMapLayers];

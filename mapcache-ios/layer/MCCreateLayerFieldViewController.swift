@@ -43,7 +43,6 @@ class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDele
         self.tableView.rowHeight = UITableView.automaticDimension
         self.extendedLayoutIncludesOpaqueBars = false
         
-        
         addAndConstrainSubview(self.tableView)
         registerCellTypes()
         initCellArray()

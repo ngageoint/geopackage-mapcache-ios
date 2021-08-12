@@ -15,6 +15,7 @@
 #import "MCSegmentedControlCell.h"
 #import "MCColorUtil.h"
 #import "MCTitleCell.h"
+#import "MCEmptyStateCell.h"
 #import "NGADrawerViewController.h"
 
 // Forward declarations
@@ -32,7 +33,6 @@
 @property (weak, nonatomic) id<MCTileLayerDetailsDelegate> delegate;
 @property (nonatomic, strong) MCFieldWithTitleCell *urlCell;
 @property (nonatomic, strong) MCTileServer *tileServer;
-@property (nonatomic, strong) NSString *selectedServerURL;
 @property (nonatomic, strong) NSString *layerName;
 - (void)update;
 @end

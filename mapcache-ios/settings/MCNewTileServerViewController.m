@@ -113,6 +113,7 @@
 
 
 - (void) doneButtonPressed {
+    [self.urlField.textView replaceEncodedCharacters:self.urlField.textView];
     [self.urlField.textView resignFirstResponder];
 }
 

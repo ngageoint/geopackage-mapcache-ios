@@ -16,6 +16,7 @@
 #import "MCSectionTitleCell.h"
 #import "MCLayerCell.h"
 #import "MCButtonCell.h"
+#import "MCEmptyStateCell.h"
 #import "MCConstants.h"
 #import "MCProperties.h"
 #import "MCGeoPackageOperationsCell.h"

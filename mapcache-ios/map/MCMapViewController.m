@@ -21,6 +21,7 @@
 @property (nonatomic, strong) GPKGBoundingBox *tilesBoundingBox;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic) BOOL showingUserLocation;
+@property (nonatomic) NSInteger userLocationStatus;
 @property (nonatomic) BOOL featureOverlayTiles;
 @property (nonatomic) BOOL ignoreRegionChange;
 @property (atomic) int updateCountId;
@@ -58,6 +59,7 @@
 @property (nonatomic) CLLocationCoordinate2D currentCenter;
 @property (nonatomic) BOOL expandedZoomDetails;
 @property (nonatomic, strong) MKTileOverlay *userTileOverlay;
+@property (nonatomic, strong) MKTileOverlay *bookmarkOverlay;
 @property (nonatomic, strong) MKTileOverlay *userBasemapOverlay;
 @end
 
@@ -66,6 +68,12 @@
 
 static NSString *mapPointImageReuseIdentifier = @"mapPointImageReuseIdentifier";
 static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
+
+typedef NS_ENUM(NSInteger, MCLocationStatus) {
+    MCLocationStatusNone,
+    MCLocationStatusGPS,
+    MCLocationStatusHeading
+};
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -95,6 +103,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.showingUserLocation = NO;
+    self.userLocationStatus = MCLocationStatusNone;
     self.settingsDrawerVisible = NO;
     self.ignoreRegionChange = YES;
     self.currentZoom = -1;
@@ -138,6 +147,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     } else {
         [self.mapView setMapType:MKMapTypeHybrid];
     }
+    
+    self.bookmarkOverlay = [[MKTileOverlay alloc] init];
+    [self.mapView addOverlay:_bookmarkOverlay];
 }
 
 
@@ -184,6 +196,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     //point.latitude -= self.mapView.region.span.latitudeDelta * (1.0/3.0);
     MKCoordinateSpan span = MKCoordinateSpanMake(0, 360/pow(2, zoomLevel)*self.mapView.frame.size.width/256);
     [self.mapView setRegion:MKCoordinateRegionMake(point, span) animated:YES];
+    
+    /*if (self.expandedZoomDetails) {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d",  (int)[GPKGMapUtils currentZoomWithMapView:self.mapView]] forState:UIControlStateNormal];
+    } else {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d",  (int)[GPKGMapUtils currentZoomWithMapView:self.mapView]] forState:UIControlStateNormal];
+    }*/
 }
 
 
@@ -216,30 +234,47 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (IBAction)changeLocationState:(id)sender {
     NSLog(@"GPS button tapped");
     
-    if (!self.showingUserLocation) {
-        if (![CLLocationManager locationServicesEnabled]) {
-            // todo show a message asking the user to enable it
-            return;
-        }
-        
+    if (![CLLocationManager locationServicesEnabled]) {
+        // todo show a message asking the user to enable it
+        return;
+    }
+    
+    if (self.userLocationStatus == MCLocationStatusNone) {
         switch ([CLLocationManager authorizationStatus]) {
             case kCLAuthorizationStatusAuthorizedWhenInUse:
                 [self.locationManager startUpdatingLocation];
                 [self.locationButton setImage:[UIImage imageNamed:@"GPSActive"] forState:UIControlStateNormal];
                 self.showingUserLocation = YES;
+                self.userLocationStatus = MCLocationStatusGPS;
                 break;
             default:
                 self.showingUserLocation = NO;
                 [self.locationManager requestWhenInUseAuthorization];
                 break;
         }
-    } else {
+    } else if (self.userLocationStatus == MCLocationStatusGPS) {
+        switch ([CLLocationManager authorizationStatus]) {
+            case kCLAuthorizationStatusAuthorizedWhenInUse:
+                [self.locationManager startUpdatingLocation];
+                [self.locationManager startUpdatingHeading];
+                [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
+                [self.locationButton setImage:[UIImage imageNamed:@"GPSHeading"] forState:UIControlStateNormal];
+                self.showingUserLocation = YES;
+                self.userLocationStatus = MCLocationStatusHeading;
+                break;
+            default:
+                self.showingUserLocation = NO;
+                [self.locationManager requestWhenInUseAuthorization];
+                break;
+        }
+    } else if (self.userLocationStatus == MCLocationStatusHeading) {
+        self.userLocationStatus = MCLocationStatusNone;
         [self.locationManager stopUpdatingLocation];
         self.mapView.showsUserLocation = NO;
+        [self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:YES];
         self.showingUserLocation = NO;
         [self.locationButton setImage:[UIImage imageNamed:@"GPS"] forState:UIControlStateNormal];
     }
-    
 }
 
 
@@ -278,7 +313,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
     if (self.showingUserLocation && !self.mapView.showsUserLocation && userLocation.coordinate.latitude != 0.0) {
         self.mapView.showsUserLocation = YES;
-        [self zoomToPointWithOffset:userLocation.coordinate];
+        [self zoomToPointWithOffset:_locationManager.location.coordinate zoomLevel:15];
     } else if (self.showingUserLocation) {
         self.mapView.showsUserLocation = YES;
     } else {
@@ -365,7 +400,17 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 #pragma mark - MCTileHelperDelegate methods
 - (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay withTable:(MCTileTable *)table {
     dispatch_sync(dispatch_get_main_queue(), ^{
-        [self.mapView addOverlay:tileOverlay];
+        //[self.mapView addOverlay:tileOverlay];
+        [self.mapView insertOverlay:tileOverlay belowOverlay:self.bookmarkOverlay];
+        /*for (id<MKOverlay> overlay in self.mapView.overlays) {
+            if ([overlay isKindOfClass:MKTileOverlay.class]) {
+                [self.mapView insertOverlay:tileOverlay aboveOverlay:overlay];
+                break;
+            } else {
+                [self.mapView insertOverlay:tileOverlay belowOverlay:overlay];
+                break;
+            }
+        }*/
     });
 }
 
@@ -374,6 +419,47 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (void) addShapeToMapView:(GPKGMapShape *) shape withCount:(int) count {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [GPKGMapShapeConverter addMapShape:shape toMapView:self.mapView];
+        //[self.mapView insertOverlay:self.bookmarkOverlay aboveOverlay:shape];
+        
+        switch (shape.shapeType) {
+                    
+                case GPKG_MST_POINT:
+                    [self.mapView addAnnotation:(GPKGMapPoint *)shape.shape];
+                    break;
+                case GPKG_MST_POLYLINE:
+                    [self.mapView insertOverlay:(GPKGPolyline *)shape.shape aboveOverlay:self.bookmarkOverlay];
+                    break;
+                case GPKG_MST_POLYGON:
+                    [self.mapView insertOverlay:(GPKGPolygon *)shape.shape aboveOverlay:self.bookmarkOverlay];
+                    break;
+                case GPKG_MST_MULTI_POINT:
+                    for (GPKGMapPoint *point in ((GPKGMultiPoint *)shape.shape).points) {
+                        [self.mapView addAnnotation:point];
+                    }
+                    break;
+                case GPKG_MST_MULTI_POLYLINE:
+                    for (GPKGPolyline *polyline in ((GPKGMultiPoint *)shape.shape).points) {
+                        [self.mapView insertOverlay:polyline aboveOverlay:self.bookmarkOverlay];
+                    }
+                    break;
+                case GPKG_MST_MULTI_POLYGON:
+                    for (GPKGPolygon *polygon in ((GPKGMultiPolygon *)shape.shape).polygons) {
+                        [self.mapView insertOverlay:polygon aboveOverlay:self.bookmarkOverlay];
+                    }
+                    break;
+                /*case GPKG_MST_COLLECTION:
+                    {
+                        NSMutableArray * addedShapeArray = [NSMutableArray array];
+                        NSArray * shapeArray = (NSArray *) mapShape.shape;
+                        for(GPKGMapShape * shapeArrayItem in shapeArray){
+                            [GPKGUtils addObject:[self addMapShape:shapeArrayItem toMapView:mapView] toArray:addedShapeArray];
+                        }
+                        addedShape = [[GPKGMapShape alloc] initWithGeometryType:mapShape.geometryType andShapeType:GPKG_MST_COLLECTION andShape:addedShapeArray];
+                    }
+                    break;*/
+                default:
+                    [NSException raise:@"Unsupported Shape" format:@"Unsupported Shape Type: %@", [GPKGMapShapeTypes name:shape.shapeType]];
+            }
     });
 }
 
@@ -470,12 +556,12 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             view = mapPointImageView;
             mapPoint.view = view;
         }else{
-            MKPinAnnotationView *mapPointPinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointPinReuseIdentifier];
-            if(mapPointPinView == nil){
-                mapPointPinView = [[MKPinAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:mapPointPinReuseIdentifier];
+            MKMarkerAnnotationView *annotationView = (MKMarkerAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointPinReuseIdentifier];
+            if (annotationView == nil) {
+                annotationView = [[MKMarkerAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:mapPointPinReuseIdentifier];
             }
-            mapPointPinView.pinTintColor = mapPoint.options.pinTintColor;
-            view = mapPointPinView;
+            annotationView.tintColor = mapPoint.options.pinTintColor;
+            view = annotationView;
         }
         
         if(mapPoint.title == nil){
@@ -492,6 +578,15 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }
     
     return view;
+}
+
+
+- (void)mapViewDidChangeVisibleRegion:(MKMapView *)mapView {
+    if (self.expandedZoomDetails) {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", (int)[GPKGMapUtils currentZoomWithMapView:mapView]] forState:UIControlStateNormal];
+    } else {
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", (int)[GPKGMapUtils currentZoomWithMapView:mapView]] forState:UIControlStateNormal];
+    }
 }
 
 
@@ -560,7 +655,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     NSLog(@"Tapped map point");
     
-    if (![view isKindOfClass:MKPinAnnotationView.class]) {
+    if (![view isKindOfClass:MKAnnotationView.class] || ![view isKindOfClass:MKMarkerAnnotationView.class]) {
         return;
     }
     
@@ -581,6 +676,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     [self.featureHelper resetFeatureCount];
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
+    [self.mapView addOverlay:self.bookmarkOverlay];
     
     if (self.userBasemapOverlay != nil) {
         [self.mapView addOverlay:self.userBasemapOverlay];
@@ -775,7 +871,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                                 }
                             }
                         } @catch (NSException *e) {
-                            NSLog(@"%@", [e description]);
+                            NSLog(@"Problem with features in zoomToActiveBounds: %@", [e description]);
                         } @finally {
                             [geoPackage close];
                         }
@@ -801,7 +897,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                                 self.tilesBoundingBox = tileMatrixSetBoundingBox;
                             }
                         } @catch (NSException *e) {
-                            NSLog(@"%@", [e description]);
+                            NSLog(@"Problem with tiles in zoomToActiveBounds%@", [e description]);
                         } @finally {
                             [geoPackage close];
                         }

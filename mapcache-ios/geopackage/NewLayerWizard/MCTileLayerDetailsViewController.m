@@ -18,6 +18,8 @@
 @property (nonatomic, strong) MCFieldWithTitleCell *layerNameCell;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic) BOOL urlIsValid;
+@property (nonatomic) BOOL haveScrolled;
+@property (nonatomic) CGFloat contentOffset;
 @end
 
 @implementation MCTileLayerDetailsViewController
@@ -25,21 +27,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _tableView = [[UITableView alloc] init];
     CGRect bounds = self.view.bounds;
     CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 32, bounds.size.width, bounds.size.height - 20);
     self.tableView = [[UITableView alloc] initWithFrame: insetBounds style:UITableViewStylePlain];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    self.tableView.estimatedRowHeight = 390.0;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.estimatedRowHeight = 141.0;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    
+    self.layerName = nil;
     self.urlIsValid = YES;
     
-    self.tileServer = [[MCTileServer alloc] initWithServerName:@"GEOINT Services OSM"];
-    self.tileServer.url = @"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png";
+    MCTileServer *tileServer = [[MCTileServer alloc] initWithServerName:@"GEOINT Services OSM"];
+    tileServer.url = @"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png";
+    tileServer.serverType = MCTileServerTypeXyz;
+    self.tileServer = tileServer;
     
     [self registerCellTypes];
     [self initCellArray];
@@ -51,11 +56,12 @@
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
+    self.contentOffset = 0;
+    self.haveScrolled = NO;
+    //[self addAndConstrainSubview:self.tableView];
     [self.view addSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
-    self.selectedServerURL = nil;
-    self.layerName = nil;
 }
 
 
@@ -76,7 +82,9 @@
     _layerNameCell.title.text = @"Layer name";
     
     if (self.layerName != nil) {
-        [_layerNameCell.field setText:self.layerName];
+        [_layerNameCell setFieldText:self.layerName];
+    } else {
+        [_layerNameCell setFieldText:@""];
     }
     
     [_layerNameCell.field setReturnKeyType:UIReturnKeyDone]; // TODO look into UIReturnKeyNext
@@ -101,8 +109,8 @@
     [_selectServerButtonCell.button setTitle:@"Choose Tile Server" forState:UIControlStateNormal];
     _selectServerButtonCell.action = @"ShowServers";
     _selectServerButtonCell.delegate = self;
-    [_cellArray addObject:_selectServerButtonCell];
     [_selectServerButtonCell useSecondaryColors];
+    [_cellArray addObject:_selectServerButtonCell];
     
     _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_buttonCell.button setTitle:@"Next" forState:UIControlStateNormal];
@@ -115,8 +123,8 @@
     [_helpButtonCell.button setTitle:@"More about URL templates" forState:UIControlStateNormal];
     _helpButtonCell.action = @"ShowHelp";
     _helpButtonCell.delegate = self;
-    [_cellArray addObject:_helpButtonCell];
     [_helpButtonCell useSecondaryColors];
+    [_cellArray addObject:_helpButtonCell];
 }
 
 - (void)update {
@@ -258,6 +266,17 @@
     [self.drawerViewDelegate popDrawer];
 }
 
+- (void) drawerWasCollapsed {
+    [super drawerWasCollapsed];
+    [self.tableView setScrollEnabled:NO];
+}
+
+
+- (void) drawerWasMadeFull {
+    [super drawerWasMadeFull];
+    [self.tableView setScrollEnabled:YES];
+}
+
 - (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
     CGPoint point = [recognizer locationInView:self.view];
     
@@ -266,6 +285,25 @@
     }
     
     return false;
+}
+
+// Override this method to make the drawer and the scrollview play nice
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.haveScrolled) {
+        [self rollUpPanGesture:scrollView.panGestureRecognizer withScrollView:scrollView];
+    }
+}
+
+// If the table view is scrolling rollup the gesture to the drawer and handle accordingly.
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.haveScrolled = YES;
+    
+    if (!self.isFullView) {
+        scrollView.scrollEnabled = NO;
+        scrollView.scrollEnabled = YES;
+    } else {
+        scrollView.scrollEnabled = YES;
+    }
 }
 
 @end

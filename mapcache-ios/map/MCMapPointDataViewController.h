@@ -30,23 +30,32 @@ typedef NS_ENUM(NSInteger, MCMapPointViewMode) {
     MCPointViewModeDisplay
 };
 
+// forward declarations
+@protocol MCShowAttachmentDelegate;
+
+
 @protocol MCMapPointDataDelegate <NSObject>
-- (BOOL)saveRow:(GPKGUserRow *)row;
+- (BOOL)saveRow:(GPKGUserRow *)row attachments:(NSArray *)media databaseName:(NSString *) databaseName;
 - (int)deleteRow:(GPKGUserRow *)row fromDatabase:(NSString *)database andRemoveMapPoint:(GPKGMapPoint *)mapPoint;
 - (void)mapPointDataViewClosedWithNewPoint:(BOOL)didCloseWithNewPoint;
+- (void)showFieldEditor;
 @end
 
-@interface MCMapPointDataViewController : NGADrawerViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, MCDualButtonCellDelegate, MCButtonCellDelegate, MCSwitchCellDelegate>
+@interface MCMapPointDataViewController : NGADrawerViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MCDualButtonCellDelegate, MCButtonCellDelegate, MCSwitchCellDelegate>
 @property (nonatomic, strong) id<MCMapPointDataDelegate>mapPointDataDelegate;
 @property (nonatomic, strong) GPKGMapPoint *mapPoint;
 @property (nonatomic, strong) GPKGUserRow *row;
+@property (nonatomic, strong) NSMutableArray *media;
+@property (nonatomic, strong) NSMutableArray *addedMedia;
 @property (nonatomic, strong) NSString *databaseName;
 @property (nonatomic, strong) NSString *layerName;
 @property (nonatomic) MCMapPointViewMode mode;
+@property (nonatomic, strong) id<MCShowAttachmentDelegate>showAttachmentDelegate;
 - (void)showEditMode;
 - (void)showDisplayMode;
 - (void)reloadWith:(GPKGUserRow *)row mapPoint:(GPKGMapPoint *)mapPoint mode:(MCMapPointViewMode)mode;
 - (instancetype) initWithMapPoint:(GPKGMapPoint *)mapPoint row:(GPKGUserRow *)row databaseName:(NSString *)databaseName layerName:(NSString *)layerName mode:(MCMapPointViewMode)mode asFullView:(BOOL)fullView drawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate pointDataDelegate:(id<MCMapPointDataDelegate>) pointDataDelegate;
+- (instancetype) initWithMapPoint:(GPKGMapPoint *)mapPoint row:(GPKGUserRow *)row databaseName:(NSString *)databaseName layerName:(NSString *)layerName media:(NSMutableArray *)media mode:(MCMapPointViewMode)mode asFullView:(BOOL)fullView drawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate pointDataDelegate:(id<MCMapPointDataDelegate>) pointDataDelegate showAttachmentDelegate:(id<MCShowAttachmentDelegate>) showAttachmentDelegate;
 @end
 
 NS_ASSUME_NONNULL_END

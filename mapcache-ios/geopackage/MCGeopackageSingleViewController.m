@@ -49,8 +49,6 @@
     self.tableView.scrollIndicatorInsets = tabBarInsets;
     self.haveScrolled = NO;
     [self addAndConstrainSubview:self.tableView];
-    
-    //[self.view addSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
 }
@@ -135,6 +133,10 @@
         [_cellArray addObject:layerCell];
     }
     
+    MCEmptyStateCell *spacer = [self.tableView dequeueReusableCellWithIdentifier:@"spacer"];
+    [spacer useAsSpacer];
+    [_cellArray addObject:spacer];
+    
     // TODO: add section for reference systems
 }
 
@@ -145,6 +147,7 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCSectionTitleCell" bundle:nil] forCellReuseIdentifier:@"sectionTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCLayerCell" bundle:nil] forCellReuseIdentifier:@"layerCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"buttonCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCEmptyStateCell" bundle:nil] forCellReuseIdentifier:@"spacer"];
 }
 
 
@@ -199,6 +202,7 @@
 - (void) becameTopDrawer {
     [self.delegate setSelectedDatabaseName];
 }
+
 
 #pragma mark - TableView delegate methods
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {

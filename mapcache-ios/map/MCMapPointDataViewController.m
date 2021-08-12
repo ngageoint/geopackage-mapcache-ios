@@ -7,14 +7,17 @@
 //
 
 #import "MCMapPointDataViewController.h"
-
+#import "mapcache_ios-Swift.h"
 
 @interface MCMapPointDataViewController ()
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *cellArray;
 @property (nonatomic, strong) MCFieldWithTitleCell *titleCell;
+@property (nonatomic, strong) MCAttachmentsCell *attachmentsCell;
 @property (nonatomic, strong) MCTextViewCell *descriptionCell;
 @property (nonatomic, strong) MCDualButtonCell *buttonsCell;
+@property (nonatomic, strong) MCDualButtonCell *attachmentButtonsCell;
+@property (nonatomic, strong) UIImagePickerController *imagePicker;
 @property (nonatomic) BOOL haveScrolled;
 @end
 
@@ -27,6 +30,24 @@
     self.layerName = layerName;
     self.drawerViewDelegate = drawerDelegate;
     self.mapPointDataDelegate = pointDataDelegate;
+    self.mode = mode;
+    self.row = row;
+    self.media = [[NSMutableArray alloc] init];
+    self.addedMedia = [[NSMutableArray alloc] init];
+    return self;
+}
+
+
+- (instancetype) initWithMapPoint:(GPKGMapPoint *)mapPoint row:(GPKGUserRow *)row databaseName:(NSString *)databaseName layerName:(NSString *)layerName media:(NSMutableArray *)media mode:(MCMapPointViewMode)mode asFullView:(BOOL)fullView drawerDelegate:(id<NGADrawerViewDelegate>) drawerDelegate pointDataDelegate:(id<MCMapPointDataDelegate>) pointDataDelegate showAttachmentDelegate:(id<MCShowAttachmentDelegate>) showAttachmentDelegate {
+    self = [super initAsFullView:fullView];
+    self.mapPoint = mapPoint;
+    self.databaseName = databaseName;
+    self.layerName = layerName;
+    self.media = media;
+    self.addedMedia = [[NSMutableArray alloc] init];
+    self.drawerViewDelegate = drawerDelegate;
+    self.mapPointDataDelegate = pointDataDelegate;
+    self.showAttachmentDelegate = showAttachmentDelegate;
     self.mode = mode;
     self.row = row;
     return self;
@@ -42,8 +63,9 @@
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.estimatedRowHeight = 390.0;
+    //self.tableView.estimatedRowHeight = 390.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
@@ -53,6 +75,8 @@
     [self registerCellTypes];
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
+    _imagePicker = [[UIImagePickerController alloc] init];
+    _imagePicker.delegate = self;
     
     [self addDragHandle];
     [self addCloseButton];
@@ -82,6 +106,7 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCSwitchCell" bundle:nil] forCellReuseIdentifier:@"switchCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCLayerCell" bundle:nil] forCellReuseIdentifier:@"layerCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCEmptyStateCell" bundle:nil] forCellReuseIdentifier:@"spacer"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCAttachmentsCell" bundle:nil] forCellReuseIdentifier:@"attachmentsCell"];
 }
 
 
@@ -98,10 +123,24 @@
     [details.layerTypeImage setImage:[UIImage imageNamed:@"Point"]];
     [_cellArray addObject:details];
     
+    if (self.media.count > 0) {
+        self.attachmentsCell = [self.tableView dequeueReusableCellWithIdentifier:@"attachmentsCell"];
+        [self.attachmentsCell setContentsWithMediaArray:self.media];
+        self.attachmentsCell.attachmentDelegate = self.showAttachmentDelegate;
+        [self.cellArray addObject:self.attachmentsCell];
+    }
+    
     if (_row.columnCount == 2) { // no user editable columns
         MCDescriptionCell *empty = [self.tableView dequeueReusableCellWithIdentifier:@"descriptionDisplay"];
         [empty setDescription:@"This layer has no fields."];
         [_cellArray addObject:empty];
+        
+        MCButtonCell *addFieldsButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
+        [addFieldsButtonCell useSecondaryColors];
+        addFieldsButtonCell.delegate = self;
+        [addFieldsButtonCell setAction:@"addFields"];
+        [addFieldsButtonCell setButtonLabel:@"Add fields"];
+        [_cellArray addObject:addFieldsButtonCell];
     }
     
     for (int i = 0; i < _row.columnCount; i++) {
@@ -182,10 +221,39 @@
     [details.layerTypeImage setImage:[UIImage imageNamed:@"Point"]];
     [_cellArray addObject:details];
     
+    _attachmentButtonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttons"];
+    [_attachmentButtonsCell setLeftButtonLabel:@""];
+    [_attachmentButtonsCell setLeftButtonAction:@"camera"];
+    [_attachmentButtonsCell leftButtonUseClearBackground];
+    [_attachmentButtonsCell.leftButton setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
+    [_attachmentButtonsCell setRightButtonLabel:@""];
+    [_attachmentButtonsCell setRightButtonAction:@"photos"];
+    [_attachmentButtonsCell rightButtonUseClearBackground];
+    [_attachmentButtonsCell.rightButton setImage:[UIImage imageNamed:@"gallery"] forState:UIControlStateNormal];
+    _attachmentButtonsCell.dualButtonDelegate = self;
+    [_cellArray addObject:_attachmentButtonsCell];
+    
+    if (self.media.count > 0 || self.addedMedia.count > 0) {
+        self.attachmentsCell = [self.tableView dequeueReusableCellWithIdentifier:@"attachmentsCell"];
+        self.attachmentsCell.attachmentDelegate = self.showAttachmentDelegate;
+        NSMutableArray *allMedia = [[NSMutableArray alloc] initWithArray:self.media];
+        [allMedia addObjectsFromArray:self.addedMedia];
+        [self.attachmentsCell setContentsWithMediaArray:allMedia];
+        [self.attachmentsCell.collectionView reloadData];
+        [self.cellArray addObject:self.attachmentsCell];
+    }
+    
     if (_row.columnCount == 2) { // no user editable columns
         MCDescriptionCell *empty = [self.tableView dequeueReusableCellWithIdentifier:@"descriptionDisplay"];
         [empty setDescription:@"This layer has no fields."];
         [_cellArray addObject:empty];
+        
+        MCButtonCell *addFieldsButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
+        [addFieldsButtonCell useSecondaryColors];
+        addFieldsButtonCell.delegate = self;
+        [addFieldsButtonCell setAction:@"addFields"];
+        [addFieldsButtonCell setButtonLabel:@"Add fields"];
+        [_cellArray addObject:addFieldsButtonCell];
     }
     
     if (_row) {
@@ -238,8 +306,11 @@
     _buttonsCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttons"];
     [_buttonsCell setLeftButtonLabel:@"Cancel"];
     [_buttonsCell setLeftButtonAction:@"cancel"];
+    [_buttonsCell leftButtonUseSecondaryColors];
+    
     [_buttonsCell setRightButtonLabel:@"Save"];
     [_buttonsCell setRightButtonAction:@"save"];
+    [_buttonsCell rightButtonUsePrimaryColors];
     _buttonsCell.dualButtonDelegate = self;
     [_cellArray addObject:_buttonsCell];
     
@@ -248,7 +319,8 @@
     [_cellArray addObject:spacer];
     
     [_tableView reloadData];
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+    //[_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
     self.mode = MCPointViewModeEdit;
 }
 
@@ -286,6 +358,21 @@
 }
 
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewAutomaticDimension;
+}
+
+
+- (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {
+    CGPoint point = [recognizer locationInView:self.view];
+    
+    if (CGRectContainsPoint(self.attachmentsCell.frame, point)) {
+        return true;
+    }
+    
+    return false;
+}
+
 #pragma mark- UITextFieldDelegate methods
 - (void) textFieldDidBeginEditing:(UITextField *)textField {
     UITableViewCell *cell = (UITableViewCell *)[textField superview];
@@ -306,7 +393,7 @@
         [_buttonsCell enableRightButton];
     }
     
-    [_row setValueWithColumnName:fieldWithTitleCell.columnName andValue: [fieldWithTitleCell fieldValue]];
+    [self.row setValueWithColumnName:fieldWithTitleCell.columnName andValue: [fieldWithTitleCell fieldValue]];
 }
 
 
@@ -318,15 +405,24 @@
 
 #pragma mark - MCDualButtonCellDelegate methods
 - (void)performDualButtonAction:(NSString *)action {
-    if ([action isEqualToString:@"save"]) {
+    if ([action isEqualToString:@"camera"]) {
+        _imagePicker.allowsEditing = NO;
+        _imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        _imagePicker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
+        _imagePicker.modalPresentationStyle = UIModalPresentationFullScreen;
+        [self presentViewController:_imagePicker animated:YES completion:nil];
+    } else if ([action isEqualToString:@"photos"]) {
+        _imagePicker.allowsEditing = NO;
+        _imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentViewController:_imagePicker animated:YES completion:nil];
+    } else if ([action isEqualToString:@"save"]) {
         NSLog(@"Saving point data");
-
-        BOOL saved = [_mapPointDataDelegate saveRow:_row];
+        BOOL saved = [_mapPointDataDelegate saveRow:_row attachments:self.addedMedia databaseName:self.databaseName];
         
         if (saved) {
+            self.addedMedia = [[NSMutableArray alloc] init];
             [self showDisplayMode];
         }
-        
     } else if ([action isEqualToString:@"edit"]) {
         // TODO Add switch to edit mode
         NSLog(@"Editing point");
@@ -374,6 +470,8 @@
         [deleteAlert addAction:cancel];
         
         [self presentViewController:deleteAlert animated:YES completion:nil];
+    } else if ([action isEqualToString:@"addFields"]) {
+        [self.mapPointDataDelegate showFieldEditor];
     }
 }
 
@@ -391,6 +489,7 @@
 #pragma mark - NGADrawerView methods
 - (void) closeDrawer {
     BOOL haveNewPoint = _mapPoint.data == nil;
+    self.addedMedia = [[NSMutableArray alloc] init];
     [self.drawerViewDelegate popDrawer];
     [self.mapPointDataDelegate mapPointDataViewClosedWithNewPoint:haveNewPoint];
 }
@@ -413,6 +512,21 @@
     } else {
         scrollView.scrollEnabled = YES;
     }
+}
+
+
+#pragma mark - UIImagePickerControllerDelegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
+    UIImage *chosenImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
+    //[self.media addObject:chosenImage];
+    [self.addedMedia addObject:chosenImage];
+    [self showEditMode];
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 
