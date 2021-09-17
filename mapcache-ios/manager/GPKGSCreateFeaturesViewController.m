@@ -11,7 +11,7 @@
 #import "GPKGSConstants.h"
 #import "GPKGSDecimalValidator.h"
 #import "GPKGGeoPackage.h"
-#import "SFPProjectionConstants.h"
+#import "PROJProjectionConstants.h"
 #import "GPKGSBoundingBoxViewController.h"
 #import "GPKGSUtils.h"
 

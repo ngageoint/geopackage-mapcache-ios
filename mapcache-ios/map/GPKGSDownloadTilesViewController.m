@@ -9,8 +9,8 @@
 #import "GPKGSDownloadTilesViewController.h"
 #import "GPKGSUtils.h"
 #import "GPKGSCreateTilesViewController.h"
-#import "SFPProjectionTransform.h"
-#import "SFPProjectionConstants.h"
+#import "SFPGeometryTransform.h"
+#import "PROJProjectionConstants.h"
 #import "GPKGTileBoundingBoxUtils.h"
 #import "GPKGSProperties.h"
 #import "GPKGSConstants.h"
@@ -146,7 +146,7 @@ NSString * const GPKGS_DOWNLOAD_TILES_SEG_CREATE_TILES = @"createTiles";
         // Try to find a good zoom starting point
         if(self.data.loadTiles.generateTiles.boundingBox != nil){
             
-            SFPProjectionTransform * webMercatorTransform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+            SFPGeometryTransform *webMercatorTransform = [SFPGeometryTransform transformFromEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM andToEpsg:PROJ_EPSG_WEB_MERCATOR];
             GPKGBoundingBox * webMercatorBoundingBox = [self.data.loadTiles.generateTiles.boundingBox transform:webMercatorTransform];
             int zoomLevel = [GPKGTileBoundingBoxUtils zoomLevelWithWebMercatorBoundingBox:webMercatorBoundingBox];
             int maxZoomLevel = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MAX_ZOOM_DEFAULT] intValue];

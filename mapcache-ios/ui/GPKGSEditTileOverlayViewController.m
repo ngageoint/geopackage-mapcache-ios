@@ -14,8 +14,8 @@
 #import "GPKGSDecimalValidator.h"
 #import "GPKGGeoPackage.h"
 #import "GPKGSFeatureTilesDrawViewController.h"
-#import "SFPProjectionTransform.h"
-#import "SFPProjectionConstants.h"
+#import "SFPGeometryTransform.h"
+#import "PROJProjectionConstants.h"
 #import "GPKGTileBoundingBoxUtils.h"
 #import "GPKGFeatureIndexManager.h"
 
@@ -137,14 +137,14 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
                 GPKGBoundingBox * boundingBox = [contents boundingBox];
                 GPKGBoundingBox * worldGeodeticBoundingBox = nil;
                 if(boundingBox != nil){
-                    SFPProjection * projection = [contentsDao projection:contents];
+                    PROJProjection * projection = [contentsDao projection:contents];
                     
-                    SFPProjectionTransform * webMercatorTransform = [[SFPProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
-                    if([projection getUnit] == SFP_UNIT_DEGREES){
+                    SFPGeometryTransform *webMercatorTransform = [SFPGeometryTransform transformFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+                    if([projection unit] == PROJ_UNIT_DEGREES){
                         boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
                     }
-                    GPKGBoundingBox * webMercatorBoundingBox = [boundingBox transform:webMercatorTransform];
-                    SFPProjectionTransform * worldGeodeticTransform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                    GPKGBoundingBox *webMercatorBoundingBox = [boundingBox transform:webMercatorTransform];
+                    SFPGeometryTransform *worldGeodeticTransform = [SFPGeometryTransform transformFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
                     worldGeodeticBoundingBox = [webMercatorBoundingBox transform:worldGeodeticTransform];
                 }else{
                     worldGeodeticBoundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-PROJ_WGS84_HALF_WORLD_LON_WIDTH andMinLatitudeDouble:PROJ_WEB_MERCATOR_MIN_LAT_RANGE andMaxLongitudeDouble:PROJ_WGS84_HALF_WORLD_LON_WIDTH andMaxLatitudeDouble:PROJ_WEB_MERCATOR_MAX_LAT_RANGE];

@@ -13,9 +13,9 @@
 #import "GPKGGeoPackageFactory.h"
 #import "GPKGSTileTable.h"
 #import "GPKGOverlayFactory.h"
-#import "SFPProjectionTransform.h"
-#import "SFPProjectionConstants.h"
-#import "SFPProjectionFactory.h"
+#import "SFPGeometryTransform.h"
+#import "PROJProjectionConstants.h"
+#import "PROJProjectionFactory.h"
 #import "GPKGTileBoundingBoxUtils.h"
 #import "GPKGSFeatureOverlayTable.h"
 #import "GPKGMapShapeConverter.h"
@@ -714,7 +714,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 
                 GPKGBoundingBox *clickBoundingBox = [GPKGMapUtils buildClickBoundingBoxWithLocationCoordinate:point andMapView:self.mapView andScreenPercentage:screenClickPercentage];
                 clickBoundingBox = [clickBoundingBox expandWgs84Coordinates];
-                SFPProjection *clickProjection = [SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+                PROJProjection *clickProjection = [PROJProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
                 
                 GPKGMapTolerance *tolerance = [GPKGMapUtils toleranceWithLocationCoordinate:point andMapView:self.mapView andScreenPercentage:screenClickPercentage];
                 
@@ -744,14 +744,14 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                                     
                                 } else {
                                     
-                                    SFPProjection *featureProjection = featureDao.projection;
-                                    SFPProjectionTransform *projectionTransform = [[SFPProjectionTransform alloc] initWithFromProjection:clickProjection andToProjection:featureProjection];
+                                    PROJProjection *featureProjection = featureDao.projection;
+                                    SFPGeometryTransform *projectionTransform = [SFPGeometryTransform transformFromProjection:clickProjection andToProjection:featureProjection];
                                     GPKGBoundingBox *boundedClickBoundingBox = [clickBoundingBox boundWgs84Coordinates];
                                     GPKGBoundingBox *transformedBoundingBox = [boundedClickBoundingBox transform:projectionTransform];
                                     double filterMaxLongitude = 0;
-                                    if([featureProjection isUnit:SFP_UNIT_DEGREES]){
+                                    if([featureProjection isUnit:PROJ_UNIT_DEGREES]){
                                         filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
-                                    }else if([featureProjection isUnit:SFP_UNIT_METERS]){
+                                    }else if([featureProjection isUnit:PROJ_UNIT_METERS]){
                                         filterMaxLongitude = PROJ_WEB_MERCATOR_HALF_WORLD_WIDTH;
                                     }
                                     
@@ -1818,13 +1818,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
 
 -(GPKGBoundingBox *) transformBoundingBoxToWgs84: (GPKGBoundingBox *) boundingBox withSrs: (GPKGSpatialReferenceSystem *) srs{
     
-    SFPProjection *projection = [srs projection];
-    if([projection isUnit:SFP_UNIT_DEGREES]){
+    PROJProjection *projection = [srs projection];
+    if([projection isUnit:PROJ_UNIT_DEGREES]){
         boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
     }
-    SFPProjectionTransform *transformToWebMercator = [[SFPProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+    SFPGeometryTransform *transformToWebMercator = [SFPGeometryTransform transformFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
     GPKGBoundingBox *webMercatorBoundingBox = [boundingBox transform:transformToWebMercator];
-    SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+    SFPGeometryTransform *transform = [SFPGeometryTransform transformFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
     boundingBox = [webMercatorBoundingBox transform:transform];
     return boundingBox;
 }
@@ -2129,7 +2129,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
     if(contentsBoundingBox != nil){
         GPKGContentsDao *contentsDao = [geoPackage contentsDao];
-        SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromProjection:[[contentsDao srs:contents] projection] andToProjection:[tileMatrixSetSrs projection]];
+        SFPGeometryTransform *transform = [SFPGeometryTransform transformFromProjection:[[contentsDao srs:contents] projection] andToProjection:[tileMatrixSetSrs projection]];
         GPKGBoundingBox *transformedContentsBoundingBox = contentsBoundingBox;
         if(![transform isSameProjection]){
             transformedContentsBoundingBox = [transformedContentsBoundingBox transform:transform];
@@ -2174,7 +2174,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     GPKGFeatureOverlay * featureOverlay = [[GPKGFeatureOverlay alloc] initWithFeatureTiles:featureTiles];
     boundingBox = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
-    [featureOverlay setBoundingBox:boundingBox inProjection:[SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
+    [featureOverlay setBoundingBox:boundingBox inProjection:[PROJProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
     [featureOverlay setMinZoom:[NSNumber numberWithInt:featureOverlayTable.minZoom]];
     [featureOverlay setMaxZoom:[NSNumber numberWithInt:featureOverlayTable.maxZoom]];
     
@@ -2234,7 +2234,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     if(![self featureUpdateCanceled:updateId] && count < maxFeatures){
     
-        SFPProjection *mapViewProjection = [SFPProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+        PROJProjection *mapViewProjection = [PROJProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
         
         NSArray<NSString *> *columns = [featureDao idAndGeometryColumnNames];
         
@@ -2256,13 +2256,13 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 double filterMaxLongitude = 0;
                 
                 if(filter){
-                    SFPProjection *featureProjection = featureDao.projection;
-                    SFPProjectionTransform * projectionTransform = [[SFPProjectionTransform alloc] initWithFromProjection:mapViewProjection andToProjection:featureProjection];
+                    PROJProjection *featureProjection = featureDao.projection;
+                    SFPGeometryTransform *projectionTransform = [SFPGeometryTransform transformFromProjection:mapViewProjection andToProjection:featureProjection];
                     GPKGBoundingBox *boundedMapViewBoundingBox = [mapViewBoundingBox boundWgs84Coordinates];
                     GPKGBoundingBox *transformedBoundingBox = [boundedMapViewBoundingBox transform:projectionTransform];
-                    if([featureProjection isUnit:SFP_UNIT_DEGREES]){
+                    if([featureProjection isUnit:PROJ_UNIT_DEGREES]){
                         filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
-                    }else if([featureProjection isUnit:SFP_UNIT_METERS]){
+                    }else if([featureProjection isUnit:PROJ_UNIT_METERS]){
                         filterMaxLongitude = PROJ_WEB_MERCATOR_HALF_WORLD_WIDTH;
                     }
                     filterBoundingBox = [transformedBoundingBox expandCoordinatesWithMaxLongitude:filterMaxLongitude];
