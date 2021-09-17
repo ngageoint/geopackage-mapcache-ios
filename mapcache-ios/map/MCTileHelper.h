@@ -17,9 +17,9 @@
 #import "GPKGTileBoundingBoxUtils.h"
 #import "GPKGBoundedOverlay.h"
 #import "GPKGOverlayFactory.h"
-#import "SFPProjectionFactory.h"
+#import "PROJProjectionFactory.h"
 #import "SFGeometryEnvelopeBuilder.h"
-#import "SFPProjectionConstants.h"
+#import "PROJProjectionConstants.h"
 #import "MCDatabases.h"
 
 

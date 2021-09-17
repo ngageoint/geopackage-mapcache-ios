@@ -222,7 +222,7 @@
     count += [self.featureShapes featureIdsCountInDatabase:database withTable:tableName];
     
     if(![self featureUpdateCanceled:updateId] && count < maxFeatures){
-        SFPProjection *mapViewProjection = [SFPProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+        PROJProjection *mapViewProjection = [PROJProjectionFactory projectionWithEpsgInt: PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
         NSArray<NSString *> *columns = [featureDao idAndGeometryColumnNames];
         GPKGFeatureIndexManager * indexer = [[GPKGFeatureIndexManager alloc] initWithGeoPackage:geoPackage andFeatureDao:featureDao];
         
@@ -241,13 +241,13 @@
             double filterMaxLongitude = 0;
             
             if(filter){
-                SFPProjection *featureProjection = featureDao.projection;
-                SFPProjectionTransform * projectionTransform = [[SFPProjectionTransform alloc] initWithFromProjection:mapViewProjection andToProjection:featureProjection];
+                PROJProjection *featureProjection = featureDao.projection;
+                SFPGeometryTransform * projectionTransform = [SFPGeometryTransform transformFromProjection:mapViewProjection andToProjection:featureProjection];
                 GPKGBoundingBox *boundedMapViewBoundingBox = [mapViewBoundingBox boundWgs84Coordinates];
                 GPKGBoundingBox *transformedBoundingBox = [boundedMapViewBoundingBox transform:projectionTransform];
-                if([featureProjection isUnit:SFP_UNIT_DEGREES]){
+                if([featureProjection isUnit:PROJ_UNIT_DEGREES]){
                     filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
-                }else if([featureProjection isUnit:SFP_UNIT_METERS]){
+                }else if([featureProjection isUnit:PROJ_UNIT_METERS]){
                     filterMaxLongitude = PROJ_WEB_MERCATOR_HALF_WORLD_WIDTH;
                 }
                 filterBoundingBox = [transformedBoundingBox expandCoordinatesWithMaxLongitude:filterMaxLongitude];

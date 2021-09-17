@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SFPProjectionConstants.h"
+#import "PROJProjectionConstants.h"
 #import "MCSectionTitleCell.h"
 #import "MCFieldWithTitleCell.h"
 #import "MCDescriptionCell.h"

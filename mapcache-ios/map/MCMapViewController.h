@@ -20,7 +20,7 @@
 #import "GPKGTileTableScaling.h"
 #import "GPKGMultipleFeatureIndexResults.h"
 #import "GPKGFeatureShapes.h"
-#import "SFPProjectionFactory.h"
+#import "PROJProjectionFactory.h"
 #import "SFGeometryEnvelopeBuilder.h"
 #import "MCTileHelper.h"
 #import "MCFeatureHelper.h"

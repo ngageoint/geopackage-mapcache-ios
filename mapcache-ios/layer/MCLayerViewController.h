@@ -19,12 +19,12 @@
 #import "MCLayerCell.h"
 #import "MCUtils.h"
 #import "MCProperties.h"
-#import <SFPProjectionTransform.h>
+#import <SFPGeometryTransform.h>
 #import "MCFeatureLayerOperationsCell.h"
 #import "MCTileLayerOperationsCell.h"
 #import "MCDescriptionCell.h"
 #import "MCTitleCell.h"
-#import "SFPProjectionConstants.h"
+#import "PROJProjectionConstants.h"
 #import "GPKGOverlayFactory.h"
 #import "MCTable.h"
 #import "MCTileTable.h"

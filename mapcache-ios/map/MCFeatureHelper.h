@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SFPProjectionFactory.h"
+#import "PROJProjectionFactory.h"
 #import "SFGeometryEnvelopeBuilder.h"
-#import "SFPProjectionConstants.h"
+#import "PROJProjectionConstants.h"
 #import "GPKGBoundingBox.h"
 #import "GPKGMapPoint.h"
 #import "GPKGMultiPoint.h"

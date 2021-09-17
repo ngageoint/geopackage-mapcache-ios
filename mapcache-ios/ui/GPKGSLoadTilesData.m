@@ -7,7 +7,7 @@
 //
 
 #import "GPKGSLoadTilesData.h"
-#import "SFPProjectionConstants.h"
+#import "PROJProjectionConstants.h"
 
 @implementation GPKGSLoadTilesData
 
