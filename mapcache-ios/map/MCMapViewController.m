@@ -123,10 +123,15 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     self.locationButton.layer.cornerRadius = 8;
     self.locationButton.layer.maskedCorners = UIRectCornerBottomLeft | UIRectCornerBottomRight;
     
-    self.zoomIndicatorButton.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.zoomIndicatorButton.layer.shadowOpacity = 0.3;
-    self.zoomIndicatorButton.layer.shadowRadius = 2;
-    self.zoomIndicatorButton.layer.shadowOffset = CGSizeMake(0.0f, 1.0f);
+    
+    self.zoomIndicatorButton.backgroundColor = [UIColor clearColor];
+    UIVisualEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+    UIVisualEffectView *blurBackground = [[UIVisualEffectView alloc] initWithEffect: blur];
+    blurBackground.userInteractionEnabled = NO;
+    blurBackground.frame = self.zoomIndicatorButton.bounds;
+    
+    blurBackground.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.zoomIndicatorButton insertSubview:blurBackground atIndex:0];
     int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
     [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", zoom] forState:UIControlStateNormal];
     self.expandedZoomDetails = NO;
@@ -163,9 +168,9 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     
     // iOS 13 dark mode support
     if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
-        [self.zoomIndicatorButton setBackgroundColor:[UIColor systemBackgroundColor]];
-        [self.locationButton setBackgroundColor:[UIColor systemBackgroundColor]];
-        [self.infoButton setBackgroundColor:[UIColor systemBackgroundColor]];
+        [self.zoomIndicatorButton setBackgroundColor:[UIColor colorNamed:@"ngaBackgroundColor"]];
+        [self.locationButton setBackgroundColor:[UIColor colorNamed:@"ngaBackgroundColor"]];
+        [self.infoButton setBackgroundColor:[UIColor colorNamed:@"ngaBackgroundColor"]];
     } else {
         
     }
@@ -298,6 +303,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
             [self.zoomIndicatorButton layoutIfNeeded];
         }];
     }
+    
 }
 
 
@@ -655,12 +661,10 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     NSLog(@"Tapped map point");
     
-    if (![view isKindOfClass:MKAnnotationView.class] || ![view isKindOfClass:MKMarkerAnnotationView.class]) {
-        return;
-    }
-    
-    [self zoomToPointWithOffset:view.annotation.coordinate];
-    [self.mapActionDelegate showDetailsForAnnotation:(GPKGMapPoint *)view.annotation];
+    if ([view isKindOfClass:MKAnnotationView.class] || [view isKindOfClass:MKMarkerAnnotationView.class]) {
+        [self zoomToPointWithOffset:view.annotation.coordinate];
+        [self.mapActionDelegate showDetailsForAnnotation:(GPKGMapPoint *)view.annotation];
+    } 
 }
 
 

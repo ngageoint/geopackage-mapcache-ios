@@ -16,7 +16,7 @@
     
     // iOS 13 dark mode support
     if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
-        self.contentView.backgroundColor = [UIColor systemBackgroundColor];
+        self.contentView.backgroundColor = [UIColor colorNamed:@"ngaBackgroundColor"];
     }
 }
 

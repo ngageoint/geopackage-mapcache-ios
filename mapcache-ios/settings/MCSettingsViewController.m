@@ -39,14 +39,21 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     self.tableView.estimatedRowHeight = 390.0;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    self.tableView.backgroundColor = [UIColor colorNamed:@"ngaBackgroundColor"];
     self.savedTileServers = [[MCTileServerRepository shared] getTileServers];
     [self registerCellTypes];
     [self initCellArray];
+    //[self addAndConstrainSubview:self.tableView];
     [self addAndConstrainSubview:self.tableView];
     
-    [self addDragHandle];
-    [self addCloseButton];
+    //[self addDragHandle];
+    //[self addCloseButton];
     
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [_mapSettingsDelegate settingsCompletionHandler];
 }
 
 
@@ -58,9 +65,9 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 
 
 - (void) closeDrawer {
-    [super closeDrawer];
+    //[super closeDrawer];
     [_mapSettingsDelegate settingsCompletionHandler];
-    [self.drawerViewDelegate popDrawer];
+    //[self.drawerViewDelegate popDrawer];
 }
 
 
@@ -220,6 +227,27 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 }
 
 
+- (void)addAndConstrainSubview:(UIView *) view {
+    [self.view addSubview:view];
+    
+    NSLayoutConstraint *left = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
+    NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+    NSLayoutConstraint *right = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0];
+    NSLayoutConstraint *bottom = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    
+    
+    [[view.topAnchor constraintEqualToAnchor:self.view.topAnchor] setActive:YES];
+    [[view.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor] setActive:YES];
+    [[view.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor] setActive:YES];
+    [[view.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor] setActive:YES];
+    view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    
+    view.frame = self.view.frame;
+    
+    [self.view addConstraints:@[left, top, right, bottom]];
+}
+
+
 #pragma mark - TableView delegate methods
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     return [[_cellArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
@@ -266,14 +294,14 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 
 
 // Override this method to make the drawer and the scrollview play nice
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+/*- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (self.haveScrolled) {
         [self rollUpPanGesture:scrollView.panGestureRecognizer withScrollView:scrollView];
     }
-}
+}*/
 
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+/*- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     self.haveScrolled = YES;
     
     if (!self.isFullView) {
@@ -282,7 +310,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     } else {
         scrollView.scrollEnabled = YES;
     }
-}
+}*/
 
 
 // Choose which types of cells can have swipe actions

@@ -78,6 +78,7 @@
 		E3500E6322B4653B00164ABF /* MCDisclaimerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3500E6222B4653B00164ABF /* MCDisclaimerViewController.m */; };
 		E3500E6522B7F36500164ABF /* MCTutorialCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3500E6422B7F36500164ABF /* MCTutorialCell.xib */; };
 		E3500E6822B7F4F100164ABF /* MCTutorialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3500E6722B7F4F100164ABF /* MCTutorialCell.m */; };
+		E3537A1F273AEF1200585E5B /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3537A1E273AEF1200585E5B /* Colors.xcassets */; };
 		E3540C252631EAB1001A5272 /* MCMediaUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3540C242631EAB1001A5272 /* MCMediaUtility.swift */; };
 		E354DB3322BAD7DA00FFD477 /* MCSwitchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E354DB3222BAD7DA00FFD477 /* MCSwitchCell.xib */; };
 		E354DB3622BAD89D00FFD477 /* MCSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E354DB3522BAD89D00FFD477 /* MCSwitchCell.m */; };
@@ -304,6 +305,7 @@
 		E3500E6422B7F36500164ABF /* MCTutorialCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCTutorialCell.xib; sourceTree = "<group>"; };
 		E3500E6622B7F4F100164ABF /* MCTutorialCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCTutorialCell.h; sourceTree = "<group>"; };
 		E3500E6722B7F4F100164ABF /* MCTutorialCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCTutorialCell.m; sourceTree = "<group>"; };
+		E3537A1E273AEF1200585E5B /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		E3540C242631EAB1001A5272 /* MCMediaUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCMediaUtility.swift; sourceTree = "<group>"; };
 		E354DB3222BAD7DA00FFD477 /* MCSwitchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCSwitchCell.xib; sourceTree = "<group>"; };
 		E354DB3422BAD89D00FFD477 /* MCSwitchCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCSwitchCell.h; sourceTree = "<group>"; };
@@ -481,6 +483,7 @@
 				040136761AF94FB200C92AFC /* AppDelegate.h */,
 				040136771AF94FB200C92AFC /* AppDelegate.m */,
 				0401367F1AF94FB200C92AFC /* Main.storyboard */,
+				E3537A1E273AEF1200585E5B /* Colors.xcassets */,
 				040136821AF94FB200C92AFC /* Images.xcassets */,
 				040136841AF94FB200C92AFC /* LaunchScreen.xib */,
 				040136721AF94FB200C92AFC /* Supporting Files */,
@@ -1022,6 +1025,7 @@
 				E3D787F6264F0CE500A32709 /* MCMediaCell.xib in Resources */,
 				E3100EAF203CAF1E00FFA56E /* MCZoomCell.xib in Resources */,
 				E3D80EA7240076CC006F1014 /* MCDualButtonCell.xib in Resources */,
+				E3537A1F273AEF1200585E5B /* Colors.xcassets in Resources */,
 				E3D78805264F390100A32709 /* MCImageCell.xib in Resources */,
 				E3B9753B1FB3DED400E33E0A /* MCHeaderCellDisplay.xib in Resources */,
 				E363F54520F0177700BBF91A /* MCTileLayerOperationsCell.xib in Resources */,

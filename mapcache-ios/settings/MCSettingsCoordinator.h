@@ -19,6 +19,7 @@
 @property (nonatomic, strong) id<MCMapSettingsDelegate> settingsDelegate;
 @property (nonatomic, strong) id<MCSettingsDelegate> noticeDelegate;
 @property (nonatomic, strong) id<MCSelectTileServerDelegate> selectServerDelegate;
+@property (nonatomic, strong) UIViewController *presentingViewController;
 - (void)start;
 - (void)startForServerSelection;
 @end

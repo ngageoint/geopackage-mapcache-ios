@@ -45,7 +45,7 @@ typedef NS_ENUM(NSInteger, MCTileServerType);
 @end
 
 
-@interface MCSettingsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCSegmentedControlCellDelegate, MCButtonCellDelegate, MCSwitchCellDelegate>
+@interface MCSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCSegmentedControlCellDelegate, MCButtonCellDelegate, MCSwitchCellDelegate>
 @property (nonatomic, strong) id<MCMapSettingsDelegate> mapSettingsDelegate;
 @property (nonatomic, strong) id<MCSettingsDelegate> settingsDelegate;
 @property (nonatomic, strong) MCTileServer *basemapTileServer;

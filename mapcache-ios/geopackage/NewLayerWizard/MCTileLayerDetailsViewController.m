@@ -37,6 +37,7 @@
     self.tableView.dataSource = self;
     self.tableView.estimatedRowHeight = 141.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.backgroundColor = [UIColor clearColor];
     
     self.layerName = nil;
     self.urlIsValid = YES;
@@ -88,6 +89,7 @@
     }
     
     [_layerNameCell.field setReturnKeyType:UIReturnKeyDone]; // TODO look into UIReturnKeyNext
+    [_layerNameCell setPlaceholder:@"Layer Name"];
     _layerNameCell.field.delegate = self;
     [_cellArray addObject:_layerNameCell];
     
@@ -227,7 +229,7 @@
         if ([_layerNameCell.field.text isEqualToString:@""]) {
             [self.layerNameCell useErrorAppearance];
             [_buttonCell disableButton];
-            [self.helpText.descriptionLabel setText:@"Please name your layer."];
+            [_layerNameCell setPlaceholder:@"Please name your layer"];
         } else if (!isLayerNameAvailable) {
             [self.layerNameCell useErrorAppearance];
             [_buttonCell disableButton];

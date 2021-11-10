@@ -230,17 +230,20 @@
 
 
 - (void) showURLHelp {
-    MCTileServerHelpViewController *tileHelpViewController = [[MCTileServerHelpViewController alloc] initAsFullView:YES];
-    tileHelpViewController.drawerViewDelegate = _drawerDelegate;
-    [tileHelpViewController.drawerViewDelegate pushDrawer:tileHelpViewController];
+    MCTileServerHelpViewController *tileHelpViewController = [[MCTileServerHelpViewController alloc] init];
+//    tileHelpViewController.drawerViewDelegate = _drawerDelegate;
+//    [tileHelpViewController.drawerViewDelegate pushDrawer:tileHelpViewController];
+    tileHelpViewController.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self.tileDetailsController presentViewController:tileHelpViewController animated:YES completion:nil];
+    
 }
 
 
 - (void) showTileServerList {
     MCSettingsCoordinator *settingsCoordinator = [[MCSettingsCoordinator alloc] init];
     [self.childCoordinators addObject:settingsCoordinator];
+    settingsCoordinator.presentingViewController = _geoPackageViewController;
     settingsCoordinator.selectServerDelegate = self;
-    settingsCoordinator.drawerViewDelegate = self.drawerDelegate;
     [settingsCoordinator startForServerSelection];
 }
 

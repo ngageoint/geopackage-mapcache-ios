@@ -14,11 +14,10 @@
     [super awakeFromNib];
     [self setBackgroundColor:[UIColor clearColor]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
-    
-    UIColor *borderColor = [UIColor colorWithRed:204.0/255.0 green:204.0/255.0 blue:204.0/255.0 alpha:1.0];
-    self.field.layer.borderColor = borderColor.CGColor;
-    self.field.layer.borderWidth = 1.0;
     self.field.layer.cornerRadius = 5.0;
+    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8, self.field.frame.size.height)];
+    self.field.leftView = paddingView;
+    self.field.leftViewMode = UITextFieldViewModeAlways;
 }
 
 
@@ -73,10 +72,11 @@
 
 
 - (void) useNormalAppearance {
-    UIColor *borderColor = [UIColor colorWithRed:204.0/255.0 green:204.0/255.0 blue:204.0/255.0 alpha:1.0];
-    self.field.layer.borderColor = borderColor.CGColor;
-    self.field.layer.borderWidth = 1.0;
-    self.field.layer.cornerRadius = 5.0;
+//    UIColor *borderColor = [UIColor colorWithRed:204.0/255.0 green:204.0/255.0 blue:204.0/255.0 alpha:1.0];
+//    self.field.layer.borderColor = borderColor.CGColor;
+//    self.field.layer.borderWidth = 1.0;
+//    self.field.layer.cornerRadius = 5.0;
+    self.field.layer.borderColor = [[UIColor clearColor] CGColor];
 }
 
 

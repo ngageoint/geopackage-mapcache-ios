@@ -41,6 +41,7 @@ class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDele
         self.tableView.dataSource = self
         self.tableView.estimatedRowHeight = 140
         self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.backgroundColor = UIColor.init(named:"ngaBackgroundColor")
         self.extendedLayoutIncludesOpaqueBars = false
         
         addAndConstrainSubview(self.tableView)

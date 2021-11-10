@@ -17,7 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     CGRect bounds = self.view.bounds;
-    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y + 40, bounds.size.width, bounds.size.height - 180); // offset on the height to account for the gap at the top of the drawer
+    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height); // offset on the height to account for the gap at the top of the drawer
     
     WKWebViewConfiguration *webViewConfiguration = [[WKWebViewConfiguration alloc] init];
     self.webView = [[WKWebView alloc] initWithFrame: insetBounds configuration:webViewConfiguration];
@@ -27,15 +27,15 @@
     [self.webView loadFileURL:url allowingReadAccessToURL:url];
     [self.view addSubview:self.webView];
     
-    [self addDragHandle];
-    [self addCloseButton];
+//    [self addDragHandle];
+//    [self addCloseButton];
 }
 
 
-- (void)closeDrawer {
-    [super closeDrawer];
-    [self.drawerViewDelegate popDrawer];
-}
+//- (void)closeDrawer {
+//    [super closeDrawer];
+//    [self.drawerViewDelegate popDrawer];
+//}
 
 
 - (BOOL)gestureIsInConflict:(UIPanGestureRecognizer *) recognizer {

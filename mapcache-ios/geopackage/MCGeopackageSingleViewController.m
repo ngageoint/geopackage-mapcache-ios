@@ -35,6 +35,7 @@
     self.tableView.dataSource = self;
     self.tableView.estimatedRowHeight = 141.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.backgroundColor = [UIColor clearColor];
     self.contentOffset = 0;
     
     [self registerCellTypes];
@@ -206,7 +207,9 @@
 
 #pragma mark - TableView delegate methods
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    return [_cellArray objectAtIndex:indexPath.row];
+    UITableViewCell *tableViewCell = [_cellArray objectAtIndex:indexPath.row];
+    [tableViewCell layoutIfNeeded];
+    return tableViewCell;
 }
 
 

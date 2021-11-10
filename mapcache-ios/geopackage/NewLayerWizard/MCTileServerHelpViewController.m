@@ -28,6 +28,8 @@
     self.tableView.estimatedRowHeight = 390.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.view.backgroundColor = [UIColor colorNamed:@"ngaBackgroundColor"];
     
     [self registerCellTypes];
     [self initCellArray];
@@ -36,8 +38,8 @@
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
     [self.view addSubview:self.tableView];
-    [self addDragHandle];
-    [self addCloseButton];
+//    [self addDragHandle];
+//    [self addCloseButton];
 }
 
 
@@ -99,15 +101,16 @@
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
     if ([action isEqualToString:@"Continue"]) {
-        [self closeDrawer];
+//        [self closeDrawer];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
 
 #pragma mark - NGADrawerView methods
-- (void) closeDrawer {
-    [self.drawerViewDelegate popDrawer];
-}
+//- (void) closeDrawer {
+//    [self.drawerViewDelegate popDrawer];
+//}
 
 
 @end

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina3_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -43,7 +44,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="GeoPackage_Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SlT-s1-hbr">
-                            <rect key="frame" x="32" y="8" width="182.5" height="24"/>
+                            <rect key="frame" x="32" y="8" width="184.5" height="24"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -69,7 +70,7 @@
                             </constraints>
                         </imageView>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" name="ngaBackgroundColor"/>
                     <constraints>
                         <constraint firstItem="E3u-hY-SOA" firstAttribute="leading" secondItem="Gar-ae-7cx" secondAttribute="trailing" constant="16" id="483-03-eTg"/>
                         <constraint firstItem="2bc-7W-T5e" firstAttribute="top" secondItem="E3u-hY-SOA" secondAttribute="bottom" constant="10" id="GPJ-AN-JY3">
@@ -99,6 +100,7 @@
                     </variation>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <constraints>
                 <constraint firstItem="OU2-TL-bAB" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="2Sd-2a-Dxg"/>
                 <constraint firstItem="OU2-TL-bAB" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="APq-jV-eKn"/>
@@ -117,7 +119,6 @@
                 <constraint firstItem="OU2-TL-bAB" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="wvU-Ox-Lmq"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <variation key="default">
                 <mask key="constraints">
                     <exclude reference="2Sd-2a-Dxg"/>
@@ -157,5 +158,8 @@
     </objects>
     <resources>
         <image name="allLayersOn" width="16" height="126"/>
+        <namedColor name="ngaBackgroundColor">
+            <color red="0.98039215686274506" green="0.98039215686274506" blue="0.99607843137254903" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

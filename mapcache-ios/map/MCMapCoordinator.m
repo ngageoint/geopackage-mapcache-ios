@@ -205,6 +205,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 - (void)showMapInfoDrawer {
     MCSettingsCoordinator *settingsCoordinator = [[MCSettingsCoordinator alloc] init];
     [self.childCoordinators addObject:settingsCoordinator];
+    settingsCoordinator.presentingViewController = self.mcMapViewController;
     settingsCoordinator.drawerViewDelegate = _drawerViewDelegate;
     settingsCoordinator.settingsDelegate = _mcMapViewController;
     [settingsCoordinator start];

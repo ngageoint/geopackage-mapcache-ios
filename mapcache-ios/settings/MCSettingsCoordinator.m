@@ -20,7 +20,7 @@
 
 - (void)start {
     MCTileServer *basemapTileServer = [[MCTileServerRepository shared] baseMapServer];
-    self.settingsViewController = [[MCSettingsViewController alloc] initAsFullView:YES];
+    self.settingsViewController = [[MCSettingsViewController alloc] init];
     
     if (basemapTileServer != nil) {
         self.settingsViewController.basemapTileServer = basemapTileServer;
@@ -34,19 +34,26 @@
     }
     
     self.settingsViewController.mapSettingsDelegate = _settingsDelegate;
-    self.settingsViewController.drawerViewDelegate = _drawerViewDelegate;
+    //self.settingsViewController.drawerViewDelegate = _drawerViewDelegate;
     self.settingsViewController.settingsDelegate = self;
-    [self.settingsViewController.drawerViewDelegate pushDrawer:self.settingsViewController];
+    
+    self.settingsViewController.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self.presentingViewController presentViewController:self.settingsViewController animated:YES completion:nil];
+    
+    //[self.settingsViewController.drawerViewDelegate pushDrawer:self.settingsViewController];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(basemapsLoadedFromUserDefaults:) name:MC_USER_BASEMAP_LOADED_FROM_DEFAULTS object:nil];
 }
 
 
 - (void) startForServerSelection {
-    self.tileServerManagerView = [[MCTileServerURLManagerViewController alloc] initAsFullView:YES];
-    self.tileServerManagerView.drawerViewDelegate = self.drawerViewDelegate;
+    self.tileServerManagerView = [[MCTileServerURLManagerViewController alloc] init];
+    //self.tileServerManagerView.drawerViewDelegate = self.drawerViewDelegate;
     self.tileServerManagerView.selectServerDelegate = self.selectServerDelegate;
     self.tileServerManagerView.tileServerManagerDelegate = self;
-    [self.drawerViewDelegate pushDrawer:self.tileServerManagerView];
+    self.tileServerManagerView.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self.presentingViewController presentViewController:self.tileServerManagerView animated:YES completion:nil];
+    self.presentingViewController = self.tileServerManagerView; // in case they choose to create a new one
+    //[self.drawerViewDelegate pushDrawer:self.tileServerManagerView];
     self.tileServerManagerView.selectMode = YES;
 }
 
@@ -63,18 +70,22 @@
 
 #pragma mark - MCSettingsDelegate
 - (void)showNoticeAndAttributeView {
-    MCNoticeAndAttributionViewController *noticeViewController = [[MCNoticeAndAttributionViewController alloc] initAsFullView:YES];
-    noticeViewController.drawerViewDelegate = self.drawerViewDelegate;
-    [self.drawerViewDelegate pushDrawer:noticeViewController];
+    MCNoticeAndAttributionViewController *noticeViewController = [[MCNoticeAndAttributionViewController alloc] init];
+    noticeViewController.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self.settingsViewController presentViewController:noticeViewController animated:YES completion:nil];
+//    noticeViewController.drawerViewDelegate = self.drawerViewDelegate;
+//    [self.drawerViewDelegate pushDrawer:noticeViewController];
 }
 
 
 - (void)showTileURLManager {
     self.originalServerName = nil;
-    self.createTileServerView = [[MCNewTileServerViewController alloc] initAsFullView:YES];
-    self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
+    self.createTileServerView = [[MCNewTileServerViewController alloc] init];
+    //self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
+    self.createTileServerView.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self.settingsViewController presentViewController:self.createTileServerView animated:YES completion:nil];
     self.createTileServerView.saveTileServerDelegate = self;
-    [self.drawerViewDelegate pushDrawer:self.createTileServerView];
+    //[self.drawerViewDelegate pushDrawer:self.createTileServerView];
 }
 
 
@@ -98,10 +109,12 @@
 #pragma mark - MCTileServerManagerDelegate
 - (void) showNewTileServerView {
     self.originalServerName = nil;
-    self.createTileServerView = [[MCNewTileServerViewController alloc] initAsFullView:YES];
-    self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
+    self.createTileServerView = [[MCNewTileServerViewController alloc] init];
+    //self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
     self.createTileServerView.saveTileServerDelegate = self;
-    [self.drawerViewDelegate pushDrawer:self.createTileServerView];
+    self.createTileServerView.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self.presentingViewController presentViewController:self.createTileServerView animated:YES completion:nil];
+    //[self.drawerViewDelegate pushDrawer:self.createTileServerView];
 }
 
 
@@ -111,10 +124,12 @@
     self.originalServerName = serverName;
     
     if (serverUrls != nil) {
-        self.createTileServerView = [[MCNewTileServerViewController alloc] initAsFullView:YES];
-        self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
+        self.createTileServerView = [[MCNewTileServerViewController alloc] init];
+        //self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
         self.createTileServerView.saveTileServerDelegate = self;
-        [self.drawerViewDelegate pushDrawer:self.createTileServerView];
+        //[self.drawerViewDelegate pushDrawer:self.createTileServerView];
+        self.createTileServerView.modalPresentationStyle = UIModalPresentationPageSheet;
+        [self.presentingViewController presentViewController:self.createTileServerView animated:YES completion:nil];
         [self.createTileServerView setServerName:serverName];
         [self.createTileServerView setServerURL:[serverUrls objectForKey:serverName]];
     }

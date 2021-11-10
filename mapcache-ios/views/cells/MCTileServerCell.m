@@ -14,6 +14,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.visibilityStatusIndicator.image = [UIImage imageNamed:@"allLayersOn"];
+    self.backgroundColor = [UIColor colorNamed:@"ngaBackgroundColor"];
     self.layersExpanded = NO;
     // Initialization code
 }
