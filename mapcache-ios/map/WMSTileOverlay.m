@@ -61,7 +61,8 @@
     double right = [self mercatorXOfLongitude: [self xOfColumn:path.x+1 andZoom:path.z]];
     double bottom = [self mercatorYOfLatitude: [self yOfRow: path.y+1 andZoom:path.z]];
     double top = [self mercatorYOfLatitude: [self yOfRow:path.y andZoom:path.z]];
-    return [NSURL URLWithString:[NSString stringWithFormat:@"%@&BBOX=%f,%f,%f,%f", self.url, left, bottom, right, top]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@&BBOX=%f,%f,%f,%f", self.url, left, bottom, right, top]];
+    return url;
 }
 
 

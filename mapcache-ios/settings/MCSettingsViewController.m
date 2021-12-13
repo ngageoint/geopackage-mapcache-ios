@@ -178,7 +178,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
         maxFeatures = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
     }
     _maxFeaturesCell.field.text = [NSString stringWithFormat:@"%d", maxFeatures];
-    [_maxFeaturesCell setTextFielDelegate:self];
+    [_maxFeaturesCell setTextFieldDelegate:self];
     [_maxFeaturesCell setupNumericalKeyboard];
     [bottomCells addObject:_maxFeaturesCell];
     

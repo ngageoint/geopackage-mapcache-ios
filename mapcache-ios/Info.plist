@@ -10,7 +10,9 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<array/>
+			<array>
+				<string>gpkgicon</string>
+			</array>
 			<key>CFBundleTypeName</key>
 			<string>GeoPackage</string>
 			<key>CFBundleTypeRole</key>
@@ -22,6 +24,7 @@
 				<string>mil.nga.mapcache.geoPackageUTIHandler.csm</string>
 			</array>
 		</dict>
+		<dict/>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>

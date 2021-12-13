@@ -13,6 +13,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.backgroundColor = [UIColor colorNamed:@"ngaBackgroundColor"];
+    self.switchControl.onTintColor = [UIColor colorNamed:@"ngaButtonColor"];
 }
 
 

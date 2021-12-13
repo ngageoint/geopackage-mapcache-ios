@@ -30,6 +30,8 @@ class MCAttachmentsCell: UITableViewCell, UICollectionViewDelegate, UICollection
         flowLayout.scrollDirection = .horizontal
         flowLayout.minimumInteritemSpacing = 0.0
         self.collectionView.collectionViewLayout = flowLayout
+        
+        self.backgroundColor = .clear
     }
     
     

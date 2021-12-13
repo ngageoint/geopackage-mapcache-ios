@@ -125,15 +125,10 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     
     
     self.zoomIndicatorButton.backgroundColor = [UIColor clearColor];
-    UIVisualEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-    UIVisualEffectView *blurBackground = [[UIVisualEffectView alloc] initWithEffect: blur];
-    blurBackground.userInteractionEnabled = NO;
-    blurBackground.frame = self.zoomIndicatorButton.bounds;
-    
-    blurBackground.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.zoomIndicatorButton insertSubview:blurBackground atIndex:0];
     int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
     [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", zoom] forState:UIControlStateNormal];
+    self.zoomIndicatorButton.layer.cornerRadius = 8;
+    self.zoomIndicatorButton.layer.maskedCorners = UIRectCornerTopRight | UIRectCornerBottomRight;
     self.expandedZoomDetails = NO;
     [self.zoomIndicatorButton setHidden:[_settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR]];
     
@@ -289,7 +284,10 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     if (self.expandedZoomDetails) {
         self.expandedZoomDetails = NO;
         [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", zoom] forState:UIControlStateNormal];
-        self.zoomIndicatorButtonWidth.constant = 45;
+        self.zoomIndicatorButtonWidth.constant = 30;
+        
+        CGRect buttonFrame = self.zoomIndicatorButton.frame;
+        self.zoomIndicatorButton.frame = CGRectMake(buttonFrame.origin.x, buttonFrame.origin.y, 30, buttonFrame.size.height);
         
         [UIView animateWithDuration:0.15 animations:^{
             [self.zoomIndicatorButton layoutIfNeeded];
@@ -298,6 +296,8 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
         self.expandedZoomDetails = YES;
         [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", zoom] forState:UIControlStateNormal];
         self.zoomIndicatorButtonWidth.constant = 130;
+        CGRect buttonFrame = self.zoomIndicatorButton.frame;
+        self.zoomIndicatorButton.frame = CGRectMake(buttonFrame.origin.x, buttonFrame.origin.y, 130, buttonFrame.size.height);
         
         [UIView animateWithDuration:0.15 animations:^{
             [self.zoomIndicatorButton layoutIfNeeded];
@@ -384,8 +384,8 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 
 - (void) toggleMapControls {
-    if (![self.zoomIndicatorButton isHidden]) {
-        [self.zoomIndicatorButton setHidden:YES];
+    if ([self.zoomIndicatorButton isHidden]) {
+        [self.zoomIndicatorButton setHidden:NO];
     } else {
         [self.zoomIndicatorButton setHidden:[self.settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR]];
     }

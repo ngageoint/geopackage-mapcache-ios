@@ -22,11 +22,12 @@ typedef NS_ENUM(NSInteger, MCServerErrorType) {
     MCTileServerNoResponse,
     MCNoData,
     MCTileServerParseError,
-    MCNoError
+    MCNoError,
+    MCUnauthorized
 };
 
 @interface MCServerError : NSError
-
+    
 @end
 
 NS_ASSUME_NONNULL_END

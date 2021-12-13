@@ -156,7 +156,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 - (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl serverType:(MCTileServerType) serverType {
     self.boundingBoxGuideView = boudingBoxGuideView;
     self.boundingBoxGuideView.alpha = 0.0;
-    [self.mcMapViewController.view addSubview:self.boundingBoxGuideView];
+    [self.mcMapViewController.view insertSubview:self.boundingBoxGuideView belowSubview:self.mcMapViewController.zoomIndicatorButton];
     
     [UIView animateWithDuration:0.35 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         self.boundingBoxGuideView.alpha = 1.0;
@@ -221,7 +221,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 
 /**
-    A map point was pressed, Query the GeoPackage's feature table for that row and show the details view. By default there are two columns, id and geom. If threre are additional columns they will be shown in this view.
+    A map point was pressed, Query the GeoPackage's feature table for that row and show the details view. By default there are two columns, id and geom. If there are additional columns they will be shown in this view.
     If the drawer was already displaying data from another point, pass the data to the drawer and it will reload and update.
  */
 - (void)showDetailsForAnnotation:(GPKGMapPoint *)mapPoint {

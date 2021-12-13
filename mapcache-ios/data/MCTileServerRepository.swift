@@ -146,7 +146,16 @@ import Foundation
             return
         }
         
-        let baseURL:String = wmsURL.scheme! + "://" + wmsURL.host! + wmsURL.path
+        var baseURL:String = wmsURL.scheme! + "://" + wmsURL.host!
+        
+        if let port = wmsURL.port {
+            baseURL = baseURL + ":\(port)"
+        }
+        
+        if wmsURL.path != "" {
+            baseURL = baseURL + wmsURL.path
+        }
+        
         let tileServer = MCTileServer.init(serverName: self.urlString)
         self.layers = []
         
@@ -158,6 +167,15 @@ import Foundation
         ]
         
         let task = URLSession.shared.dataTask(with: (builtURL?.url)!) { data, response, error in
+            if let urlResponse = response as? HTTPURLResponse {
+                if urlResponse.statusCode == 401 {
+                    completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Login to download tiles", errorType: .MCUnauthorized)))
+                } else {
+                    completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Server error", errorType: .MCTileServerParseError)))
+                }
+                return
+            }
+            
             guard let data = data, error == nil else {
                 completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Server error", errorType: .MCTileServerParseError)))
                 return

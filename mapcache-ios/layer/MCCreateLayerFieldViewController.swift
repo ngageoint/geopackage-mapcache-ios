@@ -70,7 +70,7 @@ class MCCreateLayerFieldViewController: NGADrawerViewController, UITableViewDele
         self.fieldName = (self.tableView.dequeueReusableCell(withIdentifier: "fieldWithTitle") as! MCFieldWithTitleCell)
         self.fieldName?.setTitleText("Name")
         self.fieldName?.useReturnKeyDone()
-        self.fieldName?.setTextFielDelegate(self)
+        self.fieldName?.setTextFieldDelegate(self)
         self.cellArray.append(self.fieldName!)
         
         

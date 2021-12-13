@@ -68,6 +68,7 @@
     self.tableView.estimatedRowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
@@ -269,7 +270,7 @@
                 [fieldWithTitle setTitleText:columnName];
                 fieldWithTitle.columnName = columnName;
                 fieldWithTitle.dataType = dataType;
-                [fieldWithTitle setTextFielDelegate:self];
+                [fieldWithTitle setTextFieldDelegate:self];
                 
                 if (_row.columns.columns[i].dataType == GPKG_DT_TEXT) {
                     if (![_row.values[i] isKindOfClass:NSNull.class]) {

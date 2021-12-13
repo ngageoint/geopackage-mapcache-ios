@@ -43,6 +43,11 @@
 }
 
 
+- (void) useSecureTextEntry {
+    [self.field setSecureTextEntry:YES];
+}
+
+
 /**
     Change the return key to be a done button for the text field. 
  */
@@ -51,12 +56,22 @@
 }
 
 
+- (void) useReturnKeyNext {
+    [self.field setReturnKeyType:UIReturnKeyNext];
+}
+
+
+- (void) clearButtonMode {
+    [self.field clearButtonMode];
+}
+
+
 - (NSString *)fieldValue {
     return self.field.text;
 }
 
 
-- (void)setTextFielDelegate: (id<UITextFieldDelegate>)delegate {
+- (void)setTextFieldDelegate: (id<UITextFieldDelegate>)delegate {
     self.field.delegate = delegate;
 }
 

@@ -17,7 +17,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];    
     [self disableButton];
-
+    self.agreeSwitch.onTintColor = [UIColor colorNamed:@"ngaButtonColor"];
+    
     // iOS 13 dark mode support
     if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
         self.view.backgroundColor = [UIColor colorNamed:@"ngaBackgroundColor"];

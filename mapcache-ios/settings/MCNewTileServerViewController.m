@@ -14,6 +14,8 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MCFieldWithTitleCell *nameField;
 @property (nonatomic, strong) MCTextViewCell *urlField;
+@property (nonatomic, strong) MCFieldWithTitleCell *usernameField;
+@property (nonatomic, strong) MCFieldWithTitleCell *passwordField;
 @property (nonatomic, strong) MCButtonCell *buttonCell;
 @property (nonatomic, strong) MCTileServer *tileServer;
 @property (nonatomic, strong) MCDescriptionCell *statusCell;
@@ -59,8 +61,8 @@
     self.nameField = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     [self.nameField setTitleText:@"Server name"];
     [self.nameField setPlaceholder:@"My map sever"];
-    [self.nameField useReturnKeyDone];
-    [self.nameField setTextFielDelegate:self];
+    [self.nameField useReturnKeyNext];
+    [self.nameField setTextFieldDelegate:self];
     [self.cellArray addObject:self.nameField];
     
     self.urlField = [self.tableView dequeueReusableCellWithIdentifier:@"textView"];
@@ -69,6 +71,17 @@
     UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     self.urlField.textView.inputAccessoryView = keyboardToolbar;
     [self.cellArray addObject:self.urlField];
+    
+    self.usernameField = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    [self.usernameField setTitleText:@"Username"];
+    [self.usernameField useReturnKeyNext];
+    [self.usernameField setTextFieldDelegate:self];
+    
+    self.passwordField = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    [self.passwordField setTitleText:@"Password"];
+    [self.passwordField useSecureTextEntry];
+    [self.passwordField useReturnKeyDone];
+    [self.passwordField setTextFieldDelegate:self];
     
     self.buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [self.buttonCell setButtonLabel:@"Save Tile Server"];
@@ -80,6 +93,10 @@
     self.statusCell = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
     [self.statusCell.descriptionLabel setText:@""];
     [self.cellArray addObject:self.statusCell];
+    
+    MCEmptyStateCell *spacer = [self.tableView dequeueReusableCellWithIdentifier:@"spacer"];
+    [spacer useAsSpacer];
+    [self.cellArray addObject:spacer];
 }
 
 
@@ -89,6 +106,7 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCTextViewCell" bundle:nil] forCellReuseIdentifier:@"textView"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCEmptyStateCell" bundle:nil] forCellReuseIdentifier:@"spacer"];
 }
 
 
@@ -159,6 +177,12 @@
     } else {
         [self.buttonCell disableButton];
     }
+    
+    if (textField == self.nameField.field) {
+        [self.urlField.textView becomeFirstResponder];
+    } else if (textField == self.usernameField.field) {
+        [self.passwordField.field becomeFirstResponder];
+    }
 }
 
 
@@ -179,7 +203,19 @@
             [self.statusCell.descriptionLabel setText:@""];
         });
         
-        if (tileServerResult.failure != nil && error.code != MCNoError) {
+        if (tileServerResult.failure != nil && error.code == MCUnauthorized){
+            if ([self.cellArray indexOfObject:self.usernameField] > 0) {
+                [self.cellArray insertObject:self.usernameField atIndex:[self.cellArray indexOfObject:self.urlField] + 1];
+                [self.cellArray insertObject:self.passwordField atIndex:[self.cellArray indexOfObject:self.usernameField] + 1];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.cellArray indexOfObject:self.usernameField] inSection:0];
+                [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                [self.usernameField.field becomeFirstResponder];
+            });
+        } else if (tileServerResult.failure != nil && error.code != MCNoError) {
             NSLog(@"Bad URL");
             self.urlIsValid = NO;
             dispatch_async(dispatch_get_main_queue(), ^{

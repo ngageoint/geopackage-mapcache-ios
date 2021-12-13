@@ -99,8 +99,9 @@
     [_urlCell setPlaceholder:self.tileServer.url];
     [_urlCell setFieldText:self.tileServer.url];
     
-    [_urlCell setTextFielDelegate: self];
+    [_urlCell setTextFieldDelegate: self];
     [_urlCell useReturnKeyDone];
+    [_urlCell clearButtonMode];
     [_cellArray addObject:_urlCell];
     
     self.helpText = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
