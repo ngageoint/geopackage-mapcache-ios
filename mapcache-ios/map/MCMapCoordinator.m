@@ -120,7 +120,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     
     @try {
         geoPackage = [self.manager open:geoPackageName];
-        GPKGBoundingBox *boundingBox = [geoPackage contentsBoundingBoxInProjection:[SFPProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
+        GPKGBoundingBox *boundingBox = [geoPackage contentsBoundingBoxInProjection:[PROJProjectionFactory projectionWithEpsgInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]];
         CLLocationCoordinate2D center = [boundingBox center];
         
         if (center.latitude != 0 && center.longitude != 0) {

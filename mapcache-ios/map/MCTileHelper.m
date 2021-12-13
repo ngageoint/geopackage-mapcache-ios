@@ -108,7 +108,7 @@
         GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
         if(contentsBoundingBox != nil){
             GPKGContentsDao *contentsDao = [geoPackage contentsDao];
-            SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromProjection:[[contentsDao srs:contents] projection] andToProjection:[tileMatrixSetSrs projection]];
+            SFPGeometryTransform *transform = [SFPGeometryTransform transformFromProjection:[[contentsDao srs:contents] projection] andToProjection:[tileMatrixSetSrs projection]];
             GPKGBoundingBox *transformedContentsBoundingBox = contentsBoundingBox;
             if(![transform isSameProjection]){
                 transformedContentsBoundingBox = [transformedContentsBoundingBox transform:transform];
@@ -151,13 +151,13 @@
 
 - (GPKGBoundingBox *)transformBoundingBoxToWgs84: (GPKGBoundingBox *)boundingBox withSrs: (GPKGSpatialReferenceSystem *)srs {
     
-    SFPProjection *projection = [srs projection];
-    if([projection isUnit:SFP_UNIT_DEGREES]){
+    PROJProjection *projection = [srs projection];
+    if([projection isUnit:PROJ_UNIT_DEGREES]){
         boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
     }
-    SFPProjectionTransform *transformToWebMercator = [[SFPProjectionTransform alloc] initWithFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
+    SFPGeometryTransform *transformToWebMercator = [SFPGeometryTransform transformFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
     GPKGBoundingBox *webMercatorBoundingBox = [boundingBox transform:transformToWebMercator];
-    SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
+    SFPGeometryTransform *transform = [SFPGeometryTransform transformFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
     boundingBox = [webMercatorBoundingBox transform:transform];
     return boundingBox;
 }

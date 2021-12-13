@@ -332,12 +332,12 @@
     int count = 0;
     GPKGBoundingBox *boundingBox = _tileData.loadTiles.generateTiles.boundingBox;
     
-    SFPProjection *projection = [SFPProjectionFactory projectionWithAuthority: PROJ_AUTHORITY_EPSG andCode: [NSString stringWithFormat:@"%d", _tileData.loadTiles.epsg]];
+    PROJProjection *projection = [PROJProjectionFactory projectionWithAuthority: PROJ_AUTHORITY_EPSG andCode: [NSString stringWithFormat:@"%d", _tileData.loadTiles.epsg]];
     GPKGBoundingBox *transformedBox = boundingBox;
     
     if (![projection isEqualToAuthority:PROJ_AUTHORITY_EPSG andNumberCode:[NSNumber numberWithInt:PROJ_EPSG_WORLD_GEODETIC_SYSTEM]]) {
         GPKGBoundingBox *bounded = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
-        SFPProjectionTransform *transform = [[SFPProjectionTransform alloc] initWithFromEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM andToProjection:projection];
+        SFPGeometryTransform *transform = [SFPGeometryTransform transformFromEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM andToProjection:projection];
         transformedBox = [bounded transform:transform];
     }
     

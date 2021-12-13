@@ -10,7 +10,7 @@
 #import <GPKGGeoPackageManager.h>
 #import <GPKGTileBoundingBoxUtils.h>
 #import <GPKGTileGrid.h>
-#import "SFPProjectionFactory.h"
+#import "PROJProjectionFactory.h"
 #import "MCLoadTilesTask.h"
 #import "MCGeopackageSingleViewController.h"
 #import "MCDatabase.h"
