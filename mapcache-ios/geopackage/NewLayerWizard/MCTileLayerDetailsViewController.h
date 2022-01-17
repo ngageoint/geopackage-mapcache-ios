@@ -23,7 +23,7 @@
 @class MCTileServerResult;
 
 @protocol MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer andReferenceSystemCode:(int)referenceCode;
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer username:(NSString *)username password:(NSString *)password andReferenceSystemCode:(int)referenceCode;
 - (void) showURLHelp;
 - (void) showTileServerList;
 - (BOOL) isLayerNameAvailable: (NSString *) layerName;

@@ -11,15 +11,11 @@
 
 @interface MCTileLayerDetailsViewController ()
 @property (nonatomic, strong) NSMutableArray *cellArray;
-@property (nonatomic, strong) MCTitleCell *titleCell;
 @property (nonatomic, strong) MCButtonCell *buttonCell;
 @property (nonatomic, strong) MCButtonCell *selectServerButtonCell;
 @property (nonatomic, strong) MCButtonCell *helpButtonCell;
 @property (nonatomic, strong) MCDescriptionCell *helpText;
 @property (nonatomic, strong) MCFieldWithTitleCell *layerNameCell;
-@property (nonatomic, strong) MCFieldWithTitleCell *usernameCell;
-@property (nonatomic, strong) MCFieldWithTitleCell *passwordCell;
-@property (nonatomic, strong) MCEmptyStateCell *spacer;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic) BOOL urlIsValid;
 @property (nonatomic) BOOL haveScrolled;
@@ -41,7 +37,10 @@
     self.tableView.dataSource = self;
     self.tableView.estimatedRowHeight = 141.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+<<<<<<< HEAD
     self.tableView.backgroundColor = [UIColor clearColor];
+=======
+>>>>>>> develop
     
     self.layerName = nil;
     self.urlIsValid = YES;
@@ -79,9 +78,9 @@
 - (void) initCellArray {
     _cellArray = [[NSMutableArray alloc] init];
     
-    _titleCell = [self.tableView dequeueReusableCellWithIdentifier:@"title"];
-    _titleCell.label.text = @"New tile layer";
-    [_cellArray addObject:_titleCell];
+    MCTitleCell *title = [self.tableView dequeueReusableCellWithIdentifier:@"title"];
+    title.label.text = @"New tile layer";
+    [_cellArray addObject:title];
     
     _layerNameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     _layerNameCell.title.text = @"Layer name";
@@ -132,18 +131,6 @@
     _helpButtonCell.delegate = self;
     [_helpButtonCell useSecondaryColors];
     [_cellArray addObject:_helpButtonCell];
-    
-    _usernameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    [_usernameCell setTitleText:@"Username"];
-    _usernameCell.field.delegate = self;
-    _passwordCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
-    [_passwordCell setTitleText:@"Password"];
-    _passwordCell.field.delegate = self;
-    [_passwordCell useSecureTextEntry];
-    
-    self.spacer = [self.tableView dequeueReusableCellWithIdentifier:@"spacer"];
-    [self.spacer useAsSpacer];
-
 }
 
 - (void)update {
@@ -159,7 +146,6 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MCFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"MCEmptyStateCell" bundle:nil] forCellReuseIdentifier:@"spacer"];
 }
 
 
@@ -191,10 +177,8 @@
             [self.urlCell useErrorAppearance];
             [self.buttonCell disableButton];
         } else {
-            [self.helpText setDescription:@"Checking URL"];
-            [self.buttonCell disableButton];
-            
-            [[MCTileServerRepository shared] isValidServerURLWithUrlString:[self.urlCell fieldValue] completion:^(MCTileServerResult *tileServerResult) {
+            [textField isValidTileServerURL:textField withResult:^(MCTileServerResult *tileServerResult) {
+                
                 if (tileServerResult == nil) {
                     NSLog(@"Bad url");
                     self.urlIsValid = NO;
@@ -211,7 +195,15 @@
                 MCServerError *error = (MCServerError *)tileServerResult.failure;
                 MCTileServerType serverType = ((MCTileServer *)tileServerResult.success).serverType;
                 
-                if ((error == nil || error.code == MCNoError) && (serverType == MCTileServerTypeXyz || serverType == MCTileServerTypeWms)) {
+                if (tileServerResult.failure != nil && error.code != MCNoError) {
+                    self.urlIsValid = NO;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSDictionary *userInfo = error.userInfo;
+                        [self.helpText.descriptionLabel setText:userInfo[@"message"]];
+                        [self.buttonCell disableButton];
+                        [self.urlCell useErrorAppearance];
+                    });
+                } else if (serverType == MCTileServerTypeXyz || serverType == MCTileServerTypeWms) {
                     NSLog(@"Valid URL");
                     self.tileServer = (MCTileServer *)tileServerResult.success;
                     self.urlIsValid = YES;
@@ -219,45 +211,10 @@
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.urlCell useNormalAppearance];
                         BOOL isLayerNameAvailable = [self.delegate isLayerNameAvailable: self.layerName];
-                        [self.helpText.descriptionLabel setText:@""];
+                        
                         if (self.layerName != nil && ![self.layerName isEqualToString:@""] && isLayerNameAvailable) {
                             [self.buttonCell enableButton];
                         }
-                    });
-                } else if (tileServerResult.failure != nil && error.code == MCUnauthorized) {
-                    NSMutableArray *updatedCellArray = [[NSMutableArray alloc] init];
-                    [self.usernameCell useReturnKeyNext];
-                    [self.passwordCell useReturnKeyDone];
-                    
-                    [updatedCellArray addObject:self.titleCell];
-                    [updatedCellArray addObject:self.layerNameCell];
-                    [updatedCellArray addObject:self.urlCell];
-                    [updatedCellArray addObject:self.helpText];
-                    [updatedCellArray addObject:self.selectServerButtonCell];
-                    [updatedCellArray addObject:self.usernameCell];
-                    [updatedCellArray addObject:self.passwordCell];
-                    [updatedCellArray addObject:self.buttonCell];
-                    [updatedCellArray addObject:self.helpButtonCell];
-                    [updatedCellArray addObject:self.spacer];
-                    self.cellArray = updatedCellArray;
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.tableView reloadData];
-                        NSLog(@"%@", [NSString stringWithFormat:@"number of sections %ld", (long)self.tableView.numberOfSections]);
-                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.cellArray.count - 1 inSection:0];
-                        [self.buttonCell disableButton];
-                        
-                        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
-                        [self.usernameCell.field becomeFirstResponder];
-                    });
-                    
-                } else if (tileServerResult.failure != nil && error.code != MCNoError) {
-                    self.urlIsValid = NO;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSDictionary *userInfo = error.userInfo;
-                        [self.helpText.descriptionLabel setText:userInfo[@"message"]];
-                        [self.buttonCell disableButton];
-                        [self.urlCell useErrorAppearance];
                     });
                 } else {
                     // TODO add TMS support
@@ -269,74 +226,6 @@
                 }
             }];
         }
-    } else if (textField == _passwordCell.field) {
-        [self.passwordCell.field resignFirstResponder];
-        [[MCTileServerRepository shared] isValidServerURLWithUrlString:[self.urlCell fieldValue] username:[self.usernameCell fieldValue] password:[self.passwordCell fieldValue] completion:^(MCTileServerResult *tileServerResult) {
-            if (tileServerResult == nil) {
-                NSLog(@"Bad url");
-                self.urlIsValid = NO;
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.helpText.descriptionLabel setText:@"Check your URL."];
-                    [self.buttonCell disableButton];
-                    [self.urlCell useErrorAppearance];
-                });
-                [textField resignFirstResponder];
-                return;
-            }
-            
-            MCServerError *error = (MCServerError *)tileServerResult.failure;
-            MCTileServerType serverType = ((MCTileServer *)tileServerResult.success).serverType;
-            
-            if (serverType == MCTileServerTypeXyz || serverType == MCTileServerTypeWms) {
-                NSLog(@"Valid URL");
-                self.tileServer = (MCTileServer *)tileServerResult.success;
-                self.urlIsValid = YES;
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.urlCell useNormalAppearance];
-                    BOOL isLayerNameAvailable = [self.delegate isLayerNameAvailable: self.layerName];
-                    
-                    if (self.layerName != nil && ![self.layerName isEqualToString:@""] && isLayerNameAvailable) {
-                        [self.buttonCell enableButton];
-                    }
-                });
-            } else if (tileServerResult.failure != nil && error.code == MCUnauthorized) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    //[self.buttonCell setButtonLabel:@"Sign in and continue"];
-                    //[self.helpText.descriptionLabel setText:@"Please sign in to download tiles"];
-                    [self.tableView reloadData];
-                    
-                    NSLog(@"%@", [NSString stringWithFormat:@"number of sections %ld", (long)self.tableView.numberOfSections]);
-                    
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.cellArray.count - 1 inSection:0];
-                    [self.usernameCell useErrorAppearance];
-                    [self.passwordCell useErrorAppearance];
-                    [self.helpText setDescription:@"Check your username and password"];
-                    
-                    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
-                    [self.usernameCell.field becomeFirstResponder];
-                });
-                
-            } else if (tileServerResult.failure != nil && error.code != MCNoError) {
-                self.urlIsValid = NO;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSDictionary *userInfo = error.userInfo;
-                    [self.helpText.descriptionLabel setText:userInfo[@"message"]];
-                    [self.buttonCell disableButton];
-                    [self.urlCell useErrorAppearance];
-                });
-            } else {
-                // TODO add TMS support
-                NSLog(@"Bad url");
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.buttonCell disableButton];
-                    [self.urlCell useErrorAppearance];
-                });
-            }
-        }];
-    } else if (textField == self.usernameCell.field) {
-        //[self.passwordCell.field becomeFirstResponder];
     } else {
         self.layerName = textField.text;
         BOOL isLayerNameAvailable = [self.delegate isLayerNameAvailable: self.layerName];
@@ -370,9 +259,7 @@
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
     if ([action isEqualToString:@"ContinueToBoundingBox"]) {
-        // TODO: if we have a username and password check the url again
-        
-        [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text tileServer: self.tileServer username:self.usernameCell.field.text password:self.passwordCell.field.text andReferenceSystemCode:PROJ_EPSG_WEB_MERCATOR];
+        [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text tileServer: self.tileServer andReferenceSystemCode:PROJ_EPSG_WEB_MERCATOR];
     } else if ([action isEqualToString:@"ShowServers"]) {
         [self.delegate showTileServerList];
     } else {

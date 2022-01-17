@@ -19,6 +19,7 @@
 @property (nonatomic, strong) MCButtonCell *buttonCell;
 @property (nonatomic, strong) MCTileServer *tileServer;
 @property (nonatomic, strong) MCDescriptionCell *statusCell;
+@property (nonatomic, strong) MCEmptyStateCell *spacer;
 @property (nonatomic, strong) NSString *serverName;
 @property (nonatomic, strong) NSString *serverURL;
 @property (nonatomic) BOOL nameIsValid;
@@ -94,9 +95,9 @@
     [self.statusCell.descriptionLabel setText:@""];
     [self.cellArray addObject:self.statusCell];
     
-    MCEmptyStateCell *spacer = [self.tableView dequeueReusableCellWithIdentifier:@"spacer"];
-    [spacer useAsSpacer];
-    [self.cellArray addObject:spacer];
+    self.spacer = [self.tableView dequeueReusableCellWithIdentifier:@"spacer"];
+    [self.spacer useAsSpacer];
+    [self.cellArray addObject:self.spacer];
 }
 
 
@@ -182,6 +183,11 @@
         [self.urlField.textView becomeFirstResponder];
     } else if (textField == self.usernameField.field) {
         [self.passwordField.field becomeFirstResponder];
+    } else if (textField == self.passwordField.field) {
+        [[MCTileServerRepository shared] isValidServerURLWithUrlString:_serverURL username:self.usernameField.field.text password:self.passwordField.field.text completion:^(MCTileServerResult * _Nonnull tileServerResult) {
+                // TODO: refactor server response handling into a method
+            NSLog(@"checking");
+        }];
     }
 }
 
@@ -204,14 +210,19 @@
         });
         
         if (tileServerResult.failure != nil && error.code == MCUnauthorized){
-            if ([self.cellArray indexOfObject:self.usernameField] > 0) {
-                [self.cellArray insertObject:self.usernameField atIndex:[self.cellArray indexOfObject:self.urlField] + 1];
-                [self.cellArray insertObject:self.passwordField atIndex:[self.cellArray indexOfObject:self.usernameField] + 1];
-            }
+            NSMutableArray *updatedCellArray = [[NSMutableArray alloc] init];
+            [updatedCellArray addObject:self.nameField];
+            [updatedCellArray addObject:self.urlField];
+            [updatedCellArray addObject:self.usernameField];
+            [updatedCellArray addObject:self.passwordField];
+            [updatedCellArray addObject:self.buttonCell];
+            [updatedCellArray addObject:self.statusCell];
+            [updatedCellArray addObject:self.spacer];
+            self.cellArray = updatedCellArray;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.cellArray indexOfObject:self.usernameField] inSection:0];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.cellArray.count - 1 inSection:0];
                 [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
                 [self.usernameField.field becomeFirstResponder];
             });

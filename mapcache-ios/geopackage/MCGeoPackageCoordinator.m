@@ -217,9 +217,11 @@
 
 
 #pragma mark - MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer andReferenceSystemCode:(int)referenceCode {
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer username:(NSString *)username password:(NSString *)password andReferenceSystemCode:(int)referenceCode {
     _tileData.name = name;
     _tileData.loadTiles.url = tileServer.url;
+    _tileData.loadTiles.username = username;
+    _tileData.loadTiles.password = password;
     _tileData.loadTiles.epsg = referenceCode;
     _tileServer = tileServer;
     
@@ -377,6 +379,8 @@
                andDatabase:_database.name
                   andTable:tileData.name
                     andUrl:serverURL
+                andUsername: tileData.loadTiles.username
+                andPassword: tileData.loadTiles.password
                 andMinZoom:[tileData.loadTiles.generateTiles.minZoom intValue]
                 andMaxZoom:[tileData.loadTiles.generateTiles.maxZoom intValue]
          andCompressFormat:GPKG_CF_NONE // TODO: let user set this

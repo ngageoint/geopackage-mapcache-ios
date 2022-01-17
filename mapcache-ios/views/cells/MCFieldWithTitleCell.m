@@ -62,7 +62,7 @@
 
 
 - (void) clearButtonMode {
-    [self.field clearButtonMode];
+    self.field.clearButtonMode = UITextFieldViewModeWhileEditing;
 }
 
 

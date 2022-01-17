@@ -34,6 +34,7 @@
 
 @implementation MCLoadTilesTask
 
+// Update to use the new auth method
 +(void) loadTilesWithCallback: (NSObject<GPKGSLoadTilesProtocol> *) callback
                   andDatabase: (NSString *) database
                      andTable: (NSString *) tableName
@@ -54,20 +55,73 @@
     GPKGGeoPackage * geoPackage = nil;
     @try {
         geoPackage = [manager open:database];
+        
+        PROJProjection * projection = [PROJProjectionFactory projectionWithAuthority:authority andCode:code];
+        GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
+        
+        GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andTileUrl:tileUrl andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
+        [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andXyzTiles:xyzTiles andBoundingBox:boundingBox andTileScaling:scaling];
+        
+        [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
+
     } @catch(NSException *e) {
         NSLog(@"---------- MCLoadTilesTask - Problem downloading tiles\n%@", e.reason);
     }
     @finally {
         [manager close];
     }
+}
+
++(void) loadTilesWithCallback: (NSObject<GPKGSLoadTilesProtocol> *) callback
+                  andDatabase: (NSString *) database
+                     andTable: (NSString *) tableName
+                       andUrl: (NSString *) tileUrl
+                  andUsername: (NSString *) username
+                  andPassword: (NSString *) password
+                   andMinZoom: (int) minZoom
+                   andMaxZoom: (int) maxZoom
+            andCompressFormat: (enum GPKGCompressFormat) compressFormat
+           andCompressQuality: (int) compressQuality
+             andCompressScale: (int) compressScale
+                  andXyzTiles: (BOOL) xyzTiles
+               andBoundingBox: (GPKGBoundingBox *) boundingBox
+               andTileScaling: (GPKGTileScaling *) scaling
+                 andAuthority: (NSString *) authority
+                      andCode: (NSString *) code
+                     andLabel: (NSString *) label{
     
-    PROJProjection * projection = [PROJProjectionFactory projectionWithAuthority:authority andCode:code];
-    GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
-    
-    GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andTileUrl:tileUrl andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
-    [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andXyzTiles:xyzTiles andBoundingBox:boundingBox andTileScaling:scaling];
-    
-    [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
+    GPKGGeoPackageManager *manager = [GPKGGeoPackageFactory manager];
+    GPKGGeoPackage * geoPackage = nil;
+    @try {
+        geoPackage = [manager open:database];
+        
+        PROJProjection * projection = [PROJProjectionFactory projectionWithAuthority:authority andCode:code];
+        GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
+        GPKGUrlTileGenerator *urlTileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage
+                                                                                     andTableName:tableName
+                                                                                       andTileUrl:tileUrl
+                                                                                       andMinZoom:minZoom
+                                                                                       andMaxZoom:maxZoom andBoundingBox:bbox
+                                                                                    andProjection:projection];
+        
+        if (username && password && ![username isEqualToString:@""] && ![password isEqualToString:@""]) {
+            NSString *userPasswordString = [NSString stringWithFormat: @"%@:%@", username, password];
+            NSData *userPasswordData = [userPasswordString dataUsingEncoding:NSUTF8StringEncoding];
+            NSString *base64EncodedCredential = [userPasswordData base64EncodedStringWithOptions:0];
+            NSString * authString = [NSString stringWithFormat:@"Basic %@", base64EncodedCredential];
+            [urlTileGenerator addValue:authString forHTTPHeaderField:@"Authorization"];
+        }
+        
+        [self setTileGenerator:urlTileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andXyzTiles:xyzTiles andBoundingBox:boundingBox andTileScaling:scaling];
+        
+        [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:urlTileGenerator andLabel:label];
+
+    } @catch(NSException *e) {
+        NSLog(@"---------- MCLoadTilesTask - Problem downloading tiles\n%@", e.reason);
+    }
+    @finally {
+        [manager close];
+    }
 }
 
 +(void) loadTilesWithCallback: (NSObject<GPKGSLoadTilesProtocol> *) callback
