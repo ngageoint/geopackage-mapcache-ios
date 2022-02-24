@@ -19,7 +19,7 @@
                     <rect key="frame" x="16" y="16" width="343" height="50"/>
                     <color key="backgroundColor" name="ngaButtonColor"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="50" id="j9F-8n-lL6"/>
+                        <constraint firstAttribute="height" priority="999" constant="50" id="j9F-8n-lL6"/>
                     </constraints>
                     <state key="normal" title="Button">
                         <color key="titleColor" name="ngaButtonTextColor"/>

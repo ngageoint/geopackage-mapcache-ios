@@ -81,7 +81,6 @@ import Foundation
         tileServer.url = urlString;
         
         if (urlString.contains("{z}") && urlString.contains("{y}") && urlString.contains("{x}")) {
-            
             editedURLString.replaceSubrange(editedURLString.range(of: "{x}")!, with: "0")
             editedURLString.replaceSubrange(editedURLString.range(of: "{y}")!, with: "0")
             editedURLString.replaceSubrange(editedURLString.range(of: "{z}")!, with: "0")
@@ -143,8 +142,10 @@ import Foundation
         self.username = username
         self.password = password
         
+        let tileServer = MCTileServer.init(serverName: self.urlString)
+        tileServer.url = url
+        
         guard let wmsURL:URL = URL.init(string: url) else {
-            let tileServer = MCTileServer.init(serverName: urlString)
             tileServer.serverType = .error
             let result = MCTileServerResult.init(tileServer, self.generateError(message: "Invalid URL", errorType: MCServerErrorType.MCURLInvalid))
             
@@ -153,7 +154,6 @@ import Foundation
         }
        
         if wmsURL.host == nil || wmsURL.scheme == nil {
-            let tileServer = MCTileServer.init(serverName: urlString)
             tileServer.serverType = .error
             let result = MCTileServerResult.init(tileServer, self.generateError(message: "Invalid URL", errorType: MCServerErrorType.MCURLInvalid))
             
@@ -171,9 +171,6 @@ import Foundation
             baseURL = baseURL + wmsURL.path
         }
         
-        let tileServer = MCTileServer.init(serverName: self.urlString)
-        self.layers = []
-        
         var builtURL = URLComponents(string: baseURL)
         builtURL?.queryItems = [
             URLQueryItem(name: "request", value: "GetCapabilities"),
@@ -181,10 +178,13 @@ import Foundation
             URLQueryItem(name: "version", value: "1.3.0")
         ]
         
-        var sessionConfig = URLSessionConfiguration.default
+        let builtURLString = builtURL!.string!
+        tileServer.builtURL = builtURLString
+        self.layers = []
+        
+        let sessionConfig = URLSessionConfiguration.default
         var urlRequest = URLRequest.init(url: (builtURL?.url)!)
         urlRequest.httpMethod = "GET"
-        
         
         if username != "" && password != "" {
             let loginString = String(format: "%@:%@", username, password)
@@ -195,6 +195,11 @@ import Foundation
         
         let session = URLSession(configuration: sessionConfig, delegate: self, delegateQueue: .main)
         let task = session.dataTask(with: urlRequest) { data, response, error in
+            if let error = error {
+                print("Connection Error \(error.localizedDescription)")
+                completion(MCTileServerResult.init(tileServer, self.generateError(message: error.localizedDescription, errorType: .MCNoError)))
+            }
+            
             if let urlResponse = response as? HTTPURLResponse {
                 if urlResponse.statusCode == 401 {
                     completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Login to download tiles", errorType: .MCUnauthorized)))
@@ -202,8 +207,11 @@ import Foundation
                 } else if urlResponse.statusCode != 200 {
                     completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Server error", errorType: .MCTileServerParseError)))
                     return
+                } else {
+                    
                 }
             }
+            
             
             guard let data = data, error == nil else {
                 completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Server error", errorType: .MCTileServerParseError)))
@@ -224,7 +232,7 @@ import Foundation
                 }
                 
                 tileServer.serverType = .wms
-                tileServer.url = (builtURL?.string)!
+                tileServer.builtURL = (builtURL?.string)!
                 tileServer.layers = self.layers
                 self.layers = []
                 
@@ -435,6 +443,11 @@ import Foundation
                             print("valid test URL")
                             let tileServer = tileServerResult.success as? MCTileServer
                             tileServer?.serverName = serverName
+                            self.tileServers[serverName] = tileServer
+                        } else if serverError.code == MCServerErrorType.MCUnauthorized.rawValue {
+                            let tileServer = tileServerResult.success as? MCTileServer
+                            tileServer?.serverName = serverName
+                            tileServer?.serverType = .authRequired
                             self.tileServers[serverName] = tileServer
                         } else {
                             let tileServer = tileServerResult.success as? MCTileServer

@@ -217,13 +217,28 @@
 
 
 #pragma mark - MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer username:(NSString *)username password:(NSString *)password andReferenceSystemCode:(int)referenceCode {
+- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer username:(NSString *)username password:(NSString *)password saveCredentials:(BOOL)saveCredentials andReferenceSystemCode:(int)referenceCode {
     _tileData.name = name;
     _tileData.loadTiles.url = tileServer.url;
     _tileData.loadTiles.username = username;
     _tileData.loadTiles.password = password;
     _tileData.loadTiles.epsg = referenceCode;
     _tileServer = tileServer;
+    
+    MCTileServer *serverCheck = [[MCTileServerRepository shared] tileServerForURLWithUrlString:tileServer.url];
+    if ([serverCheck.url isEqualToString:@""]) {
+        NSLog(@"Server not found in repository");
+        [[MCTileServerRepository shared] saveToUserDefaultsWithServerName:tileServer.url url:tileServer.url tileServer:tileServer];
+    }
+    
+    if (saveCredentials) {
+        NSError *keychainError = nil;
+        [[MCKeychainUtil shared] addCredentialsWithServer:tileServer.url username:username password:password error: &keychainError];
+        
+        if (keychainError) {
+            NSLog(@"Problem writing credentials to Keychain %@", [keychainError.userInfo objectForKey:@"errorCode"]);
+        }
+    }
     
     [_drawerDelegate popDrawerAndHide];
     self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] initWithTileServer:_tileServer boundingBoxDelegate:self];
@@ -264,7 +279,8 @@
 #pragma mark MCLayerSelectDelegate methods
 - (void)didSelectLayer:(NSInteger)layerIndex {
     self.selectedLayerIndex = layerIndex;
-    [self.mapDelegate addTileOverlay: [_tileServer urlForLayerWithIndex:layerIndex boundingBoxTemplate:NO] serverType:_tileServer.serverType];
+    [self.mapDelegate addTileOverlay: [_tileServer urlForLayerWithIndex:layerIndex boundingBoxTemplate:NO] serverType:_tileServer.serverType username:_tileData.loadTiles.username password:_tileData
+    .loadTiles.password];
 }
 
 

@@ -21,7 +21,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 @property (nonatomic, strong) MCSwitchCell *zoomSwitchCell;
 @property (nonatomic, strong) NSUserDefaults *settings;
 @property (nonatomic) BOOL haveScrolled;
-@property (nonatomic, strong) NSDictionary *savedTileServers;
+@property (nonatomic, strong) NSMutableDictionary *savedTileServers;
 @property (nonatomic, strong) MCTileServer *expandedServer;
 @end
 
@@ -40,15 +40,10 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     self.tableView.backgroundColor = [UIColor colorNamed:@"ngaBackgroundColor"];
-    self.savedTileServers = [[MCTileServerRepository shared] getTileServers];
+    self.savedTileServers = [[NSMutableDictionary alloc] initWithDictionary: [[MCTileServerRepository shared] getTileServers]];
     [self registerCellTypes];
     [self initCellArray];
-    //[self addAndConstrainSubview:self.tableView];
     [self addAndConstrainSubview:self.tableView];
-    
-    //[self addDragHandle];
-    //[self addCloseButton];
-    
 }
 
 
@@ -65,9 +60,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 
 
 - (void) closeDrawer {
-    //[super closeDrawer];
     [_mapSettingsDelegate settingsCompletionHandler];
-    //[self.drawerViewDelegate popDrawer];
 }
 
 
@@ -146,9 +139,11 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                         [wmsLayers addObject:layerCell];
                     }
                 }
-            }
-            
-            if (tileServer.serverType == MCTileServerTypeError) {
+            } else if (tileServer.serverType == MCTileServerTypeAuthRequired) {
+                [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:MC_PROP_ICON_TILE_SERVER_LOGIN]]];
+                [tileServerCell setLayersLabelText:@"Tap to login"];
+                [tileServerCell activeIndicatorOff];
+            } else if (tileServer.serverType == MCTileServerTypeError) {
                 [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:MC_PROP_ICON_TILE_SERVER_ERROR]]];
                 [tileServerCell setLayersLabelText:@"Unable to reach server"];
                 [tileServerCell activeIndicatorOff];
@@ -288,29 +283,58 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 [self initCellArray];
                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
             }
+        } else if (tappedServer.serverType == MCTileServerTypeAuthRequired) {
+            NSError *keychainError = nil;
+            MCCredentials *credentials = [[MCKeychainUtil shared] readCredentialsWithServer:tappedServer.url error:&keychainError];
+            
+            if (keychainError) {
+                NSLog(@"Problem reading credentials from Keychain %@", [keychainError.userInfo objectForKey:@"errorCode"]);
+                NSNumber *errorCode = [keychainError.userInfo objectForKey:@"errorCode"];
+                if (errorCode == [NSNumber numberWithInt:-25300]) {
+                    NSLog(@"Item not found error");
+                    
+                    UIAlertController *loginAlert = [UIAlertController alertControllerWithTitle:@"Sign in to continue" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *signInAction = [UIAlertAction actionWithTitle:@"Sign In" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        NSLog(@"Alert closed");
+                        // TODO: grab credentials and do some things
+                    }];
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {}];
+                    [loginAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                                            textField.placeholder = @"Username";
+                    }];
+                    [loginAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                                            textField.placeholder = @"Password";
+                                            textField.secureTextEntry = YES;
+                    }];
+                    [loginAlert addAction:signInAction];
+                    [loginAlert addAction:cancelAction];
+                    [self presentViewController:loginAlert animated:YES completion:nil];
+                }
+                
+            } else {
+                [[MCTileServerRepository shared] isValidServerURLWithUrlString:tappedServer.url username:credentials.username password:credentials.password completion:^(MCTileServerResult *tileServerResult) {
+                    if (tileServerResult == nil) {
+                        NSLog(@"Problem with URL");
+                    }
+                    
+                    MCServerError *error = (MCServerError *)tileServerResult.failure;
+                    MCTileServer *tileServer = tileServerResult.success;
+                    MCTileServerType serverType = tileServer.serverType;
+                    tileServer.serverName = tappedServer.serverName;
+                    
+                    if (serverType == MCTileServerTypeXyz || serverType == MCTileServerTypeWms) {
+                        [self.savedTileServers setValue:tileServer forKey:tileServer.url];
+                    }
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self initCellArray];
+                        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+                    });
+                }];
+            }
         }
     }
 }
-
-
-// Override this method to make the drawer and the scrollview play nice
-/*- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (self.haveScrolled) {
-        [self rollUpPanGesture:scrollView.panGestureRecognizer withScrollView:scrollView];
-    }
-}*/
-
-
-/*- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    self.haveScrolled = YES;
-    
-    if (!self.isFullView) {
-        scrollView.scrollEnabled = NO;
-        scrollView.scrollEnabled = YES;
-    } else {
-        scrollView.scrollEnabled = YES;
-    }
-}*/
 
 
 // Choose which types of cells can have swipe actions
@@ -428,7 +452,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         MCTileServerCell *cell = [cells objectAtIndex:indexPath.row];
-        [self.settingsDelegate deleteTileServer: cell.tileServer.serverName];
+        [self.settingsDelegate deleteTileServer: cell.tileServer];
         completionHandler(YES);
     }];
     

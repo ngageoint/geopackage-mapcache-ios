@@ -37,7 +37,7 @@ typedef NS_ENUM(NSInteger, MCTileServerType);
 - (void) zoomToPoint:(CLLocationCoordinate2D)point withZoomLevel:(NSUInteger) zoomLevel;
 - (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl serverType:(MCTileServerType) serverType;
 - (void) removeTileBoundingBoxGuide;
-- (void) addTileOverlay:(NSString *)tileServerURL serverType:(MCTileServerType)serverType;
+- (void) addTileOverlay:(NSString *)tileServerURL serverType:(MCTileServerType)serverType username:(NSString *)username password:(NSString *)password;
 - (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;
 @end
 

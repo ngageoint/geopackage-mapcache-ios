@@ -95,6 +95,12 @@
             MCTileServerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
             [tileServerCell setContentWithTileServer:tileServer];
             [tileServerCell activeIndicatorOff];
+            
+            if (tileServer.serverType == MCTileServerTypeAuthRequired) {
+                [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:MC_PROP_ICON_TILE_SERVER_LOGIN]]];
+                [tileServerCell setLayersLabelText:@"Tap to login"];
+            }
+            
             [self.cellArray addObject:tileServerCell];
         }
     }
@@ -157,8 +163,12 @@
     
     if (self.selectMode && [[_cellArray objectAtIndex:indexPath.row] isKindOfClass: MCTileServerCell.class]) {
         MCTileServerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
-        [self.selectServerDelegate selectTileServer:cell.tileServer];
-        [self dismissViewControllerAnimated:YES completion:nil];
+        MCTileServer *tileServer = cell.tileServer;
+        
+        if (tileServer.serverType == MCTileServerTypeWms || tileServer.serverType == MCTileServerTypeXyz || tileServer.serverType == MCTileServerTypeAuthRequired) {
+            [self.selectServerDelegate selectTileServer:tileServer];
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
     }
 }
 

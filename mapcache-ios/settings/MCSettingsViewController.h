@@ -40,7 +40,7 @@ typedef NS_ENUM(NSInteger, MCTileServerType);
 - (void)showNoticeAndAttributeView;
 - (void)showTileURLManager;
 - (void)editTileServer:(NSString *) serverName;
-- (void)deleteTileServer:(NSString *) serverName;
+- (void)deleteTileServer:(MCTileServer *) tileServer;
 - (void)setUserBasemap:(MCTileServer *)tileServer layer:(MCLayer *)layer;
 @end
 

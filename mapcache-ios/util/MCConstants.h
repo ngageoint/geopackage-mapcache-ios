@@ -48,6 +48,7 @@ extern NSString * const GPKGS_PROP_ICON_POLYGON;
 extern NSString * const GPKGS_PROP_ICON_TILES;
 extern NSString * const GPKGS_PROP_ICON_TILE_SERVER;
 extern NSString * const MC_PROP_ICON_TILE_SERVER_ERROR;
+extern NSString * const MC_PROP_ICON_TILE_SERVER_LOGIN;
 extern NSString * const GPKGS_PROP_ICON_PAINT;
 extern NSString * const GPKGS_PROP_ICON_UP;
 extern NSString * const GPKGS_PROP_ICON_DOWN;

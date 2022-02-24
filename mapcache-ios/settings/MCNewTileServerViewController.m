@@ -44,9 +44,6 @@
     [self initCellArray];
     
     [self addAndConstrainSubview:self.tableView];
-    //[self addDragHandle];
-    //[self addCloseButton];
-    
     self.nameIsValid = NO;
     self.urlIsValid = NO;
 }
@@ -163,7 +160,74 @@
 #pragma mark - UITextFieldDelegate
 - (void) textFieldDidEndEditing:(UITextField *)textField {
     [textField trimWhiteSpace];
-    _serverName = textField.text;
+    
+    if (textField == self.nameField.field) {
+        [self.urlField.textView becomeFirstResponder];
+        _serverName = textField.text;
+    } else if (textField == self.usernameField.field) {
+        [self.passwordField.field becomeFirstResponder];
+    } else if (textField == self.passwordField.field) {
+        [[MCTileServerRepository shared] isValidServerURLWithUrlString:_serverURL username:self.usernameField.field.text password:self.passwordField.field.text completion:^(MCTileServerResult * _Nonnull tileServerResult) {
+            if (tileServerResult == nil) {
+                NSLog(@"Bad url");
+                self.urlIsValid = NO;
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.buttonCell disableButton];
+                    [self.urlField useErrorAppearance];
+                });
+                
+                [textField resignFirstResponder];
+                return;
+            }
+            
+            MCServerError *error = (MCServerError *)tileServerResult.failure;
+            MCTileServerType serverType = ((MCTileServer *)tileServerResult.success).serverType;
+            
+            if (serverType == MCTileServerTypeXyz || serverType == MCTileServerTypeWms) {
+                NSLog(@"Valid URL");
+                self.tileServer = (MCTileServer *)tileServerResult.success;
+                self.urlIsValid = YES;
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.urlField useNormalAppearance];
+                    [self.buttonCell enableButton];
+                });
+            } else if (tileServerResult.failure != nil && error.code == MCUnauthorized) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    //[self.buttonCell setButtonLabel:@"Sign in and continue"];
+                    //[self.helpText.descriptionLabel setText:@"Please sign in to download tiles"];
+                    [self.tableView reloadData];
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.cellArray.count - 1 inSection:0];
+                    [self.usernameField useErrorAppearance];
+                    [self.passwordField useErrorAppearance];
+                    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+                    [self.usernameField.field becomeFirstResponder];
+                });
+                
+                MCKeychainError *keychainError = nil;
+                MCCredentials *credentials = [[MCKeychainUtil shared] readCredentialsWithServer:self.urlField.textView.text error:&keychainError];
+                if (keychainError) {
+                    NSLog(@"Problem reading credentials from Keychain %@", [keychainError.userInfo objectForKey:@"errorCode"]);
+                } else if (credentials) {
+                    [self.usernameField setFieldText:credentials.username];
+                    [self.passwordField setFieldText:credentials.password];
+                }
+            } else if (tileServerResult.failure != nil && error.code != MCNoError) {
+                self.urlIsValid = NO;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.buttonCell disableButton];
+                    [self.urlField useErrorAppearance];
+                });
+            } else {
+                NSLog(@"Bad url");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.buttonCell disableButton];
+                    [self.urlField useErrorAppearance];
+                });
+            }
+        }];
+    }
     
     if (_serverName && ![_serverName isEqualToString:@""]) {
         self.nameIsValid = YES;
@@ -177,17 +241,6 @@
         [self.buttonCell enableButton];
     } else {
         [self.buttonCell disableButton];
-    }
-    
-    if (textField == self.nameField.field) {
-        [self.urlField.textView becomeFirstResponder];
-    } else if (textField == self.usernameField.field) {
-        [self.passwordField.field becomeFirstResponder];
-    } else if (textField == self.passwordField.field) {
-        [[MCTileServerRepository shared] isValidServerURLWithUrlString:_serverURL username:self.usernameField.field.text password:self.passwordField.field.text completion:^(MCTileServerResult * _Nonnull tileServerResult) {
-                // TODO: refactor server response handling into a method
-            NSLog(@"checking");
-        }];
     }
 }
 
@@ -244,6 +297,7 @@
             NSLog(@"Valid URL");
             self.urlIsValid = YES;
             self.tileServer = (MCTileServer *)tileServerResult.success;
+            self.tileServer.url = self.urlField.textView.text;
             
             if (self.tileServer.serverType == MCTileServerTypeWms && [self.serverName  isEqualToString: @""]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -271,12 +325,6 @@
 - (void) setServerURL:(NSString *) serverURL {
     [self.urlField setTextViewContent:serverURL];
 }
-
-
-#pragma mark - NGADrawerView methods
-//- (void) closeDrawer {
-//    [self.drawerViewDelegate popDrawer];
-//}
 
 
 #pragma mark - GPKGSButtonCellDelegate methods

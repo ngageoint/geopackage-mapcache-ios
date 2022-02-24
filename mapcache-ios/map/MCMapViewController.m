@@ -222,7 +222,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 #pragma mark - Button actions
 - (IBAction)showInfo:(id)sender {
-    NSLog(@"Showing info drawer.");
+    NSLog(@"MCMapController - Showing info drawer.");
     
     if (!self.settingsDrawerVisible) {
         self.settingsDrawerVisible = YES;
@@ -232,7 +232,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 
 - (IBAction)changeLocationState:(id)sender {
-    NSLog(@"GPS button tapped");
+    NSLog(@"MCMapController - GPS button tapped");
     
     if (![CLLocationManager locationServicesEnabled]) {
         // todo show a message asking the user to enable it
@@ -330,7 +330,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 #pragma mark - MCMapSettingsDelegate
 - (void)setMapType:(NSString *)mapType {
-    NSLog(@"In MCMapViewController handing setting map change");
+    NSLog(@"MCMapController -  handing setting map change");
     
     if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
         [self.mapView setMapType:MKMapTypeStandard];
@@ -343,12 +343,12 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
         [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
     }
     
-    NSLog(@"NSUSerDefaults\n %@", [self.settings dictionaryRepresentation]);
+    NSLog(@"MCMapController - NSUSerDefaults\n %@", [self.settings dictionaryRepresentation]);
 }
 
 
 - (void)updateBasemaps:(NSString *)url serverType:(MCTileServerType) serverType {
-    NSLog(@"MCMapViewController updateBasemaps");
+    NSLog(@"MCMapController - updateBasemaps");
     if (self.userBasemapOverlay != nil) {
         [self.mapView removeOverlay:self.userBasemapOverlay];
     }
@@ -406,17 +406,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 #pragma mark - MCTileHelperDelegate methods
 - (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay withTable:(MCTileTable *)table {
     dispatch_sync(dispatch_get_main_queue(), ^{
-        //[self.mapView addOverlay:tileOverlay];
         [self.mapView insertOverlay:tileOverlay belowOverlay:self.bookmarkOverlay];
-        /*for (id<MKOverlay> overlay in self.mapView.overlays) {
-            if ([overlay isKindOfClass:MKTileOverlay.class]) {
-                [self.mapView insertOverlay:tileOverlay aboveOverlay:overlay];
-                break;
-            } else {
-                [self.mapView insertOverlay:tileOverlay belowOverlay:overlay];
-                break;
-            }
-        }*/
     });
 }
 
@@ -645,12 +635,12 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                 GPKGGeoPackage *geoPacakge;
                 @try {
                     geoPacakge = [self.manager open:database.name];
-                    [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
+                    //[self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
 
                     [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)self.currentZoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter: YES];
 
                 } @catch (NSException *exception) {
-                   NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
+                   NSLog(@"MCMapController - Error reading geopackage %@, error: %@", database, [exception description]);
                 }
             }
         }
@@ -659,11 +649,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
-    NSLog(@"Tapped map point");
-    
-    if (![view isKindOfClass:MKAnnotationView.class] || ![view isKindOfClass:MKMarkerAnnotationView.class]) {
-        return;
-    }
+    NSLog(@"MCMapController - Tapped map point");
     
     if ([view isKindOfClass:MKAnnotationView.class] || [view isKindOfClass:MKMarkerAnnotationView.class]) {
         [self zoomToPointWithOffset:view.annotation.coordinate];
@@ -726,7 +712,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                      [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)zoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter:(BOOL) filter];
                      
                  } @catch (NSException *exception) {
-                    NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
+                    NSLog(@"MCMapController - Error reading geopackage %@, error: %@", database, [exception description]);
                  }
              }
          }
@@ -879,7 +865,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                                 }
                             }
                         } @catch (NSException *e) {
-                            NSLog(@"Problem with features in zoomToActiveBounds: %@", [e description]);
+                            NSLog(@"MCMapController - Problem with features in zoomToActiveBounds: %@", [e description]);
                         } @finally {
                             [geoPackage close];
                         }
@@ -905,7 +891,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                                 self.tilesBoundingBox = tileMatrixSetBoundingBox;
                             }
                         } @catch (NSException *e) {
-                            NSLog(@"Problem with tiles in zoomToActiveBounds%@", [e description]);
+                            NSLog(@"MCMapController - Problem with tiles in zoomToActiveBounds%@", [e description]);
                         } @finally {
                             [geoPackage close];
                         }
@@ -913,7 +899,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                 }
             }
         } @catch (NSException *e) {
-            NSLog(@"Problem zooming to bounds %@", e.reason);
+            NSLog(@"MCMapController - Problem zooming to bounds %@", e.reason);
         } @finally {
             if (geoPackage != nil) {
                 [geoPackage close];
@@ -990,6 +976,19 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 }
 
 
+- (void)addUserTileOverlay:(MKTileOverlay *)tileOverlay {
+    if (self.userTileOverlay != nil) {
+        [self.mapView removeOverlay:self.userTileOverlay];
+    }
+    
+    self.userTileOverlay = tileOverlay;
+    
+    if (self.userTileOverlay != nil) {
+        [self.mapView insertOverlay:self.userTileOverlay atIndex:0];
+    }
+}
+
+
 /**
     Used to remove tile previews after a tile download, or switch off saved tile URLs from the map.
  */
@@ -1008,7 +1007,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 
 -(void) longPressGesture:(UILongPressGestureRecognizer *) longPressGestureRecognizer {
-    NSLog(@"Getting a long press gesture.");
+    NSLog(@"MCMapController - Getting a long press gesture.");
     
     if (!self.boundingBoxMode) {
         CGPoint cgPoint = [longPressGestureRecognizer locationInView:self.mapView];
@@ -1018,7 +1017,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
             UINotificationFeedbackGenerator *feedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
             [feedbackGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
             
-            NSLog(@"Adding a pin");
+            NSLog(@"MCMapController - Adding a pin");
             GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithLocation:point];
             [mapPoint.options setPinTintColor:[UIColor redColor]];
             

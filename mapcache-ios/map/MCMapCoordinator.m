@@ -188,8 +188,16 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 /**
     Used for preview tiles when downloading a map or choosing a saved server as a basemap.
  */
-- (void)addTileOverlay:(NSString *)tileServerURL serverType:(MCTileServerType)serverType {
+- (void)addTileOverlay:(NSString *)tileServerURL serverType:(MCTileServerType)serverType username:(NSString *)username password:(NSString *)password {
     [self.mcMapViewController addUserTilesWithUrl:tileServerURL serverType:serverType];
+    
+    if (serverType == MCTileServerTypeXyz) {
+        MKTileOverlay *tileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileServerURL];
+        [self.mcMapViewController addUserTileOverlay:tileOverlay];
+    } else if (serverType == MCTileServerTypeWms) {
+        WMSTileOverlay *wmsTileOverlay = [[WMSTileOverlay alloc] initWithURL:tileServerURL username:username password:password];
+        [self.mcMapViewController addUserTileOverlay:wmsTileOverlay];
+    }
 }
 
 

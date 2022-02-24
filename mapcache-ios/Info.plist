@@ -53,6 +53,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Attach photos to your pin</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Use Face ID to save your tile server login information</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>To view your position on the map allow MapCache to find your location. </string>
 	<key>NSPhotoLibraryUsageDescription</key>

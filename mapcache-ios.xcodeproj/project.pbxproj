@@ -135,6 +135,9 @@
 		E3E02AD12522A52E00856A4C /* MCTileServerRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E02AD02522A52E00856A4C /* MCTileServerRepository.swift */; };
 		E3E4C435252CF77F0083635F /* MCTileServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E4C434252CF77F0083635F /* MCTileServer.swift */; };
 		E3E9ED6923EA407E004C4530 /* mapcache_iosUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E9ED6823EA407E004C4530 /* mapcache_iosUITests.m */; };
+		E3EFBA2F27AB17A10041DE2A /* MCDownloadStatusCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3EFBA2E27AB17A10041DE2A /* MCDownloadStatusCell.xib */; };
+		E3F5568A279B716800C5E429 /* MCKeychainUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F55689279B716800C5E429 /* MCKeychainUtil.swift */; };
+		E3F5568F279F297700C5E429 /* MCKeychainError.m in Sources */ = {isa = PBXBuildFile; fileRef = E3F5568E279F297700C5E429 /* MCKeychainError.m */; };
 		E3F9A99C2475F52400DFD043 /* MCLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3B7DD4F2475F1EC00215EF5 /* MCLayerViewController.m */; };
 		E3FB856B2134955F002F012E /* NGADrawerCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB85682134955D002F012E /* NGADrawerCoordinator.m */; };
 		E3FB856C2134955F002F012E /* NGADrawerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FB85692134955D002F012E /* NGADrawerViewController.m */; };
@@ -398,6 +401,10 @@
 		E3E9ED6623EA407E004C4530 /* mapcache-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mapcache-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3E9ED6823EA407E004C4530 /* mapcache_iosUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = mapcache_iosUITests.m; sourceTree = "<group>"; };
 		E3E9ED6A23EA407E004C4530 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E3EFBA2E27AB17A10041DE2A /* MCDownloadStatusCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCDownloadStatusCell.xib; sourceTree = "<group>"; };
+		E3F55689279B716800C5E429 /* MCKeychainUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCKeychainUtil.swift; sourceTree = "<group>"; };
+		E3F5568D279F297700C5E429 /* MCKeychainError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCKeychainError.h; sourceTree = "<group>"; };
+		E3F5568E279F297700C5E429 /* MCKeychainError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCKeychainError.m; sourceTree = "<group>"; };
 		E3FB85672134955C002F012E /* NGADrawerCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NGADrawerCoordinator.h; sourceTree = "<group>"; };
 		E3FB85682134955D002F012E /* NGADrawerCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NGADrawerCoordinator.m; sourceTree = "<group>"; };
 		E3FB85692134955D002F012E /* NGADrawerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NGADrawerViewController.m; sourceTree = "<group>"; };
@@ -831,6 +838,7 @@
 				E3D787E7264A2BCD00A32709 /* MCAttachmentsCell.xib */,
 				E3D787F5264F0CE500A32709 /* MCMediaCell.xib */,
 				E3D78804264F390100A32709 /* MCImageCell.xib */,
+				E3EFBA2E27AB17A10041DE2A /* MCDownloadStatusCell.xib */,
 			);
 			path = DisplayCells;
 			sourceTree = "<group>";
@@ -863,6 +871,9 @@
 				E3CF687123D901740005A6EF /* MCTileServerURLManagerViewController.m */,
 				E3CF687823DA6AC40005A6EF /* MCNewTileServerViewController.h */,
 				E3CF687923DA6AC40005A6EF /* MCNewTileServerViewController.m */,
+				E3F55689279B716800C5E429 /* MCKeychainUtil.swift */,
+				E3F5568D279F297700C5E429 /* MCKeychainError.h */,
+				E3F5568E279F297700C5E429 /* MCKeychainError.m */,
 			);
 			path = settings;
 			sourceTree = "<group>";
@@ -1054,6 +1065,7 @@
 				E3A4920D1FA9885B00FFE613 /* MCDownloadGeopackage.xib in Resources */,
 				E35F316221EE7FC2001B720F /* privacypolicy in Resources */,
 				E355935220F4170500FC1288 /* MCGeoPackageOperationsCell.xib in Resources */,
+				E3EFBA2F27AB17A10041DE2A /* MCDownloadStatusCell.xib in Resources */,
 				040136831AF94FB200C92AFC /* Images.xcassets in Resources */,
 				E354DB3322BAD7DA00FFD477 /* MCSwitchCell.xib in Resources */,
 			);
@@ -1131,6 +1143,7 @@
 				E3B7DD502475F1ED00215EF5 /* MCCreateLayerFieldViewController.swift in Sources */,
 				E31269ED2540184300E62361 /* MCTileServerResult.swift in Sources */,
 				043A458B1B7E21E3001B8FC5 /* GPKGSMapPointData.m in Sources */,
+				E3F5568A279B716800C5E429 /* MCKeychainUtil.swift in Sources */,
 				E331C8F0210110B3006EFED1 /* MCTileLayerOperationsCell.m in Sources */,
 				E3FB856F21349B5E002F012E /* MCMapViewController.m in Sources */,
 				E3FB857B2134A9F0002F012E /* MCGeoPackageCell.m in Sources */,
@@ -1218,6 +1231,7 @@
 				E377401D254B4A2E00F67EA8 /* WMSTileOverlay.m in Sources */,
 				E3FCD6B620F42FE5006D972B /* MCGeoPackageOperationsCell.m in Sources */,
 				E358B0442638D11600860F08 /* MCAttachmentsCell.swift in Sources */,
+				E3F5568F279F297700C5E429 /* MCKeychainError.m in Sources */,
 				E3568DCB21498387005FC49C /* MCMapCoordinator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1386,14 +1400,14 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 50;
+				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.0.5;
+				MARKETING_VERSION = 2.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.mapcache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1412,13 +1426,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 50;
+				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.0.5;
+				MARKETING_VERSION = 2.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.mapcache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

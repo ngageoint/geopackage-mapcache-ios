@@ -23,6 +23,8 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic) BOOL urlIsValid;
 @property (nonatomic) BOOL haveScrolled;
+@property (nonatomic) BOOL serverRequiresLogin;
+@property (nonatomic) BOOL credentialsLoadedFromKeychain;
 @property (nonatomic) CGFloat contentOffset;
 @end
 
@@ -45,6 +47,8 @@
     
     self.layerName = nil;
     self.urlIsValid = YES;
+    self.serverRequiresLogin = NO;
+    self.credentialsLoadedFromKeychain = NO;
     
     MCTileServer *tileServer = [[MCTileServer alloc] initWithServerName:@"GEOINT Services OSM"];
     tileServer.url = @"https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png";
@@ -63,7 +67,6 @@
     self.tableView.scrollIndicatorInsets = tabBarInsets;
     self.contentOffset = 0;
     self.haveScrolled = NO;
-    //[self addAndConstrainSubview:self.tableView];
     [self.view addSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
@@ -173,8 +176,26 @@
     return 1;
 }
 
+
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_cellArray count];
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [_cellArray objectAtIndex:indexPath.row];
+    
+    if ([cell isKindOfClass:MCFieldWithTitleCell.class]) {
+        return 105;
+    } else if ([cell isKindOfClass:MCButtonCell.class]) {
+        return 82;
+    } else if ([cell isKindOfClass:MCTitleCell.class]) {
+        return 44;
+    } else if ([cell isKindOfClass:MCDescriptionCell.class]) {
+        return 44;
+    } else {
+        return 300; // empty state cell
+    }
 }
 
 
@@ -225,6 +246,9 @@
                         }
                     });
                 } else if (tileServerResult.failure != nil && error.code == MCUnauthorized) {
+                    self.serverRequiresLogin = YES;
+                    self.tileServer = (MCTileServer *)tileServerResult.success;
+                    
                     NSMutableArray *updatedCellArray = [[NSMutableArray alloc] init];
                     [self.usernameCell useReturnKeyNext];
                     [self.passwordCell useReturnKeyDone];
@@ -237,20 +261,31 @@
                     [updatedCellArray addObject:self.usernameCell];
                     [updatedCellArray addObject:self.passwordCell];
                     [updatedCellArray addObject:self.buttonCell];
-                    [updatedCellArray addObject:self.helpButtonCell];
                     [updatedCellArray addObject:self.spacer];
                     self.cellArray = updatedCellArray;
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.tableView reloadData];
-                        NSLog(@"%@", [NSString stringWithFormat:@"number of sections %ld", (long)self.tableView.numberOfSections]);
-                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.cellArray.count - 1 inSection:0];
-                        [self.buttonCell disableButton];
-                        
-                        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
                         [self.usernameCell.field becomeFirstResponder];
+                        [self.buttonCell disableButton];
+                         NSLog(@"%@", [NSString stringWithFormat:@"number of sections %ld", (long)self.tableView.numberOfSections]);
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:(self.cellArray.count -1) inSection:0];
+                        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
                     });
                     
+                    
+                    MCKeychainError *keychainError = nil;
+                    MCCredentials *credentials = [[MCKeychainUtil shared] readCredentialsWithServer:self.tileServer.url error: &keychainError];
+                    if (keychainError) {
+                        NSLog(@"Problem reading credentials from Keychain %@", [keychainError.userInfo objectForKey:@"errorCode"]);
+                    } else if (credentials) {
+                        [self.usernameCell setFieldText:credentials.username];
+                        [self.passwordCell setFieldText:credentials.password];
+                        [self.passwordCell.field becomeFirstResponder];
+                        [self.passwordCell.field endEditing:YES];
+                        [self.passwordCell.field resignFirstResponder];
+                        self.credentialsLoadedFromKeychain = YES;
+                    }
                 } else if (tileServerResult.failure != nil && error.code != MCNoError) {
                     self.urlIsValid = NO;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -281,6 +316,7 @@
                     [self.buttonCell disableButton];
                     [self.urlCell useErrorAppearance];
                 });
+                
                 [textField resignFirstResponder];
                 return;
             }
@@ -302,22 +338,15 @@
                     }
                 });
             } else if (tileServerResult.failure != nil && error.code == MCUnauthorized) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    //[self.buttonCell setButtonLabel:@"Sign in and continue"];
-                    //[self.helpText.descriptionLabel setText:@"Please sign in to download tiles"];
+                dispatch_async(dispatch_get_main_queue(), ^{;
                     [self.tableView reloadData];
-                    
-                    NSLog(@"%@", [NSString stringWithFormat:@"number of sections %ld", (long)self.tableView.numberOfSections]);
-                    
                     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.cellArray.count - 1 inSection:0];
                     [self.usernameCell useErrorAppearance];
                     [self.passwordCell useErrorAppearance];
                     [self.helpText setDescription:@"Check your username and password"];
-                    
                     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
                     [self.usernameCell.field becomeFirstResponder];
                 });
-                
             } else if (tileServerResult.failure != nil && error.code != MCNoError) {
                 self.urlIsValid = NO;
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -327,7 +356,6 @@
                     [self.urlCell useErrorAppearance];
                 });
             } else {
-                // TODO add TMS support
                 NSLog(@"Bad url");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.buttonCell disableButton];
@@ -335,8 +363,6 @@
                 });
             }
         }];
-    } else if (textField == self.usernameCell.field) {
-        //[self.passwordCell.field becomeFirstResponder];
     } else {
         self.layerName = textField.text;
         BOOL isLayerNameAvailable = [self.delegate isLayerNameAvailable: self.layerName];
@@ -367,18 +393,38 @@
     return YES;
 }
 
+
 #pragma mark - GPKGSButtonCellDelegate methods
 - (void) performButtonAction:(NSString *)action {
     if ([action isEqualToString:@"ContinueToBoundingBox"]) {
-        // TODO: if we have a username and password check the url again
         
-        [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text tileServer: self.tileServer username:self.usernameCell.field.text password:self.passwordCell.field.text andReferenceSystemCode:PROJ_EPSG_WEB_MERCATOR];
+        if (self.serverRequiresLogin && !self.credentialsLoadedFromKeychain) {
+            UIAlertController *saveCredentialsAlert = [UIAlertController alertControllerWithTitle:@"Add to Keychain" message:@"Would you like to save your username and password so you can login with FaceID?" preferredStyle:UIAlertControllerStyleActionSheet];
+            UIAlertAction *yesAction = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self continueToBoundingBox:YES];
+            }];
+            UIAlertAction *noAction = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self continueToBoundingBox:NO];
+            }];
+            
+            [saveCredentialsAlert addAction:yesAction];
+            [saveCredentialsAlert addAction:noAction];
+            [self presentViewController:saveCredentialsAlert animated:YES completion:nil];
+        } else {
+            [self continueToBoundingBox:NO];
+        }
     } else if ([action isEqualToString:@"ShowServers"]) {
         [self.delegate showTileServerList];
     } else {
         [_delegate showURLHelp];
     }
 }
+
+
+- (void) continueToBoundingBox:(BOOL)saveCredentials {
+    [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text tileServer: self.tileServer username:self.usernameCell.field.text password:self.passwordCell.field.text saveCredentials:saveCredentials andReferenceSystemCode:PROJ_EPSG_WEB_MERCATOR];
+}
+
 
 #pragma mark - NGADrawerView methods
 - (void) closeDrawer {

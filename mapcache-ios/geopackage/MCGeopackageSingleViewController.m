@@ -239,6 +239,25 @@
 }
 
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [_cellArray objectAtIndex:indexPath.row];
+    
+    if ([cell isKindOfClass:MCButtonCell.class]) {
+        return 82;
+    } else if ([cell isKindOfClass:MCLayerCell.class]) {
+        return 60;
+    } else if ([cell isKindOfClass:MCHeaderCell.class]) {
+        return 115;
+    } else if ([cell isKindOfClass:MCEmptyStateCell.class]) {
+        return 300;
+    } else if ([cell isKindOfClass:MCSectionTitleCell.class]) {
+        return 44;
+    }
+    
+    return 100;
+}
+
+
 - (UISwipeActionsConfiguration *) tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     MCLayerCell *cell = (MCLayerCell *)[_cellArray objectAtIndex:indexPath.row];
     

@@ -61,5 +61,6 @@ typedef NS_ENUM(NSInteger, MCTileServerType);
 - (void)clearTempPoints;
 - (void)removeMapPoint:(GPKGMapPoint *) mapPoint;
 - (void)addUserTilesWithUrl:(NSString *) tileTemplateURL serverType:(MCTileServerType)serverType;
+- (void)addUserTileOverlay:(MKTileOverlay *)tileOverlay;
 - (void)removeUserTiles;
 @end

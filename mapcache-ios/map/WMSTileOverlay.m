@@ -10,12 +10,24 @@
 
 @interface WMSTileOverlay ()
 @property (nonatomic, strong) NSString *url;
+@property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *password;
 @end
 
 @implementation WMSTileOverlay 
 
 - (id) initWithURL: (NSString *) url {
     self.url = url;
+    self.username = @"";
+    self.password = @"";
+    return [super initWithURLTemplate:self.url];
+}
+
+
+- (id) initWithURL:(NSString *) url username:(NSString *)username password:(NSString *)password {
+    self.url = url;
+    self.username = username;
+    self.password = password;
     return [super initWithURLTemplate:self.url];
 }
 
@@ -70,9 +82,22 @@
     NSURL *url1 = [self URLForTilePath:path];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url1];
     request.HTTPMethod = @"GET";
-    [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        result(data, error);
-    }] resume];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    if (![self.username isEqualToString:@""] && ![self.password isEqualToString:@""]) {
+        NSString *loginString = [NSString stringWithFormat:@"%@:%@", self.username, self.password];
+        NSData *loginData = [loginString dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *base64LoginString =  [loginData base64EncodedStringWithOptions:NSDataBase64Encoding76CharacterLineLength];
+        NSString *authString = [NSString stringWithFormat:@"Basic %@", base64LoginString];
+        [request setValue:authString forHTTPHeaderField:@"Authorization"];
+    }
+    
+    [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            NSLog(@"WMS Tile Request completion handler");
+            result(data, error);
+        }] resume];
 }
 
 @end

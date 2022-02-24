@@ -73,19 +73,15 @@
     MCNoticeAndAttributionViewController *noticeViewController = [[MCNoticeAndAttributionViewController alloc] init];
     noticeViewController.modalPresentationStyle = UIModalPresentationPageSheet;
     [self.settingsViewController presentViewController:noticeViewController animated:YES completion:nil];
-//    noticeViewController.drawerViewDelegate = self.drawerViewDelegate;
-//    [self.drawerViewDelegate pushDrawer:noticeViewController];
 }
 
 
 - (void)showTileURLManager {
     self.originalServerName = nil;
     self.createTileServerView = [[MCNewTileServerViewController alloc] init];
-    //self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
     self.createTileServerView.modalPresentationStyle = UIModalPresentationPageSheet;
     [self.settingsViewController presentViewController:self.createTileServerView animated:YES completion:nil];
     self.createTileServerView.saveTileServerDelegate = self;
-    //[self.drawerViewDelegate pushDrawer:self.createTileServerView];
 }
 
 
@@ -110,11 +106,9 @@
 - (void) showNewTileServerView {
     self.originalServerName = nil;
     self.createTileServerView = [[MCNewTileServerViewController alloc] init];
-    //self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
     self.createTileServerView.saveTileServerDelegate = self;
     self.createTileServerView.modalPresentationStyle = UIModalPresentationPageSheet;
     [self.presentingViewController presentViewController:self.createTileServerView animated:YES completion:nil];
-    //[self.drawerViewDelegate pushDrawer:self.createTileServerView];
 }
 
 
@@ -125,19 +119,20 @@
     
     if (serverUrls != nil) {
         self.createTileServerView = [[MCNewTileServerViewController alloc] init];
-        //self.createTileServerView.drawerViewDelegate = self.drawerViewDelegate;
         self.createTileServerView.saveTileServerDelegate = self;
-        //[self.drawerViewDelegate pushDrawer:self.createTileServerView];
         self.createTileServerView.modalPresentationStyle = UIModalPresentationPageSheet;
-        [self.presentingViewController presentViewController:self.createTileServerView animated:YES completion:nil];
+        [self.settingsViewController presentViewController:self.createTileServerView animated:YES completion:nil];
         [self.createTileServerView setServerName:serverName];
         [self.createTileServerView setServerURL:[serverUrls objectForKey:serverName]];
     }
 }
 
 
-- (void)deleteTileServer:(nonnull NSString *)serverName {
-    [[MCTileServerRepository shared] removeTileServerFromUserDefaultsWithServerName:serverName];
+- (void)deleteTileServer:(nonnull MCTileServer *)tileServer {
+    [[MCTileServerRepository shared] removeTileServerFromUserDefaultsWithServerName:tileServer.serverName];
+    NSError *keychainError = nil;
+    [[MCKeychainUtil shared] deleteCredentialsWithServer:tileServer.url error:&keychainError];
+    // TODO: Handle keychain error
     [self.settingsViewController update];
 }
 
