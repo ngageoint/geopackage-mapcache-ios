@@ -37,6 +37,7 @@ class MCAttachmentsCell: UITableViewCell, UICollectionViewDelegate, UICollection
     
     @objc func setContents(mediaArray:NSArray) {
         self.mediaArray = mediaArray
+        self.collectionView.reloadData()
     }
     
     

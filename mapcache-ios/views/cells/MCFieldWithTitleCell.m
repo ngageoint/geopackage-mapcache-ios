@@ -15,6 +15,7 @@
     [self setBackgroundColor:[UIColor clearColor]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     self.field.layer.cornerRadius = 5.0;
+    self.field.autocapitalizationType = UITextAutocapitalizationTypeSentences;
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8, self.field.frame.size.height)];
     self.field.leftView = paddingView;
     self.field.leftViewMode = UITextFieldViewModeAlways;
@@ -45,6 +46,21 @@
 
 - (void) useSecureTextEntry {
     [self.field setSecureTextEntry:YES];
+}
+
+
+- (void) useSentenceAutocapitalization {
+    self.field.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+}
+
+
+- (void) useTitleAutocapitalization {
+    self.field.autocapitalizationType = UITextAutocapitalizationTypeWords;
+}
+
+
+- (void) useNoAutocapitalization {
+    self.field.autocapitalizationType = UITextAutocapitalizationTypeNone;
 }
 
 

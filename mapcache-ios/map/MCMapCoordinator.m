@@ -74,9 +74,13 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     }
     
     if (basemapTileServer.serverType == MCTileServerTypeXyz) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            [self.mcMapViewController updateBasemaps:basemapTileServer.url serverType:MCTileServerTypeXyz];
-        });
+        @try {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [self.mcMapViewController updateBasemaps:basemapTileServer.url serverType:MCTileServerTypeXyz];
+            });
+        } @catch(NSException *e) {
+            NSLog(@"Tile error");
+        }
     } else if (basemapTileServer.serverType == MCTileServerTypeWms) {
         MCLayer *basemapLayer = [[MCTileServerRepository shared] baseMapLayer];
         
@@ -268,6 +272,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
             } else {
                 _mapPointDataViewController.databaseName = selectedGeoPackage;
                 _mapPointDataViewController.layerName = selectedLayer;
+                _mapPointDataViewController.media = [[NSMutableArray alloc] init];
                 _mapPointDataViewController.mapPointDataDelegate = self;
                 _mapPointDataViewController.showAttachmentDelegate = self;
                 [_mapPointDataViewController reloadWith:newRow mapPoint:mapPoint mode:MCPointViewModeEdit];
@@ -285,6 +290,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
             [_drawerViewDelegate pushDrawer:_mapPointDataViewController];
         } else {
             _mapPointDataViewController.media = [[NSMutableArray alloc] initWithArray: media];
+            _mapPointDataViewController.showAttachmentDelegate = self;
             [_mapPointDataViewController reloadWith:userRow mapPoint:mapPoint mode:MCPointViewModeDisplay];
         }
     }
@@ -365,6 +371,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     if (self.mapPoint != nil) {
         GPKGFeatureRow *newRow = [_repository newRowInTable:_repository.selectedLayerName database:_repository.selectedGeoPackageName mapPoint:self.mapPoint];
         _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:self.mapPoint row:newRow databaseName:_repository.selectedGeoPackageName layerName:_repository.selectedLayerName mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+        _mapPointDataViewController.showAttachmentDelegate = self;
         
         [_mapPointDataViewController pushOntoStack];
     }
@@ -382,6 +389,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
             [MCMediaUtility.shared saveAttachmentsForRow:row media:media databaseName:databaseName];
             NSArray *media = [[MCMediaUtility shared] mediaRelationsForGeoPackageName:databaseName row:row];
             _mapPointDataViewController.media = [[NSMutableArray alloc] initWithArray: media];
+            _mapPointDataViewController.showAttachmentDelegate = self;
         }
         
         [_mcMapViewController setDrawing:NO];

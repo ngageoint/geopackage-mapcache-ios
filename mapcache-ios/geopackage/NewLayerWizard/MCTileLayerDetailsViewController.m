@@ -95,14 +95,15 @@
         [_layerNameCell setFieldText:@""];
     }
     
-    [_layerNameCell.field setReturnKeyType:UIReturnKeyDone]; // TODO look into UIReturnKeyNext
+    /*[_layerNameCell.field setReturnKeyType:UIReturnKeyDone]; // TODO look into UIReturnKeyNext
     [_layerNameCell setPlaceholder:@"Layer Name"];
+    [_layerNameCell useTitleAutocapitalization];
     _layerNameCell.field.delegate = self;
-    [_cellArray addObject:_layerNameCell];
+    [_cellArray addObject:_layerNameCell];*/
     
     _urlCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     [_urlCell setTitleText:@"Tile server URL"];
-
+    [_urlCell useNoAutocapitalization];
     [_urlCell setPlaceholder:self.tileServer.url];
     [_urlCell setFieldText:self.tileServer.url];
     
@@ -124,7 +125,6 @@
     
     _buttonCell = [self.tableView dequeueReusableCellWithIdentifier:@"button"];
     [_buttonCell.button setTitle:@"Next" forState:UIControlStateNormal];
-    [_buttonCell disableButton];
     _buttonCell.delegate = self;
     _buttonCell.action = @"ContinueToBoundingBox";
     [_cellArray addObject:_buttonCell];
@@ -146,7 +146,6 @@
     
     self.spacer = [self.tableView dequeueReusableCellWithIdentifier:@"spacer"];
     [self.spacer useAsSpacer];
-
 }
 
 - (void)update {
@@ -200,6 +199,11 @@
 
 
 #pragma mark- UITextFieldDelegate methods
+- (void) textFieldDidBeginEditing:(UITextField *)textField {
+    [_buttonCell disableButton];
+}
+
+
 - (void) textFieldDidEndEditing:(UITextField *)textField {
     [textField trimWhiteSpace];
     
@@ -239,11 +243,8 @@
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.urlCell useNormalAppearance];
-                        BOOL isLayerNameAvailable = [self.delegate isLayerNameAvailable: self.layerName];
                         [self.helpText.descriptionLabel setText:@""];
-                        if (self.layerName != nil && ![self.layerName isEqualToString:@""] && isLayerNameAvailable) {
-                            [self.buttonCell enableButton];
-                        }
+                        [self.buttonCell enableButton];
                     });
                 } else if (tileServerResult.failure != nil && error.code == MCUnauthorized) {
                     self.serverRequiresLogin = YES;
@@ -331,11 +332,7 @@
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.urlCell useNormalAppearance];
-                    BOOL isLayerNameAvailable = [self.delegate isLayerNameAvailable: self.layerName];
-                    
-                    if (self.layerName != nil && ![self.layerName isEqualToString:@""] && isLayerNameAvailable) {
-                        [self.buttonCell enableButton];
-                    }
+                    [self.buttonCell enableButton];
                 });
             } else if (tileServerResult.failure != nil && error.code == MCUnauthorized) {
                 dispatch_async(dispatch_get_main_queue(), ^{;
@@ -363,25 +360,6 @@
                 });
             }
         }];
-    } else {
-        self.layerName = textField.text;
-        BOOL isLayerNameAvailable = [self.delegate isLayerNameAvailable: self.layerName];
-        
-        if ([_layerNameCell.field.text isEqualToString:@""]) {
-            [self.layerNameCell useErrorAppearance];
-            [_buttonCell disableButton];
-            [_layerNameCell setPlaceholder:@"Please name your layer"];
-        } else if (!isLayerNameAvailable) {
-            [self.layerNameCell useErrorAppearance];
-            [_buttonCell disableButton];
-            [self.helpText.descriptionLabel setText:@"There is already a layer with that name."];
-        } else {
-            [self.layerNameCell useNormalAppearance];
-            
-            if (self.urlIsValid) {
-                [_buttonCell enableButton];
-            }
-        }
     }
     
     [textField resignFirstResponder];
@@ -422,7 +400,7 @@
 
 
 - (void) continueToBoundingBox:(BOOL)saveCredentials {
-    [_delegate tileLayerDetailsCompletionHandlerWithName:_layerNameCell.field.text tileServer: self.tileServer username:self.usernameCell.field.text password:self.passwordCell.field.text saveCredentials:saveCredentials andReferenceSystemCode:PROJ_EPSG_WEB_MERCATOR];
+    [_delegate tileLayerDetailsCompletionHandlerWithTileServer: self.tileServer username:self.usernameCell.field.text password:self.passwordCell.field.text saveCredentials:saveCredentials andReferenceSystemCode:PROJ_EPSG_WEB_MERCATOR];
 }
 
 

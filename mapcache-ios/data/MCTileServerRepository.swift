@@ -290,13 +290,6 @@ import Foundation
         level += 1
         tagStack.append(elementName)
         
-        /*var spaces = ""
-        for _ in 1...level {
-            spaces = spaces + "\t"
-        }
-        
-        print("\(spaces) \(level) \(elementName)")*/
-        
         if elementName == layerKey {
             if (topLevelLayer.title == "") {
                 topLevelLayer = currentLayer
@@ -430,20 +423,37 @@ import Foundation
     
     // Load or refresh the tile server list from UserDefaults.
     @objc func loadUserDefaults() {
+        let savedBasemapServerName = self.userDefaults.string(forKey: MC_USER_BASEMAP_SERVER_NAME)
+        let savedBasemapLayerName = self.userDefaults.string(forKey: MC_USER_BASEMAP_LAYER_NAME)
+        
         if let savedServers = self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) {
             for serverName in savedServers.keys {
                 if let serverURL = savedServers[serverName] {
                     print("\(serverName) \(serverURL)")
-                    var numberOfServersLoaded = 0
                     
                     self.isValidServerURL(urlString: serverURL as! String) { (tileServerResult) in
                         let serverError:MCServerError = tileServerResult.failure as! MCServerError
                         
                         if (serverError.code == MCServerErrorType.MCNoError.rawValue) {
-                            print("valid test URL")
-                            let tileServer = tileServerResult.success as? MCTileServer
-                            tileServer?.serverName = serverName
-                            self.tileServers[serverName] = tileServer
+                            print("MCTileServerRepository:loadUserDefaults - Valid  URL")
+                            if let tileServer = tileServerResult.success as? MCTileServer {
+                                tileServer.serverName = serverName
+                                self.tileServers[serverName] = tileServer
+                                
+                                if tileServer.serverName == savedBasemapServerName {
+                                    self.baseMapServer = tileServer
+                                    
+                                    if tileServer.serverType == MCTileServerType.wms {
+                                        for layer in tileServer.layers {
+                                            if layer.name == savedBasemapLayerName {
+                                                self.baseMapLayer = layer
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                NotificationCenter.default.post(name: Notification.Name(MC_USER_BASEMAP_LOADED_FROM_DEFAULTS), object: nil)
+                            }
                         } else if serverError.code == MCServerErrorType.MCUnauthorized.rawValue {
                             let tileServer = tileServerResult.success as? MCTileServer
                             tileServer?.serverName = serverName
@@ -455,42 +465,10 @@ import Foundation
                             tileServer?.serverType = .error
                             self.tileServers[serverName] = tileServer
                         }
-                        
-                        numberOfServersLoaded += 1
-                        if (numberOfServersLoaded == savedServers.keys.count) {
-                            self.loadBasemapsFromUserDefaults()
-                        }
                     }
                 }
             }
         }
-    }
-    
-    
-    @objc func loadBasemapsFromUserDefaults() {
-        if let savedBasemapServerName = self.userDefaults.string(forKey: MC_USER_BASEMAP_SERVER_NAME) {
-            if self.tileServers.keys.contains(savedBasemapServerName), let server = self.tileServers[savedBasemapServerName] {
-                self.baseMapServer = server
-                
-                if let savedBasemapLayerName = self.userDefaults.string(forKey: MC_USER_BASEMAP_LAYER_NAME) {
-                    for layer in server.layers {
-                        if (layer.name == savedBasemapLayerName) {
-                            self.baseMapLayer = layer
-                            break
-                        }
-                    }
-                } else {
-                    self.baseMapLayer = MCLayer()
-                }
-            } else {
-                self.baseMapServer = MCTileServer()
-            }
-        } else {
-            self.baseMapServer = MCTileServer()
-            self.baseMapLayer = MCLayer()
-        }
-        
-        NotificationCenter.default.post(name: Notification.Name(MC_USER_BASEMAP_LOADED_FROM_DEFAULTS), object: nil)
     }
     
     

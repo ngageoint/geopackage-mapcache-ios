@@ -37,4 +37,7 @@
 - (void) useNormalAppearance;
 - (void) useErrorAppearance;
 - (void) useSecureTextEntry;
+- (void) useSentenceAutocapitalization;
+- (void) useTitleAutocapitalization;
+- (void) useNoAutocapitalization;
 @end

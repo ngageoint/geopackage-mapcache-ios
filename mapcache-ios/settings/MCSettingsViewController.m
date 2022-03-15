@@ -98,7 +98,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     MCTileServerCell *defaultServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileServerCell"];
     [defaultServerCell setContentWithTileServer:defaultServer];
     
-    if (self.basemapTileServer.serverName == defaultServer.serverName) {
+    if ([self.basemapTileServer.serverName isEqualToString:defaultServer.serverName]) {
         [defaultServerCell activeIndicatorOn];
     } else {
         [defaultServerCell activeIndicatorOff];
@@ -113,7 +113,13 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
             MCTileServer *tileServer = [self.savedTileServers objectForKey:serverName];
             MCTileServerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileServerCell"];
             [tileServerCell setContentWithTileServer:tileServer];
-                        
+            
+            if ([self.basemapTileServer.serverName isEqualToString:tileServer.serverName]) {
+                [tileServerCell activeIndicatorOn];
+            } else {
+                [tileServerCell activeIndicatorOff];
+            }
+            
             NSMutableArray *wmsLayers = [[NSMutableArray alloc] init];
             
             if (tileServer.serverType == MCTileServerTypeWms) {
@@ -121,22 +127,18 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 NSString *details = [NSString stringWithFormat:@"%lu %@", (unsigned long)tileServer.layers.count, layerLabel];
                 [tileServerCell setLayersLabelText:details];
                 
-                if ([self.basemapTileServer.serverName isEqualToString:tileServer.serverName]) {
-                    [tileServerCell activeIndicatorOn];
-                } else {
-                    [tileServerCell activeIndicatorOff];
-                }
-                
                 if ([self.expandedServer.serverName isEqualToString:tileServer.serverName]) {
                     for (MCLayer *layer in tileServer.layers) {
-                        MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
-                        [layerCell setContentsWithLayer:layer tileServer:tileServer];
-                        
-                        if (self.basemapTileServer.serverName == tileServer.serverName && self.basemapLayer.name == layer.name) {
-                            [layerCell activeIndicatorOn];
+                        if (![layer.name isEqualToString:@""]) {
+                            MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
+                            [layerCell setContentsWithLayer:layer tileServer:tileServer];
+                            
+                            if ([self.basemapTileServer.serverName isEqualToString: tileServer.serverName] && [self.basemapLayer.name isEqualToString: layer.name]) {
+                                [layerCell activeIndicatorOn];
+                            }
+                            
+                            [wmsLayers addObject:layerCell];
                         }
-                        
-                        [wmsLayers addObject:layerCell];
                     }
                 }
             } else if (tileServer.serverType == MCTileServerTypeAuthRequired) {
@@ -390,6 +392,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 [self.settingsDelegate setUserBasemap:nil layer:nil];
                 self.basemapTileServer = [[MCTileServer alloc] init];
                 self.basemapLayer = [[MCLayer alloc] init];
+                [layerCell activeIndicatorOff];
             }
             
             [layerCell toggleActiveIndicator];

@@ -19,14 +19,14 @@
 @implementation MCSettingsCoordinator 
 
 - (void)start {
-    MCTileServer *basemapTileServer = [[MCTileServerRepository shared] baseMapServer];
+    MCTileServer *basemapTileServer = [MCTileServerRepository shared].baseMapServer;
     self.settingsViewController = [[MCSettingsViewController alloc] init];
     
     if (basemapTileServer != nil) {
         self.settingsViewController.basemapTileServer = basemapTileServer;
         
         if (basemapTileServer.serverType == MCTileServerTypeWms) {
-            MCLayer *basemapLayer = [[MCTileServerRepository shared] baseMapLayer];
+            MCLayer *basemapLayer = [MCTileServerRepository shared].baseMapLayer;
             if (basemapLayer != nil) {
                 self.settingsViewController.basemapLayer = basemapLayer;
             }

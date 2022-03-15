@@ -58,6 +58,7 @@
     
     _nameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     [_nameCell setTitleText:@"Name"];
+    [_nameCell useTitleAutocapitalization];
     [_nameCell setTextFieldDelegate:self];
     [_nameCell useReturnKeyDone];
     [_cellArray addObject:_nameCell];

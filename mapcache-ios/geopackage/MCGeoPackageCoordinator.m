@@ -217,8 +217,7 @@
 
 
 #pragma mark - MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer username:(NSString *)username password:(NSString *)password saveCredentials:(BOOL)saveCredentials andReferenceSystemCode:(int)referenceCode {
-    _tileData.name = name;
+- (void) tileLayerDetailsCompletionHandlerWithTileServer:(MCTileServer *) tileServer username:(NSString *)username password:(NSString *)password saveCredentials:(BOOL)saveCredentials andReferenceSystemCode:(int)referenceCode {
     _tileData.loadTiles.url = tileServer.url;
     _tileData.loadTiles.username = username;
     _tileData.loadTiles.password = password;
@@ -226,8 +225,7 @@
     _tileServer = tileServer;
     
     MCTileServer *serverCheck = [[MCTileServerRepository shared] tileServerForURLWithUrlString:tileServer.url];
-    if ([serverCheck.url isEqualToString:@""]) {
-        NSLog(@"Server not found in repository");
+    if ([serverCheck.serverName isEqualToString:@""]) {
         [[MCTileServerRepository shared] saveToUserDefaultsWithServerName:tileServer.url url:tileServer.url tileServer:tileServer];
     }
     
@@ -329,9 +327,10 @@
 
 
 #pragma mark- MCZoomAndQualityDelegate methods
-- (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
+- (void) zoomAndQualityCompletionHandlerWith:(NSString *)layerName andMinZoom:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom; {
     NSLog(@"In wizard, going to call completion handler");
     
+    _tileData.name = layerName;
     _tileData.loadTiles.generateTiles.minZoom = minZoom;
     _tileData.loadTiles.generateTiles.maxZoom = maxZoom;
     [self createTileLayer:_tileData];

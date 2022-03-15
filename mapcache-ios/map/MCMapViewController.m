@@ -349,20 +349,24 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 - (void)updateBasemaps:(NSString *)url serverType:(MCTileServerType) serverType {
     NSLog(@"MCMapController - updateBasemaps");
-    if (self.userBasemapOverlay != nil) {
-        [self.mapView removeOverlay:self.userBasemapOverlay];
-    }
-    
-    if (url == nil || [url isEqualToString: @""]) {
-        return;
-    }
-    
-    if (serverType == MCTileServerTypeXyz) {
-        self.userBasemapOverlay = [[MKTileOverlay alloc] initWithURLTemplate:url];
-        [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
-    } else if (serverType == MCTileServerTypeWms) {
-        self.userBasemapOverlay = [[WMSTileOverlay alloc] initWithURL:url];
-        [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
+    @try {
+        if (self.userBasemapOverlay != nil) {
+            [self.mapView removeOverlay:self.userBasemapOverlay];
+        }
+        
+        if (url == nil || [url isEqualToString: @""]) {
+            return;
+        }
+        
+        if (serverType == MCTileServerTypeXyz) {
+            self.userBasemapOverlay = [[MKTileOverlay alloc] initWithURLTemplate:url];
+            [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
+        } else if (serverType == MCTileServerTypeWms) {
+            self.userBasemapOverlay = [[WMSTileOverlay alloc] initWithURL:url];
+            [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
+        }
+    } @catch(NSException *e) {
+        NSLog(@"Tile loading problem");
     }
 }
 

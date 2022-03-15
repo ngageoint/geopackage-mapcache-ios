@@ -23,10 +23,9 @@
 @class MCTileServerResult;
 
 @protocol MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer username:(NSString *)username password:(NSString *)password saveCredentials:(BOOL)saveCredentials andReferenceSystemCode:(int)referenceCode;
+- (void) tileLayerDetailsCompletionHandlerWithTileServer:(MCTileServer *) tileServer username:(NSString *)username password:(NSString *)password saveCredentials:(BOOL)saveCredentials andReferenceSystemCode:(int)referenceCode;
 - (void) showURLHelp;
 - (void) showTileServerList;
-- (BOOL) isLayerNameAvailable: (NSString *) layerName;
 @end
 
 @interface MCTileLayerDetailsViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCButtonCellDelegate>

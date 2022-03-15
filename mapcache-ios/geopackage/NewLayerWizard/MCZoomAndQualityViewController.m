@@ -11,6 +11,7 @@
 @interface MCZoomAndQualityViewController ()
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *cellArray;
+@property (nonatomic, strong) MCFieldWithTitleCell *layerNameCell;
 @property (nonatomic, strong) MCZoomCell *zoomCell;
 @property (nonatomic, strong) MCButtonCell *continueButtonCell;
 @property (nonatomic, strong) MCButtonCell *backButtonCell;
@@ -63,6 +64,13 @@
 - (void) initCellArray {
     _cellArray = [[NSMutableArray alloc] init];
     
+    _layerNameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
+    [_layerNameCell setTitleText:@"Offline Map Name"];
+    [_layerNameCell useTitleAutocapitalization];
+    [_layerNameCell useReturnKeyDone];
+    _layerNameCell.field.delegate = self;
+    [_cellArray addObject:_layerNameCell];
+    
     _zoomCell = [self.tableView dequeueReusableCellWithIdentifier:@"zoom"];
     _zoomCell.valueChangedDelegate = self;
     [_cellArray addObject:_zoomCell];
@@ -71,6 +79,7 @@
     [_continueButtonCell.button setTitle:@"Create Tile Layer" forState:UIControlStateNormal];
     _continueButtonCell.delegate = self;
     _continueButtonCell.action = @"continue";
+    [_continueButtonCell disableButton];
     [_cellArray addObject:_continueButtonCell];
     
 //    _downloadDetailsCell = [self.tableView dequeueReusableCellWithIdentifier:@"description"];
@@ -83,12 +92,11 @@
     _backButtonCell.delegate = self;
     _backButtonCell.action = @"back";
     [_cellArray addObject:_backButtonCell];
-    
-    
 }
 
 
 - (void) registerCellTypes {
+    [self.tableView registerNib:[UINib nibWithNibName:@"MCFieldWithTitleCell" bundle:nil] forCellReuseIdentifier:@"fieldWithTitle"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCZoomCell" bundle:nil] forCellReuseIdentifier:@"zoom"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCButtonCell" bundle:nil] forCellReuseIdentifier:@"button"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCDescriptionCell" bundle:nil] forCellReuseIdentifier:@"description"];
@@ -99,6 +107,10 @@
     [super closeDrawer];
     [self.drawerViewDelegate popDrawer];
     [self.zoomAndQualityDelegate cancelZoomAndQuality];
+    
+    if ([_layerNameCell.field isFirstResponder]) {
+        [_layerNameCell.field resignFirstResponder];
+    }
 }
 
 
@@ -118,6 +130,34 @@
 }
 
 
+#pragma mark - UITextFieldDelegate
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    [textField trimWhiteSpace];
+    
+    NSString* layerName = textField.text;
+    BOOL isLayerNameAvailable = [_zoomAndQualityDelegate isLayerNameAvailable: layerName];
+    
+    if ([layerName isEqualToString:@""]) {
+        [self.layerNameCell useErrorAppearance];
+        [_continueButtonCell disableButton];
+        [_layerNameCell setPlaceholder:@"Please name your layer"];
+    } else if (!isLayerNameAvailable) {
+        [self.layerNameCell useErrorAppearance];
+        [_continueButtonCell disableButton];
+        //[self.helpText.descriptionLabel setText:@"There is already a layer with that name."];
+    } else {
+        [self.layerNameCell useNormalAppearance];
+        [_continueButtonCell enableButton];
+    }
+}
+
+
+- (BOOL) textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
+
 #pragma mark - MCZoomCellValueChangedDelegate
 - (void) zoomValuesChanged:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
     //TODO Update to estimate downlaod size.
@@ -131,7 +171,7 @@
     NSLog(@"Button tapped in zoom and format screen");
     
     if ([action isEqualToString:@"continue"]) {
-        [_zoomAndQualityDelegate zoomAndQualityCompletionHandlerWith:_zoomCell.minZoom andMaxZoom:_zoomCell.maxZoom];
+        [_zoomAndQualityDelegate zoomAndQualityCompletionHandlerWith:_layerNameCell.field.text  andMinZoom:_zoomCell.minZoom andMaxZoom:_zoomCell.maxZoom];
     } else {
         [_zoomAndQualityDelegate goBackToBoundingBox];
     }

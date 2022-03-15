@@ -49,14 +49,12 @@
     [titleCell setLabelText:@"Choose your layer"];
     [_cellArray addObject:titleCell];
     
-    /*MCTileServerCell *tileServerCell = [_tableView dequeueReusableCellWithIdentifier:@"tileServerCell"];
-    [tileServerCell setContentWithTileServer:self.tileServer];
-    [_cellArray addObject:tileServerCell];*/
-    
     for (MCLayer *layer in self.tileServer.layers) {
-        MCLayerCell *layerCell = [_tableView dequeueReusableCellWithIdentifier:@"layerCell"];
-        [layerCell setContentsWithLayer:layer tileServer:self.tileServer];
-        [_cellArray addObject:layerCell];
+        if (![layer.name isEqualToString:@""]) {
+            MCLayerCell *layerCell = [_tableView dequeueReusableCellWithIdentifier:@"layerCell"];
+            [layerCell setContentsWithLayer:layer tileServer:self.tileServer];
+            [_cellArray addObject:layerCell];
+        }
     }
 }
 
