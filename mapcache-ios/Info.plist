@@ -24,7 +24,6 @@
 				<string>mil.nga.mapcache.geoPackageUTIHandler.csm</string>
 			</array>
 		</dict>
-		<dict/>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
