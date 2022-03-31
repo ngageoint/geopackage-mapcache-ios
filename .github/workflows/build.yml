@@ -25,3 +25,11 @@ jobs:
         pod install
     - name: Build
       run: xcodebuild -workspace mapcache-ios.xcworkspace -scheme mapcache-ios -allowProvisioningUpdates -configuration AppStoreDistribution archive -archivePath buildArchive/MapCache.xcarchive CODE_SIGNING_ALLOWED=NO
+    - name: mobsfscan
+      uses: MobSF/mobsfscan@0.1.0
+      with:
+        args: '. --sarif --output results.sarif || true'
+    - name: Upload mobsfscan report
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: results.sarif
