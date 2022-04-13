@@ -343,7 +343,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             int updateId = ++self.featureUpdateCountId;
             
             int previousZoom = self.currentZoom;
-            int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
+            int zoom = [GPKGMapUtils currentRoundedZoomWithMapView:self.mapView];
             self.currentZoom = zoom;
             if(zoom != previousZoom){
                 // Zoom level changed, remove all feature shapes except for markers
@@ -2118,7 +2118,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         self.featureOverlayTiles = true;
         
         // Add the feature overlay query
-        GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithBoundedOverlay:overlay andFeatureTiles:featureTiles];
+        GPKGFeatureOverlayQuery *featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithBoundedOverlay:overlay andFeatureTiles:featureTiles];
+        [featureOverlayQuery calculateStylePixelBounds];
         [self.featureOverlayQueries addObject:featureOverlayQuery];
     }
     
@@ -2186,7 +2187,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     
     self.featureOverlayTiles = true;
     
-    GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithBoundedOverlay:overlay andFeatureTiles:featureTiles];
+    GPKGFeatureOverlayQuery *featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithBoundedOverlay:overlay andFeatureTiles:featureTiles];
+    [featureOverlayQuery calculateStylePixelBounds];
     [self.featureOverlayQueries addObject:featureOverlayQuery];
     
     GPKGContentsDao * contentsDao = [geoPackage contentsDao];
