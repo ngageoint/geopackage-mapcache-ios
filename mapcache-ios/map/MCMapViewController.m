@@ -127,7 +127,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     self.zoomIndicatorButton.layer.shadowOpacity = 0.3;
     self.zoomIndicatorButton.layer.shadowRadius = 2;
     self.zoomIndicatorButton.layer.shadowOffset = CGSizeMake(0.0f, 1.0f);
-    int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
+    int zoom = [GPKGMapUtils currentRoundedZoomWithMapView:self.mapView];
     [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", zoom] forState:UIControlStateNormal];
     self.expandedZoomDetails = NO;
     [self.zoomIndicatorButton setHidden:[_settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR]];
@@ -198,9 +198,9 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     [self.mapView setRegion:MKCoordinateRegionMake(point, span) animated:YES];
     
     /*if (self.expandedZoomDetails) {
-        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d",  (int)[GPKGMapUtils currentZoomWithMapView:self.mapView]] forState:UIControlStateNormal];
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d",  [GPKGMapUtils currentRoundedZoomWithMapView:self.mapView]] forState:UIControlStateNormal];
     } else {
-        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d",  (int)[GPKGMapUtils currentZoomWithMapView:self.mapView]] forState:UIControlStateNormal];
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d",  [GPKGMapUtils currentRoundedZoomWithMapView:self.mapView]] forState:UIControlStateNormal];
     }*/
 }
 
@@ -279,7 +279,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 
 - (IBAction)toggleZoomDetails:(id)sender {
-    int zoom = (int)[GPKGMapUtils currentZoomWithMapView:self.mapView];
+    int zoom = [GPKGMapUtils currentRoundedZoomWithMapView:self.mapView];
     
     if (self.expandedZoomDetails) {
         self.expandedZoomDetails = NO;
@@ -583,9 +583,9 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 - (void)mapViewDidChangeVisibleRegion:(MKMapView *)mapView {
     if (self.expandedZoomDetails) {
-        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", (int)[GPKGMapUtils currentZoomWithMapView:mapView]] forState:UIControlStateNormal];
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", [GPKGMapUtils currentRoundedZoomWithMapView:mapView]] forState:UIControlStateNormal];
     } else {
-        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", (int)[GPKGMapUtils currentZoomWithMapView:mapView]] forState:UIControlStateNormal];
+        [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", [GPKGMapUtils currentRoundedZoomWithMapView:mapView]] forState:UIControlStateNormal];
     }
 }
 
@@ -604,7 +604,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     CLLocationCoordinate2D previousCenter = self.currentCenter;
     self.currentCenter = self.mapView.centerCoordinate;
     int previousZoom = self.currentZoom;
-    self.currentZoom = (int)[GPKGMapUtils currentZoomWithMapView:mapView];
+    self.currentZoom = [GPKGMapUtils currentRoundedZoomWithMapView:mapView];
     
     if (self.currentCenter.latitude == previousCenter.latitude && self.currentCenter.longitude == previousCenter.longitude && self.currentZoom == previousZoom) {
         return;

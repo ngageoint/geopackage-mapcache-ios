@@ -97,7 +97,8 @@
         //        self.featureOverlayTiles = true;
         //
         //        // Add the feature overlay query
-        ////        GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithBoundedOverlay:overlay andFeatureTiles:featureTiles];
+        //        GPKGFeatureOverlayQuery * featureOverlayQuery = [[GPKGFeatureOverlayQuery alloc] initWithBoundedOverlay:overlay andFeatureTiles:featureTiles];
+        //        [featureOverlayQuery calculateStylePixelBounds];
         //        [self.featureOverlayQueries addObject:featureOverlayQuery];
         //    }
         
