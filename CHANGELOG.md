@@ -4,6 +4,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## [1.32 - Legacy](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.32) (09-09-2022)
+
+* geopackage-ios version 7.3.0
+
 ## [1.31 - Legacy](https://github.com/ngageoint/geopackage-mapcache-ios/releases/tag/1.31) (05-06-2022)
 
 * geopackage-ios version 7.2.1
