@@ -456,6 +456,14 @@
 	<string>Satellite</string>
 	<key>map_type_hybrid</key>
 	<string>Hybrid</string>
+	<key>grid_type</key>
+	<string>Grid Type</string>
+	<key>grid_type_none</key>
+	<string>None</string>
+	<key>grid_type_gars</key>
+	<string>GARS</string>
+	<key>grid_type_mgrs</key>
+	<string>MGRS</string>
 	<key>map_features_zoom_padding_percentage</key>
 	<integer>10</integer>
 	<key>map_features_zoom_already_visible_percentage</key>

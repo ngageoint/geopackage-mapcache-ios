@@ -16,6 +16,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 @property (nonatomic, strong) NSMutableArray *cellArray;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MCSegmentedControlCell *baseMapSelector;
+@property (nonatomic, strong) MCSegmentedControlCell *gridOverlaySelector;
 @property (nonatomic, strong) MCFieldWithTitleCell *maxFeaturesCell;
 @property (nonatomic, strong) MCSwitchCell *alertSwitchCell;
 @property (nonatomic, strong) MCSwitchCell *zoomSwitchCell;
@@ -73,7 +74,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     
     self.settings = [NSUserDefaults standardUserDefaults];
     _baseMapSelector = [_tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
-    _baseMapSelector.label.text = @"Base Map Type";
+    _baseMapSelector.label.text = [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE];
     _baseMapSelector.delegate = self;
     NSArray *maps = [[NSArray alloc] initWithObjects: [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD],
                      [MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE],
@@ -89,7 +90,24 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
         [_baseMapSelector.segmentedControl setSelectedSegmentIndex:2];
     }
     
-    NSArray *topCells = @[titleCell, _baseMapSelector];
+    _gridOverlaySelector = [_tableView dequeueReusableCellWithIdentifier:@"segmentedControl"];
+    _gridOverlaySelector.label.text = [MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE];
+    _gridOverlaySelector.delegate = self;
+    NSArray *grids = [[NSArray alloc] initWithObjects: [MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_NONE],
+                     [MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_GARS],
+                     [MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_MGRS], nil];
+    [_gridOverlaySelector updateItems:grids];
+    
+    NSString *gridType = [self.settings stringForKey:GPKGS_PROP_GRID_TYPE];
+    if (gridType == nil || [gridType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_NONE]]) {
+        [_gridOverlaySelector.segmentedControl setSelectedSegmentIndex:0];
+    } else if ([gridType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_GARS]]) {
+        [_gridOverlaySelector.segmentedControl setSelectedSegmentIndex:1];
+    } else {
+        [_gridOverlaySelector.segmentedControl setSelectedSegmentIndex:2];
+    }
+    
+    NSArray *topCells = @[titleCell, _baseMapSelector, _gridOverlaySelector];
     [_cellArray addObject:topCells];
     
     MCTileServer *defaultServer = [[MCTileServer alloc] initWithServerName:@"GEOINT Services OSM"];

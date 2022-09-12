@@ -8,6 +8,8 @@
 
 #import "MCMapViewController.h"
 #import "mapcache_ios-Swift.h"
+#import "gars_ios-Swift.h"
+#import "mgrs_ios-Swift.h"
 
 @interface MCMapViewController ()
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
@@ -61,6 +63,7 @@
 @property (nonatomic, strong) MKTileOverlay *userTileOverlay;
 @property (nonatomic, strong) MKTileOverlay *bookmarkOverlay;
 @property (nonatomic, strong) MKTileOverlay *userBasemapOverlay;
+@property (nonatomic, strong) MKTileOverlay *gridOverlay;
 @end
 
 
@@ -152,7 +155,6 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     [self.mapView addOverlay:_bookmarkOverlay];
 }
 
-
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -169,6 +171,16 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     } else {
         
     }
+    
+    NSString *gridType = [self.settings stringForKey:GPKGS_PROP_GRID_TYPE];
+    if ([gridType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_GARS]]) {
+        _gridOverlay = [[GARSTileOverlay alloc] init];
+        [self.mapView addOverlay:_gridOverlay];
+    } else if ([gridType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_MGRS]]) {
+        _gridOverlay = [[MGRSTileOverlay alloc] init];
+        [self.mapView addOverlay:_gridOverlay];
+    }
+    
 }
 
 
@@ -332,9 +344,29 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_SATELLITE]]) {
         [self.mapView setMapType:MKMapTypeSatellite];
         [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
-    } else {
+    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_HYBRID]]) {
         [self.mapView setMapType:MKMapTypeHybrid];
         [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
+    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_NONE]]) {
+        if (_gridOverlay != nil) {
+            [self.mapView removeOverlay:_gridOverlay];
+            _gridOverlay = nil;
+        }
+        [self.settings setObject:mapType forKey:GPKGS_PROP_GRID_TYPE];
+    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_GARS]]) {
+        if (_gridOverlay != nil) {
+            [self.mapView removeOverlay:_gridOverlay];
+        }
+        _gridOverlay = [[GARSTileOverlay alloc] init];
+        [self.mapView addOverlay:_gridOverlay];
+        [self.settings setObject:mapType forKey:GPKGS_PROP_GRID_TYPE];
+    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_MGRS]]) {
+        if (_gridOverlay != nil) {
+            [self.mapView removeOverlay:_gridOverlay];
+        }
+        _gridOverlay = [[MGRSTileOverlay alloc] init];
+        [self.mapView addOverlay:_gridOverlay];
+        [self.settings setObject:mapType forKey:GPKGS_PROP_GRID_TYPE];
     }
     
     NSLog(@"NSUSerDefaults\n %@", [self.settings dictionaryRepresentation]);
