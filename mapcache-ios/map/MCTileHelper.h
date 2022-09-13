@@ -11,6 +11,7 @@
 #import "MCTileTable.h"
 #import "GPKGGeoPackageManager.h"
 #import "GPKGGeoPackageFactory.h"
+#import "GPKGGeoPackageOverlay.h"
 #import "GPKGTileBoundingBoxUtils.h"
 #import "GPKGTileTableScaling.h"
 #import "MCTileTable.h"
