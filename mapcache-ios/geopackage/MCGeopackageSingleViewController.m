@@ -35,6 +35,7 @@
     self.tableView.dataSource = self;
     self.tableView.estimatedRowHeight = 141.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.backgroundColor = [UIColor clearColor];
     self.contentOffset = 0;
     
     [self registerCellTypes];
@@ -206,7 +207,9 @@
 
 #pragma mark - TableView delegate methods
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    return [_cellArray objectAtIndex:indexPath.row];
+    UITableViewCell *tableViewCell = [_cellArray objectAtIndex:indexPath.row];
+    [tableViewCell layoutIfNeeded];
+    return tableViewCell;
 }
 
 
@@ -233,6 +236,25 @@
         layerCell = (MCLayerCell *) cellObject;
         [_delegate showLayerDetails:layerCell.table];
     }
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [_cellArray objectAtIndex:indexPath.row];
+    
+    if ([cell isKindOfClass:MCButtonCell.class]) {
+        return 82;
+    } else if ([cell isKindOfClass:MCLayerCell.class]) {
+        return 60;
+    } else if ([cell isKindOfClass:MCHeaderCell.class]) {
+        return 115;
+    } else if ([cell isKindOfClass:MCEmptyStateCell.class]) {
+        return 300;
+    } else if ([cell isKindOfClass:MCSectionTitleCell.class]) {
+        return 44;
+    }
+    
+    return 100;
 }
 
 

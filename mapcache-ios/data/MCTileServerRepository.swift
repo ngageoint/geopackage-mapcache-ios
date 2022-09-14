@@ -9,7 +9,7 @@
 import Foundation
 
 
-@objc class MCTileServerRepository: NSObject, XMLParserDelegate {
+@objc class MCTileServerRepository: NSObject, XMLParserDelegate, URLSessionDelegate {
     @objc static let shared = MCTileServerRepository()
     
     private override init() {
@@ -54,6 +54,8 @@ import Foundation
     var level = 0
     var tagStack: [String] = []
     var layerTitleStack: [String] = []
+    var username = ""
+    var password = ""
     
     
     @objc func tileServerForURL(urlString: String) -> MCTileServer {
@@ -67,6 +69,11 @@ import Foundation
     
     
     @objc func isValidServerURL(urlString: String, completion: @escaping (MCTileServerResult) -> Void) {
+        self.isValidServerURL(urlString: urlString, username: "", password: "", completion: completion)
+    }
+    
+    
+    @objc func isValidServerURL(urlString: String, username:String, password:String, completion: @escaping (MCTileServerResult) -> Void) {
         var tryXYZ = false;
         var tryWMS = false;
         var editedURLString = urlString
@@ -74,7 +81,6 @@ import Foundation
         tileServer.url = urlString;
         
         if (urlString.contains("{z}") && urlString.contains("{y}") && urlString.contains("{x}")) {
-            
             editedURLString.replaceSubrange(editedURLString.range(of: "{x}")!, with: "0")
             editedURLString.replaceSubrange(editedURLString.range(of: "{y}")!, with: "0")
             editedURLString.replaceSubrange(editedURLString.range(of: "{z}")!, with: "0")
@@ -118,7 +124,7 @@ import Foundation
             }.resume()
             
         } else if (tryWMS) {
-            self.getCapabilites(url: urlString, completion: completion)
+            self.getCapabilites(url: urlString, username: username, password: password, completion: completion)
         } else {
             tileServer.serverType = .error
             let error:MCServerError = MCServerError.init(domain: "MCTileServerRepository", code: MCServerErrorType.MCURLInvalid.rawValue, userInfo: ["message" : "Invalid URL"])
@@ -128,8 +134,18 @@ import Foundation
 
     
     @objc public func getCapabilites(url:String, completion: @escaping (MCTileServerResult) -> Void) {
+        self.getCapabilites(url: url, username: "", password: "", completion: completion)
+    }
+    
+    
+    @objc public func getCapabilites(url:String, username:String, password:String, completion: @escaping (MCTileServerResult) -> Void) {
+        self.username = username
+        self.password = password
+        
+        let tileServer = MCTileServer.init(serverName: self.urlString)
+        tileServer.url = url
+        
         guard let wmsURL:URL = URL.init(string: url) else {
-            let tileServer = MCTileServer.init(serverName: urlString)
             tileServer.serverType = .error
             let result = MCTileServerResult.init(tileServer, self.generateError(message: "Invalid URL", errorType: MCServerErrorType.MCURLInvalid))
             
@@ -138,7 +154,6 @@ import Foundation
         }
        
         if wmsURL.host == nil || wmsURL.scheme == nil {
-            let tileServer = MCTileServer.init(serverName: urlString)
             tileServer.serverType = .error
             let result = MCTileServerResult.init(tileServer, self.generateError(message: "Invalid URL", errorType: MCServerErrorType.MCURLInvalid))
             
@@ -146,9 +161,15 @@ import Foundation
             return
         }
         
-        let baseURL:String = wmsURL.scheme! + "://" + wmsURL.host! + wmsURL.path
-        let tileServer = MCTileServer.init(serverName: self.urlString)
-        self.layers = []
+        var baseURL:String = wmsURL.scheme! + "://" + wmsURL.host!
+        
+        if let port = wmsURL.port {
+            baseURL = baseURL + ":\(port)"
+        }
+        
+        if wmsURL.path != "" {
+            baseURL = baseURL + wmsURL.path
+        }
         
         var builtURL = URLComponents(string: baseURL)
         builtURL?.queryItems = [
@@ -157,7 +178,41 @@ import Foundation
             URLQueryItem(name: "version", value: "1.3.0")
         ]
         
-        let task = URLSession.shared.dataTask(with: (builtURL?.url)!) { data, response, error in
+        let builtURLString = builtURL!.string!
+        tileServer.builtURL = builtURLString
+        self.layers = []
+        
+        let sessionConfig = URLSessionConfiguration.default
+        var urlRequest = URLRequest.init(url: (builtURL?.url)!)
+        urlRequest.httpMethod = "GET"
+        
+        if username != "" && password != "" {
+            let loginString = String(format: "%@:%@", username, password)
+            let loginData = loginString.data(using: String.Encoding.utf8)!
+            let base64LoginString = loginData.base64EncodedString()
+            sessionConfig.httpAdditionalHeaders = ["Authorization":"Basic \(base64LoginString)"]
+        }
+        
+        let session = URLSession(configuration: sessionConfig, delegate: self, delegateQueue: .main)
+        let task = session.dataTask(with: urlRequest) { data, response, error in
+            if let error = error {
+                print("Connection Error \(error.localizedDescription)")
+                completion(MCTileServerResult.init(tileServer, self.generateError(message: error.localizedDescription, errorType: .MCNoError)))
+            }
+            
+            if let urlResponse = response as? HTTPURLResponse {
+                if urlResponse.statusCode == 401 {
+                    completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Login to download tiles", errorType: .MCUnauthorized)))
+                    return
+                } else if urlResponse.statusCode != 200 {
+                    completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Server error", errorType: .MCTileServerParseError)))
+                    return
+                } else {
+                    
+                }
+            }
+            
+            
             guard let data = data, error == nil else {
                 completion(MCTileServerResult.init(tileServer, self.generateError(message: error?.localizedDescription ?? "Server error", errorType: .MCTileServerParseError)))
                 return
@@ -177,7 +232,7 @@ import Foundation
                 }
                 
                 tileServer.serverType = .wms
-                tileServer.url = (builtURL?.string)!
+                tileServer.builtURL = (builtURL?.string)!
                 tileServer.layers = self.layers
                 self.layers = []
                 
@@ -208,13 +263,20 @@ import Foundation
                     URLQueryItem(name: "version", value: "1.3.0"),
                     URLQueryItem(name: "width", value: "256"),
                     URLQueryItem(name: "height", value: "256"),
-                    URLQueryItem(name: "crs", value: layer.crs),
+                    URLQueryItem(name: "crs", value: "3857"),
                     URLQueryItem(name: "bbox", value: "{minLon},{minLat},{maxLon},{maxLat}")
                 ]
                 
                 print(components.url!.absoluteString)
             }
         }
+    }
+    
+    
+    // MARK: URLSessionDelegate
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        //let credentials = URLCredential(user: self.username, password: self.password, persistence: .forSession)
+        completionHandler(.useCredential, URLCredential())
     }
     
     
@@ -227,13 +289,6 @@ import Foundation
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         level += 1
         tagStack.append(elementName)
-        
-        /*var spaces = ""
-        for _ in 1...level {
-            spaces = spaces + "\t"
-        }
-        
-        print("\(spaces) \(level) \(elementName)")*/
         
         if elementName == layerKey {
             if (topLevelLayer.title == "") {
@@ -267,8 +322,8 @@ import Foundation
             
             currentLayer = MCLayer()
         } else if dictionaryKeys.contains(elementName) {
-            if elementName == "CRS" && currentValue == "EPSG:3857" {
-                currentLayer.crs = currentValue
+            if elementName == "CRS" {
+                currentLayer.crs = "EPSG:3857"
             } else if elementName ==  "Title" {
                 if (tagStack.count > 2 && tagStack[tagStack.count - 2] == "Layer"){
                     print("topLevelLayer.title: \(self.topLevelLayer.title) currentValue: \(currentValue)")
@@ -368,19 +423,41 @@ import Foundation
     
     // Load or refresh the tile server list from UserDefaults.
     @objc func loadUserDefaults() {
+        let savedBasemapServerName = self.userDefaults.string(forKey: MC_USER_BASEMAP_SERVER_NAME)
+        let savedBasemapLayerName = self.userDefaults.string(forKey: MC_USER_BASEMAP_LAYER_NAME)
+        
         if let savedServers = self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) {
             for serverName in savedServers.keys {
                 if let serverURL = savedServers[serverName] {
                     print("\(serverName) \(serverURL)")
-                    var numberOfServersLoaded = 0
                     
                     self.isValidServerURL(urlString: serverURL as! String) { (tileServerResult) in
                         let serverError:MCServerError = tileServerResult.failure as! MCServerError
                         
                         if (serverError.code == MCServerErrorType.MCNoError.rawValue) {
-                            print("valid test URL")
+                            print("MCTileServerRepository:loadUserDefaults - Valid  URL")
+                            if let tileServer = tileServerResult.success as? MCTileServer {
+                                tileServer.serverName = serverName
+                                self.tileServers[serverName] = tileServer
+                                
+                                if tileServer.serverName == savedBasemapServerName {
+                                    self.baseMapServer = tileServer
+                                    
+                                    if tileServer.serverType == MCTileServerType.wms {
+                                        for layer in tileServer.layers {
+                                            if layer.name == savedBasemapLayerName {
+                                                self.baseMapLayer = layer
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                NotificationCenter.default.post(name: Notification.Name(MC_USER_BASEMAP_LOADED_FROM_DEFAULTS), object: nil)
+                            }
+                        } else if serverError.code == MCServerErrorType.MCUnauthorized.rawValue {
                             let tileServer = tileServerResult.success as? MCTileServer
                             tileServer?.serverName = serverName
+                            tileServer?.serverType = .authRequired
                             self.tileServers[serverName] = tileServer
                         } else {
                             let tileServer = tileServerResult.success as? MCTileServer
@@ -388,42 +465,10 @@ import Foundation
                             tileServer?.serverType = .error
                             self.tileServers[serverName] = tileServer
                         }
-                        
-                        numberOfServersLoaded += 1
-                        if (numberOfServersLoaded == savedServers.keys.count) {
-                            self.loadBasemapsFromUserDefaults()
-                        }
                     }
                 }
             }
         }
-    }
-    
-    
-    @objc func loadBasemapsFromUserDefaults() {
-        if let savedBasemapServerName = self.userDefaults.string(forKey: MC_USER_BASEMAP_SERVER_NAME) {
-            if self.tileServers.keys.contains(savedBasemapServerName), let server = self.tileServers[savedBasemapServerName] {
-                self.baseMapServer = server
-                
-                if let savedBasemapLayerName = self.userDefaults.string(forKey: MC_USER_BASEMAP_LAYER_NAME) {
-                    for layer in server.layers {
-                        if (layer.name == savedBasemapLayerName) {
-                            self.baseMapLayer = layer
-                            break
-                        }
-                    }
-                } else {
-                    self.baseMapLayer = MCLayer()
-                }
-            } else {
-                self.baseMapServer = MCTileServer()
-            }
-        } else {
-            self.baseMapServer = MCTileServer()
-            self.baseMapLayer = MCLayer()
-        }
-        
-        NotificationCenter.default.post(name: Notification.Name(MC_USER_BASEMAP_LOADED_FROM_DEFAULTS), object: nil)
     }
     
     

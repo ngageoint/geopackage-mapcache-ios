@@ -68,6 +68,7 @@
     self.tableView.estimatedRowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
     UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
@@ -149,10 +150,10 @@
         NSString *idColumnName = [_row idColumnName]; // the Primary Key column name
         NSString *geometryColumnName = [(GPKGFeatureRow*)_row geometryColumnName];
         
-        if (![columnName isEqualToString:idColumnName] && ![columnName isEqualToString:geometryColumnName]) {
+        if (![columnName isEqualToString:idColumnName] && ![columnName isEqualToString:geometryColumnName] && ![columnName isEqualToString:@"_feature_id"]) {
             MCKeyValueDisplayCell *displayCell = [self.tableView dequeueReusableCellWithIdentifier:@"keyValue"];
             
-            if (_row.columns.columns[i].dataType == GPKG_DT_TEXT) {
+            if (dataType == GPKG_DT_TEXT) {
                 if (!_row.values[i] || [_row.values[i] isKindOfClass:NSNull.class] || [_row.values[i] isEqualToString:@""]) {
                     [displayCell setValueLabelText:@"none"];
                 } else {
@@ -254,9 +255,7 @@
         [addFieldsButtonCell setAction:@"addFields"];
         [addFieldsButtonCell setButtonLabel:@"Add fields"];
         [_cellArray addObject:addFieldsButtonCell];
-    }
-    
-    if (_row) {
+    } else if (_row.columnCount > 2) {
         NSString *idColumnName = [_row idColumnName]; // the Primary Key column name
         NSString *geometryColumnName = [(GPKGFeatureRow*)_row geometryColumnName];
         
@@ -264,16 +263,18 @@
             NSString *columnName = _row.columnNames[i];
             enum GPKGDataType dataType = _row.columns.columns[i].dataType;
             
-            if (![columnName isEqualToString:idColumnName] && ![columnName isEqualToString:@"id"] && ![columnName isEqualToString:geometryColumnName]) {
+            if (![columnName isEqualToString:idColumnName] && ![columnName isEqualToString:@"_feature_id"] && ![columnName isEqualToString:geometryColumnName]) {
                 MCFieldWithTitleCell *fieldWithTitle = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
                 [fieldWithTitle setTitleText:columnName];
                 fieldWithTitle.columnName = columnName;
                 fieldWithTitle.dataType = dataType;
-                [fieldWithTitle setTextFielDelegate:self];
+                [fieldWithTitle setTextFieldDelegate:self];
                 
-                if (_row.columns.columns[i].dataType == GPKG_DT_TEXT) {
+                if (dataType == GPKG_DT_TEXT) {
                     if (![_row.values[i] isKindOfClass:NSNull.class]) {
                         [fieldWithTitle setFieldText:_row.values[i]];
+                    } else {
+                        [fieldWithTitle setFieldText:@""];
                     }
                     
                     [fieldWithTitle useReturnKeyDone];
@@ -282,6 +283,10 @@
                     if (![_row.values[i] isKindOfClass:NSNull.class] && _row.values[i] != nil) {
                         if ([_row.values[i] respondsToSelector:@selector(stringValue)]) {
                             [fieldWithTitle setFieldText:[_row.values[i] stringValue]];
+                        } else if ([_row.values[i] isKindOfClass:NSString.class]) {
+                            [fieldWithTitle setFieldText:_row.values[i]];
+                        } else {
+                            [fieldWithTitle setFieldText:@""];
                         }
                     }
                     [fieldWithTitle setupNumericalKeyboard];
@@ -377,6 +382,15 @@
 - (void) textFieldDidBeginEditing:(UITextField *)textField {
     UITableViewCell *cell = (UITableViewCell *)[textField superview];
     [_tableView scrollToRowAtIndexPath:[_tableView indexPathForCell:cell] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    
+    if ([cell isKindOfClass:MCFieldWithTitleCell.class]) {
+        MCFieldWithTitleCell *fieldWithTitle = (MCFieldWithTitleCell *)cell;
+        
+        if (fieldWithTitle.dataType == GPKG_DT_TEXT) {
+            [textField setKeyboardType:UIKeyboardTypeDefault];
+            [fieldWithTitle useReturnKeyDone];
+        }
+    }
 }
 
 

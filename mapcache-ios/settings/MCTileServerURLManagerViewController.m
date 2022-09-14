@@ -34,6 +34,7 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    self.tableView.backgroundColor = [UIColor colorNamed:@"ngaBackgroundColor"];
     [self registerCellTypes];
     [self initCellArray];
     
@@ -45,8 +46,8 @@
     self.tableView.contentInset = tabBarInsets;
     self.tableView.scrollIndicatorInsets = tabBarInsets;
     [self.view addSubview:self.tableView];
-    [self addDragHandle];
-    [self addCloseButton];
+//    [self addDragHandle];
+//    [self addCloseButton];
     self.selectMode = NO;
 }
 
@@ -94,6 +95,12 @@
             MCTileServerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"server"];
             [tileServerCell setContentWithTileServer:tileServer];
             [tileServerCell activeIndicatorOff];
+            
+            if (tileServer.serverType == MCTileServerTypeAuthRequired) {
+                [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:MC_PROP_ICON_TILE_SERVER_LOGIN]]];
+                [tileServerCell setLayersLabelText:@"Tap to login"];
+            }
+            
             [self.cellArray addObject:tileServerCell];
         }
     }
@@ -112,6 +119,27 @@
 - (void) update {
     [self initCellArray];
     [self.tableView reloadData];
+}
+
+
+- (void)addAndConstrainSubview:(UIView *) view {
+    [self.view addSubview:view];
+    
+    NSLayoutConstraint *left = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
+    NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+    NSLayoutConstraint *right = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0];
+    NSLayoutConstraint *bottom = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    
+    
+    [[view.topAnchor constraintEqualToAnchor:self.view.topAnchor] setActive:YES];
+    [[view.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor] setActive:YES];
+    [[view.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor] setActive:YES];
+    [[view.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor] setActive:YES];
+    view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    
+    view.frame = self.view.frame;
+    
+    [self.view addConstraints:@[left, top, right, bottom]];
 }
 
 
@@ -135,8 +163,12 @@
     
     if (self.selectMode && [[_cellArray objectAtIndex:indexPath.row] isKindOfClass: MCTileServerCell.class]) {
         MCTileServerCell *cell = [self.cellArray objectAtIndex:indexPath.row];
-        [self.selectServerDelegate selectTileServer:cell.tileServer];
-        [self.drawerViewDelegate popDrawer];
+        MCTileServer *tileServer = cell.tileServer;
+        
+        if (tileServer.serverType == MCTileServerTypeWms || tileServer.serverType == MCTileServerTypeXyz || tileServer.serverType == MCTileServerTypeAuthRequired) {
+            [self.selectServerDelegate selectTileServer:tileServer];
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
     }
 }
 
@@ -184,9 +216,9 @@
 
 
 #pragma mark - NGADrawerView methods
-- (void) closeDrawer {
-    [self.drawerViewDelegate popDrawer];
-}
+//- (void) closeDrawer {
+//    [self.drawerViewDelegate popDrawer];
+//}
 
 
 #pragma mark - GPKGSButtonCellDelegate methods

@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface WMSTileOverlay : MKTileOverlay
 
 - (id) initWithURL: (NSString *) url;
+- (id) initWithURL:(NSString *) url username:(NSString *)username password:(NSString *)password;
 
 @end
 

@@ -29,9 +29,15 @@
 - (void) setTitleText:(NSString *) titleText;
 - (void) setPlaceholder:(NSString *) placeholder;
 - (void) setFieldText:(NSString *) text;
-- (void) setTextFielDelegate: (id<UITextFieldDelegate>)delegate;
+- (void) setTextFieldDelegate: (id<UITextFieldDelegate>)delegate;
 - (void) useReturnKeyDone;
+- (void) useReturnKeyNext;
+- (void) clearButtonMode;
 - (void) setupNumericalKeyboard;
 - (void) useNormalAppearance;
 - (void) useErrorAppearance;
+- (void) useSecureTextEntry;
+- (void) useSentenceAutocapitalization;
+- (void) useTitleAutocapitalization;
+- (void) useNoAutocapitalization;
 @end

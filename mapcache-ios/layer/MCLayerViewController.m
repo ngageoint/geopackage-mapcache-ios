@@ -33,6 +33,7 @@
     self.tableView.dataSource = self;
     self.tableView.estimatedRowHeight = 141.0;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.backgroundColor = [UIColor clearColor];
     
     [self registerCellTypes];
     [self initCellArray];

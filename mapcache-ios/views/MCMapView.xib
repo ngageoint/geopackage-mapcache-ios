@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,7 +30,7 @@
                 </mapView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9k9-7k-Tsz">
                     <rect key="frame" x="322" y="16" width="45" height="45"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" name="ngaBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="45" id="fqk-22-yRr"/>
                         <constraint firstAttribute="height" constant="45" id="sn6-1m-kR0"/>
@@ -43,7 +44,7 @@
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kgz-Xo-TlV">
                     <rect key="frame" x="322" y="62" width="45" height="45"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" name="ngaBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="45" id="Wkn-1r-Y16"/>
                         <constraint firstAttribute="width" constant="45" id="kMT-84-zBR"/>
@@ -55,41 +56,39 @@
                         <action selector="changeLocationState:" destination="-1" eventType="touchUpInside" id="bji-z2-Qxa"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lmp-sw-3cO">
-                    <rect key="frame" x="8" y="16" width="45" height="45"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <button opaque="NO" alpha="0.65000000000000002" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lmp-sw-3cO">
+                    <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="45" id="iCy-HY-rlX"/>
-                        <constraint firstAttribute="width" constant="45" id="m44-sE-e7v"/>
+                        <constraint firstAttribute="height" constant="30" id="iCy-HY-rlX"/>
+                        <constraint firstAttribute="width" constant="30" id="m44-sE-e7v"/>
                     </constraints>
                     <state key="normal">
                         <color key="titleColor" red="0.1019607843" green="0.64705882349999999" blue="0.67843137249999996" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                            <integer key="value" value="8"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="toggleZoomDetails:" destination="-1" eventType="touchUpInside" id="4Bs-3N-AHS"/>
                     </connections>
                 </button>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="lmp-sw-3cO" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="2eU-zB-oUU"/>
+                <constraint firstItem="lmp-sw-3cO" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="2eU-zB-oUU"/>
                 <constraint firstItem="9k9-7k-Tsz" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="7NI-aA-0x1"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Kgz-Xo-TlV" secondAttribute="trailing" constant="8" id="Dqk-wm-cPh"/>
                 <constraint firstItem="Kgz-Xo-TlV" firstAttribute="top" secondItem="9k9-7k-Tsz" secondAttribute="bottom" constant="1" id="ItX-5Y-B2x"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="9k9-7k-Tsz" secondAttribute="trailing" constant="8" id="NvC-mE-gSm"/>
-                <constraint firstItem="lmp-sw-3cO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="jP1-MM-iEU"/>
+                <constraint firstItem="lmp-sw-3cO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="jP1-MM-iEU"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="24.5" y="51.5"/>
         </view>
     </objects>
     <resources>
         <image name="GPS" width="36" height="36"/>
         <image name="Info" width="36" height="36"/>
+        <namedColor name="ngaBackgroundColor">
+            <color red="0.95294117647058818" green="0.96078431372549022" blue="0.96470588235294119" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

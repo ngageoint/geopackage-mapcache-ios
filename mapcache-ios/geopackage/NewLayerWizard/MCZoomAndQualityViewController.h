@@ -17,12 +17,13 @@
 
 
 @protocol MCZoomAndQualityDelegate
-- (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom;
+- (void) zoomAndQualityCompletionHandlerWith:(NSString *)layerName andMinZoom:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom;
 - (void) goBackToBoundingBox;
 - (void) cancelZoomAndQuality;
 - (NSString *) updateTileDownloadSizeEstimateWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom;
+- (BOOL) isLayerNameAvailable: (NSString *) layerName;
 @end
 
-@interface MCZoomAndQualityViewController : NGADrawerViewController <MCButtonCellDelegate, MCZoomCellValueChangedDelegate>
+@interface MCZoomAndQualityViewController : NGADrawerViewController <MCButtonCellDelegate, MCZoomCellValueChangedDelegate, UITextFieldDelegate>
 @property (weak, nonatomic) id<MCZoomAndQualityDelegate> zoomAndQualityDelegate;
 @end

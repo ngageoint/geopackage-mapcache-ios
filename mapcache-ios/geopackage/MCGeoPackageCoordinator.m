@@ -217,11 +217,26 @@
 
 
 #pragma mark - MCTileLayerDetailsDelegate
-- (void) tileLayerDetailsCompletionHandlerWithName:(NSString *)name tileServer:(MCTileServer *) tileServer andReferenceSystemCode:(int)referenceCode {
-    _tileData.name = name;
+- (void) tileLayerDetailsCompletionHandlerWithTileServer:(MCTileServer *) tileServer username:(NSString *)username password:(NSString *)password saveCredentials:(BOOL)saveCredentials andReferenceSystemCode:(int)referenceCode {
     _tileData.loadTiles.url = tileServer.url;
+    _tileData.loadTiles.username = username;
+    _tileData.loadTiles.password = password;
     _tileData.loadTiles.epsg = referenceCode;
     _tileServer = tileServer;
+    
+    MCTileServer *serverCheck = [[MCTileServerRepository shared] tileServerForURLWithUrlString:tileServer.url];
+    if ([serverCheck.serverName isEqualToString:@""]) {
+        [[MCTileServerRepository shared] saveToUserDefaultsWithServerName:tileServer.url url:tileServer.url tileServer:tileServer];
+    }
+    
+    if (saveCredentials) {
+        NSError *keychainError = nil;
+        [[MCKeychainUtil shared] addCredentialsWithServer:tileServer.url username:username password:password error: &keychainError];
+        
+        if (keychainError) {
+            NSLog(@"Problem writing credentials to Keychain %@", [keychainError.userInfo objectForKey:@"errorCode"]);
+        }
+    }
     
     [_drawerDelegate popDrawerAndHide];
     self.boundingBoxGuideViewController = [[MCBoundingBoxGuideView alloc] initWithTileServer:_tileServer boundingBoxDelegate:self];
@@ -230,17 +245,20 @@
 
 
 - (void) showURLHelp {
-    MCTileServerHelpViewController *tileHelpViewController = [[MCTileServerHelpViewController alloc] initAsFullView:YES];
-    tileHelpViewController.drawerViewDelegate = _drawerDelegate;
-    [tileHelpViewController.drawerViewDelegate pushDrawer:tileHelpViewController];
+    MCTileServerHelpViewController *tileHelpViewController = [[MCTileServerHelpViewController alloc] init];
+//    tileHelpViewController.drawerViewDelegate = _drawerDelegate;
+//    [tileHelpViewController.drawerViewDelegate pushDrawer:tileHelpViewController];
+    tileHelpViewController.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self.tileDetailsController presentViewController:tileHelpViewController animated:YES completion:nil];
+    
 }
 
 
 - (void) showTileServerList {
     MCSettingsCoordinator *settingsCoordinator = [[MCSettingsCoordinator alloc] init];
     [self.childCoordinators addObject:settingsCoordinator];
+    settingsCoordinator.presentingViewController = _geoPackageViewController;
     settingsCoordinator.selectServerDelegate = self;
-    settingsCoordinator.drawerViewDelegate = self.drawerDelegate;
     [settingsCoordinator startForServerSelection];
 }
 
@@ -259,7 +277,8 @@
 #pragma mark MCLayerSelectDelegate methods
 - (void)didSelectLayer:(NSInteger)layerIndex {
     self.selectedLayerIndex = layerIndex;
-    [self.mapDelegate addTileOverlay: [_tileServer urlForLayerWithIndex:layerIndex boundingBoxTemplate:NO] serverType:_tileServer.serverType];
+    [self.mapDelegate addTileOverlay: [_tileServer urlForLayerWithIndex:layerIndex boundingBoxTemplate:NO] serverType:_tileServer.serverType username:_tileData.loadTiles.username password:_tileData
+    .loadTiles.password];
 }
 
 
@@ -308,9 +327,10 @@
 
 
 #pragma mark- MCZoomAndQualityDelegate methods
-- (void) zoomAndQualityCompletionHandlerWith:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom {
+- (void) zoomAndQualityCompletionHandlerWith:(NSString *)layerName andMinZoom:(NSNumber *) minZoom andMaxZoom:(NSNumber *) maxZoom; {
     NSLog(@"In wizard, going to call completion handler");
     
+    _tileData.name = layerName;
     _tileData.loadTiles.generateTiles.minZoom = minZoom;
     _tileData.loadTiles.generateTiles.maxZoom = maxZoom;
     [self createTileLayer:_tileData];
@@ -374,6 +394,8 @@
                andDatabase:_database.name
                   andTable:tileData.name
                     andUrl:serverURL
+                andUsername: tileData.loadTiles.username
+                andPassword: tileData.loadTiles.password
                 andMinZoom:[tileData.loadTiles.generateTiles.minZoom intValue]
                 andMaxZoom:[tileData.loadTiles.generateTiles.maxZoom intValue]
          andCompressFormat:GPKG_CF_NONE // TODO: let user set this

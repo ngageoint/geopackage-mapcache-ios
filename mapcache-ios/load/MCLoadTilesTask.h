@@ -34,6 +34,26 @@
                       andCode: (NSString *) code
                      andLabel: (NSString *) label;
 
+
++(void) loadTilesWithCallback: (NSObject<GPKGSLoadTilesProtocol> *) callback
+                  andDatabase: (NSString *) database
+                     andTable: (NSString *) tableName
+                       andUrl: (NSString *) tileUrl
+                  andUsername: (NSString *) username
+                  andPassword: (NSString *) password
+                   andMinZoom: (int) minZoom
+                   andMaxZoom: (int) maxZoom
+            andCompressFormat: (enum GPKGCompressFormat) compressFormat
+           andCompressQuality: (int) compressQuality
+             andCompressScale: (int) compressScale
+                  andXyzTiles: (BOOL) xyzTiles
+               andBoundingBox: (GPKGBoundingBox *) boundingBox
+               andTileScaling: (GPKGTileScaling *) scaling
+                 andAuthority: (NSString *) authority
+                      andCode: (NSString *) code
+                     andLabel: (NSString *) label;
+
+
 +(void) loadTilesWithCallback: (NSObject<GPKGSLoadTilesProtocol> *) callback
                 andGeoPackage: (GPKGGeoPackage *) geoPackage
                      andTable: (NSString *) tableName

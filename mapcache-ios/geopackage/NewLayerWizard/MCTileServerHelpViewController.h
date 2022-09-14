@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MCTileServerHelpViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, MCButtonCellDelegate>
+@interface MCTileServerHelpViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MCButtonCellDelegate>
 
 @end
 

@@ -33,7 +33,7 @@
 
 
 - (void) usePrimaryColors {
-    [self.button setBackgroundColor: [MCColorUtil getAccent]];
+    [self.button setBackgroundColor: [UIColor colorNamed:@"ngaButtonColor"]];
     self.button.clipsToBounds = YES;
     [self.button setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
 }
@@ -42,7 +42,7 @@
 - (void) useSecondaryColors {
     [self.button setBackgroundColor:[UIColor clearColor]];
     self.button.clipsToBounds = YES;
-    [self.button setTitleColor: [UIColor colorWithRed:15.3/255.0 green:187.5/255.0 blue:186.15/255.0 alpha:1.0] forState:UIControlStateNormal];
+    [self.button setTitleColor: [UIColor colorNamed:@"ngaButtonColor"] forState:UIControlStateNormal];
 }
 
 
@@ -62,13 +62,13 @@
 
 - (void) enableButton {
     _button.userInteractionEnabled = YES;
-    [_button setBackgroundColor: [MCColorUtil getAccent]];
+    [_button setBackgroundColor: [UIColor colorNamed:@"ngaButtonColor"]];
 }
 
 
 - (void) disableButton {
     _button.userInteractionEnabled = NO;
-    [_button setBackgroundColor: [MCColorUtil getMediumGrey]];
+    [_button setBackgroundColor: [UIColor colorNamed:@"ngaDisabledButtonColor"]];
 }
 
 @end

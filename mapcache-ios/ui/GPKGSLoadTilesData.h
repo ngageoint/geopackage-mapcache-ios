@@ -12,6 +12,8 @@
 @interface GPKGSLoadTilesData : NSObject
 
 @property (nonatomic, strong) NSString * url;
+@property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *password;
 @property (nonatomic) int epsg;
 @property (nonatomic, strong) GPKGSGenerateTilesData * generateTiles;
 

@@ -50,6 +50,13 @@
 }
 
 
+- (void)viewDidAppear:(BOOL)animated {
+    if (self.tileServer.serverType == MCTileServerTypeWms) {
+        [self.delegate showLayerSelectView];
+    }
+}
+
+
 - (IBAction)continue:(id)sender {
     [self.delegate boundingBoxCompletionHandler:self.boundingBox];
 }

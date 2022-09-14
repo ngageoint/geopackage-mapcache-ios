@@ -10,7 +10,7 @@
 #import <WebKit/WebKit.h>
 
 
-@interface MCNoticeAndAttributionViewController : NGADrawerViewController <WKNavigationDelegate>
+@interface MCNoticeAndAttributionViewController : UIViewController <WKNavigationDelegate>
 
 @end
 

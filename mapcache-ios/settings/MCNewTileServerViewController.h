@@ -12,6 +12,7 @@
 #import "MCTextViewCell.h"
 #import "MCButtonCell.h"
 #import "MCDescriptionCell.h"
+#import "MCEmptyStateCell.h"
 #import "MCUtils.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -21,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface MCNewTileServerViewController : NGADrawerViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCButtonCellDelegate, MCTextViewCellDelegate>
+@interface MCNewTileServerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, MCButtonCellDelegate, MCTextViewCellDelegate>
 @property (nonatomic, strong) id<MCSaveTileServerDelegate>saveTileServerDelegate;
 - (void) setServerName:(NSString *) serverName;
 - (void) setServerURL:(NSString *) serverURL;

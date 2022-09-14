@@ -14,6 +14,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.visibilityStatusIndicator.image = [UIImage imageNamed:@"allLayersOn"];
+    self.backgroundColor = [UIColor colorNamed:@"ngaBackgroundColor"];
     self.layersExpanded = NO;
     // Initialization code
 }
@@ -27,7 +28,13 @@
 - (void)setContentWithTileServer:(MCTileServer *)tileServer {
     self.tileServer = tileServer;
     [self.nameLabel setText:self.tileServer.serverName];
-    [self.urlLabel setText:self.tileServer.url];
+    
+    if ([self.tileServer.serverName isEqualToString:self.tileServer.url]) {
+        [self.urlLabel setText:@""];
+    } else {
+        [self.urlLabel setText:self.tileServer.url];
+    }
+    
     [self.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:GPKGS_PROP_ICON_TILE_SERVER]]];
     
     if (self.tileServer.serverType == MCTileServerTypeXyz) {

@@ -32,6 +32,7 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    self.tableView.backgroundColor = [UIColor clearColor];
     [self registerCellTypes];
     [self initCellArray];
     
@@ -57,7 +58,8 @@
     
     _nameCell = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     [_nameCell setTitleText:@"Name"];
-    [_nameCell setTextFielDelegate:self];
+    [_nameCell useTitleAutocapitalization];
+    [_nameCell setTextFieldDelegate:self];
     [_nameCell useReturnKeyDone];
     [_cellArray addObject:_nameCell];
     

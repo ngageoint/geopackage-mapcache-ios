@@ -22,7 +22,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 @property (nonatomic, strong) MCSwitchCell *zoomSwitchCell;
 @property (nonatomic, strong) NSUserDefaults *settings;
 @property (nonatomic) BOOL haveScrolled;
-@property (nonatomic, strong) NSDictionary *savedTileServers;
+@property (nonatomic, strong) NSMutableDictionary *savedTileServers;
 @property (nonatomic, strong) MCTileServer *expandedServer;
 @end
 
@@ -40,14 +40,16 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     self.tableView.estimatedRowHeight = 390.0;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
-    self.savedTileServers = [[MCTileServerRepository shared] getTileServers];
+    self.tableView.backgroundColor = [UIColor colorNamed:@"ngaBackgroundColor"];
+    self.savedTileServers = [[NSMutableDictionary alloc] initWithDictionary: [[MCTileServerRepository shared] getTileServers]];
     [self registerCellTypes];
     [self initCellArray];
     [self addAndConstrainSubview:self.tableView];
-    
-    [self addDragHandle];
-    [self addCloseButton];
-    
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [_mapSettingsDelegate settingsCompletionHandler];
 }
 
 
@@ -59,9 +61,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 
 
 - (void) closeDrawer {
-    [super closeDrawer];
     [_mapSettingsDelegate settingsCompletionHandler];
-    [self.drawerViewDelegate popDrawer];
 }
 
 
@@ -116,7 +116,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     MCTileServerCell *defaultServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileServerCell"];
     [defaultServerCell setContentWithTileServer:defaultServer];
     
-    if (self.basemapTileServer.serverName == defaultServer.serverName) {
+    if ([self.basemapTileServer.serverName isEqualToString:defaultServer.serverName]) {
         [defaultServerCell activeIndicatorOn];
     } else {
         [defaultServerCell activeIndicatorOff];
@@ -131,7 +131,13 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
             MCTileServer *tileServer = [self.savedTileServers objectForKey:serverName];
             MCTileServerCell *tileServerCell = [self.tableView dequeueReusableCellWithIdentifier:@"tileServerCell"];
             [tileServerCell setContentWithTileServer:tileServer];
-                        
+            
+            if ([self.basemapTileServer.serverName isEqualToString:tileServer.serverName]) {
+                [tileServerCell activeIndicatorOn];
+            } else {
+                [tileServerCell activeIndicatorOff];
+            }
+            
             NSMutableArray *wmsLayers = [[NSMutableArray alloc] init];
             
             if (tileServer.serverType == MCTileServerTypeWms) {
@@ -139,27 +145,25 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 NSString *details = [NSString stringWithFormat:@"%lu %@", (unsigned long)tileServer.layers.count, layerLabel];
                 [tileServerCell setLayersLabelText:details];
                 
-                if ([self.basemapTileServer.serverName isEqualToString:tileServer.serverName]) {
-                    [tileServerCell activeIndicatorOn];
-                } else {
-                    [tileServerCell activeIndicatorOff];
-                }
-                
                 if ([self.expandedServer.serverName isEqualToString:tileServer.serverName]) {
                     for (MCLayer *layer in tileServer.layers) {
-                        MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
-                        [layerCell setContentsWithLayer:layer tileServer:tileServer];
-                        
-                        if (self.basemapTileServer.serverName == tileServer.serverName && self.basemapLayer.name == layer.name) {
-                            [layerCell activeIndicatorOn];
+                        if (![layer.name isEqualToString:@""]) {
+                            MCLayerCell *layerCell = [self.tableView dequeueReusableCellWithIdentifier:@"layerCell"];
+                            [layerCell setContentsWithLayer:layer tileServer:tileServer];
+                            
+                            if ([self.basemapTileServer.serverName isEqualToString: tileServer.serverName] && [self.basemapLayer.name isEqualToString: layer.name]) {
+                                [layerCell activeIndicatorOn];
+                            }
+                            
+                            [wmsLayers addObject:layerCell];
                         }
-                        
-                        [wmsLayers addObject:layerCell];
                     }
                 }
-            }
-            
-            if (tileServer.serverType == MCTileServerTypeError) {
+            } else if (tileServer.serverType == MCTileServerTypeAuthRequired) {
+                [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:MC_PROP_ICON_TILE_SERVER_LOGIN]]];
+                [tileServerCell setLayersLabelText:@"Tap to login"];
+                [tileServerCell activeIndicatorOff];
+            } else if (tileServer.serverType == MCTileServerTypeError) {
                 [tileServerCell.icon setImage:[UIImage imageNamed:[MCProperties getValueOfProperty:MC_PROP_ICON_TILE_SERVER_ERROR]]];
                 [tileServerCell setLayersLabelText:@"Unable to reach server"];
                 [tileServerCell activeIndicatorOff];
@@ -189,7 +193,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
         maxFeatures = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_MAX_FEATURES_DEFAULT] intValue];
     }
     _maxFeaturesCell.field.text = [NSString stringWithFormat:@"%d", maxFeatures];
-    [_maxFeaturesCell setTextFielDelegate:self];
+    [_maxFeaturesCell setTextFieldDelegate:self];
     [_maxFeaturesCell setupNumericalKeyboard];
     [bottomCells addObject:_maxFeaturesCell];
     
@@ -238,6 +242,27 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 }
 
 
+- (void)addAndConstrainSubview:(UIView *) view {
+    [self.view addSubview:view];
+    
+    NSLayoutConstraint *left = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
+    NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+    NSLayoutConstraint *right = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0];
+    NSLayoutConstraint *bottom = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    
+    
+    [[view.topAnchor constraintEqualToAnchor:self.view.topAnchor] setActive:YES];
+    [[view.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor] setActive:YES];
+    [[view.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor] setActive:YES];
+    [[view.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor] setActive:YES];
+    view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    
+    view.frame = self.view.frame;
+    
+    [self.view addConstraints:@[left, top, right, bottom]];
+}
+
+
 #pragma mark - TableView delegate methods
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     return [[_cellArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
@@ -278,27 +303,56 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 [self initCellArray];
                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
             }
+        } else if (tappedServer.serverType == MCTileServerTypeAuthRequired) {
+            NSError *keychainError = nil;
+            MCCredentials *credentials = [[MCKeychainUtil shared] readCredentialsWithServer:tappedServer.url error:&keychainError];
+            
+            if (keychainError) {
+                NSLog(@"Problem reading credentials from Keychain %@", [keychainError.userInfo objectForKey:@"errorCode"]);
+                NSNumber *errorCode = [keychainError.userInfo objectForKey:@"errorCode"];
+                if (errorCode == [NSNumber numberWithInt:-25300]) {
+                    NSLog(@"Item not found error");
+                    
+                    UIAlertController *loginAlert = [UIAlertController alertControllerWithTitle:@"Sign in to continue" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *signInAction = [UIAlertAction actionWithTitle:@"Sign In" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        NSLog(@"Alert closed");
+                        // TODO: grab credentials and do some things
+                    }];
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {}];
+                    [loginAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                                            textField.placeholder = @"Username";
+                    }];
+                    [loginAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                                            textField.placeholder = @"Password";
+                                            textField.secureTextEntry = YES;
+                    }];
+                    [loginAlert addAction:signInAction];
+                    [loginAlert addAction:cancelAction];
+                    [self presentViewController:loginAlert animated:YES completion:nil];
+                }
+                
+            } else {
+                [[MCTileServerRepository shared] isValidServerURLWithUrlString:tappedServer.url username:credentials.username password:credentials.password completion:^(MCTileServerResult *tileServerResult) {
+                    if (tileServerResult == nil) {
+                        NSLog(@"Problem with URL");
+                    }
+                    
+                    MCServerError *error = (MCServerError *)tileServerResult.failure;
+                    MCTileServer *tileServer = tileServerResult.success;
+                    MCTileServerType serverType = tileServer.serverType;
+                    tileServer.serverName = tappedServer.serverName;
+                    
+                    if (serverType == MCTileServerTypeXyz || serverType == MCTileServerTypeWms) {
+                        [self.savedTileServers setValue:tileServer forKey:tileServer.url];
+                    }
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self initCellArray];
+                        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+                    });
+                }];
+            }
         }
-    }
-}
-
-
-// Override this method to make the drawer and the scrollview play nice
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (self.haveScrolled) {
-        [self rollUpPanGesture:scrollView.panGestureRecognizer withScrollView:scrollView];
-    }
-}
-
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    self.haveScrolled = YES;
-    
-    if (!self.isFullView) {
-        scrollView.scrollEnabled = NO;
-        scrollView.scrollEnabled = YES;
-    } else {
-        scrollView.scrollEnabled = YES;
     }
 }
 
@@ -356,6 +410,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 [self.settingsDelegate setUserBasemap:nil layer:nil];
                 self.basemapTileServer = [[MCTileServer alloc] init];
                 self.basemapLayer = [[MCLayer alloc] init];
+                [layerCell activeIndicatorOff];
             }
             
             [layerCell toggleActiveIndicator];
@@ -418,7 +473,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         MCTileServerCell *cell = [cells objectAtIndex:indexPath.row];
-        [self.settingsDelegate deleteTileServer: cell.tileServer.serverName];
+        [self.settingsDelegate deleteTileServer: cell.tileServer];
         completionHandler(YES);
     }];
     

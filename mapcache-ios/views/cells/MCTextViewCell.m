@@ -15,11 +15,6 @@
     
     self.textView.delegate = self;
     
-    UIColor *borderColor = [UIColor colorWithRed:204.0/255.0 green:204.0/255.0 blue:204.0/255.0 alpha:1.0];
-    self.textView.layer.borderColor = borderColor.CGColor;
-    self.textView.layer.borderWidth = 1.0;
-    self.textView.layer.cornerRadius = 5.0;
-    
     [self setBackgroundColor:[UIColor clearColor]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 }
@@ -82,10 +77,7 @@
 
 
 - (void) useNormalAppearance {
-    UIColor *borderColor = [UIColor colorWithRed:204.0/255.0 green:204.0/255.0 blue:204.0/255.0 alpha:1.0];
-    self.textView.layer.borderColor = borderColor.CGColor;
-    self.textView.layer.borderWidth = 1.0;
-    self.textView.layer.cornerRadius = 5.0;
+    self.textView.layer.borderColor = [[UIColor clearColor] CGColor];
 }
 
 

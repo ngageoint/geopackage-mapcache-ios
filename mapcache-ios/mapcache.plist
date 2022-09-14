@@ -20,6 +20,8 @@
 	<string>TileServer</string>
 	<key>icon_tile_server_error</key>
 	<string>TileServerError</string>
+	<key>icon_tile_server_login</key>
+	<string>TileServerLogin</string>
 	<key>icon_paint</key>
 	<string>paint</string>
 	<key>icon_up</key>

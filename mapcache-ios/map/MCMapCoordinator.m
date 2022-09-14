@@ -74,9 +74,13 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     }
     
     if (basemapTileServer.serverType == MCTileServerTypeXyz) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            [self.mcMapViewController updateBasemaps:basemapTileServer.url serverType:MCTileServerTypeXyz];
-        });
+        @try {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [self.mcMapViewController updateBasemaps:basemapTileServer.url serverType:MCTileServerTypeXyz];
+            });
+        } @catch(NSException *e) {
+            NSLog(@"Tile error");
+        }
     } else if (basemapTileServer.serverType == MCTileServerTypeWms) {
         MCLayer *basemapLayer = [[MCTileServerRepository shared] baseMapLayer];
         
@@ -156,7 +160,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 - (void) setupTileBoundingBoxGuide:(UIView *) boudingBoxGuideView tileUrl:(NSString *)tileUrl serverType:(MCTileServerType) serverType {
     self.boundingBoxGuideView = boudingBoxGuideView;
     self.boundingBoxGuideView.alpha = 0.0;
-    [self.mcMapViewController.view addSubview:self.boundingBoxGuideView];
+    [self.mcMapViewController.view insertSubview:self.boundingBoxGuideView belowSubview:self.mcMapViewController.zoomIndicatorButton];
     
     [UIView animateWithDuration:0.35 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         self.boundingBoxGuideView.alpha = 1.0;
@@ -188,8 +192,16 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 /**
     Used for preview tiles when downloading a map or choosing a saved server as a basemap.
  */
-- (void)addTileOverlay:(NSString *)tileServerURL serverType:(MCTileServerType)serverType {
+- (void)addTileOverlay:(NSString *)tileServerURL serverType:(MCTileServerType)serverType username:(NSString *)username password:(NSString *)password {
     [self.mcMapViewController addUserTilesWithUrl:tileServerURL serverType:serverType];
+    
+    if (serverType == MCTileServerTypeXyz) {
+        MKTileOverlay *tileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileServerURL];
+        [self.mcMapViewController addUserTileOverlay:tileOverlay];
+    } else if (serverType == MCTileServerTypeWms) {
+        WMSTileOverlay *wmsTileOverlay = [[WMSTileOverlay alloc] initWithURL:tileServerURL username:username password:password];
+        [self.mcMapViewController addUserTileOverlay:wmsTileOverlay];
+    }
 }
 
 
@@ -205,6 +217,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 - (void)showMapInfoDrawer {
     MCSettingsCoordinator *settingsCoordinator = [[MCSettingsCoordinator alloc] init];
     [self.childCoordinators addObject:settingsCoordinator];
+    settingsCoordinator.presentingViewController = self.mcMapViewController;
     settingsCoordinator.drawerViewDelegate = _drawerViewDelegate;
     settingsCoordinator.settingsDelegate = _mcMapViewController;
     [settingsCoordinator start];
@@ -220,7 +233,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 
 /**
-    A map point was pressed, Query the GeoPackage's feature table for that row and show the details view. By default there are two columns, id and geom. If threre are additional columns they will be shown in this view.
+    A map point was pressed, Query the GeoPackage's feature table for that row and show the details view. By default there are two columns, id and geom. If there are additional columns they will be shown in this view.
     If the drawer was already displaying data from another point, pass the data to the drawer and it will reload and update.
  */
 - (void)showDetailsForAnnotation:(GPKGMapPoint *)mapPoint {
@@ -259,6 +272,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
             } else {
                 _mapPointDataViewController.databaseName = selectedGeoPackage;
                 _mapPointDataViewController.layerName = selectedLayer;
+                _mapPointDataViewController.media = [[NSMutableArray alloc] init];
                 _mapPointDataViewController.mapPointDataDelegate = self;
                 _mapPointDataViewController.showAttachmentDelegate = self;
                 [_mapPointDataViewController reloadWith:newRow mapPoint:mapPoint mode:MCPointViewModeEdit];
@@ -276,6 +290,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
             [_drawerViewDelegate pushDrawer:_mapPointDataViewController];
         } else {
             _mapPointDataViewController.media = [[NSMutableArray alloc] initWithArray: media];
+            _mapPointDataViewController.showAttachmentDelegate = self;
             [_mapPointDataViewController reloadWith:userRow mapPoint:mapPoint mode:MCPointViewModeDisplay];
         }
     }
@@ -356,6 +371,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     if (self.mapPoint != nil) {
         GPKGFeatureRow *newRow = [_repository newRowInTable:_repository.selectedLayerName database:_repository.selectedGeoPackageName mapPoint:self.mapPoint];
         _mapPointDataViewController = [[MCMapPointDataViewController alloc] initWithMapPoint:self.mapPoint row:newRow databaseName:_repository.selectedGeoPackageName layerName:_repository.selectedLayerName mode:MCPointViewModeEdit asFullView:YES drawerDelegate:_drawerViewDelegate pointDataDelegate:self];
+        _mapPointDataViewController.showAttachmentDelegate = self;
         
         [_mapPointDataViewController pushOntoStack];
     }
@@ -373,6 +389,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
             [MCMediaUtility.shared saveAttachmentsForRow:row media:media databaseName:databaseName];
             NSArray *media = [[MCMediaUtility shared] mediaRelationsForGeoPackageName:databaseName row:row];
             _mapPointDataViewController.media = [[NSMutableArray alloc] initWithArray: media];
+            _mapPointDataViewController.showAttachmentDelegate = self;
         }
         
         [_mcMapViewController setDrawing:NO];

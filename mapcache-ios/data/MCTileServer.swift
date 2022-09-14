@@ -9,7 +9,7 @@
 import Foundation
 
 @objc enum MCTileServerType: Int {
-    case xyz, wms, tms, error
+    case xyz, wms, tms, error, authRequired
 }
 
 
@@ -60,8 +60,10 @@ import Foundation
     
     @objc var serverName: String = ""
     @objc var url: String = ""
+    @objc var builtURL: String = ""
     @objc var layers: [MCLayer] = []
     @objc var serverType: MCTileServerType = .error
+    @objc var requiresLogin = false
     
     
     override init() {

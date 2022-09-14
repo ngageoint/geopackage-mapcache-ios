@@ -87,7 +87,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     _childCoordinators = [[NSMutableArray alloc] init];
-    
+
     self.mapView.delegate = self;
     self.mapView.showsCompass = NO;
     UIScreen *screen = [UIScreen mainScreen];
@@ -105,7 +105,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     [self.active setModified:YES];
     self.tileHelper = [[MCTileHelper alloc] initWithTileHelperDelegate:self];
     self.featureHelper = [[MCFeatureHelper alloc] initWithFeatureHelperDelegate:self];
-    
+
     self.locationDecimalFormatter = [[NSNumberFormatter alloc] init];
     self.locationDecimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     self.locationDecimalFormatter.maximumFractionDigits = 4;
@@ -117,37 +117,37 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     self.ignoreRegionChange = YES;
     self.currentZoom = -1;
     self.currentCenter = self.mapView.centerCoordinate;
-    
+
     self.infoButton.layer.shadowColor = [UIColor blackColor].CGColor;
     self.infoButton.layer.shadowOpacity = 0.3;
     self.infoButton.layer.shadowRadius = 2;
     self.infoButton.layer.shadowOffset = CGSizeMake(0.0f, -1.0f);
     self.infoButton.layer.cornerRadius = 8;
     self.infoButton.layer.maskedCorners = UIRectCornerTopLeft | UIRectCornerTopRight;
-    
+
     self.locationButton.layer.shadowColor = [UIColor blackColor].CGColor;
     self.locationButton.layer.shadowOpacity = 0.3;
     self.locationButton.layer.shadowRadius = 2;
     self.locationButton.layer.shadowOffset = CGSizeMake(0.0f, 1.0f);
     self.locationButton.layer.cornerRadius = 8;
     self.locationButton.layer.maskedCorners = UIRectCornerBottomLeft | UIRectCornerBottomRight;
-    
-    self.zoomIndicatorButton.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.zoomIndicatorButton.layer.shadowOpacity = 0.3;
-    self.zoomIndicatorButton.layer.shadowRadius = 2;
-    self.zoomIndicatorButton.layer.shadowOffset = CGSizeMake(0.0f, 1.0f);
+
+
+    self.zoomIndicatorButton.backgroundColor = [UIColor clearColor];
     int zoom = [GPKGMapUtils currentRoundedZoomWithMapView:self.mapView];
     [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", zoom] forState:UIControlStateNormal];
+    self.zoomIndicatorButton.layer.cornerRadius = 8;
+    self.zoomIndicatorButton.layer.maskedCorners = UIRectCornerTopRight | UIRectCornerBottomRight;
     self.expandedZoomDetails = NO;
     [self.zoomIndicatorButton setHidden:[_settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR]];
-    
+
     [self.view setNeedsLayout];
-    
+
     self.boundingBoxMode = NO;
     [_mapView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget: self action:@selector(longPressGesture:)]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableBoundingBoxMode) name:@"drawBoundingBox" object:nil];
     self.tempMapPoints = [[NSMutableArray alloc] init];
-    
+
     NSString *mapType = [self.settings stringForKey:GPKGS_PROP_MAP_TYPE];
     if (mapType == nil || [mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
         [self.mapView setMapType:MKMapTypeStandard];
@@ -156,35 +156,35 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     } else {
         [self.mapView setMapType:MKMapTypeHybrid];
     }
-    
+
     self.bookmarkOverlay = [[MKTileOverlay alloc] init];
     [self.mapView addOverlay:_bookmarkOverlay];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     if (self.active.modified) {
         [self.active setModified:NO];
         [self updateInBackgroundWithZoom:NO];
     }
-    
+
     // iOS 13 dark mode support
     if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
-        [self.zoomIndicatorButton setBackgroundColor:[UIColor systemBackgroundColor]];
-        [self.locationButton setBackgroundColor:[UIColor systemBackgroundColor]];
-        [self.infoButton setBackgroundColor:[UIColor systemBackgroundColor]];
+        [self.zoomIndicatorButton setBackgroundColor:[UIColor colorNamed:@"ngaBackgroundColor"]];
+        [self.locationButton setBackgroundColor:[UIColor colorNamed:@"ngaBackgroundColor"]];
+        [self.infoButton setBackgroundColor:[UIColor colorNamed:@"ngaBackgroundColor"]];
     } else {
-        
+
     }
-    
+
     NSString *gridTypeName = [self.settings stringForKey:GPKGS_PROP_GRID_TYPE];
-    
+
     enum MCGridType gridType = [self gridType:gridTypeName];
     if (gridType != -1) {
-        
+
         _gridType = gridType;
-        
+
         switch (gridType) {
             case MC_GT_GARS:
                 _gridOverlay = [GridHelper garsTileOverlay];
@@ -195,21 +195,21 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
             default:
                 break;
         }
-        
+
         [self updateCoordinateLabel];
         if(_gridOverlay != nil) {
             [self.mapView addOverlay:_gridOverlay];
         }
-        
+
     }
-    
+
 }
 
 
 - (void)layoutSubviews {
     CAShapeLayer * topCornersMaskLayer = [CAShapeLayer layer];
     topCornersMaskLayer.path = [UIBezierPath bezierPathWithRoundedRect: self.infoButton.bounds byRoundingCorners: UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii: (CGSize){8.0, 8.0}].CGPath;
-    
+
     self.infoButton.layer.mask = topCornersMaskLayer;
 }
 
@@ -230,7 +230,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     //point.latitude -= self.mapView.region.span.latitudeDelta * (1.0/3.0);
     MKCoordinateSpan span = MKCoordinateSpanMake(0, 360/pow(2, zoomLevel)*self.mapView.frame.size.width/256);
     [self.mapView setRegion:MKCoordinateRegionMake(point, span) animated:YES];
-    
+
     /*if (self.expandedZoomDetails) {
         [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d",  [GPKGMapUtils currentRoundedZoomWithMapView:self.mapView]] forState:UIControlStateNormal];
     } else {
@@ -243,7 +243,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     for (GPKGMapPoint *point in self.tempMapPoints) {
         [self.mapView removeAnnotation:point];
     }
-    
+
     [self.tempMapPoints removeAllObjects];
 }
 
@@ -256,8 +256,8 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 #pragma mark - Button actions
 - (IBAction)showInfo:(id)sender {
-    NSLog(@"Showing info drawer.");
-    
+    NSLog(@"MCMapController - Showing info drawer.");
+
     if (!self.settingsDrawerVisible) {
         self.settingsDrawerVisible = YES;
         [self.mapActionDelegate showMapInfoDrawer];
@@ -266,13 +266,13 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 
 - (IBAction)changeLocationState:(id)sender {
-    NSLog(@"GPS button tapped");
-    
+    NSLog(@"MCMapController - GPS button tapped");
+
     if (![CLLocationManager locationServicesEnabled]) {
         // todo show a message asking the user to enable it
         return;
     }
-    
+
     if (self.userLocationStatus == MCLocationStatusNone) {
         switch ([CLLocationManager authorizationStatus]) {
             case kCLAuthorizationStatusAuthorizedWhenInUse:
@@ -314,12 +314,15 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 - (IBAction)toggleZoomDetails:(id)sender {
     int zoom = [GPKGMapUtils currentRoundedZoomWithMapView:self.mapView];
-    
+
     if (self.expandedZoomDetails) {
         self.expandedZoomDetails = NO;
         [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", zoom] forState:UIControlStateNormal];
-        self.zoomIndicatorButtonWidth.constant = 45;
-        
+        self.zoomIndicatorButtonWidth.constant = 30;
+
+        CGRect buttonFrame = self.zoomIndicatorButton.frame;
+        self.zoomIndicatorButton.frame = CGRectMake(buttonFrame.origin.x, buttonFrame.origin.y, 30, buttonFrame.size.height);
+
         [UIView animateWithDuration:0.15 animations:^{
             [self.zoomIndicatorButton layoutIfNeeded];
         }];
@@ -327,11 +330,14 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
         self.expandedZoomDetails = YES;
         [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", zoom] forState:UIControlStateNormal];
         self.zoomIndicatorButtonWidth.constant = 130;
-        
+        CGRect buttonFrame = self.zoomIndicatorButton.frame;
+        self.zoomIndicatorButton.frame = CGRectMake(buttonFrame.origin.x, buttonFrame.origin.y, 130, buttonFrame.size.height);
+
         [UIView animateWithDuration:0.15 animations:^{
             [self.zoomIndicatorButton layoutIfNeeded];
         }];
     }
+
 }
 
 
@@ -358,8 +364,8 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 #pragma mark - MCMapSettingsDelegate
 - (void)setMapType:(NSString *)mapType {
-    NSLog(@"In MCMapViewController handing setting map change");
-    
+    NSLog(@"MCMapController -  handing setting map change");
+
     if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_STANDARD]]) {
         [self.mapView setMapType:MKMapTypeStandard];
         [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
@@ -372,14 +378,14 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     } else {
         enum MCGridType gridType = [self gridType:mapType];
         if (gridType != -1) {
-            
+
             _gridType = gridType;
-            
+
             if (_gridOverlay != nil) {
                 [self.mapView removeOverlay:_gridOverlay];
                 _gridOverlay = nil;
             }
-            
+
             switch (gridType) {
                 case MC_GT_GARS:
                     _gridOverlay = [GridHelper garsTileOverlay];
@@ -390,7 +396,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                 default:
                     break;
             }
-            
+
             [self updateCoordinateLabel];
             if(_gridOverlay != nil) {
                 [self.mapView addOverlay:_gridOverlay];
@@ -398,27 +404,31 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
             [self.settings setObject:mapType forKey:GPKGS_PROP_GRID_TYPE];
         }
     }
-    
-    NSLog(@"NSUSerDefaults\n %@", [self.settings dictionaryRepresentation]);
+
+    NSLog(@"MCMapController - NSUSerDefaults\n %@", [self.settings dictionaryRepresentation]);
 }
 
 
 - (void)updateBasemaps:(NSString *)url serverType:(MCTileServerType) serverType {
-    NSLog(@"MCMapViewController updateBasemaps");
-    if (self.userBasemapOverlay != nil) {
-        [self.mapView removeOverlay:self.userBasemapOverlay];
-    }
-    
-    if (url == nil || [url isEqualToString: @""]) {
-        return;
-    }
-    
-    if (serverType == MCTileServerTypeXyz) {
-        self.userBasemapOverlay = [[MKTileOverlay alloc] initWithURLTemplate:url];
-        [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
-    } else if (serverType == MCTileServerTypeWms) {
-        self.userBasemapOverlay = [[WMSTileOverlay alloc] initWithURL:url];
-        [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
+    NSLog(@"MCMapController - updateBasemaps");
+    @try {
+        if (self.userBasemapOverlay != nil) {
+            [self.mapView removeOverlay:self.userBasemapOverlay];
+        }
+
+        if (url == nil || [url isEqualToString: @""]) {
+            return;
+        }
+
+        if (serverType == MCTileServerTypeXyz) {
+            self.userBasemapOverlay = [[MKTileOverlay alloc] initWithURLTemplate:url];
+            [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
+        } else if (serverType == MCTileServerTypeWms) {
+            self.userBasemapOverlay = [[WMSTileOverlay alloc] initWithURL:url];
+            [self.mapView insertOverlay:self.userBasemapOverlay atIndex:0];
+        }
+    } @catch(NSException *e) {
+        NSLog(@"Tile loading problem");
     }
 }
 
@@ -440,12 +450,12 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 
 - (void) toggleMapControls {
-    if (![self.zoomIndicatorButton isHidden]) {
-        [self.zoomIndicatorButton setHidden:YES];
+    if ([self.zoomIndicatorButton isHidden]) {
+        [self.zoomIndicatorButton setHidden:NO];
     } else {
         [self.zoomIndicatorButton setHidden:[self.settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR]];
     }
-    
+
     if ([self.infoButton isHidden]) {
         [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
             [self.infoButton setHidden:NO];
@@ -462,17 +472,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 #pragma mark - MCTileHelperDelegate methods
 - (void)addTileOverlayToMapView:(MKTileOverlay *)tileOverlay withTable:(MCTileTable *)table {
     dispatch_sync(dispatch_get_main_queue(), ^{
-        //[self.mapView addOverlay:tileOverlay];
         [self.mapView insertOverlay:tileOverlay belowOverlay:self.bookmarkOverlay];
-        /*for (id<MKOverlay> overlay in self.mapView.overlays) {
-            if ([overlay isKindOfClass:MKTileOverlay.class]) {
-                [self.mapView insertOverlay:tileOverlay aboveOverlay:overlay];
-                break;
-            } else {
-                [self.mapView insertOverlay:tileOverlay belowOverlay:overlay];
-                break;
-            }
-        }*/
     });
 }
 
@@ -482,9 +482,9 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [GPKGMapShapeConverter addMapShape:shape toMapView:self.mapView];
         //[self.mapView insertOverlay:self.bookmarkOverlay aboveOverlay:shape];
-        
+
         switch (shape.shapeType) {
-                    
+
                 case GPKG_MST_POINT:
                     [self.mapView addAnnotation:(GPKGMapPoint *)shape.shape];
                     break;
@@ -527,15 +527,15 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 
 - (void) showMaxFeaturesWarning {
-    
+
     dispatch_sync(dispatch_get_main_queue(), ^{
         BOOL hideWarning = [self.settings boolForKey:GPKGS_PROP_HIDE_MAX_FEATURES_WARNING];
         if (hideWarning) {
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Max features exceeded" message:@"In the app settings you can adjust how many features you display on the map." preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                
+
             }];
-            
+
             [alert addAction:defaultAction];
             [self presentViewController:alert animated:YES completion:nil];
         }
@@ -601,12 +601,12 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     MKAnnotationView * view = nil;
-    
+
     if ([annotation isKindOfClass:[GPKGMapPoint class]]){
         GPKGMapPoint * mapPoint = (GPKGMapPoint *) annotation;
-        
+
         if(mapPoint.options.image != nil){
-            
+
             MKAnnotationView *mapPointImageView = (MKAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:mapPointImageReuseIdentifier];
             if (mapPointImageView == nil)
             {
@@ -614,7 +614,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
             }
             mapPointImageView.image = mapPoint.options.image;
             mapPointImageView.centerOffset = mapPoint.options.imageCenterOffset;
-            
+
             view = mapPointImageView;
             mapPoint.view = view;
         }else{
@@ -625,20 +625,20 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
             annotationView.tintColor = mapPoint.options.pinTintColor;
             view = annotationView;
         }
-        
+
         if(mapPoint.title == nil){
             [self.featureHelper setTitleWithMapPoint:mapPoint];
         }
-        
+
         //UIButton *optionsButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
         //[optionsButton addTarget:self action:@selector(selectedMapPointOptions:) forControlEvents:UIControlEventTouchUpInside];
-        
+
         //view.rightCalloutAccessoryView = optionsButton;
         view.canShowCallout = YES;
-        
+
         view.draggable = mapPoint.options.draggable;
     }
-    
+
     return view;
 }
 
@@ -649,37 +649,37 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     } else {
         [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", [GPKGMapUtils currentRoundedZoomWithMapView:mapView]] forState:UIControlStateNormal];
     }
-    
+
     [self updateCoordinateLabel];
 }
 
 
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
-    
+
     if (_active == nil) {
         return;
     }
-    
+
     if (self.ignoreRegionChange) {
         self.ignoreRegionChange = NO;
         return;
     }
-    
+
     CLLocationCoordinate2D previousCenter = self.currentCenter;
     self.currentCenter = self.mapView.centerCoordinate;
     int previousZoom = self.currentZoom;
     self.currentZoom = [GPKGMapUtils currentRoundedZoomWithMapView:mapView];
-    
+
     if (self.currentCenter.latitude == previousCenter.latitude && self.currentCenter.longitude == previousCenter.longitude && self.currentZoom == previousZoom) {
         return;
     }
-    
+
     if (self.expandedZoomDetails) {
         [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"Zoom level %d", self.currentZoom] forState:UIControlStateNormal];
     } else {
         [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", self.currentZoom] forState:UIControlStateNormal];
     }
-    
+
     if (self.currentZoom != previousZoom) {
         // Zoom level changed, remove all the feature shapes except the markers
         [self.featureHelper.featureShapes removeShapesFromMapView:mapView withExclusions:[[NSSet alloc] initWithObjects:[NSNumber numberWithInt:GPKG_MST_POINT], [NSNumber numberWithInt:GPKG_MST_MULTI_POINT], nil]];
@@ -687,7 +687,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
         // Remove shapes no longer visible on the map view
         [self.featureHelper.featureShapes removeShapesNotWithinMapView:mapView];
     }
-    
+
     int updateId = [self.featureHelper getNewUpdateId];
     int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];
     [self.featureHelper resetFeatureCount];
@@ -703,12 +703,12 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                 GPKGGeoPackage *geoPacakge;
                 @try {
                     geoPacakge = [self.manager open:database.name];
-                    [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
+                    //[self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
 
                     [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)self.currentZoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter: YES];
 
                 } @catch (NSException *exception) {
-                   NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
+                   NSLog(@"MCMapController - Error reading geopackage %@, error: %@", database, [exception description]);
                 }
             }
         }
@@ -717,14 +717,12 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
-    NSLog(@"Tapped map point");
-    
-    if (![view isKindOfClass:MKAnnotationView.class] || ![view isKindOfClass:MKMarkerAnnotationView.class]) {
-        return;
+    NSLog(@"MCMapController - Tapped map point");
+
+    if ([view isKindOfClass:MKAnnotationView.class] || [view isKindOfClass:MKMarkerAnnotationView.class]) {
+        [self zoomToPointWithOffset:view.annotation.coordinate];
+        [self.mapActionDelegate showDetailsForAnnotation:(GPKGMapPoint *)view.annotation];
     }
-    
-    [self zoomToPointWithOffset:view.annotation.coordinate];
-    [self.mapActionDelegate showDetailsForAnnotation:(GPKGMapPoint *)view.annotation];
 }
 
 
@@ -741,11 +739,11 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView removeOverlays:self.mapView.overlays];
     [self.mapView addOverlay:self.bookmarkOverlay];
-    
+
     if (self.userBasemapOverlay != nil) {
         [self.mapView addOverlay:self.userBasemapOverlay];
     }
-    
+
     for(GPKGGeoPackage * geoPackage in [self.geoPackages allValues]){
         @try {
             [geoPackage close];
@@ -755,21 +753,21 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     }
     [self.geoPackages removeAllObjects];
     [self.featureDaos removeAllObjects];
-    
+
     if(zoom){
         self.ignoreRegionChange = YES;
         [self zoomToActiveBounds];
     }
-    
+
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
     self.featureOverlayTiles = false;
     [self.featureHelper.featureShapes clear];
-    
+
     int maxFeatures = [self getMaxFeatures];
     GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:self.mapView];
     double toleranceDistance = [GPKGMapUtils toleranceDistanceInMapView:self.mapView];
-    
+
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
          if (self.active != nil) {
@@ -778,11 +776,11 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                  @try {
                      geoPacakge = [self.manager open:database.name];
                      [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
-                     
+
                      [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)zoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter:(BOOL) filter];
-                     
+
                  } @catch (NSException *exception) {
-                    NSLog(@"Error reading geopackage %@, error: %@", database, [exception description]);
+                    NSLog(@"MCMapController - Error reading geopackage %@, error: %@", database, [exception description]);
                  }
              }
          }
@@ -818,7 +816,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 -(void) zoomToActiveIfNothingVisible: (BOOL) nothingVisible andIgnoreRegionChange: (BOOL) ignoreChange{
     GPKGBoundingBox * bbox = self.featuresBoundingBox;
     BOOL tileBox = false;
-    
+
     float paddingPercentage;
     if(bbox == nil){
         bbox = self.tilesBoundingBox;
@@ -831,55 +829,55 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     }else{
         paddingPercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_PADDING_PERCENTAGE] intValue] * .01f;
     }
-    
+
     if(bbox != nil){
-        
+
         BOOL zoomToActive = YES;
         if(nothingVisible){
             GPKGBoundingBox *mapViewBoundingBox = [GPKGMapUtils boundingBoxOfMapView:self.mapView];
             if([GPKGTileBoundingBoxUtils overlapWithBoundingBox:bbox andBoundingBox:mapViewBoundingBox withMaxLongitude:PROJ_WGS84_HALF_WORLD_LON_WIDTH] != nil){
-                
+
                 struct GPKGBoundingBoxSize bboxSize = [bbox sizeInMeters];
                 struct GPKGBoundingBoxSize mapViewSize = [mapViewBoundingBox sizeInMeters];
-                
+
                 double longitudeDistance = bboxSize.width;
                 double latitudeDistance = bboxSize.height;
                 double mapViewLongitudeDistance = mapViewSize.width;
                 double mapViewLatitudeDistance = mapViewSize.height;
-                
+
                 if (mapViewLongitudeDistance > longitudeDistance && mapViewLatitudeDistance > latitudeDistance) {
-                    
+
                     double longitudeRatio = longitudeDistance / mapViewLongitudeDistance;
                     double latitudeRatio = latitudeDistance / mapViewLatitudeDistance;
-                    
+
                     double zoomAlreadyVisiblePercentage;
                     if (tileBox) {
                         zoomAlreadyVisiblePercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_TILES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
                     }else{
                         zoomAlreadyVisiblePercentage = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_MAP_FEATURES_ZOOM_ALREADY_VISIBLE_PERCENTAGE] intValue] * .01;
                     }
-                    
+
                     if(longitudeRatio >= zoomAlreadyVisiblePercentage && latitudeRatio >= zoomAlreadyVisiblePercentage){
                         zoomToActive = false;
                     }
                 }
             }
         }
-        
+
         if(zoomToActive){
             struct GPKGBoundingBoxSize size = [bbox sizeInMeters];
             double expandedHeight = size.height + (2 * (size.height * paddingPercentage));
             double expandedWidth = size.width + (2 * (size.width * paddingPercentage));
-            
+
             CLLocationCoordinate2D center = [bbox center];
             MKCoordinateRegion expandedRegion = MKCoordinateRegionMakeWithDistance(center, expandedHeight, expandedWidth);
-            
+
             double latitudeRange = expandedRegion.span.latitudeDelta / 2.0;
-            
+
             if(expandedRegion.center.latitude + latitudeRange > 90.0 || expandedRegion.center.latitude - latitudeRange < -90.0){
                 expandedRegion = MKCoordinateRegionMake(self.mapView.centerCoordinate, MKCoordinateSpanMake(180, 360));
             }
-            
+
             if(ignoreChange){
                 self.ignoreRegionChange = YES;
             }
@@ -892,7 +890,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 -(void) zoomToActiveBounds{
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
-    
+
     // Pre zoom
     NSMutableArray *activeDatabase = [[NSMutableArray alloc] init];
     [activeDatabase addObjectsFromArray:[self.active getDatabases]];
@@ -904,30 +902,30 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
             if (geoPackage != nil) {
                 NSMutableSet<NSString *> *featureTableDaos = [[NSMutableSet alloc] init];
                 NSArray *features = [database getFeatures];
-                
+
                 if(features.count > 0){
                     for(MCTable *featureTable in features){
                         [featureTableDaos addObject:featureTable.name];
                     }
                 }
-                
+
                 for(MCFeatureOverlayTable * featureOverlay in [database getFeatureOverlays]){
                     if(featureOverlay.active){
                         [featureTableDaos addObject:featureOverlay.featureTable];
                     }
                 }
-                
+
                 if(featureTableDaos.count > 0){
                     GPKGContentsDao *contentsDao = [geoPackage contentsDao];
-                    
+
                     for (NSString *featureTable in featureTableDaos) {
                         @try {
                             GPKGContents *contents = (GPKGContents *)[contentsDao queryForIdObject:featureTable];
                             GPKGBoundingBox *contentsBoundingBox = [contents boundingBox];
-                            
+
                             if (contentsBoundingBox != nil) {
                                 contentsBoundingBox = [self.tileHelper transformBoundingBoxToWgs84: contentsBoundingBox withSrs: [contentsDao srs:contents]];
-                                
+
                                 if (self.featuresBoundingBox != nil) {
                                     self.featuresBoundingBox = [self.featuresBoundingBox union:contentsBoundingBox];
                                 } else {
@@ -935,33 +933,33 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                                 }
                             }
                         } @catch (NSException *e) {
-                            NSLog(@"Problem with features in zoomToActiveBounds: %@", [e description]);
+                            NSLog(@"MCMapController - Problem with features in zoomToActiveBounds: %@", [e description]);
                         } @finally {
                             [geoPackage close];
                         }
                     }
                 }
-                
+
                 NSArray *tileTables = [database getTiles];
                 if(tileTables.count > 0){
-                    
+
                     GPKGTileMatrixSetDao *tileMatrixSetDao = [geoPackage tileMatrixSetDao];
-                    
+
                     for(MCTileTable *tileTable in tileTables){
-                        
+
                         @try {
                             GPKGTileMatrixSet *tileMatrixSet = (GPKGTileMatrixSet *)[tileMatrixSetDao queryForIdObject:tileTable.name];
                             GPKGBoundingBox *tileMatrixSetBoundingBox = [tileMatrixSet boundingBox];
-                            
+
                             tileMatrixSetBoundingBox = [self.tileHelper transformBoundingBoxToWgs84:tileMatrixSetBoundingBox withSrs:[tileMatrixSetDao srs:tileMatrixSet]];
-                            
+
                             if (self.tilesBoundingBox != nil) {
                                 self.tilesBoundingBox = [self.tilesBoundingBox union:tileMatrixSetBoundingBox];
                             } else {
                                 self.tilesBoundingBox = tileMatrixSetBoundingBox;
                             }
                         } @catch (NSException *e) {
-                            NSLog(@"Problem with tiles in zoomToActiveBounds%@", [e description]);
+                            NSLog(@"MCMapController - Problem with tiles in zoomToActiveBounds%@", [e description]);
                         } @finally {
                             [geoPackage close];
                         }
@@ -969,14 +967,14 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                 }
             }
         } @catch (NSException *e) {
-            NSLog(@"Problem zooming to bounds %@", e.reason);
+            NSLog(@"MCMapController - Problem zooming to bounds %@", e.reason);
         } @finally {
             if (geoPackage != nil) {
                 [geoPackage close];
             }
         }
     }
-    
+
     [self zoomToActiveAndIgnoreRegionChange:YES];
 }
 
@@ -996,28 +994,28 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     if([MCProperties getBoolOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL]){
         self.boundingBoxFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_BOUNDING_BOX_DRAW_FILL_COLOR]];
     }
-    
+
     self.defaultPolylineColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_COLOR]];
     self.defaultPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYLINE_LINE_WIDTH] doubleValue];
-    
+
     self.defaultPolygonColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_COLOR]];
     self.defaultPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DEFAULT_POLYGON_LINE_WIDTH] doubleValue];
     if([MCProperties getBoolOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL]){
         self.defaultPolygonFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DEFAULT_POLYGON_FILL_COLOR]];
     }
-    
+
     self.editPolylineColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYLINE_COLOR]];
     self.editPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYLINE_LINE_WIDTH] doubleValue];
-    
+
     self.editPolygonColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_COLOR]];
     self.editPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_EDIT_POLYGON_LINE_WIDTH] doubleValue];
     if([MCProperties getBoolOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL]){
         self.editPolygonFillColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_EDIT_POLYGON_FILL_COLOR]];
     }
-    
+
     self.drawPolylineColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYLINE_COLOR]];
     self.drawPolylineLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYLINE_LINE_WIDTH] doubleValue];
-    
+
     self.drawPolygonColor = [GPKGUtils color:[MCProperties getDictionaryOfProperty:GPKGS_PROP_DRAW_POLYGON_COLOR]];
     self.drawPolygonLineWidth = [[MCProperties getNumberValueOfProperty:GPKGS_PROP_DRAW_POLYGON_LINE_WIDTH] doubleValue];
     if([MCProperties getBoolOfProperty:GPKGS_PROP_DRAW_POLYGON_FILL]){
@@ -1033,13 +1031,26 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     if (self.userTileOverlay != nil) {
         [self.mapView removeOverlay:self.userTileOverlay];
     }
-    
+
     if (serverType == MCTileServerTypeXyz) {
         self.userTileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:tileTemplateURL];
     } else if (serverType == MCTileServerTypeWms) {
         self.userTileOverlay = [[WMSTileOverlay alloc] initWithURL:tileTemplateURL];
     }
-    
+
+    if (self.userTileOverlay != nil) {
+        [self.mapView insertOverlay:self.userTileOverlay atIndex:0];
+    }
+}
+
+
+- (void)addUserTileOverlay:(MKTileOverlay *)tileOverlay {
+    if (self.userTileOverlay != nil) {
+        [self.mapView removeOverlay:self.userTileOverlay];
+    }
+
+    self.userTileOverlay = tileOverlay;
+
     if (self.userTileOverlay != nil) {
         [self.mapView insertOverlay:self.userTileOverlay atIndex:0];
     }
@@ -1064,46 +1075,46 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 
 -(void) longPressGesture:(UILongPressGestureRecognizer *) longPressGestureRecognizer {
-    NSLog(@"Getting a long press gesture.");
-    
+    NSLog(@"MCMapController - Getting a long press gesture.");
+
     if (!self.boundingBoxMode) {
         CGPoint cgPoint = [longPressGestureRecognizer locationInView:self.mapView];
         CLLocationCoordinate2D point = [self.mapView convertPoint:cgPoint toCoordinateFromView:self.mapView];
-        
+
         if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan && self.tempMapPoints.count == 0) {
             UINotificationFeedbackGenerator *feedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
             [feedbackGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
-            
-            NSLog(@"Adding a pin");
+
+            NSLog(@"MCMapController - Adding a pin");
             GPKGMapPoint * mapPoint = [[GPKGMapPoint alloc] initWithLocation:point];
             [mapPoint.options setPinTintColor:[UIColor redColor]];
-            
+
             [self.mapView addAnnotation: mapPoint];
             [self.tempMapPoints addObject:mapPoint];
-         
+
             if (!_drawing && self.tempMapPoints.count > 0) {
                 [self zoomToPointWithOffset: point];
                 [mapPoint setTitle:[_featureHelper buildLocationTitleWithMapPoint:mapPoint]];
                 [self.mapView selectAnnotation:mapPoint animated:YES];
-                
+
                 _drawing = YES;
             } else {
                 [self.mapActionDelegate updateDrawingStatus];
             }
         }
     }
-    
-    
+
+
     // MKMapView workaround for unresponsiveness after a longpress https://forums.developer.apple.com/thread/126473
     //[self.mapView setCenterCoordinate:self.mapView.centerCoordinate animated:NO];
 }
 
 
 -(BOOL) isWithinDistanceWithPoint: (CGPoint) point andLocation: (CLLocationCoordinate2D) location andAllowableScreenPercentage: (double) allowableScreenPercentage{
-    
+
     CGPoint locationPoint = [self.mapView convertCoordinate:location toPointToView:self.mapView];
     double distance = sqrt(pow(point.x - locationPoint.x, 2) + pow(point.y - locationPoint.y, 2));
-    
+
     BOOL withinDistance = distance / MIN(self.mapView.frame.size.width, self.mapView.frame.size.height) <= allowableScreenPercentage;
     return withinDistance;
 }
@@ -1127,9 +1138,9 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 -(void) updateCoordinateLabel {
     if (_gridType != -1 && _gridType != MC_GT_NONE) {
-        
+
         NSString *label = nil;
-        
+
         CLLocationCoordinate2D center = self.mapView.centerCoordinate;
         switch (_gridType) {
             case MC_GT_GARS:
@@ -1141,10 +1152,10 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
             default:
                 break;
         }
-        
+
         self.coordinateLabel.text = label;
         [self.coordinateLabel setHidden:NO];
-        
+
     } else {
         self.coordinateLabel.text = @"";
         [self.coordinateLabel setHidden:YES];
