@@ -33,6 +33,7 @@
 		047733C41B4C3D1200E523BD /* MCProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 047733C31B4C3D1200E523BD /* MCProperties.m */; };
 		047733C61B4C3E3400E523BD /* mapcache.plist in Resources */ = {isa = PBXBuildFile; fileRef = 047733C51B4C3E3400E523BD /* mapcache.plist */; };
 		048C212B1AFBCC9400EBC38B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 048C212A1AFBCC9400EBC38B /* libsqlite3.dylib */; };
+		04C4FBA728CFA86700432EAC /* GridHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C4FBA628CFA86600432EAC /* GridHelper.swift */; };
 		04CCC85F1B60225C0001296D /* GPKGSKeyboardConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CCC85E1B60225C0001296D /* GPKGSKeyboardConstraint.m */; };
 		04CCC8621B60232A0001296D /* GPKGSUIResponder+FirstResponder.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CCC8611B60232A0001296D /* GPKGSUIResponder+FirstResponder.m */; };
 		04CCC8681B6114EE0001296D /* GPKGSGenerateTilesData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CCC8671B6114EE0001296D /* GPKGSGenerateTilesData.m */; };
@@ -222,6 +223,7 @@
 		047733C31B4C3D1200E523BD /* MCProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCProperties.m; sourceTree = "<group>"; };
 		047733C51B4C3E3400E523BD /* mapcache.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = mapcache.plist; sourceTree = "<group>"; };
 		048C212A1AFBCC9400EBC38B /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		04C4FBA628CFA86600432EAC /* GridHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridHelper.swift; sourceTree = "<group>"; };
 		04CCC85D1B60225C0001296D /* GPKGSKeyboardConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSKeyboardConstraint.h; sourceTree = "<group>"; };
 		04CCC85E1B60225C0001296D /* GPKGSKeyboardConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSKeyboardConstraint.m; sourceTree = "<group>"; };
 		04CCC8601B60232A0001296D /* GPKGSUIResponder+FirstResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GPKGSUIResponder+FirstResponder.h"; sourceTree = "<group>"; };
@@ -559,6 +561,7 @@
 		0446481B1B4C26BE0052913B /* util */ = {
 			isa = PBXGroup;
 			children = (
+				04C4FBA628CFA86600432EAC /* GridHelper.swift */,
 				0446481C1B4C26DF0052913B /* MCConstants.h */,
 				0446481D1B4C26DF0052913B /* MCConstants.m */,
 				047733C21B4C3D1200E523BD /* MCProperties.h */,
@@ -1205,6 +1208,7 @@
 				E3500E6322B4653B00164ABF /* MCDisclaimerViewController.m in Sources */,
 				044648021B4AF4250052913B /* MCTableTypes.m in Sources */,
 				E3CE3823265D6223003D625D /* UIImage+RotateImage.swift in Sources */,
+				04C4FBA728CFA86700432EAC /* GridHelper.swift in Sources */,
 				E35F316521EFEC7E001B720F /* MCNoticeAndAttributionViewController.m in Sources */,
 				045C949B1B5D4C560005CCD0 /* MCDecimalValidator.m in Sources */,
 				E3540C252631EAB1001A5272 /* MCMediaUtility.swift in Sources */,

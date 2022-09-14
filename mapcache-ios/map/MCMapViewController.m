@@ -64,8 +64,14 @@
 @property (nonatomic, strong) MKTileOverlay *bookmarkOverlay;
 @property (nonatomic, strong) MKTileOverlay *userBasemapOverlay;
 @property (nonatomic, strong) MKTileOverlay *gridOverlay;
+@property (nonatomic) enum MCGridType gridType;
 @end
 
+enum MCGridType{
+    MC_GT_NONE,
+    MC_GT_GARS,
+    MC_GT_MGRS
+};
 
 @implementation MCMapViewController
 
@@ -172,13 +178,29 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
         
     }
     
-    NSString *gridType = [self.settings stringForKey:GPKGS_PROP_GRID_TYPE];
-    if ([gridType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_GARS]]) {
-        _gridOverlay = [[GARSTileOverlay alloc] init];
-        [self.mapView addOverlay:_gridOverlay];
-    } else if ([gridType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_MGRS]]) {
-        _gridOverlay = [[MGRSTileOverlay alloc] init];
-        [self.mapView addOverlay:_gridOverlay];
+    NSString *gridTypeName = [self.settings stringForKey:GPKGS_PROP_GRID_TYPE];
+    
+    enum MCGridType gridType = [self gridType:gridTypeName];
+    if (gridType != -1) {
+        
+        _gridType = gridType;
+        
+        switch (gridType) {
+            case MC_GT_GARS:
+                _gridOverlay = [GridHelper garsTileOverlay];
+                break;
+            case MC_GT_MGRS:
+                _gridOverlay = [GridHelper mgrsTileOverlay];
+                break;
+            default:
+                break;
+        }
+        
+        [self updateCoordinateLabel];
+        if(_gridOverlay != nil) {
+            [self.mapView addOverlay:_gridOverlay];
+        }
+        
     }
     
 }
@@ -347,26 +369,34 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_MAP_TYPE_HYBRID]]) {
         [self.mapView setMapType:MKMapTypeHybrid];
         [self.settings setObject:mapType forKey:GPKGS_PROP_MAP_TYPE];
-    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_NONE]]) {
-        if (_gridOverlay != nil) {
-            [self.mapView removeOverlay:_gridOverlay];
-            _gridOverlay = nil;
+    } else {
+        enum MCGridType gridType = [self gridType:mapType];
+        if (gridType != -1) {
+            
+            _gridType = gridType;
+            
+            if (_gridOverlay != nil) {
+                [self.mapView removeOverlay:_gridOverlay];
+                _gridOverlay = nil;
+            }
+            
+            switch (gridType) {
+                case MC_GT_GARS:
+                    _gridOverlay = [GridHelper garsTileOverlay];
+                    break;
+                case MC_GT_MGRS:
+                    _gridOverlay = [GridHelper mgrsTileOverlay];
+                    break;
+                default:
+                    break;
+            }
+            
+            [self updateCoordinateLabel];
+            if(_gridOverlay != nil) {
+                [self.mapView addOverlay:_gridOverlay];
+            }
+            [self.settings setObject:mapType forKey:GPKGS_PROP_GRID_TYPE];
         }
-        [self.settings setObject:mapType forKey:GPKGS_PROP_GRID_TYPE];
-    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_GARS]]) {
-        if (_gridOverlay != nil) {
-            [self.mapView removeOverlay:_gridOverlay];
-        }
-        _gridOverlay = [[GARSTileOverlay alloc] init];
-        [self.mapView addOverlay:_gridOverlay];
-        [self.settings setObject:mapType forKey:GPKGS_PROP_GRID_TYPE];
-    } else if ([mapType isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_MGRS]]) {
-        if (_gridOverlay != nil) {
-            [self.mapView removeOverlay:_gridOverlay];
-        }
-        _gridOverlay = [[MGRSTileOverlay alloc] init];
-        [self.mapView addOverlay:_gridOverlay];
-        [self.settings setObject:mapType forKey:GPKGS_PROP_GRID_TYPE];
     }
     
     NSLog(@"NSUSerDefaults\n %@", [self.settings dictionaryRepresentation]);
@@ -619,6 +649,8 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     } else {
         [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", [GPKGMapUtils currentRoundedZoomWithMapView:mapView]] forState:UIControlStateNormal];
     }
+    
+    [self updateCoordinateLabel];
 }
 
 
@@ -1092,5 +1124,46 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     return coordinates;
 }
 
+
+-(void) updateCoordinateLabel {
+    if (_gridType != -1 && _gridType != MC_GT_NONE) {
+        
+        NSString *label = nil;
+        
+        CLLocationCoordinate2D center = self.mapView.centerCoordinate;
+        switch (_gridType) {
+            case MC_GT_GARS:
+                label = [GridHelper garsCoordinate:center];
+                break;
+            case MC_GT_MGRS:
+                label = [GridHelper mgrsCoordinate:center];
+                break;
+            default:
+                break;
+        }
+        
+        self.coordinateLabel.text = label;
+        [self.coordinateLabel setHidden:NO];
+        
+    } else {
+        self.coordinateLabel.text = @"";
+        [self.coordinateLabel setHidden:YES];
+    }
+}
+
+
+-(enum MCGridType) gridType: (NSString *) name {
+    enum MCGridType gridType = -1;
+    if (name != nil) {
+        if ([name isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_NONE]]) {
+            gridType = MC_GT_NONE;
+        } else if ([name isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_GARS]]) {
+           gridType = MC_GT_GARS;
+        } else if ([name isEqualToString:[MCProperties getValueOfProperty:GPKGS_PROP_GRID_TYPE_MGRS]]) {
+           gridType = MC_GT_MGRS;
+        }
+    }
+    return gridType;
+}
 
 @end
