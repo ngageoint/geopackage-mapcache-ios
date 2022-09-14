@@ -141,6 +141,9 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     self.expandedZoomDetails = NO;
     [self.zoomIndicatorButton setHidden:[_settings boolForKey:GPKGS_PROP_HIDE_ZOOM_LEVEL_INDICATOR]];
 
+    self.coordinateButton.backgroundColor = [UIColor clearColor];
+    self.coordinateButton.layer.cornerRadius = 8.0;
+    
     [self.view setNeedsLayout];
 
     self.boundingBoxMode = NO;
@@ -172,6 +175,7 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     // iOS 13 dark mode support
     if ([UIColor respondsToSelector:@selector(systemBackgroundColor)]) {
         [self.zoomIndicatorButton setBackgroundColor:[UIColor colorNamed:@"ngaBackgroundColor"]];
+        [self.coordinateButton setBackgroundColor:[UIColor colorNamed:@"ngaBackgroundColor"]];
         [self.locationButton setBackgroundColor:[UIColor colorNamed:@"ngaBackgroundColor"]];
         [self.infoButton setBackgroundColor:[UIColor colorNamed:@"ngaBackgroundColor"]];
     } else {
@@ -649,13 +653,13 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     } else {
         [self.zoomIndicatorButton setTitle:[NSString stringWithFormat: @"%d", [GPKGMapUtils currentRoundedZoomWithMapView:mapView]] forState:UIControlStateNormal];
     }
-
-    [self updateCoordinateLabel];
 }
 
 
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
 
+    [self updateCoordinateLabel];
+    
     if (_active == nil) {
         return;
     }
@@ -1153,12 +1157,12 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                 break;
         }
 
-        self.coordinateLabel.text = label;
-        [self.coordinateLabel setHidden:NO];
+        [self.coordinateButton setTitle:label forState:UIControlStateNormal];
+        [self.coordinateButton setHidden:NO];
 
     } else {
-        self.coordinateLabel.text = @"";
-        [self.coordinateLabel setHidden:YES];
+        [self.coordinateButton setTitle:@"" forState:UIControlStateNormal];
+        [self.coordinateButton setHidden:YES];
     }
 }
 

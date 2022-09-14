@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MCMapViewController">
             <connections>
+                <outlet property="coordinateButton" destination="25A-jW-C41" id="kaB-dn-UVO"/>
                 <outlet property="infoButton" destination="9k9-7k-Tsz" id="iHa-1F-q8F"/>
                 <outlet property="locationButton" destination="Kgz-Xo-TlV" id="Kqq-rC-9vH"/>
                 <outlet property="mapView" destination="wr8-dW-dfS" id="0bZ-30-JrW"/>
@@ -70,6 +71,18 @@
                         <action selector="toggleZoomDetails:" destination="-1" eventType="touchUpInside" id="4Bs-3N-AHS"/>
                     </connections>
                 </button>
+                <button opaque="NO" alpha="0.65000000000000002" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="25A-jW-C41">
+                    <rect key="frame" x="142" y="-1.5" width="91" height="33"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <accessibility key="accessibilityConfiguration">
+                        <accessibilityTraits key="traits" button="YES" notEnabled="YES"/>
+                    </accessibility>
+                    <inset key="contentEdgeInsets" minX="7.5" minY="7.5" maxX="7.5" maxY="7.5"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" title="Coordinate">
+                        <color key="titleColor" red="0.1019607843" green="0.64705882349999999" blue="0.67843137249999996" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -77,8 +90,10 @@
                 <constraint firstItem="lmp-sw-3cO" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="2eU-zB-oUU"/>
                 <constraint firstItem="9k9-7k-Tsz" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="16" id="7NI-aA-0x1"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Kgz-Xo-TlV" secondAttribute="trailing" constant="8" id="Dqk-wm-cPh"/>
+                <constraint firstItem="25A-jW-C41" firstAttribute="centerY" secondItem="lmp-sw-3cO" secondAttribute="centerY" id="Geo-4R-YPP"/>
                 <constraint firstItem="Kgz-Xo-TlV" firstAttribute="top" secondItem="9k9-7k-Tsz" secondAttribute="bottom" constant="1" id="ItX-5Y-B2x"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="9k9-7k-Tsz" secondAttribute="trailing" constant="8" id="NvC-mE-gSm"/>
+                <constraint firstItem="25A-jW-C41" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="QSJ-hW-veY"/>
                 <constraint firstItem="lmp-sw-3cO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="jP1-MM-iEU"/>
             </constraints>
             <point key="canvasLocation" x="24.5" y="51.5"/>
