@@ -113,7 +113,6 @@
 		E3B9753B1FB3DED400E33E0A /* MCHeaderCellDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3B9753A1FB3DED400E33E0A /* MCHeaderCellDisplay.xib */; };
 		E3BED1E0219116FA001AF654 /* MCSettingsCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3BED1DF219116FA001AF654 /* MCSettingsCoordinator.m */; };
 		E3BED1E321911712001AF654 /* MCSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3BED1E221911712001AF654 /* MCSettingsViewController.m */; };
-		E3C3B74C275EDD760060C3DF /* gpkg.png in Resources */ = {isa = PBXBuildFile; fileRef = E3C3B74B275EDD750060C3DF /* gpkg.png */; };
 		E3C5FC4824B7D38F00B5E12E /* MCTileMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5FC4724B7D38F00B5E12E /* MCTileMatrix.swift */; };
 		E3CE3823265D6223003D625D /* UIImage+RotateImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CE3822265D6223003D625D /* UIImage+RotateImage.swift */; };
 		E3CF687223D901750005A6EF /* MCTileServerURLManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CF687123D901740005A6EF /* MCTileServerURLManagerViewController.m */; };
@@ -367,7 +366,6 @@
 		E3BED1DF219116FA001AF654 /* MCSettingsCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCSettingsCoordinator.m; sourceTree = "<group>"; };
 		E3BED1E121911712001AF654 /* MCSettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCSettingsViewController.h; sourceTree = "<group>"; };
 		E3BED1E221911712001AF654 /* MCSettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCSettingsViewController.m; sourceTree = "<group>"; };
-		E3C3B74B275EDD750060C3DF /* gpkg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gpkg.png; path = ../../../../Desktop/gpkg.png; sourceTree = "<group>"; };
 		E3C5FC4724B7D38F00B5E12E /* MCTileMatrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCTileMatrix.swift; sourceTree = "<group>"; };
 		E3CE3822265D6223003D625D /* UIImage+RotateImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+RotateImage.swift"; sourceTree = "<group>"; };
 		E3CF687023D901740005A6EF /* MCTileServerURLManagerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCTileServerURLManagerViewController.h; sourceTree = "<group>"; };
@@ -454,7 +452,6 @@
 		040136661AF94FB200C92AFC = {
 			isa = PBXGroup;
 			children = (
-				E3C3B74B275EDD750060C3DF /* gpkg.png */,
 				040136711AF94FB200C92AFC /* mapcache-ios */,
 				0401368E1AF94FB200C92AFC /* mapcache-iosTests */,
 				E3E9ED6723EA407E004C4530 /* mapcache-iosUITests */,
@@ -1030,7 +1027,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3C3B74C275EDD760060C3DF /* gpkg.png in Resources */,
 				E3FB85762134A9D8002F012E /* MCGeoPackageList.xib in Resources */,
 				E300A93323313D77002336A0 /* MCBoundingBoxGuideView.xib in Resources */,
 				E3D787E8264A2BCD00A32709 /* MCAttachmentsCell.xib in Resources */,
