@@ -191,10 +191,10 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
         switch (gridType) {
             case MC_GT_GARS:
-                _gridOverlay = [GridHelper garsTileOverlay];
+                _gridOverlay = [GridSystems garsTileOverlay];
                 break;
             case MC_GT_MGRS:
-                _gridOverlay = [GridHelper mgrsTileOverlay];
+                _gridOverlay = [GridSystems mgrsTileOverlay];
                 break;
             default:
                 break;
@@ -392,10 +392,10 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
             switch (gridType) {
                 case MC_GT_GARS:
-                    _gridOverlay = [GridHelper garsTileOverlay];
+                    _gridOverlay = [GridSystems garsTileOverlay];
                     break;
                 case MC_GT_MGRS:
-                    _gridOverlay = [GridHelper mgrsTileOverlay];
+                    _gridOverlay = [GridSystems mgrsTileOverlay];
                     break;
                 default:
                     break;
@@ -1148,10 +1148,10 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
         CLLocationCoordinate2D center = self.mapView.centerCoordinate;
         switch (_gridType) {
             case MC_GT_GARS:
-                label = [GridHelper garsCoordinate:center];
+                label = [GridSystems gars:center];
                 break;
             case MC_GT_MGRS:
-                label = [GridHelper mgrsCoordinate:center];
+                label = [GridSystems mgrs:center];
                 break;
             default:
                 break;
