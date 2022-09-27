@@ -44,6 +44,9 @@
 		04E1D8D91B66D4CA002BD947 /* GPKGSEditContentsData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8D81B66D4CA002BD947 /* GPKGSEditContentsData.m */; };
 		04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8DE1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m */; };
 		ABF599CF223A19684B94F220 /* Pods_mapcache_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FB9F52FC47FC548E7F938C /* Pods_mapcache_ios.framework */; };
+		CA225EB128E394B300F0B6EB /* SlowServerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CA225EAB28E394B200F0B6EB /* SlowServerModel.m */; };
+		CA225EB228E394B300F0B6EB /* SlowServerNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = CA225EAE28E394B200F0B6EB /* SlowServerNotifier.m */; };
+		CA225EB328E394B300F0B6EB /* SlowServerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA225EB028E394B300F0B6EB /* SlowServerView.m */; };
 		E300A93323313D77002336A0 /* MCBoundingBoxGuideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E300A93223313D77002336A0 /* MCBoundingBoxGuideView.xib */; };
 		E300A93623313DCE002336A0 /* MCBoundingBoxGuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = E300A93523313DCE002336A0 /* MCBoundingBoxGuideView.m */; };
 		E300A93923315B9D002336A0 /* MCBoundingBoxPassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = E300A93823315B9D002336A0 /* MCBoundingBoxPassthroughView.m */; };
@@ -251,6 +254,12 @@
 		5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.debug.xcconfig"; sourceTree = "<group>"; };
+		CA225EAB28E394B200F0B6EB /* SlowServerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlowServerModel.m; sourceTree = "<group>"; };
+		CA225EAC28E394B200F0B6EB /* SlowServerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlowServerView.h; sourceTree = "<group>"; };
+		CA225EAD28E394B200F0B6EB /* SlowServerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlowServerModel.h; sourceTree = "<group>"; };
+		CA225EAE28E394B200F0B6EB /* SlowServerNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlowServerNotifier.m; sourceTree = "<group>"; };
+		CA225EAF28E394B200F0B6EB /* SlowServerNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlowServerNotifier.h; sourceTree = "<group>"; };
+		CA225EB028E394B300F0B6EB /* SlowServerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlowServerView.m; sourceTree = "<group>"; };
 		E300A93223313D77002336A0 /* MCBoundingBoxGuideView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCBoundingBoxGuideView.xib; sourceTree = "<group>"; };
 		E300A93423313DCE002336A0 /* MCBoundingBoxGuideView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MCBoundingBoxGuideView.h; path = "mapcache-ios/geopackage/NewLayerWizard/MCBoundingBoxGuideView.h"; sourceTree = SOURCE_ROOT; };
 		E300A93523313DCE002336A0 /* MCBoundingBoxGuideView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MCBoundingBoxGuideView.m; path = "mapcache-ios/geopackage/NewLayerWizard/MCBoundingBoxGuideView.m"; sourceTree = SOURCE_ROOT; };
@@ -594,6 +603,7 @@
 		044D6B481B627AB400527745 /* load */ = {
 			isa = PBXGroup;
 			children = (
+				CA225EA128E393AA00F0B6EB /* slowserver */,
 				044D6B491B627B0000527745 /* MCLoadTilesTask.h */,
 				044D6B4A1B627B0000527745 /* MCLoadTilesTask.m */,
 				044D6B4C1B627B2200527745 /* GPKGSLoadTilesProtocol.h */,
@@ -681,6 +691,19 @@
 				317A64B2FA9FC9C408272041 /* Pods-mapcache-ios.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		CA225EA128E393AA00F0B6EB /* slowserver */ = {
+			isa = PBXGroup;
+			children = (
+				CA225EAD28E394B200F0B6EB /* SlowServerModel.h */,
+				CA225EAB28E394B200F0B6EB /* SlowServerModel.m */,
+				CA225EAF28E394B200F0B6EB /* SlowServerNotifier.h */,
+				CA225EAE28E394B200F0B6EB /* SlowServerNotifier.m */,
+				CA225EAC28E394B200F0B6EB /* SlowServerView.h */,
+				CA225EB028E394B300F0B6EB /* SlowServerView.m */,
+			);
+			path = slowserver;
 			sourceTree = "<group>";
 		};
 		E308FBC31FBFA77F00348577 /* cells */ = {
@@ -1169,6 +1192,7 @@
 				E3B7DD502475F1ED00215EF5 /* MCCreateLayerFieldViewController.swift in Sources */,
 				E31269ED2540184300E62361 /* MCTileServerResult.swift in Sources */,
 				043A458B1B7E21E3001B8FC5 /* GPKGSMapPointData.m in Sources */,
+				CA225EB328E394B300F0B6EB /* SlowServerView.m in Sources */,
 				E3F5568A279B716800C5E429 /* MCKeychainUtil.swift in Sources */,
 				E331C8F0210110B3006EFED1 /* MCTileLayerOperationsCell.m in Sources */,
 				E3FB856F21349B5E002F012E /* MCMapViewController.m in Sources */,
@@ -1198,6 +1222,7 @@
 				E3B7DD512475F1ED00215EF5 /* MCLayerCoordinator.swift in Sources */,
 				044D6B4B1B627B0000527745 /* MCLoadTilesTask.m in Sources */,
 				E3FB856C2134955F002F012E /* NGADrawerViewController.m in Sources */,
+				CA225EB128E394B300F0B6EB /* SlowServerModel.m in Sources */,
 				04CCC8681B6114EE0001296D /* GPKGSGenerateTilesData.m in Sources */,
 				E377401725476D1900F67EA8 /* MCServerError.m in Sources */,
 				E300A93623313DCE002336A0 /* MCBoundingBoxGuideView.m in Sources */,
@@ -1226,6 +1251,7 @@
 				044648021B4AF4250052913B /* MCTableTypes.m in Sources */,
 				E3CE3823265D6223003D625D /* UIImage+RotateImage.swift in Sources */,
 				04C4FBA728CFA86700432EAC /* GridSystems.swift in Sources */,
+				CA225EB228E394B300F0B6EB /* SlowServerNotifier.m in Sources */,
 				E35F316521EFEC7E001B720F /* MCNoticeAndAttributionViewController.m in Sources */,
 				045C949B1B5D4C560005CCD0 /* MCDecimalValidator.m in Sources */,
 				E3540C252631EAB1001A5272 /* MCMediaUtility.swift in Sources */,
