@@ -68,7 +68,8 @@
                andTileScaling: (GPKGTileScaling *) scaling
                  andAuthority: (NSString *) authority
                       andCode: (NSString *) code
-                     andLabel: (NSString *) label;
+                     andLabel: (NSString *) label
+                       andUrl: (NSString *) tileUrl;
 
 +(GPKGBoundingBox *) transformBoundingBox: (GPKGBoundingBox *) boundingBox withProjection: (PROJProjection *) projection;
 

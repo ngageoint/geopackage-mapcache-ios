@@ -32,6 +32,7 @@
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic) double lastProgressTime;
 @property (nonatomic, strong) SlowServerNotifier *slowNotifier;
+@property (nonatomic, strong) NSString *host;
 
 @end
 
@@ -65,7 +66,7 @@
         GPKGTileGenerator * tileGenerator = [[GPKGUrlTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andTileUrl:tileUrl andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
         [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andXyzTiles:xyzTiles andBoundingBox:boundingBox andTileScaling:scaling];
         
-        [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
+        [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label andUrl: tileUrl];
 
     } @catch(NSException *e) {
         NSLog(@"---------- MCLoadTilesTask - Problem downloading tiles\n%@", e.reason);
@@ -117,7 +118,7 @@
         
         [self setTileGenerator:urlTileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andXyzTiles:xyzTiles andBoundingBox:boundingBox andTileScaling:scaling];
         
-        [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:urlTileGenerator andLabel:label];
+        [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:urlTileGenerator andLabel:label andUrl:tileUrl];
 
     } @catch(NSException *e) {
         NSLog(@"---------- MCLoadTilesTask - Problem downloading tiles\n%@", e.reason);
@@ -141,7 +142,8 @@
                andTileScaling: (GPKGTileScaling *) scaling
                  andAuthority: (NSString *) authority
                       andCode: (NSString *) code
-                     andLabel: (NSString *) label{
+                     andLabel: (NSString *) label
+                       andUrl: (NSString *) tileUrl{
     
     PROJProjection * projection = [PROJProjectionFactory projectionWithAuthority:authority andCode:code];
     GPKGBoundingBox * bbox = [self transformBoundingBox:boundingBox withProjection:projection];
@@ -149,7 +151,7 @@
     GPKGTileGenerator * tileGenerator = [[GPKGFeatureTileGenerator alloc] initWithGeoPackage:geoPackage andTableName:tableName andFeatureTiles:featureTiles andMinZoom:minZoom andMaxZoom:maxZoom andBoundingBox:bbox andProjection:projection];
     [self setTileGenerator:tileGenerator withMinZoom:minZoom andMaxZoom:maxZoom andCompressFormat:compressFormat andCompressQuality:compressQuality andCompressScale:compressScale andXyzTiles:xyzTiles andBoundingBox:boundingBox andTileScaling:scaling];
     
-    [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label];
+    [self loadTilesWithCallback:callback andGeoPackage:geoPackage andTable:tableName andTileGenerator:tileGenerator andLabel:label andUrl:tileUrl];
 }
 
 +(GPKGBoundingBox *) transformBoundingBox: (GPKGBoundingBox *) boundingBox withProjection: (PROJProjection *) projection{
@@ -186,7 +188,7 @@
     [tileGenerator setScaling:scaling];
 }
 
-+(void) loadTilesWithCallback:(NSObject<GPKGSLoadTilesProtocol> *)callback andGeoPackage:(GPKGGeoPackage *)geoPackage andTable:(NSString *)tableName andTileGenerator: (GPKGTileGenerator *) tileGenerator andLabel: (NSString *) label{
++(void) loadTilesWithCallback:(NSObject<GPKGSLoadTilesProtocol> *)callback andGeoPackage:(GPKGGeoPackage *)geoPackage andTable:(NSString *)tableName andTileGenerator: (GPKGTileGenerator *) tileGenerator andLabel: (NSString *) label andUrl: (NSString *) tileUrl{
     
     MCLoadTilesTask * loadTilesTask = [[MCLoadTilesTask alloc] initWithCallback:callback];
     
@@ -209,6 +211,12 @@
     [alertView show];
     
     loadTilesTask.slowNotifier = [SlowServerNotifier alloc];
+    NSArray  *parts = [tileUrl componentsSeparatedByString:@"/"];
+    if(parts.count > 2) {
+        loadTilesTask.host = parts[2];
+    } else {
+        loadTilesTask.host = @"this server";
+    }
     loadTilesTask.lastProgressTime = CACurrentMediaTime();
     
     [loadTilesTask execute];
@@ -280,8 +288,8 @@
 
 -(void) addProgress: (int) progress{
     double currentTime = CACurrentMediaTime();
-    [self.slowNotifier responseTime:currentTime - self.lastProgressTime];
-    self.lastProgressTime = currentTime;
+    [self.slowNotifier responseTime:currentTime - self.lastProgressTime andHost:self.host];
+    self.lastProgressTime = CACurrentMediaTime();
     self.progress += progress;
     float progressPercentage = self.progress / [self.maxTiles floatValue];
     dispatch_sync(dispatch_get_main_queue(), ^{

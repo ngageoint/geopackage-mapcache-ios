@@ -10,6 +10,6 @@
 
 @interface SlowServerNotifier : NSObject
 
-- (void) responseTime : (double) timeInSeconds;
+- (void) responseTime : (double) timeInSeconds andHost: (NSString *) host;
 
 @end
