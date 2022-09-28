@@ -18,6 +18,7 @@
 #import "SFPGeometryTransform.h"
 #import "PROJProjectionConstants.h"
 #import "GPKGTileBoundingBoxUtils.h"
+#import "SlowServerNotifier.h"
 
 @interface MCLoadTilesTask ()
 
@@ -29,6 +30,8 @@
 @property (nonatomic, strong) NSString *error;
 @property (nonatomic, strong) UIAlertView *alertView;
 @property (nonatomic, strong) UIProgressView *progressView;
+@property (nonatomic) double lastProgressTime;
+@property (nonatomic, strong) SlowServerNotifier *slowNotifier;
 
 @end
 
@@ -205,6 +208,9 @@
     
     [alertView show];
     
+    loadTilesTask.slowNotifier = [SlowServerNotifier alloc];
+    loadTilesTask.lastProgressTime = CACurrentMediaTime();
+    
     [loadTilesTask execute];
     
 }
@@ -273,6 +279,8 @@
 }
 
 -(void) addProgress: (int) progress{
+    double currentTime = CACurrentMediaTime();
+    [self.slowNotifier responseTime:currentTime - self.lastProgressTime];
     self.progress += progress;
     float progressPercentage = self.progress / [self.maxTiles floatValue];
     dispatch_sync(dispatch_get_main_queue(), ^{

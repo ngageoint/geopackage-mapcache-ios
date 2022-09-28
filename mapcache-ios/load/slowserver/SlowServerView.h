@@ -11,7 +11,7 @@
 
 @interface SlowServerView : NSObject
  
-- (id)init: (SlowServerModel*) model;
+- (instancetype)init: (SlowServerModel*) model;
 - (void)show;
 
 @end

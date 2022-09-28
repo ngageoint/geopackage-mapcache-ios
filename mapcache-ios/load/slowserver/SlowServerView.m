@@ -17,12 +17,12 @@
 
 @implementation SlowServerView
 
--(id)init: (SlowServerModel *) model{
+-(instancetype)init: (SlowServerModel *) model{
     if(self = [super init]) {
         self.model = model;
     }
 
-    return ([NSObject init]); // return self;
+    return self; // return self;
 }
 
 -(void) show{

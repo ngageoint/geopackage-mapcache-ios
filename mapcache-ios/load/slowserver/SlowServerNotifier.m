@@ -19,15 +19,16 @@
 
 @implementation SlowServerNotifier
 
--(void) responseTime:(NSString *) host timeInSeconds: (double)timeInSeconds {
+-(void) responseTime:(double)timeInSeconds {
     if (timeInSeconds >= 2.0) {
         self.slowCount++;
         if (self.slowCount >= 10 && !self.notified) {
             SlowServerModel* model = [SlowServerModel alloc];
-            [model setMessage:[NSString stringWithFormat:@"Downloads from %@ are taking a long time.  Either your connection is poor or the server's performance is slow.", host]];
+            [model setMessage:[NSString stringWithFormat:@"Downloads from %@ are taking a long time.  Either your connection is poor or the server's performance is slow.", @"host"]];
             SlowServerView* view = [[SlowServerView alloc]init: model];
-            [view show];
             self.notified = true;
+            dispatch_queue_t queue = dispatch_get_main_queue();
+            dispatch_async(queue, ^{[view show];});
         }
     }
 }

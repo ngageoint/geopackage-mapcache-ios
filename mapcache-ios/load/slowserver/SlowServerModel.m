@@ -10,18 +10,18 @@
 
 @interface SlowServerModel ()
 
-@property (nonatomic, strong) NSString *message;
+@property (nonatomic, strong) NSString *slowMessage;
 
 @end
 
 @implementation SlowServerModel
 
 -(NSString *) getMessage{
-    return self.message;
+    return self.slowMessage;
 }
 
--(void) setMessage:(NSString *)message {
-    self.message = message;
+-(void) setMessage:(NSString *)newMessage {
+    self.slowMessage = newMessage;
 }
 
 @end
