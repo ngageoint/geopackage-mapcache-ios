@@ -31,7 +31,7 @@
                               initWithTitle:@"Slow Downloads"
                               message:[self.model getMessage]
                               delegate:nil
-                              cancelButtonTitle:@"Ok"
+                              cancelButtonTitle:@"OK"
                               otherButtonTitles:nil];
     [self.alertView show];
 }

@@ -281,6 +281,7 @@
 -(void) addProgress: (int) progress{
     double currentTime = CACurrentMediaTime();
     [self.slowNotifier responseTime:currentTime - self.lastProgressTime];
+    self.lastProgressTime = currentTime;
     self.progress += progress;
     float progressPercentage = self.progress / [self.maxTiles floatValue];
     dispatch_sync(dispatch_get_main_queue(), ^{
