@@ -14,23 +14,10 @@
 
 @implementation MCNoticeAndAttributionViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    CGRect bounds = self.view.bounds;
-    CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height); // offset on the height to account for the gap at the top of the drawer
-    
-    WKWebViewConfiguration *webViewConfiguration = [[WKWebViewConfiguration alloc] init];
-    self.webView = [[WKWebView alloc] initWithFrame: insetBounds configuration:webViewConfiguration];
-    self.webView.navigationDelegate = self;
-    
+-(instancetype)init {
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"privacypolicy/index" withExtension:@"html"];
-    [self.webView loadFileURL:url allowingReadAccessToURL:url];
-    [self.view addSubview:self.webView];
-    
-//    [self addDragHandle];
-//    [self addCloseButton];
+    return [super initWithUrl:url.absoluteString];
 }
-
 
 //- (void)closeDrawer {
 //    [super closeDrawer];

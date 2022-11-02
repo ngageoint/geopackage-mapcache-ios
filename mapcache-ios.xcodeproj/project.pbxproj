@@ -44,6 +44,7 @@
 		04E1D8D91B66D4CA002BD947 /* GPKGSEditContentsData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8D81B66D4CA002BD947 /* GPKGSEditContentsData.m */; };
 		04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8DE1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m */; };
 		ABF599CF223A19684B94F220 /* Pods_mapcache_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FB9F52FC47FC548E7F938C /* Pods_mapcache_ios.framework */; };
+		CA17E1672913044400C21B78 /* MCWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA17E1662913044400C21B78 /* MCWebViewController.m */; };
 		E300A93323313D77002336A0 /* MCBoundingBoxGuideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E300A93223313D77002336A0 /* MCBoundingBoxGuideView.xib */; };
 		E300A93623313DCE002336A0 /* MCBoundingBoxGuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = E300A93523313DCE002336A0 /* MCBoundingBoxGuideView.m */; };
 		E300A93923315B9D002336A0 /* MCBoundingBoxPassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = E300A93823315B9D002336A0 /* MCBoundingBoxPassthroughView.m */; };
@@ -251,6 +252,8 @@
 		5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.debug.xcconfig"; sourceTree = "<group>"; };
+		CA17E1662913044400C21B78 /* MCWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCWebViewController.m; sourceTree = "<group>"; };
+		CA17E1682913047400C21B78 /* MCWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCWebViewController.h; sourceTree = "<group>"; };
 		E300A93223313D77002336A0 /* MCBoundingBoxGuideView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCBoundingBoxGuideView.xib; sourceTree = "<group>"; };
 		E300A93423313DCE002336A0 /* MCBoundingBoxGuideView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MCBoundingBoxGuideView.h; path = "mapcache-ios/geopackage/NewLayerWizard/MCBoundingBoxGuideView.h"; sourceTree = SOURCE_ROOT; };
 		E300A93523313DCE002336A0 /* MCBoundingBoxGuideView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MCBoundingBoxGuideView.m; path = "mapcache-ios/geopackage/NewLayerWizard/MCBoundingBoxGuideView.m"; sourceTree = SOURCE_ROOT; };
@@ -906,6 +909,8 @@
 				E3FB85682134955D002F012E /* NGADrawerCoordinator.m */,
 				E3FB856A2134955E002F012E /* NGADrawerViewController.h */,
 				E3FB85692134955D002F012E /* NGADrawerViewController.m */,
+				CA17E1662913044400C21B78 /* MCWebViewController.m */,
+				CA17E1682913047400C21B78 /* MCWebViewController.h */,
 			);
 			path = drawer;
 			sourceTree = "<group>";
@@ -1192,6 +1197,7 @@
 				E3D80EA223FF59E3006F1014 /* MCDrawingStatusViewController.m in Sources */,
 				E3A651B32005652400B8AB27 /* MCFieldWithTitleCell.m in Sources */,
 				E3D7880A264F3C6600A32709 /* MCMapPointAttachmentViewController.swift in Sources */,
+				CA17E1672913044400C21B78 /* MCWebViewController.m in Sources */,
 				E3D78800264F38E600A32709 /* MCImageCell.swift in Sources */,
 				04E0EE0B1B691A3C0095E53E /* GPKGSEditTileOverlayData.m in Sources */,
 				045C94891B5026E00005CCD0 /* MCDatabases.m in Sources */,

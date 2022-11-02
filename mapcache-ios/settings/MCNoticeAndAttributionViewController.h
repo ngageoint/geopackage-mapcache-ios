@@ -6,11 +6,13 @@
 //  Copyright © 2019 NGA. All rights reserved.
 //
 
-#import "NGADrawerViewController.h"
+#import "MCWebViewController.h"
 #import <WebKit/WebKit.h>
 
 
-@interface MCNoticeAndAttributionViewController : UIViewController <WKNavigationDelegate>
+@interface MCNoticeAndAttributionViewController : MCWebViewController
+
+-(instancetype)init;
 
 @end
 

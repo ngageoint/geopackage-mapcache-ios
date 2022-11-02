@@ -218,6 +218,8 @@ import Foundation
                 return
             }
             
+            let str = String(decoding: data, as: UTF8.self)
+            print(str)
             let parser = XMLParser(data: data)
             parser.delegate = self
             
