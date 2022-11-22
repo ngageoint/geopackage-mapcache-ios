@@ -332,7 +332,7 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
                 }
                 
             } else {
-                [[MCTileServerRepository shared] isValidServerURLWithUrlString:tappedServer.url username:credentials.username password:credentials.password completion:^(MCTileServerResult *tileServerResult) {
+                [[MCTileServerRepository shared] isValidServerURLWithUrlString:tappedServer.url username:credentials.username password:credentials.password viewController:self completion:^(MCTileServerResult *tileServerResult) {
                     if (tileServerResult == nil) {
                         NSLog(@"Problem with URL");
                     }

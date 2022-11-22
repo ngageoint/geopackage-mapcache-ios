@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UITextView (Validators)
-- (void)isValidTileServerURL:(UITextView *)textView withResult:(void(^)(MCTileServerResult *tileServerResult))resultBlock;
+- (void)isValidTileServerURL:(UITextView *)textView withViewController:(UIViewController *)viewController withResult:(void(^)(MCTileServerResult *tileServerResult))resultBlock;
 - (void)isValidGeoPackageURL:(UITextView *)textView withResult:(void(^)(BOOL isValid))resultBlock;
 - (void)trimWhiteSpace:(UITextView *)textView;
 - (void)replaceEncodedCharacters:(UITextView *)textView;

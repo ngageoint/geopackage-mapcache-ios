@@ -58,6 +58,7 @@
     _manager = [GPKGGeoPackageFactory manager];
     _geoPackages = [[GPKGGeoPackageCache alloc] initWithManager:self.manager];
     _tileServerRepository = [MCTileServerRepository shared];
+    [_tileServerRepository loadUserDefaultsWithViewController:_window.rootViewController];
     
     return YES;
 }

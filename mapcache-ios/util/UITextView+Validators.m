@@ -12,8 +12,8 @@
 
 @implementation UITextView (Validators)
 
-- (void)isValidTileServerURL:(UITextView *)textView withResult:(void(^)(MCTileServerResult *tileServerResult))resultBlock {
-    [MCTileServerRepository.shared isValidServerURLWithUrlString:textView.text completion:resultBlock];
+- (void)isValidTileServerURL:(UITextView *)textView withViewController:(UIViewController *)viewController withResult:(void(^)(MCTileServerResult *tileServerResult))resultBlock {
+    [MCTileServerRepository.shared isValidServerURLWithUrlString:textView.text viewController:viewController completion:resultBlock];
 }
 
 

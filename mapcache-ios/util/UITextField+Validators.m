@@ -12,8 +12,8 @@
 
 @implementation UITextField (Validators)
 
-- (void)isValidTileServerURL:(UITextField *)textField withResult:(void(^)(MCTileServerResult *tileServerResult))resultBlock {
-    [MCTileServerRepository.shared isValidServerURLWithUrlString:textField.text completion:resultBlock];
+- (void)isValidTileServerURL:(UITextField *)textField withController:(UIViewController *)viewController withResult:(void(^)(MCTileServerResult *tileServerResult))resultBlock {
+    [MCTileServerRepository.shared isValidServerURLWithUrlString:textField.text viewController:viewController completion:resultBlock];
 }
 
 

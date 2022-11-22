@@ -29,11 +29,16 @@
     CGRect insetBounds = CGRectMake(bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height); // offset on the height to account for the gap at the top of the drawer
     
     WKWebViewConfiguration *webViewConfiguration = [[WKWebViewConfiguration alloc] init];
+    WKPreferences *thePreferences = [[WKPreferences alloc] init];
+    thePreferences.javaScriptCanOpenWindowsAutomatically = YES;
+    thePreferences.javaScriptEnabled = YES;
+    webViewConfiguration.preferences = thePreferences;
     self.webView = [[WKWebView alloc] initWithFrame: insetBounds configuration:webViewConfiguration];
     self.webView.navigationDelegate = self;
     
     NSURL *url = [[NSURL alloc] initWithString: self.urlString];
-    [self.webView loadFileURL:url allowingReadAccessToURL:url];
+    NSURLRequest* request = [[NSURLRequest alloc] initWithURL: url];
+    [self.webView loadRequest:request];
     [self.view addSubview:self.webView];
 }
 

@@ -167,7 +167,7 @@
     } else if (textField == self.usernameField.field) {
         [self.passwordField.field becomeFirstResponder];
     } else if (textField == self.passwordField.field) {
-        [[MCTileServerRepository shared] isValidServerURLWithUrlString:_serverURL username:self.usernameField.field.text password:self.passwordField.field.text completion:^(MCTileServerResult * _Nonnull tileServerResult) {
+        [[MCTileServerRepository shared] isValidServerURLWithUrlString:_serverURL username:self.usernameField.field.text password:self.passwordField.field.text viewController:self completion:^(MCTileServerResult * _Nonnull tileServerResult) {
             if (tileServerResult == nil) {
                 NSLog(@"Bad url");
                 self.urlIsValid = NO;
@@ -255,7 +255,7 @@
     _serverURL = textView.text;
     
     [textView trimWhiteSpace:textView];
-    [textView isValidTileServerURL:textView withResult:^(MCTileServerResult * _Nonnull tileServerResult) {
+    [textView isValidTileServerURL:textView withViewController:self withResult:^(MCTileServerResult * _Nonnull tileServerResult) {
         MCServerError *error = (MCServerError *)tileServerResult.failure;
         
         dispatch_async(dispatch_get_main_queue(), ^{

@@ -219,7 +219,7 @@
             [self.helpText setDescription:@"Checking URL"];
             [self.buttonCell disableButton];
             
-            [[MCTileServerRepository shared] isValidServerURLWithUrlString:[self.urlCell fieldValue] completion:^(MCTileServerResult *tileServerResult) {
+            [[MCTileServerRepository shared] isValidServerURLWithUrlString:[self.urlCell fieldValue] viewController:self completion:^(MCTileServerResult *tileServerResult) {
                 if (tileServerResult == nil) {
                     NSLog(@"Bad url");
                     self.urlIsValid = NO;
@@ -307,7 +307,7 @@
         }
     } else if (textField == _passwordCell.field) {
         [self.passwordCell.field resignFirstResponder];
-        [[MCTileServerRepository shared] isValidServerURLWithUrlString:[self.urlCell fieldValue] username:[self.usernameCell fieldValue] password:[self.passwordCell fieldValue] completion:^(MCTileServerResult *tileServerResult) {
+        [[MCTileServerRepository shared] isValidServerURLWithUrlString:[self.urlCell fieldValue] username:[self.usernameCell fieldValue] password:[self.passwordCell fieldValue] viewController:self completion:^(MCTileServerResult *tileServerResult) {
             if (tileServerResult == nil) {
                 NSLog(@"Bad url");
                 self.urlIsValid = NO;
