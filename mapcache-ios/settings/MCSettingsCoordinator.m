@@ -14,6 +14,7 @@
 @property (nonatomic, strong) MCTileServerURLManagerViewController *tileServerManagerView;
 @property (nonatomic, strong) MCNewTileServerViewController *createTileServerView;
 @property (nonatomic, strong) NSString *originalServerName;
+@property (nonatomic, strong) NSString *originalServerUrl;
 @end
 
 @implementation MCSettingsCoordinator 
@@ -78,6 +79,7 @@
 
 - (void)showTileURLManager {
     self.originalServerName = nil;
+    self.originalServerUrl = nil;
     self.createTileServerView = [[MCNewTileServerViewController alloc] init];
     self.createTileServerView.modalPresentationStyle = UIModalPresentationPageSheet;
     [self.settingsViewController presentViewController:self.createTileServerView animated:YES completion:nil];
@@ -105,6 +107,7 @@
 #pragma mark - MCTileServerManagerDelegate
 - (void) showNewTileServerView {
     self.originalServerName = nil;
+    self.originalServerUrl = nil;
     self.createTileServerView = [[MCNewTileServerViewController alloc] init];
     self.createTileServerView.saveTileServerDelegate = self;
     self.createTileServerView.modalPresentationStyle = UIModalPresentationPageSheet;
@@ -112,24 +115,22 @@
 }
 
 
-- (void)editTileServer:(NSString *)serverName {
+- (void)editTileServer:(MCTileServer *)tileServer {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *serverUrls = [defaults dictionaryForKey:MC_SAVED_TILE_SERVER_URLS];
-    self.originalServerName = serverName;
+    self.originalServerName = tileServer.serverName;
+    self.originalServerUrl = tileServer.url;
     
-    if (serverUrls != nil) {
-        self.createTileServerView = [[MCNewTileServerViewController alloc] init];
-        self.createTileServerView.saveTileServerDelegate = self;
-        self.createTileServerView.modalPresentationStyle = UIModalPresentationPageSheet;
-        [self.settingsViewController presentViewController:self.createTileServerView animated:YES completion:nil];
-        [self.createTileServerView setServerName:serverName];
-        [self.createTileServerView setServerURL:[serverUrls objectForKey:serverName]];
-    }
+    self.createTileServerView = [[MCNewTileServerViewController alloc] init];
+    self.createTileServerView.saveTileServerDelegate = self;
+    self.createTileServerView.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self.settingsViewController presentViewController:self.createTileServerView animated:YES completion:nil];
+    [self.createTileServerView setServerName:tileServer.serverName];
+    [self.createTileServerView setServerURL:tileServer.url];
 }
 
 
 - (void)deleteTileServer:(nonnull MCTileServer *)tileServer {
-    [[MCTileServerRepository shared] removeTileServerFromUserDefaultsWithServerName:tileServer.serverName];
+    [[MCTileServerRepository shared] removeTileServerFromUserDefaultsWithServerName:tileServer.serverName andUrl:tileServer.url];
     NSError *keychainError = nil;
     [[MCKeychainUtil shared] deleteCredentialsWithServer:tileServer.url error:&keychainError];
     // TODO: Handle keychain error
@@ -140,8 +141,9 @@
 #pragma mark - MCTileServerSaveDelegate
 - (BOOL)saveURL:(NSString *)url forServerNamed:(NSString *)serverName tileServer:(nonnull MCTileServer *)tileServer {
     // If the server name changed, remove the old value
-    if (self.originalServerName != nil && ![self.originalServerName isEqualToString:serverName]) {
-        [[MCTileServerRepository shared] removeTileServerFromUserDefaultsWithServerName:self.originalServerName];
+    if ((self.originalServerUrl != nil && ![self.originalServerUrl isEqualToString:tileServer.url]) ||
+        (self.originalServerName != nil && ![self.originalServerName isEqualToString:tileServer.serverName])) {
+        [[MCTileServerRepository shared] removeTileServerFromUserDefaultsWithServerName:self.originalServerName andUrl:self.originalServerUrl];
     }
     
     BOOL didUpdate = [[MCTileServerRepository shared] saveToUserDefaultsWithServerName:serverName url:url tileServer:tileServer];
