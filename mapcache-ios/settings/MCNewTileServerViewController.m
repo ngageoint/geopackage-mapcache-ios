@@ -68,6 +68,8 @@
     self.urlField.textViewCellDelegate = self;
     UIToolbar *keyboardToolbar = [MCUtils buildKeyboardDoneToolbarWithTarget:self andAction:@selector(doneButtonPressed)];
     self.urlField.textView.inputAccessoryView = keyboardToolbar;
+    self.urlField.textView.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.urlField.textView.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [self.cellArray addObject:self.urlField];
     
     self.usernameField = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
