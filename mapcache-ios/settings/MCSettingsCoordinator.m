@@ -148,6 +148,7 @@
     
     BOOL didUpdate = [[MCTileServerRepository shared] saveToUserDefaultsWithServerName:serverName url:url tileServer:tileServer];
     [self.settingsViewController update];
+    [self.tileServerManagerView update];
     return didUpdate;
 }
 
