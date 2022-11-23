@@ -291,10 +291,6 @@ import Foundation
         tagStack.append(elementName)
         
         if elementName == layerKey {
-            if (topLevelLayer.title == "") {
-                topLevelLayer = currentLayer
-                layers.append(topLevelLayer)
-            }
             currentLayer = MCLayer()
         }
         
