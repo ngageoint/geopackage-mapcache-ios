@@ -200,6 +200,7 @@
 #pragma mark - MCLayerCoordinatorDelegate methods
 - (void) layerCoordinatorCompletionHandler {
     // TODO update the geopackage view to reflect any changes
+    [self updateDatabase];
     _geoPackageViewController.database = [_repository databaseNamed:_database.name];
     [_geoPackageViewController update];
     [self.childCoordinators removeAllObjects];
