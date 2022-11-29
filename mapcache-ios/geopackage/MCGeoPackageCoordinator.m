@@ -204,6 +204,7 @@
     _geoPackageViewController.database = [_repository databaseNamed:_database.name];
     [_geoPackageViewController update];
     [self.childCoordinators removeAllObjects];
+    [_mapDelegate updateMapLayers];
 }
 
 
