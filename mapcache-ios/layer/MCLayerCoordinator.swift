@@ -20,14 +20,16 @@ import UIKit
     var fieldViewController: MCCreateLayerFieldViewController
     @objc weak var layerCoordinatorDelegate:MCLayerCoordinatorDelegate?
     var launchedFromSingleLayerView: Bool
+    var repository: MCGeoPackageRepository
     
-    @objc public init(table:MCTable, drawerDelegate:NGADrawerViewDelegate, layerCoordinatorDelegate:MCLayerCoordinatorDelegate, launchedFromSingleLayerView:Bool) {
+    @objc public init(table:MCTable, drawerDelegate:NGADrawerViewDelegate, layerCoordinatorDelegate:MCLayerCoordinatorDelegate, launchedFromSingleLayerView:Bool, repository:MCGeoPackageRepository) {
         self.drawerViewDelegate = drawerDelegate
         self.layerCoordinatorDelegate = layerCoordinatorDelegate
         self.table = table
         self.layerViewController = MCLayerViewController(asFullView: true)
         self.fieldViewController = MCCreateLayerFieldViewController(asFullView: true)
         self.launchedFromSingleLayerView = launchedFromSingleLayerView
+        self.repository = repository
         super.init()
     }
     
@@ -50,6 +52,9 @@ import UIKit
         print("MCLayerCoordinator deleteLayer")
         let didDelete = MCGeoPackageRepository.shared().deleteLayer(self.table)
         if didDelete {
+            if self.table.name == self.repository.selectedLayerName {
+                self.repository.selectedLayerName = ""
+            }
             self.drawerViewDelegate.popDrawer()
             if self.launchedFromSingleLayerView {
                 self.drawerViewDelegate.popDrawer()

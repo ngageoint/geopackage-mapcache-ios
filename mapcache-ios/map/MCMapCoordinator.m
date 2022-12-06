@@ -442,7 +442,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     
     if (database != nil && [database hasTableNamed:_repository.selectedLayerName]) {
         MCTable *table = [database tableNamed:_repository.selectedLayerName];
-        MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerViewDelegate layerCoordinatorDelegate:self launchedFromSingleLayerView:YES];
+        MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerViewDelegate layerCoordinatorDelegate:self launchedFromSingleLayerView:YES repository:_repository];
         [self.childCoordinators addObject:layerCoordinator];
         [layerCoordinator start];
     }

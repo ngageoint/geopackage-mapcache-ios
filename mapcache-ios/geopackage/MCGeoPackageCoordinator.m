@@ -167,7 +167,7 @@
         _repository.selectedLayerName = table.name;
     }
     
-    MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerDelegate layerCoordinatorDelegate:self launchedFromSingleLayerView:NO];
+    MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerDelegate layerCoordinatorDelegate:self launchedFromSingleLayerView:NO repository:self.repository];
     [self.childCoordinators addObject:layerCoordinator];
     
     [layerCoordinator start];
