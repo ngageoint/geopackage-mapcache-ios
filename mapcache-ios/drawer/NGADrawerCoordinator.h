@@ -11,11 +11,12 @@
 #import "NGADrawerViewController.h"
 #import "MCGeoPackageListCoordinator.h"
 #import "MCMapCoordinator.h"
+#import "MCGeoPackageCoordinator.h"
 
 @protocol MCMapDelegate;
 @interface NGADrawerCoordinator : NSObject <NGADrawerViewDelegate>
 - (instancetype) initWithBackgroundViewController:(UIViewController *) viewController andMCMapDelegate:(id<MCMapDelegate>) mcMapDelegate;
-- (void) start;
+- (MCGeoPackageListCoordinator*) start;
 - (void) pushDrawer:(NGADrawerViewController *) childViewController;
 @property (nonatomic, strong) id<MCMapDelegate> mcMapDelegate;
 @end

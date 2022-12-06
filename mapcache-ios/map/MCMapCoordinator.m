@@ -442,7 +442,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     
     if (database != nil && [database hasTableNamed:_repository.selectedLayerName]) {
         MCTable *table = [database tableNamed:_repository.selectedLayerName];
-        MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerViewDelegate layerCoordinatorDelegate:self];
+        MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerViewDelegate layerCoordinatorDelegate:self launchedFromSingleLayerView:YES];
         [self.childCoordinators addObject:layerCoordinator];
         [layerCoordinator start];
     }
@@ -505,6 +505,8 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     self.mapPointDataViewController.row = newRow;
     [self.mapPointDataViewController reloadWith:newRow mapPoint:self.mapPoint mode:MCPointViewModeEdit];
     [self.childCoordinators removeLastObject];
+    [self updateMapLayers];
+    [self.geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_repository.selectedGeoPackageName withDelete:NO];
 }
 
 
