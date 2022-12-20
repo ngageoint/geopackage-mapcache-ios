@@ -161,7 +161,7 @@
     
     if ([table isKindOfClass:MCTileTable.class]) {
         MCTileTable *tileTable = (MCTileTable *)table;
-        NSUInteger zoomLevel = tileTable.maxZoom;
+        NSUInteger zoomLevel = (tileTable.maxZoom - tileTable.minZoom) / 2 + tileTable.minZoom;
         [_mapDelegate zoomToPoint:tileTable.center withZoomLevel:zoomLevel];
     } else if ([table isKindOfClass:MCFeatureTable.class]) {
         _repository.selectedLayerName = table.name;
