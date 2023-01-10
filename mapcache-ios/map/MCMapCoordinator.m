@@ -501,9 +501,9 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 #pragma mark - MCLayerCoordinatorDelegate methods
 - (void)layerCoordinatorCompletionHandler {
-    GPKGFeatureRow *newRow = [_repository newRowInTable:_repository.selectedLayerName database:_repository.selectedGeoPackageName mapPoint:self.mapPoint];
+    /*GPKGFeatureRow *newRow = [_repository newRowInTable:_repository.selectedLayerName database:_repository.selectedGeoPackageName mapPoint:self.mapPoint];
     self.mapPointDataViewController.row = newRow;
-    [self.mapPointDataViewController reloadWith:newRow mapPoint:self.mapPoint mode:MCPointViewModeEdit];
+    [self.mapPointDataViewController reloadWith:newRow mapPoint:self.mapPoint mode:MCPointViewModeEdit];*/
     [self.childCoordinators removeLastObject];
     [self updateMapLayers];
     [self.geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_repository.selectedGeoPackageName withDelete:NO];
