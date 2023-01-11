@@ -25,6 +25,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 @property (nonatomic, strong) MCMapPointAttachmentViewController *attachmentView;
 @property (nonatomic, strong) MCGeoPackageRepository *repository;
 @property (nonatomic, strong) GPKGMapPoint *mapPoint;
+@property (nonatomic, strong) GPKGMapPoint *editingMapPoint;
 @property (nonatomic, strong) GPKGMediaRow *selectedAttachment; // If the attachment was saved
 @property (nonatomic, strong) NSNumber *selectedAttachmentIndex; // if the attachment has been selected while editing the feature, but hasn't been saved
 @end
@@ -237,6 +238,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
     If the drawer was already displaying data from another point, pass the data to the drawer and it will reload and update.
  */
 - (void)showDetailsForAnnotation:(GPKGMapPoint *)mapPoint {
+    _editingMapPoint = nil;
     if (mapPoint.data == nil) { // this is a new point
         // When you have selected a geopackage and a layer from the main list, when you longpress on the map we assume
         // that is where you would like to save the new point. If you have not selected anything, then you will be
@@ -279,6 +281,7 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
             }
         }
     } else { // this is an existing point, query it's data and show it
+        self.editingMapPoint = mapPoint;
         GPKGSMapPointData *pointData = (GPKGSMapPointData *)mapPoint.data;
         [_repository setSelectedGeoPackageName: pointData.database];
         [_repository setSelectedLayerName:pointData.tableName];
@@ -501,12 +504,20 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
 
 #pragma mark - MCLayerCoordinatorDelegate methods
 - (void)layerCoordinatorCompletionHandler {
-    /*GPKGFeatureRow *newRow = [_repository newRowInTable:_repository.selectedLayerName database:_repository.selectedGeoPackageName mapPoint:self.mapPoint];
-    self.mapPointDataViewController.row = newRow;
-    [self.mapPointDataViewController reloadWith:newRow mapPoint:self.mapPoint mode:MCPointViewModeEdit];*/
+    NSString* geoPackageName = _repository.selectedGeoPackageName;
+    if([_repository.selectedLayerName length] != 0) {
+        if(_editingMapPoint == nil){
+            GPKGFeatureRow *newRow = [_repository newRowInTable:_repository.selectedLayerName database:_repository.selectedGeoPackageName mapPoint:self.mapPoint];
+            self.mapPointDataViewController.row = newRow;
+            [self.mapPointDataViewController reloadWith:newRow mapPoint:self.mapPoint mode:MCPointViewModeEdit];
+        } else {
+            [self showDetailsForAnnotation:self.editingMapPoint];
+        }
+    }
     [self.childCoordinators removeLastObject];
     [self updateMapLayers];
     [self.geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_repository.selectedGeoPackageName withDelete:NO];
+    _repository.selectedGeoPackageName = geoPackageName;
 }
 
 
