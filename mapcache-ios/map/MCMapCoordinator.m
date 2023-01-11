@@ -513,9 +513,10 @@ NSString * const MC_MAX_FEATURES_PREFERENCE = @"maxFeatures";
         } else {
             [self showDetailsForAnnotation:self.editingMapPoint];
         }
+    } else {
+        [self updateMapLayers];
     }
     [self.childCoordinators removeLastObject];
-    [self updateMapLayers];
     [self.geoPackageCoordinatorDelegate geoPackageCoordinatorCompletionHandlerForDatabase:_repository.selectedGeoPackageName withDelete:NO];
     _repository.selectedGeoPackageName = geoPackageName;
 }
