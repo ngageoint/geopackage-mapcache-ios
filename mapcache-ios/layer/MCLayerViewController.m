@@ -235,7 +235,7 @@
 - (void) deleteLayer {
     NSLog(@"Deleting layer");
     
-    UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you wanbt to delete this layer? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *deleteAlert = [UIAlertController alertControllerWithTitle:@"Delete" message:@"Do you want to delete this layer? This action can not be undone." preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *confirmDelete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         [self.delegate deleteLayer];
         [self dismissViewControllerAnimated:YES completion:nil];
