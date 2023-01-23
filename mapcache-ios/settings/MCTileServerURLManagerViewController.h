@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol MCTileServerManagerDelegate <NSObject>
 - (void) showNewTileServerView;
-- (void) editTileServer:(NSString *) serverName;
+- (void) editTileServer:(MCTileServer *) tileServer;
 - (void) deleteTileServer:(NSString *) serverName;
 @end
 

@@ -291,10 +291,6 @@ import Foundation
         tagStack.append(elementName)
         
         if elementName == layerKey {
-            if (topLevelLayer.title == "") {
-                topLevelLayer = currentLayer
-                layers.append(topLevelLayer)
-            }
             currentLayer = MCLayer()
         }
         
@@ -370,13 +366,13 @@ import Foundation
         if var savedServers = self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) {
             savedServers[serverName] = url
             self.userDefaults.setValue(savedServers, forKey: MC_SAVED_TILE_SERVER_URLS)
-            self.tileServers[serverName] = tileServer
+            self.tileServers[url] = tileServer
             return true
         } else if self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) == nil {
             let savedServers = NSMutableDictionary()
             savedServers[serverName] = url
             self.userDefaults.setValue(savedServers, forKey: MC_SAVED_TILE_SERVER_URLS)
-            self.tileServers[serverName] = tileServer
+            self.tileServers[url] = tileServer
             return true
         }
         
@@ -404,11 +400,11 @@ import Foundation
     }
     
     
-    @objc func removeTileServerFromUserDefaults(serverName:String) {
+    @objc func removeTileServerFromUserDefaults(serverName:String, andUrl:String) {
         // get the defaults
         if var savedServers = self.userDefaults.dictionary(forKey: MC_SAVED_TILE_SERVER_URLS) {
             savedServers.removeValue(forKey: serverName)
-            self.tileServers.removeValue(forKey: serverName)
+            self.tileServers.removeValue(forKey: andUrl)
             self.userDefaults.setValue(savedServers, forKey: MC_SAVED_TILE_SERVER_URLS)
         }
         
@@ -438,7 +434,7 @@ import Foundation
                             print("MCTileServerRepository:loadUserDefaults - Valid  URL")
                             if let tileServer = tileServerResult.success as? MCTileServer {
                                 tileServer.serverName = serverName
-                                self.tileServers[serverName] = tileServer
+                                self.tileServers[tileServer.url] = tileServer
                                 
                                 if tileServer.serverName == savedBasemapServerName {
                                     self.baseMapServer = tileServer
@@ -458,12 +454,12 @@ import Foundation
                             let tileServer = tileServerResult.success as? MCTileServer
                             tileServer?.serverName = serverName
                             tileServer?.serverType = .authRequired
-                            self.tileServers[serverName] = tileServer
+                            self.tileServers[tileServer!.url] = tileServer
                         } else {
                             let tileServer = tileServerResult.success as? MCTileServer
                             tileServer?.serverName = serverName
                             tileServer?.serverType = .error
-                            self.tileServers[serverName] = tileServer
+                            self.tileServers[tileServer!.url] = tileServer
                         }
                     }
                 }

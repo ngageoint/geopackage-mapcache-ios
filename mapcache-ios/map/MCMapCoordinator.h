@@ -24,6 +24,7 @@
 @class MCTileServer;
 @class MCLayer;
 @class MCLayerCoordinator;
+@class MCGeoPackageListCoordinator;
 typedef NS_ENUM(NSInteger, MCTileServerType);
 @protocol MCMapActionDelegate;
 @protocol MCShowAttachmentDelegate;
@@ -45,4 +46,5 @@ typedef NS_ENUM(NSInteger, MCTileServerType);
 @interface MCMapCoordinator : NSObject <MCMapDelegate, MCMapActionDelegate, MCDrawingStatusDelegate, MCCreateGeoPackageDelegate, MCFeatureLayerCreationDelegate, MCMapPointDataDelegate, MCShowAttachmentDelegate, MCPointAttachmentDelegate, MCLayerCoordinatorDelegate>
 - (instancetype) initWithMapViewController:(MCMapViewController *) mapViewController;
 @property (nonatomic, strong) id<NGADrawerViewDelegate> drawerViewDelegate;
+@property (nonatomic, strong) MCGeoPackageListCoordinator* geoPackageCoordinatorDelegate;
 @end

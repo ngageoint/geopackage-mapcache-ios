@@ -161,13 +161,13 @@
     
     if ([table isKindOfClass:MCTileTable.class]) {
         MCTileTable *tileTable = (MCTileTable *)table;
-        NSUInteger zoomLevel = tileTable.maxZoom;
+        NSUInteger zoomLevel = (tileTable.maxZoom - tileTable.minZoom) / 2 + tileTable.minZoom;
         [_mapDelegate zoomToPoint:tileTable.center withZoomLevel:zoomLevel];
     } else if ([table isKindOfClass:MCFeatureTable.class]) {
         _repository.selectedLayerName = table.name;
     }
     
-    MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerDelegate layerCoordinatorDelegate:self];
+    MCLayerCoordinator *layerCoordinator = [[MCLayerCoordinator alloc] initWithTable:table drawerDelegate:self.drawerDelegate layerCoordinatorDelegate:self launchedFromSingleLayerView:NO repository:self.repository];
     [self.childCoordinators addObject:layerCoordinator];
     
     [layerCoordinator start];
@@ -200,9 +200,11 @@
 #pragma mark - MCLayerCoordinatorDelegate methods
 - (void) layerCoordinatorCompletionHandler {
     // TODO update the geopackage view to reflect any changes
+    [self updateDatabase];
     _geoPackageViewController.database = [_repository databaseNamed:_database.name];
     [_geoPackageViewController update];
     [self.childCoordinators removeAllObjects];
+    [_mapDelegate updateMapLayers];
 }
 
 

@@ -201,6 +201,7 @@
 
 
 - (void) becameTopDrawer {
+    [self.delegate updateDatabase];
     [self.delegate setSelectedDatabaseName];
 }
 

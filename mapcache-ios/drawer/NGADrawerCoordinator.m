@@ -32,14 +32,17 @@
 }
 
 
-- (void) start {
+- (MCGeoPackageListCoordinator*) start {
+    MCGeoPackageListCoordinator *geoPackageListCoordinator = NULL;
     if (_drawerStack.count == 0) {
-        MCGeoPackageListCoordinator *geoPackageListCoordinator = [[MCGeoPackageListCoordinator alloc] init];
+        geoPackageListCoordinator = [[MCGeoPackageListCoordinator alloc] init];
         geoPackageListCoordinator.mcMapDelegate = self.mcMapDelegate;
         [_childCoordinators addObject:geoPackageListCoordinator];
         geoPackageListCoordinator.drawerViewDelegate = self;
         [geoPackageListCoordinator start];
     }
+    
+    return geoPackageListCoordinator;
 }
 
 
