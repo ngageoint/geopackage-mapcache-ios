@@ -24,6 +24,7 @@
 @property (nonatomic, strong) NSString *serverURL;
 @property (nonatomic) BOOL nameIsValid;
 @property (nonatomic) BOOL urlIsValid;
+@property (nonatomic, strong) NSDictionary *encodedCharacters;
 @end
 
 @implementation MCNewTileServerViewController
@@ -46,6 +47,19 @@
     [self addAndConstrainSubview:self.tableView];
     self.nameIsValid = NO;
     self.urlIsValid = NO;
+    
+    self.encodedCharacters = @{
+        @"%23": @"#",
+        @"%26": @"&",
+        @"%28": @"(",
+        @"%29": @")",
+        @"%2A": @"&",
+        @"%2E": @".",
+        @"%2F": @"/",
+        @"%3F": @"?",
+        @"%7B": @"{",
+        @"%7D": @"}"
+    };
 }
 
 
@@ -255,6 +269,14 @@
     ] withRowAnimation:UITableViewRowAnimationNone];
     
     _serverURL = textView.text;
+    
+    if ([_serverURL containsString:@"%"]) {
+        for (NSString *encodedCharacter in self.encodedCharacters.allKeys) {
+            _serverURL = [_serverURL stringByReplacingOccurrencesOfString:encodedCharacter withString:[self.encodedCharacters objectForKey: encodedCharacter]];
+        }
+        
+        [textView setText:_serverURL];
+    }
     
     [textView trimWhiteSpace:textView];
     [textView isValidTileServerURL:textView withResult:^(MCTileServerResult * _Nonnull tileServerResult) {
