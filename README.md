@@ -27,6 +27,14 @@ The MapCache app provides read and write access to GeoPackage files, including f
 
 [![Build Archive](https://github.com/ngageoint/geopackage-mapcache-ios/workflows/Build%20Archive/badge.svg)](https://github.com/ngageoint/geopackage-mapcache-ios/actions?query=workflow%3A%22Build+Archive%22)
 
+**IMPORTANT** -
+Be sure your Mac has the `autoconf`, `automake`, and `glibtoolize` utilities.  These are required to build
+the [proj4-ios](https://cocoapods.org/pods/proj4-ios) dependency.  Without them, `pod install` will fail.  The easiest way to get these is to [`brew install`](https://brew.sh/) them:
+```
+brew install automake
+brew install libtool
+```
+
 Build this repository using Xcode and/or CocoaPods:
 
     pod repo update
