@@ -88,6 +88,7 @@
     
     self.usernameField = [self.tableView dequeueReusableCellWithIdentifier:@"fieldWithTitle"];
     [self.usernameField setTitleText:@"Username"];
+    [self.usernameField useNoAutocapitalization];
     [self.usernameField useReturnKeyNext];
     [self.usernameField setTextFieldDelegate:self];
     
