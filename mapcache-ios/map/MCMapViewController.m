@@ -731,12 +731,12 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
 
 #pragma mark - Zoom and map state
--(int) updateInBackgroundWithZoom: (BOOL) zoom{
-    return [self updateInBackgroundWithZoom:zoom andFilter:false];
+-(void) updateInBackgroundWithZoom: (BOOL) zoom{
+    [self updateInBackgroundWithZoom:zoom andFilter:false];
 }
 
 
--(int) updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter{
+-(void) updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter{
     int updateId = [self.featureHelper getNewUpdateId];
     int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];
     [self.featureHelper resetFeatureCount];

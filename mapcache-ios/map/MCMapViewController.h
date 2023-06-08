@@ -53,8 +53,8 @@ typedef NS_ENUM(NSInteger, MCTileServerType);
 @property (nonatomic, strong) NSMutableArray *tempMapPoints;
 @property (nonatomic, strong) MCDatabases *active;
 
-- (int)updateInBackgroundWithZoom: (BOOL) zoom;
-- (int)updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter;
+- (void)updateInBackgroundWithZoom: (BOOL) zoom;
+- (void)updateInBackgroundWithZoom: (BOOL) zoom andFilter: (BOOL) filter;
 - (void)zoomToPointWithOffset:(CLLocationCoordinate2D) point;
 - (void)zoomToPointWithOffset:(CLLocationCoordinate2D) point zoomLevel:(NSUInteger)zoomLevel;
 - (CLLocationCoordinate2D) convertPointToCoordinate:(CGPoint) point;

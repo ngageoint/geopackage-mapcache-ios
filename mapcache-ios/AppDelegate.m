@@ -10,7 +10,7 @@
 #import "GPKGGeoPackageFactory.h"
 #import "MCConstants.h"
 #import "MCProperties.h"
-#import "MBFingerTipWindow.h"
+//#import "MBFingerTipWindow.h"
 #import "mapcache_ios-Swift.h"
 
 
@@ -25,9 +25,9 @@
 
 - (UIWindow *)window {
     if ([MCProperties getBoolOfProperty:GPKGS_ANIMATE_SCREEN_TOUCHES] && !_window) {
-        MBFingerTipWindow * fingerTip = [[MBFingerTipWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        fingerTip.alwaysShowTouches = YES;
-        _window = fingerTip;
+        //MBFingerTipWindow * fingerTip = [[MBFingerTipWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        //fingerTip.alwaysShowTouches = YES;
+        //_window = fingerTip;
     }
     return _window;
 }
