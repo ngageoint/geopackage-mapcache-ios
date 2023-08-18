@@ -148,6 +148,7 @@ NSString * const GPKGS_DOWNLOAD_TILES_SEG_CREATE_TILES = @"createTiles";
             
             SFPGeometryTransform *webMercatorTransform = [SFPGeometryTransform transformFromEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM andToEpsg:PROJ_EPSG_WEB_MERCATOR];
             GPKGBoundingBox * webMercatorBoundingBox = [self.data.loadTiles.generateTiles.boundingBox transform:webMercatorTransform];
+            [webMercatorTransform destroy];
             int zoomLevel = [GPKGTileBoundingBoxUtils zoomLevelWithWebMercatorBoundingBox:webMercatorBoundingBox];
             int maxZoomLevel = [[GPKGSProperties getNumberValueOfProperty:GPKGS_PROP_LOAD_TILES_MAX_ZOOM_DEFAULT] intValue];
             zoomLevel = MAX(0, MIN(zoomLevel, maxZoomLevel - 2));

@@ -748,6 +748,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                                     SFPGeometryTransform *projectionTransform = [SFPGeometryTransform transformFromProjection:clickProjection andToProjection:featureProjection];
                                     GPKGBoundingBox *boundedClickBoundingBox = [clickBoundingBox boundWgs84Coordinates];
                                     GPKGBoundingBox *transformedBoundingBox = [boundedClickBoundingBox transform:projectionTransform];
+                                    [projectionTransform destroy];
                                     double filterMaxLongitude = 0;
                                     if([featureProjection isUnit:PROJ_UNIT_DEGREES]){
                                         filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
@@ -1227,6 +1228,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                         }
                         
                         self.editFeatureShape = [converter addMapShape:shape asPointsToMapView:self.mapView withPointOptions:[self getEditFeaturePointOptions] andPolylinePointOptions:[self getEditFeatureShapePointOptions] andPolygonPointOptions:[self getEditFeatureShapePointOptions] andPolygonPointHoleOptions:[self getEditFeatureShapeHolePointOptions] andPolylineOptions:[self drawPolylineOptions] andPolygonOptions:[self drawPolygonOptions]];
+                        [converter close];
                         [self updateEditState:true];
                     }
                     @finally {
@@ -1254,6 +1256,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
             if(geometry != nil){
                 GPKGMapShapeConverter * converter = [[GPKGMapShapeConverter alloc] initWithProjection:featureDao.projection];
                 GPKGMapShape * shape = [converter toShapeWithGeometry:geometry];
+                [converter close];
                 GPKGStyleCache *styleCache = [[GPKGStyleCache alloc] initWithGeoPackage:geoPackage];
                 [self prepareShapeOptionsWithShape:shape andStyleCache:styleCache andFeature:featureRow andEditable:true andTopLevel:true];
                 GPKGMapShape * mapShape = [GPKGMapShapeConverter addMapShape:shape toMapView:self.mapView];
@@ -1400,6 +1403,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                 break;
         }
         
+        [converter close];
     }
     @catch (NSException *e) {
         [GPKGSUtils showMessageWithDelegate:self
@@ -1824,8 +1828,10 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     }
     SFPGeometryTransform *transformToWebMercator = [SFPGeometryTransform transformFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
     GPKGBoundingBox *webMercatorBoundingBox = [boundingBox transform:transformToWebMercator];
+    [transformToWebMercator destroy];
     SFPGeometryTransform *transform = [SFPGeometryTransform transformFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
     boundingBox = [webMercatorBoundingBox transform:transform];
+    [transform destroy];
     return boundingBox;
 }
 
@@ -2135,6 +2141,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         if(![transform isSameProjection]){
             transformedContentsBoundingBox = [transformedContentsBoundingBox transform:transform];
         }
+        [transform destroy];
         displayBoundingBox = [displayBoundingBox overlap:transformedContentsBoundingBox];
     }
     
@@ -2262,6 +2269,7 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
                     SFPGeometryTransform *projectionTransform = [SFPGeometryTransform transformFromProjection:mapViewProjection andToProjection:featureProjection];
                     GPKGBoundingBox *boundedMapViewBoundingBox = [mapViewBoundingBox boundWgs84Coordinates];
                     GPKGBoundingBox *transformedBoundingBox = [boundedMapViewBoundingBox transform:projectionTransform];
+                    [projectionTransform destroy];
                     if([featureProjection isUnit:PROJ_UNIT_DEGREES]){
                         filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
                     }else if([featureProjection isUnit:PROJ_UNIT_METERS]){
@@ -2292,6 +2300,8 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
         }
         
     }
+    
+    [converter close];
     
     return count;
 }

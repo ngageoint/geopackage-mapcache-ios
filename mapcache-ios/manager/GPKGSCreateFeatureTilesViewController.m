@@ -199,6 +199,7 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
                 boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
             }
             webMercatorBoundingBox = [boundingBox transform:webMercatorTransform];
+            [webMercatorTransform destroy];
             
             // Try to find a good zoom starting point
             int zoomLevel = [GPKGTileBoundingBoxUtils zoomLevelWithWebMercatorBoundingBox:webMercatorBoundingBox];
@@ -226,6 +227,7 @@ NSString * const GPKGS_MANAGER_CREATE_FEATURE_TILES_SEG_FEATURE_TILES_DRAW = @"f
             if(self.generateTilesData.boundingBox == nil){
                 SFPGeometryTransform *worldGeodeticTransform = [SFPGeometryTransform transformFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
                 GPKGBoundingBox *worldGeodeticBoundingBox = [webMercatorBoundingBox transform:worldGeodeticTransform];
+                [worldGeodeticTransform destroy];
                 self.generateTilesData.boundingBox = worldGeodeticBoundingBox;
             }
         }

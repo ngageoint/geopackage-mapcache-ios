@@ -144,8 +144,10 @@ NSString * const GPKGS_EDIT_TILE_OVERLAY_SEG_FEATURE_TILES_DRAW = @"featureTiles
                         boundingBox = [GPKGTileBoundingBoxUtils boundDegreesBoundingBoxWithWebMercatorLimits:boundingBox];
                     }
                     GPKGBoundingBox *webMercatorBoundingBox = [boundingBox transform:webMercatorTransform];
+                    [webMercatorTransform destroy];
                     SFPGeometryTransform *worldGeodeticTransform = [SFPGeometryTransform transformFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
                     worldGeodeticBoundingBox = [webMercatorBoundingBox transform:worldGeodeticTransform];
+                    [worldGeodeticTransform destroy];
                 }else{
                     worldGeodeticBoundingBox = [[GPKGBoundingBox alloc] initWithMinLongitudeDouble:-PROJ_WGS84_HALF_WORLD_LON_WIDTH andMinLatitudeDouble:PROJ_WEB_MERCATOR_MIN_LAT_RANGE andMaxLongitudeDouble:PROJ_WGS84_HALF_WORLD_LON_WIDTH andMaxLatitudeDouble:PROJ_WEB_MERCATOR_MAX_LAT_RANGE];
                 }
