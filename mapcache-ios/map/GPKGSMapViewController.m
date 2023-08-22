@@ -1714,6 +1714,11 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     int updateId = ++self.updateCountId;
     int featureUpdateId = ++self.featureUpdateCountId;
     [self.mapView removeAnnotations:self.mapView.annotations];
+    for (id<MKOverlay> overlay in self.mapView.overlays) {
+        if ([overlay isKindOfClass:[GPKGBoundedOverlay class]]) {
+            [(GPKGBoundedOverlay *)overlay close];
+        }
+    }
     [self.mapView removeOverlays:self.mapView.overlays];
     [self.geoPackages closeAll];
     [self.featureDaos removeAllObjects];
@@ -1725,6 +1730,9 @@ static NSString *mapPointPinReuseIdentifier = @"mapPointPinReuseIdentifier";
     self.featuresBoundingBox = nil;
     self.tilesBoundingBox = nil;
     self.featureOverlayTiles = false;
+    for (GPKGFeatureOverlayQuery *query in self.featureOverlayQueries) {
+        [query close];
+    }
     [self.featureOverlayQueries removeAllObjects];
     [self.featureShapes clear];
     int maxFeatures = [self getMaxFeatures];
