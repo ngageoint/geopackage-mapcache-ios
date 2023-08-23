@@ -8,8 +8,6 @@
 
 #import "MCMapViewController.h"
 #import "mapcache_ios-Swift.h"
-#import "gars_ios-Swift.h"
-#import "mgrs_ios-Swift.h"
 
 @interface MCMapViewController ()
 @property (nonatomic, strong) NSMutableArray *childCoordinators;
@@ -741,6 +739,11 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
     int featureUpdateId = [self.featureHelper getNewFeatureUpdateId];
     [self.featureHelper resetFeatureCount];
     [self.mapView removeAnnotations:self.mapView.annotations];
+    for (id<MKOverlay> overlay in self.mapView.overlays) {
+        if ([overlay isKindOfClass:[GPKGBoundedOverlay class]]) {
+            [(GPKGBoundedOverlay *)overlay close];
+        }
+    }
     [self.mapView removeOverlays:self.mapView.overlays];
     [self.mapView addOverlay:self.bookmarkOverlay];
 

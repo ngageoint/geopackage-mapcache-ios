@@ -245,6 +245,7 @@
                 SFPGeometryTransform * projectionTransform = [SFPGeometryTransform transformFromProjection:mapViewProjection andToProjection:featureProjection];
                 GPKGBoundingBox *boundedMapViewBoundingBox = [mapViewBoundingBox boundWgs84Coordinates];
                 GPKGBoundingBox *transformedBoundingBox = [boundedMapViewBoundingBox transform:projectionTransform];
+                [projectionTransform destroy];
                 if([featureProjection isUnit:PROJ_UNIT_DEGREES]){
                     filterMaxLongitude = PROJ_WGS84_HALF_WORLD_LON_WIDTH;
                 }else if([featureProjection isUnit:PROJ_UNIT_METERS]){
@@ -279,6 +280,8 @@
         }
     }
     
+    [converter close];
+
     return count;
 }
 

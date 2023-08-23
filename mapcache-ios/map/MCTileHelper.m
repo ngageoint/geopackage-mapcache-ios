@@ -114,6 +114,7 @@
             if(![transform isSameProjection]){
                 transformedContentsBoundingBox = [transformedContentsBoundingBox transform:transform];
             }
+            [transform destroy];
             displayBoundingBox = [GPKGTileBoundingBoxUtils overlapWithBoundingBox:displayBoundingBox andBoundingBox:transformedContentsBoundingBox];
         }
         
@@ -158,8 +159,10 @@
     }
     SFPGeometryTransform *transformToWebMercator = [SFPGeometryTransform transformFromProjection:projection andToEpsg:PROJ_EPSG_WEB_MERCATOR];
     GPKGBoundingBox *webMercatorBoundingBox = [boundingBox transform:transformToWebMercator];
+    [transformToWebMercator destroy];
     SFPGeometryTransform *transform = [SFPGeometryTransform transformFromEpsg:PROJ_EPSG_WEB_MERCATOR andToEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM];
     boundingBox = [webMercatorBoundingBox transform:transform];
+    [transform destroy];
     return boundingBox;
 }
 

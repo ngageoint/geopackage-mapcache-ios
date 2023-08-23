@@ -358,6 +358,7 @@
         GPKGBoundingBox *bounded = [GPKGTileBoundingBoxUtils boundWgs84BoundingBoxWithWebMercatorLimits:boundingBox];
         SFPGeometryTransform *transform = [SFPGeometryTransform transformFromEpsg:PROJ_EPSG_WORLD_GEODETIC_SYSTEM andToProjection:projection];
         transformedBox = [bounded transform:transform];
+        [transform destroy];
     }
     
     for (int zoom = [minZoom intValue]; zoom <= [maxZoom intValue]; zoom++) {

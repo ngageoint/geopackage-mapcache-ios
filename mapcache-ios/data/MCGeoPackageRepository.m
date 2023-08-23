@@ -241,6 +241,8 @@ static MCGeoPackageRepository *sharedRepository;
             }
         }
         
+        [converter close];
+
     } @catch (NSException *e) {
         NSLog(@"Problem while saving points: %@", e.reason);
         saved = NO;
@@ -449,6 +451,7 @@ static MCGeoPackageRepository *sharedRepository;
         GPKGMapShapeConverter *converter = [[GPKGMapShapeConverter alloc] initWithProjection:featureDao.projection];
 
         SFPoint *point = [converter toPointWithMapPoint:mapPoint];
+        [converter close];
         GPKGGeometryData *pointGeomData = [[GPKGGeometryData alloc] initWithSrsId:srsId];
         [pointGeomData setGeometry: point];
         [newRow setGeometry:pointGeomData];
