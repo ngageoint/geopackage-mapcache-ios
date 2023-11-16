@@ -532,7 +532,7 @@
 				TargetAttributes = {
 					0401366E1AF94FB200C92AFC = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 4ZSTZ437BU;
+						DevelopmentTeam = ZL8G5D9G2H;
 					};
 					0401368A1AF94FB200C92AFC = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -606,11 +606,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/PROJ/PROJ.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/geopackage-ios/geopackage-ios.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/proj-ios/proj-ios.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PROJ.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/geopackage-ios.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/proj-ios.bundle",
 			);
@@ -839,9 +841,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 4ZSTZ437BU;
+				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.mapcache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -854,9 +857,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 4ZSTZ437BU;
+				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				INFOPLIST_FILE = "mapcache-ios/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.mapcache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
