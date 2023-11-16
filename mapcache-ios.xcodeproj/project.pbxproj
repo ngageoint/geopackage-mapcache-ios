@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 53;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -32,7 +32,6 @@
 		045C949B1B5D4C560005CCD0 /* MCDecimalValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 045C949A1B5D4C560005CCD0 /* MCDecimalValidator.m */; };
 		047733C41B4C3D1200E523BD /* MCProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 047733C31B4C3D1200E523BD /* MCProperties.m */; };
 		047733C61B4C3E3400E523BD /* mapcache.plist in Resources */ = {isa = PBXBuildFile; fileRef = 047733C51B4C3E3400E523BD /* mapcache.plist */; };
-		048C212B1AFBCC9400EBC38B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 048C212A1AFBCC9400EBC38B /* libsqlite3.dylib */; };
 		04C4FBA728CFA86700432EAC /* GridSystems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C4FBA628CFA86600432EAC /* GridSystems.swift */; };
 		04CCC85F1B60225C0001296D /* GPKGSKeyboardConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CCC85E1B60225C0001296D /* GPKGSKeyboardConstraint.m */; };
 		04CCC8621B60232A0001296D /* GPKGSUIResponder+FirstResponder.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CCC8611B60232A0001296D /* GPKGSUIResponder+FirstResponder.m */; };
@@ -438,7 +437,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				048C212B1AFBCC9400EBC38B /* libsqlite3.dylib in Frameworks */,
 				C23DC2D8B70234192D216933 /* libPods-mapcache-ios.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1008,7 +1006,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1500;
 				ORGANIZATIONNAME = NGA;
 				TargetAttributes = {
 					0401366E1AF94FB200C92AFC = {
