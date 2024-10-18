@@ -53,6 +53,16 @@
 }
 
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if(_featureTable != nil) {
+        [[MCMetrics shared] featureLayerDetails];
+    } else {
+        [[MCMetrics shared] tileLayerDetails];
+    }
+}
+
+
 - (void) registerCellTypes {
     [self.tableView registerNib:[UINib nibWithNibName:@"MCHeaderCellDisplay" bundle:nil] forCellReuseIdentifier:@"header"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MCFeatureLayerOperationsCell" bundle:nil] forCellReuseIdentifier:@"featureButtons"];

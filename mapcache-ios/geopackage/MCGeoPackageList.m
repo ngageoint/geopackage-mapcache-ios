@@ -7,6 +7,7 @@
 //
 
 #import "MCGeoPackageList.h"
+#import "mapcache_ios-Swift.h"
 
 @interface MCGeoPackageList()
 @property (strong, nonatomic) NSMutableArray *childCoordinators;
@@ -56,6 +57,7 @@
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self showSwipeHelp];
+    [[MCMetrics shared] showGeoPackageList];
 }
 
 

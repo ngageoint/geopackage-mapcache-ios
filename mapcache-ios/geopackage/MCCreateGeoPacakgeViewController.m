@@ -7,6 +7,7 @@
 //
 
 #import "MCCreateGeoPacakgeViewController.h"
+#import "mapcache_ios-Swift.h"
 
 @interface MCCreateGeoPacakgeViewController ()
 @property (nonatomic, strong) NSMutableArray *cellArray;
@@ -46,6 +47,12 @@
     [self.view addSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
+}
+
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[MCMetrics shared] newGeoPackage];
 }
 
 

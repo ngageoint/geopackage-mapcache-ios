@@ -33,6 +33,8 @@
     [self addAndConstrainSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
+    
+    [[MCMetrics shared] tileLayerChooseServer];
 }
 
 

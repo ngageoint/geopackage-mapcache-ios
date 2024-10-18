@@ -7,6 +7,7 @@
 //
 
 #import "MCFeatureLayerDetailsViewController.h"
+#import "mapcache_ios-Swift.h"
 
 @interface MCFeatureLayerDetailsViewController ()
 @property (strong, nonatomic) NSMutableArray *cellArray;
@@ -53,6 +54,8 @@
     self.tableView.separatorStyle = UIAccessibilityTraitNone;
     [self.view addSubview:self.tableView];
     [self addCloseButton];
+    
+    [[MCMetrics shared] featureLayerDetails];
 }
 
 - (void)didReceiveMemoryWarning {

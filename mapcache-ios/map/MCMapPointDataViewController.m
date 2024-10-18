@@ -1,4 +1,4 @@
- //
+//
 //  MCMapPointDataViewController.m
 //  mapcache-ios
 //
@@ -90,8 +90,10 @@
     
     if (self.mode == MCPointViewModeEdit) {
         [self showEditMode];
+        [[MCMetrics shared] newFeature];
     } else {
         [self showDisplayMode];
+        [[MCMetrics shared] showFeature];
     }
 }
 

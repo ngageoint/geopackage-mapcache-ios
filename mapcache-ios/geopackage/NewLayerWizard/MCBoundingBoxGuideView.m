@@ -47,6 +47,8 @@
     } else {
         [self.layerButton setHidden:YES];
     }
+    
+    [[MCMetrics shared] tileLayerBoundingBox];
 }
 
 

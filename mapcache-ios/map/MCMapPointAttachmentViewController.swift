@@ -53,6 +53,12 @@ class MCMapPointAttachmentViewController: NGADrawerViewController, UITableViewDe
     }
     
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        MCMetrics.shared.viewFeatureAttachment()
+    }
+    
+    
     func registerCellTypes() {
         self.tableView.register(UINib.init(nibName: "MCImageCell", bundle: nil), forCellReuseIdentifier: "image")
         self.tableView.register(UINib.init(nibName: "MCDualButtonCell", bundle: nil), forCellReuseIdentifier: "dualButtons")

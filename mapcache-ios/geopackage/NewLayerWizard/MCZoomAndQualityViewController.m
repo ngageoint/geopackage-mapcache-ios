@@ -7,6 +7,7 @@
 //
 
 #import "MCZoomAndQualityViewController.h"
+#import "mapcache_ios-Swift.h"
 
 @interface MCZoomAndQualityViewController ()
 @property (nonatomic, strong) UITableView *tableView;
@@ -50,6 +51,7 @@
     [self addDragHandle];
     [self addCloseButton];
     
+    [[MCMetrics shared] tileLayerZoomSettings];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
 }

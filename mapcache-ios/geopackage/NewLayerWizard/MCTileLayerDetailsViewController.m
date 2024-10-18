@@ -70,6 +70,8 @@
     [self.view addSubview:self.tableView];
     [self addDragHandle];
     [self addCloseButton];
+    
+    [[MCMetrics shared] tileLayerDetails];
 }
 
 

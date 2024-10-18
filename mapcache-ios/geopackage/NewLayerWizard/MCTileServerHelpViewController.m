@@ -7,6 +7,7 @@
 //
 
 #import "MCTileServerHelpViewController.h"
+#import "mapcache_ios-Swift.h"
 
 @interface MCTileServerHelpViewController ()
 @property (nonatomic, strong) NSMutableArray *cellArray;
@@ -40,6 +41,7 @@
     [self.view addSubview:self.tableView];
 //    [self addDragHandle];
 //    [self addCloseButton];
+    [[MCMetrics shared] newServerHelp];
 }
 
 

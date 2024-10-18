@@ -160,6 +160,8 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 
     self.bookmarkOverlay = [[MKTileOverlay alloc] init];
     [self.mapView addOverlay:_bookmarkOverlay];
+    
+    [[MCMetrics shared] showMap];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -782,10 +784,11 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
                  GPKGGeoPackage *geoPacakge;
                  @try {
                      geoPacakge = [self.manager open:database.name];
-                     [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
-
-                     [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)zoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter:(BOOL) filter];
-
+                     if(geoPacakge != nil) {
+                         [self.tileHelper prepareTilesForGeoPackage:geoPacakge andDatabase:database];
+                         
+                         [self.featureHelper prepareFeaturesWithGeoPackage:geoPacakge andDatabase:database andUpdateId: (int)updateId andFeatureUpdateId: (int)featureUpdateId andZoom: (int)zoom andMaxFeatures: (int)maxFeatures andMapViewBoundingBox: (GPKGBoundingBox *)mapViewBoundingBox andToleranceDistance: (double)toleranceDistance andFilter:(BOOL) filter];
+                     }
                  } @catch (NSException *exception) {
                     NSLog(@"MCMapController - Error reading geopackage %@, error: %@", database, [exception description]);
                  }

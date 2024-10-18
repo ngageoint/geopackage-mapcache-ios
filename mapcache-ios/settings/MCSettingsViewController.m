@@ -48,6 +48,12 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
 }
 
 
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[MCMetrics shared] settings];
+}
+
+
 - (void)viewWillDisappear:(BOOL)animated {
     [_mapSettingsDelegate settingsCompletionHandler];
 }
