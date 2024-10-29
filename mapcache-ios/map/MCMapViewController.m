@@ -723,6 +723,10 @@ typedef NS_ENUM(NSInteger, MCLocationStatus) {
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     NSLog(@"MCMapController - Tapped map point");
 
+    if ([view.annotation isKindOfClass:MKUserLocation.class]) {
+        return;
+    }
+    
     if ([view isKindOfClass:MKAnnotationView.class] || [view isKindOfClass:MKMarkerAnnotationView.class]) {
         [self zoomToPointWithOffset:view.annotation.coordinate];
         [self.mapActionDelegate showDetailsForAnnotation:(GPKGMapPoint *)view.annotation];

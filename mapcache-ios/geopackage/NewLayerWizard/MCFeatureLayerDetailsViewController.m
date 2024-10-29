@@ -21,6 +21,8 @@
 @property (strong, nonatomic) MCFieldWithTitleCell *layerNameCell;
 @property (strong, nonatomic) MCButtonCell *buttonCell;
 @property (strong, nonatomic) MCDescriptionCell *descriptionCell;
+@property (nonatomic) BOOL haveScrolled;
+@property (nonatomic) CGFloat contentOffset;
 @end
 
 @implementation MCFeatureLayerDetailsViewController
@@ -52,7 +54,15 @@
     self.tableView.estimatedRowHeight = 100;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.separatorStyle = UIAccessibilityTraitNone;
+    
+    UIEdgeInsets tabBarInsets = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
+    self.tableView.contentInset = tabBarInsets;
+    self.tableView.scrollIndicatorInsets = tabBarInsets;
+    self.contentOffset = 0;
+    self.haveScrolled = NO;
+    
     [self.view addSubview:self.tableView];
+    [self addDragHandle];
     [self addCloseButton];
     
     [[MCMetrics shared] featureLayerDetails];
@@ -157,10 +167,41 @@
     return YES;
 }
 
-
+#pragma mark - NGADrawerView methods
 - (void) closeDrawer {
     [self.drawerViewDelegate popDrawer];
 }
+
+- (void) drawerWasCollapsed {
+    [super drawerWasCollapsed];
+    [self.tableView setScrollEnabled:NO];
+}
+
+
+- (void) drawerWasMadeFull {
+    [super drawerWasMadeFull];
+    [self.tableView setScrollEnabled:YES];
+}
+
+// Override this method to make the drawer and the scrollview play nice
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.haveScrolled) {
+        [self rollUpPanGesture:scrollView.panGestureRecognizer withScrollView:scrollView];
+    }
+}
+
+// If the table view is scrolling rollup the gesture to the drawer and handle accordingly.
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.haveScrolled = YES;
+    
+    if (!self.isFullView) {
+        scrollView.scrollEnabled = NO;
+        scrollView.scrollEnabled = YES;
+    } else {
+        scrollView.scrollEnabled = YES;
+    }
+}
+
 
 
 
