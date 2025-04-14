@@ -11,6 +11,7 @@
 
 NSString *const SHOW_NOTICE = @"showNotice";
 NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
+NSString *const CONTACT_US = @"contactUs";
 
 @interface MCSettingsViewController ()
 @property (nonatomic, strong) NSMutableArray *cellArray;
@@ -218,6 +219,21 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
         [_zoomSwitchCell switchOn];
     }
     [bottomCells addObject:_zoomSwitchCell];
+    
+    MCButtonCell *contactUsButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
+    [contactUsButtonCell setButtonLabel:@"Contact Us"];
+    contactUsButtonCell.action = CONTACT_US;
+    contactUsButtonCell.delegate = self;
+    
+    [contactUsButtonCell useSecondaryColors];
+    
+    UIImage *envelopeIcon = [UIImage systemImageNamed:@"envelope.fill"];
+    [contactUsButtonCell.button setImage:envelopeIcon forState:UIControlStateNormal];
+    
+    contactUsButtonCell.button.tintColor = contactUsButtonCell.button.titleLabel.textColor;
+
+    contactUsButtonCell.button.imageEdgeInsets = UIEdgeInsetsMake(0, -4, 0, 4);
+    [bottomCells addObject:contactUsButtonCell];
     
     MCButtonCell *showNoticesButtonCell = [self.tableView dequeueReusableCellWithIdentifier:@"buttonCell"];
     [showNoticesButtonCell setButtonLabel:@"About MapCache"];
@@ -545,6 +561,19 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
     
 }
 
+- (void)openMailClient {
+    NSString *email = @"magesuitesupport@nga.mil";
+    NSString *encoded = [NSString stringWithFormat:@"mailto:%@", email];
+    NSString *escaped = [encoded stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSURL *url = [NSURL URLWithString:escaped];
+
+    if ([[UIApplication sharedApplication] canOpenURL:url]) {
+        [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+    } else {
+        NSLog(@"Cannot open mail client");
+    }
+}
+
 
 #pragma mark - ButtonCell delegate
 - (void)performButtonAction:(NSString *)action {
@@ -552,6 +581,8 @@ NSString *const SHOW_TILE_URL_MANAGER =@"showTileURLManager";
         [self.settingsDelegate showNoticeAndAttributeView];
     } else if ([action isEqualToString:SHOW_TILE_URL_MANAGER]) {
         [self.settingsDelegate showTileURLManager];
+    } else if ([action isEqualToString:CONTACT_US]) {
+        [self openMailClient];
     }
 }
 
