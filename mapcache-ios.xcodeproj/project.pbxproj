@@ -42,7 +42,7 @@
 		04E0EE0B1B691A3C0095E53E /* GPKGSEditTileOverlayData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0EE0A1B691A3C0095E53E /* GPKGSEditTileOverlayData.m */; };
 		04E1D8D91B66D4CA002BD947 /* GPKGSEditContentsData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8D81B66D4CA002BD947 /* GPKGSEditContentsData.m */; };
 		04E1D8DF1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1D8DE1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m */; };
-		C23DC2D8B70234192D216933 /* libPods-mapcache-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 914BF31466A9358408F12408 /* libPods-mapcache-ios.a */; };
+		874B4441AF0CE6FEA374A08E /* libPods-mapcache-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DEA6EF8A1F19D85F1A62A3A0 /* libPods-mapcache-ios.a */; };
 		CA225EB128E394B300F0B6EB /* SlowServerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CA225EAB28E394B200F0B6EB /* SlowServerModel.m */; };
 		CA225EB228E394B300F0B6EB /* SlowServerNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = CA225EAE28E394B200F0B6EB /* SlowServerNotifier.m */; };
 		CA225EB328E394B300F0B6EB /* SlowServerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA225EB028E394B300F0B6EB /* SlowServerView.m */; };
@@ -171,7 +171,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		02FF687C0F94F922C6DBA093 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0401366F1AF94FB200C92AFC /* mapcache-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mapcache-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		040136731AF94FB200C92AFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		040136741AF94FB200C92AFC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -248,17 +247,14 @@
 		04E1D8D81B66D4CA002BD947 /* GPKGSEditContentsData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSEditContentsData.m; sourceTree = "<group>"; };
 		04E1D8DD1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPKGSFeatureTilesDrawData.h; sourceTree = "<group>"; };
 		04E1D8DE1B682D0F002BD947 /* GPKGSFeatureTilesDrawData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPKGSFeatureTilesDrawData.m; sourceTree = "<group>"; };
-		317A64B2FA9FC9C408272041 /* Pods-mapcache-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.release.xcconfig"; sourceTree = "<group>"; };
-		5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		914BF31466A9358408F12408 /* libPods-mapcache-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mapcache-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.debug.xcconfig"; sourceTree = "<group>"; };
+		AE266C970EADA2DE4EBE8E48 /* Pods-mapcache-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.debug.xcconfig"; path = "Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.debug.xcconfig"; sourceTree = "<group>"; };
 		CA225EAB28E394B200F0B6EB /* SlowServerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlowServerModel.m; sourceTree = "<group>"; };
 		CA225EAC28E394B200F0B6EB /* SlowServerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlowServerView.h; sourceTree = "<group>"; };
 		CA225EAD28E394B200F0B6EB /* SlowServerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlowServerModel.h; sourceTree = "<group>"; };
 		CA225EAE28E394B200F0B6EB /* SlowServerNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlowServerNotifier.m; sourceTree = "<group>"; };
 		CA225EAF28E394B200F0B6EB /* SlowServerNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlowServerNotifier.h; sourceTree = "<group>"; };
 		CA225EB028E394B300F0B6EB /* SlowServerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlowServerView.m; sourceTree = "<group>"; };
+		DEA6EF8A1F19D85F1A62A3A0 /* libPods-mapcache-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mapcache-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E300A93223313D77002336A0 /* MCBoundingBoxGuideView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MCBoundingBoxGuideView.xib; sourceTree = "<group>"; };
 		E300A93423313DCE002336A0 /* MCBoundingBoxGuideView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MCBoundingBoxGuideView.h; path = "mapcache-ios/geopackage/NewLayerWizard/MCBoundingBoxGuideView.h"; sourceTree = SOURCE_ROOT; };
 		E300A93523313DCE002336A0 /* MCBoundingBoxGuideView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MCBoundingBoxGuideView.m; path = "mapcache-ios/geopackage/NewLayerWizard/MCBoundingBoxGuideView.m"; sourceTree = SOURCE_ROOT; };
@@ -430,6 +426,7 @@
 		E3FB857D2134C533002F012E /* MCGeoPackageListCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCGeoPackageListCoordinator.m; sourceTree = "<group>"; };
 		E3FCD6B420F42FE0006D972B /* MCGeoPackageOperationsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCGeoPackageOperationsCell.m; sourceTree = "<group>"; };
 		E3FCD6B520F42FE4006D972B /* MCGeoPackageOperationsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCGeoPackageOperationsCell.h; sourceTree = "<group>"; };
+		F904AC8246DFA5EF652080CC /* Pods-mapcache-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mapcache-ios.release.xcconfig"; path = "Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -437,7 +434,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C23DC2D8B70234192D216933 /* libPods-mapcache-ios.a in Frameworks */,
+				874B4441AF0CE6FEA374A08E /* libPods-mapcache-ios.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,8 +462,8 @@
 				0401368E1AF94FB200C92AFC /* mapcache-iosTests */,
 				E3E9ED6723EA407E004C4530 /* mapcache-iosUITests */,
 				040136701AF94FB200C92AFC /* Products */,
-				C5D6DE3118DC6CC3BD7E852D /* Pods */,
 				F92DE52400ADCEC8CC3BBB88 /* Frameworks */,
+				67A789A6F8DD26B5377A92F1 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -680,15 +677,14 @@
 			path = ui;
 			sourceTree = "<group>";
 		};
-		C5D6DE3118DC6CC3BD7E852D /* Pods */ = {
+		67A789A6F8DD26B5377A92F1 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				5EF2C0B086224981AE6EF48D /* Pods.debug.xcconfig */,
-				C5C14A8A96D2279034BCA65B /* Pods.release.xcconfig */,
-				C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */,
-				317A64B2FA9FC9C408272041 /* Pods-mapcache-ios.release.xcconfig */,
+				AE266C970EADA2DE4EBE8E48 /* Pods-mapcache-ios.debug.xcconfig */,
+				F904AC8246DFA5EF652080CC /* Pods-mapcache-ios.release.xcconfig */,
 			);
 			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		CA225EA128E393AA00F0B6EB /* slowserver */ = {
@@ -935,8 +931,7 @@
 			isa = PBXGroup;
 			children = (
 				048C212A1AFBCC9400EBC38B /* libsqlite3.dylib */,
-				02FF687C0F94F922C6DBA093 /* libPods.a */,
-				914BF31466A9358408F12408 /* libPods-mapcache-ios.a */,
+				DEA6EF8A1F19D85F1A62A3A0 /* libPods-mapcache-ios.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -948,11 +943,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 040136951AF94FB200C92AFC /* Build configuration list for PBXNativeTarget "mapcache-ios" */;
 			buildPhases = (
-				C8B98BBB41597A0D3F25DE44 /* [CP] Check Pods Manifest.lock */,
+				F79793BD34A834AB52820969 /* [CP] Check Pods Manifest.lock */,
 				0401366B1AF94FB200C92AFC /* Sources */,
 				0401366C1AF94FB200C92AFC /* Frameworks */,
 				0401366D1AF94FB200C92AFC /* Resources */,
-				A54221923124DA47FC50EB72 /* [CP] Copy Pods Resources */,
+				E82302FD0EA01A08F548F996 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1108,7 +1103,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		A54221923124DA47FC50EB72 /* [CP] Copy Pods Resources */ = {
+		E82302FD0EA01A08F548F996 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1134,16 +1129,20 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C8B98BBB41597A0D3F25DE44 /* [CP] Check Pods Manifest.lock */ = {
+		F79793BD34A834AB52820969 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-mapcache-ios-checkManifestLockResult.txt",
 			);
@@ -1429,7 +1428,7 @@
 		};
 		040136961AF94FB200C92AFC /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C87B7FD45C393DE7D862CA13 /* Pods-mapcache-ios.debug.xcconfig */;
+			baseConfigurationReference = AE266C970EADA2DE4EBE8E48 /* Pods-mapcache-ios.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1458,7 +1457,7 @@
 		};
 		040136971AF94FB200C92AFC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 317A64B2FA9FC9C408272041 /* Pods-mapcache-ios.release.xcconfig */;
+			baseConfigurationReference = F904AC8246DFA5EF652080CC /* Pods-mapcache-ios.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
