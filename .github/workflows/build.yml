@@ -14,11 +14,20 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
     - name: Install Utilities
       run: |
         brew install automake
         brew install libtool
+    - name: Select Xcode 16.2
+      run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+      # This command requires sudo to change the system-wide active developer directory.
+    - name: Verify Xcode Version # Optional but recommended
+      run: |
+        echo "Selected Xcode Path:"
+        xcode-select -p
+        echo "Selected Xcode Version:"
+        xcodebuild -version
     - name: Install
       run: |
         pod repo update
