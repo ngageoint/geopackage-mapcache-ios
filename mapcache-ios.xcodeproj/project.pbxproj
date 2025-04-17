@@ -1126,6 +1126,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-mapcache-ios/Pods-mapcache-ios-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MatomoTracker/MatomoTracker_Privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/PROJ/PROJ.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/gars-ios/gars-ios.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/geopackage-ios/geopackage-ios.bundle",
@@ -1134,6 +1135,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MatomoTracker_Privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PROJ.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gars-ios.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/geopackage-ios.bundle",
