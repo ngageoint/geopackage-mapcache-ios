@@ -15,7 +15,7 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
     - name: Install Utilities
       run: |
         brew install automake
@@ -27,7 +27,7 @@ jobs:
     - name: Build
       run: xcodebuild -workspace mapcache-ios.xcworkspace -scheme mapcache-ios -allowProvisioningUpdates -configuration AppStoreDistribution archive -archivePath buildArchive/MapCache.xcarchive CODE_SIGNING_ALLOWED=NO
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: MapCache.xcarchive
         path: buildArchive/MapCache.xcarchive
