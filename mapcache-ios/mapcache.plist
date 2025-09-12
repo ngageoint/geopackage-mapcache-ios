@@ -604,7 +604,7 @@
 			<key>label</key>
 			<string>OpenStreetMap</string>
 			<key>url</key>
-			<string>http://a.tile.openstreetmap.org/{z}/{x}/{y}.png</string>
+			<string>https://tile.openstreetmap.org/{z}/{x}/{y}.png</string>
 			<key>name</key>
 			<string>openstreetmap</string>
 			<key>min_zoom</key>
